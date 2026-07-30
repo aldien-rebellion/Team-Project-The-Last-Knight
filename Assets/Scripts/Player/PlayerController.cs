@@ -13,7 +13,8 @@ namespace TheLastKnight.Player
         Falling,
         Dashing,
         Attacking,
-        UsingSkill
+        UsingSkill,
+        Buffing
     }
 
     [RequireComponent(typeof(KinematicCharacterController2D), typeof(SpriteRenderer), typeof(Animator))]
@@ -36,6 +37,12 @@ namespace TheLastKnight.Player
         private float _skillDuration = 3.8f;
         [SerializeField, Tooltip("Cooldown between skill uses.")]
         private float _skillCooldown = 1.0f;
+
+        [Header("Buff Settings")]
+        [SerializeField, Tooltip("Buff skill duration.")]
+        private float _buffDuration = 0.75f;
+        [SerializeField, Tooltip("Cooldown between buff uses.")]
+        private float _buffCooldown = 1.0f;
 
         [Header("Movement Settings")]
         [SerializeField, Tooltip("Base movement speed.")]
@@ -115,6 +122,10 @@ namespace TheLastKnight.Player
         private float _skillTimer = 0f;
         private float _skillCooldownTimer = 0f;
 
+        // Buff State Variables
+        private float _buffTimer = 0f;
+        private float _buffCooldownTimer = 0f;
+
         private void Awake()
         {
             _kinematicController = GetComponent<KinematicCharacterController2D>();
@@ -158,6 +169,12 @@ namespace TheLastKnight.Player
                 _skillCooldownTimer -= Time.deltaTime;
             }
 
+            // Update Buff Cooldown
+            if (_buffCooldownTimer > 0f)
+            {
+                _buffCooldownTimer -= Time.deltaTime;
+            }
+
             // Coyote time update
             if (_kinematicController.IsGrounded)
             {
@@ -187,10 +204,17 @@ namespace TheLastKnight.Player
             }
 
             // Check for Skill Trigger (Excalibur)
-            bool canUseSkill = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Dashing && _skillCooldownTimer <= 0f;
+            bool canUseSkill = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && _skillCooldownTimer <= 0f;
             if (_inputHandler != null && _inputHandler.UseSkillTriggered && canUseSkill)
             {
                 StartSkill();
+            }
+
+            // Check for Buff Trigger (Key R)
+            bool canUseBuff = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && _buffCooldownTimer <= 0f;
+            if (_inputHandler != null && _inputHandler.UseBuffTriggered && canUseBuff)
+            {
+                StartBuff();
             }
 
             // Check for Dash Trigger
@@ -215,6 +239,10 @@ namespace TheLastKnight.Player
             else if (CurrentState == PlayerState.UsingSkill)
             {
                 UpdateSkill();
+            }
+            else if (CurrentState == PlayerState.Buffing)
+            {
+                UpdateBuff();
             }
             else
             {
@@ -411,6 +439,61 @@ namespace TheLastKnight.Player
             }
         }
 
+        private void StartBuff()
+        {
+            CurrentState = PlayerState.Buffing;
+            _buffTimer = _buffDuration;
+            _buffCooldownTimer = _buffDuration + _buffCooldown;
+
+            if (_animator != null && _animator.runtimeAnimatorController != null)
+            {
+                _animator.Play("Buff", 0, 0f);
+            }
+
+            // Stop horizontal movement during buff
+            _velocity.x = 0f;
+        }
+
+        private void UpdateBuff()
+        {
+            _buffTimer -= Time.deltaTime;
+
+            if (!_kinematicController.IsGrounded)
+            {
+                float activeGravity = _gravity;
+                _velocity.y -= activeGravity * Time.deltaTime;
+                _velocity.y = Mathf.Max(_velocity.y, -_maxFallSpeed);
+            }
+            else
+            {
+                _velocity.y = 0f;
+            }
+
+            _velocity.x = 0f;
+            _kinematicController.Move(_velocity, Time.deltaTime);
+
+            if (_buffTimer <= 0f)
+            {
+                EndBuff();
+            }
+        }
+
+        private void EndBuff()
+        {
+            if (_kinematicController.IsGrounded)
+            {
+                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
+                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
+                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
+                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
+            }
+            else
+            {
+                CurrentState = PlayerState.Falling;
+            }
+        }
+
         private void UpdateNormalMovement()
         {
             float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
@@ -519,6 +602,7 @@ namespace TheLastKnight.Player
             bool isDashing = CurrentState == PlayerState.Dashing;
             bool isAttacking = CurrentState == PlayerState.Attacking;
             bool isUsingSkill = CurrentState == PlayerState.UsingSkill;
+            bool isBuffing = CurrentState == PlayerState.Buffing;
 
             _animator.SetBool("IsIdle", isIdle);
             _animator.SetBool("IsRunning", isMoving);
@@ -526,6 +610,7 @@ namespace TheLastKnight.Player
             _animator.SetBool("IsDashing", isDashing);
             _animator.SetBool("IsAttacking", isAttacking);
             _animator.SetBool("UseExcalibur", isUsingSkill);
+            _animator.SetBool("UseBuff", isBuffing);
 
             // Play explicit animation clips for Walk vs Run state
             if (isRunningState)

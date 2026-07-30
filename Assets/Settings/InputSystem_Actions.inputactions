@@ -106,6 +106,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "UseBuff",
+                    "type": "Button",
+                    "id": "a9840212-4c28-4791-a189-9831f242095b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "CounterAttack",
                     "type": "Button",
                     "id": "d54f6851-5a64-467a-977a-c41a944845bd",
@@ -553,6 +562,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "UseSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c1740921-2a14-4648-912f-981248011234",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "UseBuff",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
