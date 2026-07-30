@@ -71,3 +71,7 @@ Packages/packages-lock.json linguist-generated
 # Unity Graph tools
 *.shadergraph filter=lfs diff=lfs merge=lfs -text
 *.vfx        filter=lfs diff=lfs merge=lfs -text
+
+
+*.png binary
+*.jpg binary
