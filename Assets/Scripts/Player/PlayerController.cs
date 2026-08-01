@@ -32,16 +32,16 @@ namespace TheLastKnight.Player
         [SerializeField, Tooltip("Cooldown between attacks.")]
         private float _attackCooldown = 0.35f;
 
-        [Header("Skill Settings")]
-        [SerializeField, Tooltip("Excalibur skill duration.")]
-        private float _skillDuration = 3.8f;
+        [Header("Skill Settings (Carnage Burst - Key E)")]
+        [SerializeField, Tooltip("Carnage Burst skill duration.")]
+        private float _skillDuration = 0.5f;
         [SerializeField, Tooltip("Cooldown between skill uses.")]
         private float _skillCooldown = 1.0f;
 
-        [Header("Buff Settings")]
-        [SerializeField, Tooltip("Buff skill duration.")]
-        private float _buffDuration = 0.75f;
-        [SerializeField, Tooltip("Cooldown between buff uses.")]
+        [Header("Buff Settings (Excalibur - Key R)")]
+        [SerializeField, Tooltip("Excalibur skill duration.")]
+        private float _buffDuration = 3.8f;
+        [SerializeField, Tooltip("Cooldown between Excalibur uses.")]
         private float _buffCooldown = 1.0f;
 
         [Header("Movement Settings")]
@@ -203,14 +203,14 @@ namespace TheLastKnight.Player
                 StartAttack();
             }
 
-            // Check for Skill Trigger (Excalibur)
+            // Check for Skill Trigger (Carnage Burst - Key E)
             bool canUseSkill = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && _skillCooldownTimer <= 0f;
             if (_inputHandler != null && _inputHandler.UseSkillTriggered && canUseSkill)
             {
                 StartSkill();
             }
 
-            // Check for Buff Trigger (Key R)
+            // Check for Excalibur Trigger (Key R)
             bool canUseBuff = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && _buffCooldownTimer <= 0f;
             if (_inputHandler != null && _inputHandler.UseBuffTriggered && canUseBuff)
             {
@@ -392,7 +392,7 @@ namespace TheLastKnight.Player
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
-                _animator.Play("Excalibur", 0, 0f);
+                _animator.Play("CarnageBurst", 0, 0f);
             }
 
             // Stop horizontal movement during skill
@@ -447,10 +447,10 @@ namespace TheLastKnight.Player
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
-                _animator.Play("Buff", 0, 0f);
+                _animator.Play("Excalibur", 0, 0f);
             }
 
-            // Stop horizontal movement during buff
+            // Stop horizontal movement during Excalibur
             _velocity.x = 0f;
         }
 
@@ -609,8 +609,8 @@ namespace TheLastKnight.Player
             _animator.SetBool("IsJumping", isJumping);
             _animator.SetBool("IsDashing", isDashing);
             _animator.SetBool("IsAttacking", isAttacking);
-            _animator.SetBool("UseExcalibur", isUsingSkill);
-            _animator.SetBool("UseBuff", isBuffing);
+            _animator.SetBool("UseCarnageBurst", isUsingSkill);
+            _animator.SetBool("UseExcalibur", isBuffing);
 
             // Play explicit animation clips for Walk vs Run state
             if (isRunningState)

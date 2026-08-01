@@ -578,7 +578,12 @@ MonoBehaviour:
   _animator: {fileID: 0}
   _attackDuration: 0.4
   _attackCooldown: 0.5
+  _skillDuration: 0.5
+  _skillCooldown: 1
+  _buffDuration: 3.8
+  _buffCooldown: 1
   _baseMoveSpeed: 8
+  _baseSprintSpeed: 13
   _acceleration: 50
   _deceleration: 50
   _baseJumpForce: 16
