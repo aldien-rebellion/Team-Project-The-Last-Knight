@@ -16,6 +16,7 @@ namespace TheLastKnight.Input
         private InputAction _useBuffAction;
         private InputAction _nextAction;
         private InputAction _previousAction;
+        private InputAction _useDrinkAction;
 
         private void Start()
         {
@@ -33,6 +34,7 @@ namespace TheLastKnight.Input
             _counterAttackAction = InputSystem.actions.FindAction("CounterAttack");
             _useSkillAction = InputSystem.actions.FindAction("UseSkill");
             _useBuffAction = InputSystem.actions.FindAction("UseBuff");
+            _useDrinkAction = InputSystem.actions.FindAction("UseDrink");
             _nextAction = InputSystem.actions.FindAction("Next");
             _previousAction = InputSystem.actions.FindAction("Previous");
 
@@ -44,6 +46,7 @@ namespace TheLastKnight.Input
             if (_counterAttackAction == null) Debug.LogWarning("[PlayerInputHandler] 'CounterAttack' action not found in 'InputSystem.actions'.");
             if (_useSkillAction == null) Debug.LogWarning("[PlayerInputHandler] 'UseSkill' action not found in 'InputSystem.actions'.");
             if (_useBuffAction == null) Debug.LogWarning("[PlayerInputHandler] 'UseBuff' action not found in 'InputSystem.actions'.");
+            if (_useDrinkAction == null) Debug.LogWarning("[PlayerInputHandler] 'UseDrink' action not found in 'InputSystem.actions'.");
             if (_nextAction == null) Debug.LogWarning("[PlayerInputHandler] 'Next' action not found in 'InputSystem.actions'.");
             if (_previousAction == null) Debug.LogWarning("[PlayerInputHandler] 'Previous' action not found in 'InputSystem.actions'.");
         }
@@ -59,6 +62,7 @@ namespace TheLastKnight.Input
         public bool CounterTriggered => _counterAttackAction != null && _counterAttackAction.WasPressedThisFrame();
         public bool UseSkillTriggered => _useSkillAction != null && _useSkillAction.WasPressedThisFrame();
         public bool UseBuffTriggered => _useBuffAction != null && _useBuffAction.WasPressedThisFrame();
+        public bool UseDrinkTriggered => _useDrinkAction != null && _useDrinkAction.WasPressedThisFrame();
 
         public float CycleSkillInput
         {

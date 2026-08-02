@@ -14,7 +14,8 @@ namespace TheLastKnight.Player
         Dashing,
         Attacking,
         UsingSkill,
-        Buffing
+        Buffing,
+        Drinking
     }
 
     [RequireComponent(typeof(KinematicCharacterController2D), typeof(SpriteRenderer), typeof(Animator))]
@@ -43,6 +44,12 @@ namespace TheLastKnight.Player
         private float _buffDuration = 3.8f;
         [SerializeField, Tooltip("Cooldown between Excalibur uses.")]
         private float _buffCooldown = 1.0f;
+
+        [Header("Drink Settings (Key Q)")]
+        [SerializeField, Tooltip("Drink skill duration.")]
+        private float _drinkDuration = 2.5f;
+        [SerializeField, Tooltip("Cooldown between drink uses.")]
+        private float _drinkCooldown = 1.0f;
 
         [Header("Movement Settings")]
         [SerializeField, Tooltip("Base movement speed.")]
@@ -126,6 +133,10 @@ namespace TheLastKnight.Player
         private float _buffTimer = 0f;
         private float _buffCooldownTimer = 0f;
 
+        // Drink State Variables
+        private float _drinkTimer = 0f;
+        private float _drinkCooldownTimer = 0f;
+
         private void Awake()
         {
             _kinematicController = GetComponent<KinematicCharacterController2D>();
@@ -175,6 +186,11 @@ namespace TheLastKnight.Player
                 _buffCooldownTimer -= Time.deltaTime;
             }
 
+            if (_drinkCooldownTimer > 0f)
+            {
+                _drinkCooldownTimer -= Time.deltaTime;
+            }
+
             // Coyote time update
             if (_kinematicController.IsGrounded)
             {
@@ -211,10 +227,17 @@ namespace TheLastKnight.Player
             }
 
             // Check for Excalibur Trigger (Key R)
-            bool canUseBuff = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && _buffCooldownTimer <= 0f;
+            bool canUseBuff = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && CurrentState != PlayerState.Drinking && _buffCooldownTimer <= 0f;
             if (_inputHandler != null && _inputHandler.UseBuffTriggered && canUseBuff)
             {
                 StartBuff();
+            }
+
+            // Check for Drink Trigger (Key Q)
+            bool canDrink = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && CurrentState != PlayerState.Drinking && _drinkCooldownTimer <= 0f;
+            if (_inputHandler != null && _inputHandler.UseDrinkTriggered && canDrink)
+            {
+                StartDrink();
             }
 
             // Check for Dash Trigger
@@ -243,6 +266,10 @@ namespace TheLastKnight.Player
             else if (CurrentState == PlayerState.Buffing)
             {
                 UpdateBuff();
+            }
+            else if (CurrentState == PlayerState.Drinking)
+            {
+                UpdateDrink();
             }
             else
             {
@@ -494,6 +521,61 @@ namespace TheLastKnight.Player
             }
         }
 
+        private void StartDrink()
+        {
+            CurrentState = PlayerState.Drinking;
+            _drinkTimer = _drinkDuration;
+            _drinkCooldownTimer = _drinkDuration + _drinkCooldown;
+
+            if (_animator != null && _animator.runtimeAnimatorController != null)
+            {
+                _animator.Play("Drink", 0, 0f);
+            }
+
+            // Stop horizontal movement during drink
+            _velocity.x = 0f;
+        }
+
+        private void UpdateDrink()
+        {
+            _drinkTimer -= Time.deltaTime;
+
+            if (!_kinematicController.IsGrounded)
+            {
+                float activeGravity = _gravity;
+                _velocity.y -= activeGravity * Time.deltaTime;
+                _velocity.y = Mathf.Max(_velocity.y, -_maxFallSpeed);
+            }
+            else
+            {
+                _velocity.y = 0f;
+            }
+
+            _velocity.x = 0f;
+            _kinematicController.Move(_velocity, Time.deltaTime);
+
+            if (_drinkTimer <= 0f)
+            {
+                EndDrink();
+            }
+        }
+
+        private void EndDrink()
+        {
+            if (_kinematicController.IsGrounded)
+            {
+                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
+                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
+                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
+                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
+            }
+            else
+            {
+                CurrentState = PlayerState.Falling;
+            }
+        }
+
         private void UpdateNormalMovement()
         {
             float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
@@ -603,6 +685,7 @@ namespace TheLastKnight.Player
             bool isAttacking = CurrentState == PlayerState.Attacking;
             bool isUsingSkill = CurrentState == PlayerState.UsingSkill;
             bool isBuffing = CurrentState == PlayerState.Buffing;
+            bool isDrinking = CurrentState == PlayerState.Drinking;
 
             _animator.SetBool("IsIdle", isIdle);
             _animator.SetBool("IsRunning", isMoving);
@@ -611,6 +694,7 @@ namespace TheLastKnight.Player
             _animator.SetBool("IsAttacking", isAttacking);
             _animator.SetBool("UseCarnageBurst", isUsingSkill);
             _animator.SetBool("UseExcalibur", isBuffing);
+            _animator.SetBool("UseDrink", isDrinking);
 
             // Play explicit animation clips for Walk vs Run state
             if (isRunningState)
