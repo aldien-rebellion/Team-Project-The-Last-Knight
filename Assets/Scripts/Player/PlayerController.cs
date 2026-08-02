@@ -15,7 +15,8 @@ namespace TheLastKnight.Player
         Attacking,
         UsingSkill,
         Buffing,
-        Drinking
+        Drinking,
+        Hurt
     }
 
     [RequireComponent(typeof(KinematicCharacterController2D), typeof(SpriteRenderer), typeof(Animator))]
@@ -50,6 +51,12 @@ namespace TheLastKnight.Player
         private float _drinkDuration = 2.5f;
         [SerializeField, Tooltip("Cooldown between drink uses.")]
         private float _drinkCooldown = 1.0f;
+
+        [Header("Hurt Settings")]
+        [SerializeField, Tooltip("Frame 1 duration before advancing to frame 2 when damage stops.")]
+        private float _hurtFrame1Duration = 0.25f;
+        [SerializeField, Tooltip("Frame 2 duration.")]
+        private float _hurtFrame2Duration = 0.17f;
 
         [Header("Movement Settings")]
         [SerializeField, Tooltip("Base movement speed.")]
@@ -137,6 +144,9 @@ namespace TheLastKnight.Player
         private float _drinkTimer = 0f;
         private float _drinkCooldownTimer = 0f;
 
+        // Hurt State Variables
+        private float _hurtTimer = 0f;
+
         private void Awake()
         {
             _kinematicController = GetComponent<KinematicCharacterController2D>();
@@ -213,35 +223,35 @@ namespace TheLastKnight.Player
             }
 
             // Check for Attack Trigger
-            bool canAttack = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Dashing && _attackCooldownTimer <= 0f;
+            bool canAttack = CurrentState != PlayerState.Hurt && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Dashing && _attackCooldownTimer <= 0f;
             if (_inputHandler != null && _inputHandler.AttackTriggered && canAttack)
             {
                 StartAttack();
             }
 
             // Check for Skill Trigger (Carnage Burst - Key E)
-            bool canUseSkill = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && _skillCooldownTimer <= 0f;
+            bool canUseSkill = CurrentState != PlayerState.Hurt && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && _skillCooldownTimer <= 0f;
             if (_inputHandler != null && _inputHandler.UseSkillTriggered && canUseSkill)
             {
                 StartSkill();
             }
 
             // Check for Excalibur Trigger (Key R)
-            bool canUseBuff = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && CurrentState != PlayerState.Drinking && _buffCooldownTimer <= 0f;
+            bool canUseBuff = CurrentState != PlayerState.Hurt && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && CurrentState != PlayerState.Drinking && _buffCooldownTimer <= 0f;
             if (_inputHandler != null && _inputHandler.UseBuffTriggered && canUseBuff)
             {
                 StartBuff();
             }
 
             // Check for Drink Trigger (Key Q)
-            bool canDrink = CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && CurrentState != PlayerState.Drinking && _drinkCooldownTimer <= 0f;
+            bool canDrink = CurrentState != PlayerState.Hurt && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && CurrentState != PlayerState.Drinking && _drinkCooldownTimer <= 0f;
             if (_inputHandler != null && _inputHandler.UseDrinkTriggered && canDrink)
             {
                 StartDrink();
             }
 
             // Check for Dash Trigger
-            if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f)
+            if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f && CurrentState != PlayerState.Hurt)
             {
                 bool canDash = _kinematicController.IsGrounded || !_hasDashedInAir;
                 if (canDash)
@@ -270,6 +280,10 @@ namespace TheLastKnight.Player
             else if (CurrentState == PlayerState.Drinking)
             {
                 UpdateDrink();
+            }
+            else if (CurrentState == PlayerState.Hurt)
+            {
+                UpdateHurt();
             }
             else
             {
@@ -576,6 +590,61 @@ namespace TheLastKnight.Player
             }
         }
 
+        /// <summary>
+        /// Triggers Arthur's hurt reaction animation.
+        /// If damage is taken continuously, resets/holds frame 1 until damage stops.
+        /// </summary>
+        public void OnTakeDamage()
+        {
+            CurrentState = PlayerState.Hurt;
+            _hurtTimer = _hurtFrame1Duration + _hurtFrame2Duration;
+
+            if (_animator != null && _animator.runtimeAnimatorController != null)
+            {
+                _animator.Play("Hurt", 0, 0f);
+            }
+        }
+
+        private void UpdateHurt()
+        {
+            _hurtTimer -= Time.deltaTime;
+
+            if (!_kinematicController.IsGrounded)
+            {
+                _velocity.y -= _gravity * _fallMultiplier * Time.deltaTime;
+                _velocity.y = Mathf.Max(_velocity.y, -_maxFallSpeed);
+            }
+            else
+            {
+                _velocity.y = 0f;
+            }
+
+            _velocity.x = Mathf.MoveTowards(_velocity.x, 0f, _deceleration * Time.deltaTime);
+            _kinematicController.Move(_velocity, Time.deltaTime);
+
+            if (_hurtTimer <= 0f)
+            {
+                EndHurt();
+            }
+        }
+
+        private void EndHurt()
+        {
+            _hurtTimer = 0f;
+            if (_kinematicController.IsGrounded)
+            {
+                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
+                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
+                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
+                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
+            }
+            else
+            {
+                CurrentState = PlayerState.Falling;
+            }
+        }
+
         private void UpdateNormalMovement()
         {
             float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
@@ -686,6 +755,7 @@ namespace TheLastKnight.Player
             bool isUsingSkill = CurrentState == PlayerState.UsingSkill;
             bool isBuffing = CurrentState == PlayerState.Buffing;
             bool isDrinking = CurrentState == PlayerState.Drinking;
+            bool isHurt = CurrentState == PlayerState.Hurt;
 
             _animator.SetBool("IsIdle", isIdle);
             _animator.SetBool("IsRunning", isMoving);
@@ -695,6 +765,7 @@ namespace TheLastKnight.Player
             _animator.SetBool("UseCarnageBurst", isUsingSkill);
             _animator.SetBool("UseExcalibur", isBuffing);
             _animator.SetBool("UseDrink", isDrinking);
+            _animator.SetBool("IsHurt", isHurt);
 
             // Play explicit animation clips for Walk vs Run state
             if (isRunningState)

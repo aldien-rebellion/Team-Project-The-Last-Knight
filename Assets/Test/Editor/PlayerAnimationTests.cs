@@ -31,7 +31,7 @@ namespace TheLastKnight.Tests
         // ============================================================
 
         private static readonly string[] ExpectedClips =
-            { "Idle", "Walk", "Run", "Attack", "Dash", "Jump", "Dead", "Excalibur" };
+            { "Idle", "Walk", "Run", "Attack", "Dash", "Jump", "Dead", "Excalibur", "Hurt" };
 
         [Test, TestCaseSource(nameof(ExpectedClips))]
         public void AnimationClip_Exists(string clipName)
@@ -54,6 +54,7 @@ namespace TheLastKnight.Tests
             new object[] { "Jump",      "player-jump",      2 },
             new object[] { "Dead",      "player-dead",      3 },
             new object[] { "Excalibur", "player-excalibur", 3 },
+            new object[] { "Hurt",      "player-hurt",      2 },
         };
 
         [Test, TestCaseSource(nameof(ClipSpriteData))]
@@ -132,6 +133,7 @@ namespace TheLastKnight.Tests
             new object[] { "Jump",       false, 4f },
             new object[] { "Dead",       false, 4f },
             new object[] { "Excalibur",  false, 4f },
+            new object[] { "Hurt",       false, 4f },
         };
 
         [Test, TestCaseSource(nameof(ClipSettingsData))]

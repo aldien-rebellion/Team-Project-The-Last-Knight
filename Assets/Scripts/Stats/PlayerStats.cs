@@ -214,6 +214,11 @@ namespace TheLastKnight.Stats
             _currentHP = Mathf.Max(_currentHP, 0);
             Debug.Log($"[PlayerStats] Arthur took {damage} damage! HP: {_currentHP}/{MaxHP}");
 
+            if (_playerController != null)
+            {
+                _playerController.OnTakeDamage();
+            }
+
             if (_currentHP <= 0)
             {
                 Die();
