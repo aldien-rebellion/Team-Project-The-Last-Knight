@@ -15,6 +15,7 @@ namespace TheLastKnight.Player
         Attacking,
         UsingSkill,
         Buffing,
+        Excalibur,
         Drinking,
         Hurt
     }
@@ -40,11 +41,17 @@ namespace TheLastKnight.Player
         [SerializeField, Tooltip("Cooldown between skill uses.")]
         private float _skillCooldown = 1.0f;
 
-        [Header("Buff Settings (Excalibur - Key R)")]
-        [SerializeField, Tooltip("Excalibur skill duration.")]
-        private float _buffDuration = 3.8f;
-        [SerializeField, Tooltip("Cooldown between Excalibur uses.")]
+        [Header("Buff Settings (Key R)")]
+        [SerializeField, Tooltip("Buff skill duration.")]
+        private float _buffDuration = 0.75f;
+        [SerializeField, Tooltip("Cooldown between Buff uses.")]
         private float _buffCooldown = 1.0f;
+
+        [Header("Excalibur Settings (Key T)")]
+        [SerializeField, Tooltip("Excalibur skill duration.")]
+        private float _excaliburDuration = 3.8f;
+        [SerializeField, Tooltip("Cooldown between Excalibur uses.")]
+        private float _excaliburCooldown = 1.0f;
 
         [Header("Drink Settings (Key Q)")]
         [SerializeField, Tooltip("Drink skill duration.")]
@@ -140,6 +147,10 @@ namespace TheLastKnight.Player
         private float _buffTimer = 0f;
         private float _buffCooldownTimer = 0f;
 
+        // Excalibur State Variables
+        private float _excaliburTimer = 0f;
+        private float _excaliburCooldownTimer = 0f;
+
         // Drink State Variables
         private float _drinkTimer = 0f;
         private float _drinkCooldownTimer = 0f;
@@ -196,6 +207,12 @@ namespace TheLastKnight.Player
                 _buffCooldownTimer -= Time.deltaTime;
             }
 
+            // Update Excalibur Cooldown
+            if (_excaliburCooldownTimer > 0f)
+            {
+                _excaliburCooldownTimer -= Time.deltaTime;
+            }
+
             if (_drinkCooldownTimer > 0f)
             {
                 _drinkCooldownTimer -= Time.deltaTime;
@@ -222,30 +239,34 @@ namespace TheLastKnight.Player
                 _jumpBufferCounter -= Time.deltaTime;
             }
 
+            bool isBusy = CurrentState == PlayerState.Hurt || CurrentState == PlayerState.Attacking || CurrentState == PlayerState.UsingSkill || CurrentState == PlayerState.Buffing || CurrentState == PlayerState.Excalibur || CurrentState == PlayerState.Dashing || CurrentState == PlayerState.Drinking;
+
             // Check for Attack Trigger
-            bool canAttack = CurrentState != PlayerState.Hurt && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Dashing && _attackCooldownTimer <= 0f;
-            if (_inputHandler != null && _inputHandler.AttackTriggered && canAttack)
+            if (_inputHandler != null && _inputHandler.AttackTriggered && !isBusy && _attackCooldownTimer <= 0f)
             {
                 StartAttack();
             }
 
             // Check for Skill Trigger (Carnage Burst - Key E)
-            bool canUseSkill = CurrentState != PlayerState.Hurt && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && _skillCooldownTimer <= 0f;
-            if (_inputHandler != null && _inputHandler.UseSkillTriggered && canUseSkill)
+            if (_inputHandler != null && _inputHandler.UseSkillTriggered && !isBusy && _skillCooldownTimer <= 0f)
             {
                 StartSkill();
             }
 
-            // Check for Excalibur Trigger (Key R)
-            bool canUseBuff = CurrentState != PlayerState.Hurt && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && CurrentState != PlayerState.Drinking && _buffCooldownTimer <= 0f;
-            if (_inputHandler != null && _inputHandler.UseBuffTriggered && canUseBuff)
+            // Check for Buff Trigger (Key R)
+            if (_inputHandler != null && _inputHandler.UseBuffTriggered && !isBusy && _buffCooldownTimer <= 0f)
             {
                 StartBuff();
             }
 
+            // Check for Excalibur Trigger (Key T)
+            if (_inputHandler != null && _inputHandler.UseExcaliburTriggered && !isBusy && _excaliburCooldownTimer <= 0f)
+            {
+                StartExcalibur();
+            }
+
             // Check for Drink Trigger (Key Q)
-            bool canDrink = CurrentState != PlayerState.Hurt && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill && CurrentState != PlayerState.Buffing && CurrentState != PlayerState.Dashing && CurrentState != PlayerState.Drinking && _drinkCooldownTimer <= 0f;
-            if (_inputHandler != null && _inputHandler.UseDrinkTriggered && canDrink)
+            if (_inputHandler != null && _inputHandler.UseDrinkTriggered && !isBusy && _drinkCooldownTimer <= 0f)
             {
                 StartDrink();
             }
@@ -276,6 +297,10 @@ namespace TheLastKnight.Player
             else if (CurrentState == PlayerState.Buffing)
             {
                 UpdateBuff();
+            }
+            else if (CurrentState == PlayerState.Excalibur)
+            {
+                UpdateExcalibur();
             }
             else if (CurrentState == PlayerState.Drinking)
             {
@@ -488,10 +513,10 @@ namespace TheLastKnight.Player
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
-                _animator.Play("Excalibur", 0, 0f);
+                _animator.Play("Buff", 0, 0f);
             }
 
-            // Stop horizontal movement during Excalibur
+            // Stop horizontal movement during Buff
             _velocity.x = 0f;
         }
 
@@ -520,6 +545,61 @@ namespace TheLastKnight.Player
         }
 
         private void EndBuff()
+        {
+            if (_kinematicController.IsGrounded)
+            {
+                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
+                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
+                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
+                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
+            }
+            else
+            {
+                CurrentState = PlayerState.Falling;
+            }
+        }
+
+        private void StartExcalibur()
+        {
+            CurrentState = PlayerState.Excalibur;
+            _excaliburTimer = _excaliburDuration;
+            _excaliburCooldownTimer = _excaliburDuration + _excaliburCooldown;
+
+            if (_animator != null && _animator.runtimeAnimatorController != null)
+            {
+                _animator.Play("Excalibur", 0, 0f);
+            }
+
+            // Stop horizontal movement during Excalibur
+            _velocity.x = 0f;
+        }
+
+        private void UpdateExcalibur()
+        {
+            _excaliburTimer -= Time.deltaTime;
+
+            if (!_kinematicController.IsGrounded)
+            {
+                float activeGravity = _gravity;
+                _velocity.y -= activeGravity * Time.deltaTime;
+                _velocity.y = Mathf.Max(_velocity.y, -_maxFallSpeed);
+            }
+            else
+            {
+                _velocity.y = 0f;
+            }
+
+            _velocity.x = 0f;
+            _kinematicController.Move(_velocity, Time.deltaTime);
+
+            if (_excaliburTimer <= 0f)
+            {
+                EndExcalibur();
+            }
+        }
+
+        private void EndExcalibur()
         {
             if (_kinematicController.IsGrounded)
             {
@@ -754,6 +834,7 @@ namespace TheLastKnight.Player
             bool isAttacking = CurrentState == PlayerState.Attacking;
             bool isUsingSkill = CurrentState == PlayerState.UsingSkill;
             bool isBuffing = CurrentState == PlayerState.Buffing;
+            bool isExcalibur = CurrentState == PlayerState.Excalibur;
             bool isDrinking = CurrentState == PlayerState.Drinking;
             bool isHurt = CurrentState == PlayerState.Hurt;
 
@@ -763,7 +844,8 @@ namespace TheLastKnight.Player
             _animator.SetBool("IsDashing", isDashing);
             _animator.SetBool("IsAttacking", isAttacking);
             _animator.SetBool("UseCarnageBurst", isUsingSkill);
-            _animator.SetBool("UseExcalibur", isBuffing);
+            _animator.SetBool("UseBuff", isBuffing);
+            _animator.SetBool("UseExcalibur", isExcalibur);
             _animator.SetBool("UseDrink", isDrinking);
             _animator.SetBool("IsHurt", isHurt);
 

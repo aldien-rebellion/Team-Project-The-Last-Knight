@@ -214,7 +214,7 @@ namespace TheLastKnight.Tests
 
         // Additional parameters for future/complete coverage
         private static readonly string[] AllExpectedBoolParams =
-            { "IsIdle", "IsRunning", "IsAttacking", "IsDashing", "IsJumping", "IsDead", "UseExcalibur" };
+            { "IsIdle", "IsRunning", "IsAttacking", "IsDashing", "IsJumping", "IsDead", "UseExcalibur", "UseBuff" };
 
         [Test, TestCaseSource(nameof(RequiredBoolParams))]
         public void Controller_HasRequiredBoolParameter(string paramName)

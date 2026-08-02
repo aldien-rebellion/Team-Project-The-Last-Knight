@@ -115,6 +115,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "UseExcalibur",
+                    "type": "Button",
+                    "id": "e7d8c9f0-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "CounterAttack",
                     "type": "Button",
                     "id": "d54f6851-5a64-467a-977a-c41a944845bd",
@@ -582,6 +591,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "UseBuff",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "UseExcalibur",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
