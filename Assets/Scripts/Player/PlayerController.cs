@@ -52,6 +52,8 @@ namespace TheLastKnight.Player
         private float _excaliburDuration = 3.8f;
         [SerializeField, Tooltip("Cooldown between Excalibur uses.")]
         private float _excaliburCooldown = 1.0f;
+        [SerializeField, Tooltip("VFX controller for Excalibur. Auto-assigned if null.")]
+        private ExcaliburVFXController _excaliburVFXController;
 
         [Header("Drink Settings (Key Q)")]
         [SerializeField, Tooltip("Drink skill duration.")]
@@ -171,6 +173,11 @@ namespace TheLastKnight.Player
                 {
                     _inputHandler = FindAnyObjectByType<PlayerInputHandler>();
                 }
+            }
+
+            if (_excaliburVFXController == null)
+            {
+                _excaliburVFXController = GetComponent<ExcaliburVFXController>();
             }
 
             // Initialize active movement stats from base values
@@ -569,6 +576,11 @@ namespace TheLastKnight.Player
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
                 _animator.Play("Excalibur", 0, 0f);
+            }
+
+            if (_excaliburVFXController != null)
+            {
+                _excaliburVFXController.ExecuteUltimateAttack();
             }
 
             // Stop horizontal movement during Excalibur
