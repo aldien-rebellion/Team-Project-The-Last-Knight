@@ -380,14 +380,14 @@ namespace TheLastKnight.Editor
                 }
             );
             streakMain.startColor = new ParticleSystem.MinMaxGradient(streakGradient);
-            streakMain.maxParticles = 1200;
+            streakMain.maxParticles = 2500;
             streakMain.simulationSpace = ParticleSystemSimulationSpace.Local;
 
             var streakEmission = streakPS.emission;
             streakEmission.enabled = true;
             AnimationCurve streakEmissionCurve = new AnimationCurve(
-                new Keyframe(0f, 30f),
-                new Keyframe(1f, 300f)
+                new Keyframe(0f, 150f),
+                new Keyframe(1f, 1200f)
             );
             streakEmission.rateOverTime = new ParticleSystem.MinMaxCurve(1.0f, streakEmissionCurve);
 
@@ -400,7 +400,7 @@ namespace TheLastKnight.Editor
             var streakVol = streakPS.velocityOverLifetime;
             streakVol.enabled = true;
             streakVol.space = ParticleSystemSimulationSpace.Local;
-            streakVol.radial = -9.5f; // Rapid inward streak pull
+            streakVol.radial = -12.0f; // Rapid inward streak pull
             streakVol.orbitalY = new ParticleSystem.MinMaxCurve(Mathf.Deg2Rad * 480f);
 
             var streakSol = streakPS.sizeOverLifetime;
@@ -411,8 +411,8 @@ namespace TheLastKnight.Editor
             streakPsr.sharedMaterial = softParticleMat;
             streakPsr.renderMode = ParticleSystemRenderMode.Stretch;
             streakPsr.cameraVelocityScale = 0f;
-            streakPsr.velocityScale = -0.15f;
-            streakPsr.lengthScale = 3.8f; // Stretched energy streak lines
+            streakPsr.velocityScale = -0.35f;
+            streakPsr.lengthScale = 5.0f; // Stretched energy streak lines
             streakPsr.sortingOrder = 11; // Render on top for sharp, vibrant energy streak contrast
 
             string prefabPath = Path.Combine(folderPath, "ChargeVortex.prefab").Replace("\\", "/");

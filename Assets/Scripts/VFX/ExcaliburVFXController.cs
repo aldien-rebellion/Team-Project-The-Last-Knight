@@ -138,6 +138,7 @@ namespace VFX
 
         private void Awake()
         {
+            Time.timeScale = 1.0f;
             EnsureReferences();
             ValidateOffsets();
             AutoAssignPrefabsIfNull();

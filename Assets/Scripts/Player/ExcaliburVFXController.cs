@@ -138,6 +138,7 @@ namespace TheLastKnight.Player
 
         private void Awake()
         {
+            Time.timeScale = 1.0f;
             EnsureReferences();
             ValidateOffsets();
             AutoAssignPrefabsIfNull();
