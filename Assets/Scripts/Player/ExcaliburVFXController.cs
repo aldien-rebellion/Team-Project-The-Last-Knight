@@ -226,9 +226,9 @@ namespace TheLastKnight.Player
             if (spritePhase1 == null)
                 spritePhase1 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/sprites/Player/player-excalibur1.png");
             if (spritePhase2 == null)
-                spritePhase2 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/sprites/Player/player-excalibur2.png");
+                spritePhase2 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/sprites/Player/player-excalibur2-new.png");
             if (spritePhase3 == null)
-                spritePhase3 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/sprites/Player/player-excalibur3.png");
+                spritePhase3 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/sprites/Player/player-excalibur3-new.png");
 #endif
         }
 

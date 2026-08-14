@@ -39695,8 +39695,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Player.ExcaliburVFXController
   spritePhase1: {fileID: 21300000, guid: 1ab59fc5bf423274dab3f48b9a884858, type: 3}
-  spritePhase2: {fileID: 21300000, guid: 80865bb91ef03e94c93fc7c1db062d26, type: 3}
-  spritePhase3: {fileID: 21300000, guid: ff2001120f0c18f4da514544d75a5610, type: 3}
+  spritePhase2: {fileID: 8553454827641894527, guid: 307ba343bdacf434186ea5257eef1a74, type: 3}
+  spritePhase3: {fileID: 1472841751132624081, guid: a7302f6cb9b975a41a32947dba49e2eb, type: 3}
   anticipationDuration: 0.5
   chargeDuration: 2.8
   swordBurstDuration: 0.35
