@@ -91,7 +91,7 @@ namespace TheLastKnight.Player
         [SerializeField] private Vector3 phase2BladeOffset = new Vector3(0.0f, 3.80f, 0f);
 
         [Tooltip("Beam origin offset for Phase 3 thrust (matches player-excalibur3.png sword tip)")]
-        [SerializeField] private Vector3 phase3BeamOffset = new Vector3(2.67f, 1.47f, 0f);
+        [SerializeField] private Vector3 phase3BeamOffset = new Vector3(1.5f, 1.47f, 0f);
 
         [Header("Background & Screen Effects (Optional)")]
         [Tooltip("Optional CanvasGroup overlay for dimming the screen")]

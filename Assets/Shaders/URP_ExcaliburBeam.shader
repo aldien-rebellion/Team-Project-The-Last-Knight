@@ -113,6 +113,26 @@ Shader "Custom/URP_ExcaliburBeam"
                 float distortedY = input.uv.y + (combinedNoise - 0.5) * _NoiseDistortion;
                 float distFromCenter = abs(distortedY - 0.5) * 2.0; // 0 at centerline, 1 at edges
 
+                // ----- NEW TAPER LOGIC -----
+                // Pinch the beam to a point towards the right tip (uv.x -> 1.0)
+                // We divide distFromCenter by a tapering multiplier so that as the multiplier goes to 0,
+                // distFromCenter grows rapidly, causing the edgeMask to become 0 closer to the center.
+                float taper = 1.0;
+                // Default fallback if properties aren't set: start tapering at 0.7, power 2.0
+                float taperStart = 0.7;
+                float taperPower = 2.0;
+                
+                if (input.uv.x > taperStart) {
+                    float t = (input.uv.x - taperStart) / (1.0 - taperStart);
+                    taper = saturate(1.0 - pow(t, taperPower));
+                }
+                // Apply taper (prevent divide by zero)
+                distFromCenter /= max(taper, 0.001);
+                
+                // Tip fade to soften the sharp point
+                float tipFade = smoothstep(1.0, 0.9, input.uv.x);
+                // ---------------------------
+
                 // Base edge mask for the main beam body
                 float edgeMask = saturate(1.0 - distFromCenter);
                 
@@ -132,8 +152,8 @@ Shader "Custom/URP_ExcaliburBeam"
 
                 half3 finalRGB = auraColor + magentaBody + streaks + whiteCore;
                 
-                // Combine alphas for the additive blend
-                float finalAlpha = saturate(outerAura * _AuraColor.a + outerFlame * combinedNoise * _BeamColor.a) * input.color.a;
+                // Combine alphas for the additive blend, multiply by tipFade for a clean tip
+                float finalAlpha = saturate(outerAura * _AuraColor.a + outerFlame * combinedNoise * _BeamColor.a) * input.color.a * tipFade;
 
                 return half4(finalRGB * input.color.rgb, finalAlpha);
             }

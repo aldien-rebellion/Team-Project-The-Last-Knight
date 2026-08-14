@@ -510,18 +510,28 @@ namespace TheLastKnight.Editor
         private static void BuildExcaliburBeamPrefab(string folderPath, string matFolderPath, Material softParticleMat)
         {
             GameObject beamGO = new GameObject("ExcaliburBeam");
-
-            SpriteRenderer sr = beamGO.AddComponent<SpriteRenderer>();
+            GameObject beamVisualGO = new GameObject("BeamVisual");
+            beamVisualGO.transform.SetParent(beamGO.transform, false);
+            
+            SpriteRenderer sr = beamVisualGO.AddComponent<SpriteRenderer>();
             sr.drawMode = SpriteDrawMode.Simple;
             sr.sortingOrder = 10;
 
             Sprite defaultSquare = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
+            float spriteWidth = 1.0f;
+            float spriteHeight = 1.0f;
             if (defaultSquare != null)
             {
                 sr.sprite = defaultSquare;
+                spriteWidth = defaultSquare.bounds.size.x;
+                spriteHeight = defaultSquare.bounds.size.y;
             }
 
-            beamGO.transform.localScale = new Vector3(12.0f, 3.5f, 1.0f);
+            // Ensure the beam is exactly 25 units long and 3.5 units thick, regardless of sprite PPU/bounds
+            beamGO.transform.localScale = new Vector3(25.0f / spriteWidth, 3.5f / spriteHeight, 1.0f);
+
+            // Offset by half the sprite width in local space so the left edge aligns perfectly with the origin (sword tip)
+            beamVisualGO.transform.localPosition = new Vector3(spriteWidth / 2.0f, 0.0f, 0.0f);
 
             string matPath = Path.Combine(matFolderPath, "M_ExcaliburBeam_Placeholder.mat").Replace("\\", "/");
             Material beamMat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
@@ -541,6 +551,8 @@ namespace TheLastKnight.Editor
                 beamMat.SetFloat("_PanSpeed3", -6.0f);
                 beamMat.SetFloat("_CoreThickness", 8.0f);
                 beamMat.SetFloat("_AuraWidth", 1.2f);
+                beamMat.SetFloat("_TipTaperStart", 0.7f);
+                beamMat.SetFloat("_TipTaperPower", 2.0f);
                 AssetDatabase.CreateAsset(beamMat, matPath);
             }
             else
@@ -555,13 +567,16 @@ namespace TheLastKnight.Editor
                 beamMat.SetFloat("_PanSpeed3", -6.0f);
                 beamMat.SetFloat("_CoreThickness", 8.0f);
                 beamMat.SetFloat("_AuraWidth", 1.2f);
+                beamMat.SetFloat("_TipTaperStart", 0.7f);
+                beamMat.SetFloat("_TipTaperPower", 2.0f);
                 EditorUtility.SetDirty(beamMat);
             }
             sr.sharedMaterial = beamMat;
 
             GameObject sparksGO = new GameObject("ImpactSparks");
             sparksGO.transform.SetParent(beamGO.transform, false);
-            sparksGO.transform.localPosition = new Vector3(0.5f, 0.0f, 0.0f);
+            // Place sparks at the exact tip of the beam
+            sparksGO.transform.localPosition = new Vector3(spriteWidth, 0.0f, 0.0f);
 
             ParticleSystem sparksPS = sparksGO.AddComponent<ParticleSystem>();
             var main = sparksPS.main;
