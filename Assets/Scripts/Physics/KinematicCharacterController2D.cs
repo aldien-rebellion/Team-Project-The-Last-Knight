@@ -33,6 +33,7 @@ namespace TheLastKnight.Physics
             _rigidbody.bodyType = RigidbodyType2D.Kinematic;
             _rigidbody.useFullKinematicContacts = true;
             _rigidbody.simulated = true;
+            _rigidbody.interpolation = RigidbodyInterpolation2D.Interpolate;
 
             // Setup contact filter
             _contactFilter.useTriggers = false;
@@ -70,6 +71,7 @@ namespace TheLastKnight.Physics
 
             // 3. Apply final resolved movement to the Rigidbody
             _rigidbody.position += deltaPosition;
+            Physics2D.SyncTransforms(); // Force transform to update immediately for LateUpdate camera
 
             // 4. Perform an extra post-move ground check to ensure IsGrounded state is accurate when stationary/sliding down slopes
             CheckGrounded();

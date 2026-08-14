@@ -23,21 +23,44 @@ namespace TheLastKnight.Camera
         {
             if (_target == null) return;
 
-            // Calculate target position with offset
-            _targetPosition = _target.position + _offset;
+            // Base target position with offset
+            Vector3 targetWorldPos = _target.position + _offset;
 
-            // Apply deadzone logic
-            Vector3 currentPos = transform.position;
-            Vector2 diff = new Vector2(_targetPosition.x - currentPos.x, _targetPosition.y - currentPos.y);
+            // Desired camera position initialized to current camera position
+            Vector3 desiredPos = transform.position;
 
-            if (Mathf.Abs(diff.x) < _deadzoneSize.x) _targetPosition.x = currentPos.x;
-            else _targetPosition.x -= Mathf.Sign(diff.x) * _deadzoneSize.x;
+            // Difference between target position and current camera position
+            Vector2 diff = new Vector2(targetWorldPos.x - desiredPos.x, targetWorldPos.y - desiredPos.y);
 
-            if (Mathf.Abs(diff.y) < _deadzoneSize.y) _targetPosition.y = currentPos.y;
-            else _targetPosition.y -= Mathf.Sign(diff.y) * _deadzoneSize.y;
+            // Smooth deadzone tracking (continuous target calculation without high-frequency chatter)
+            if (_deadzoneSize.x > 0f)
+            {
+                if (Mathf.Abs(diff.x) > _deadzoneSize.x)
+                {
+                    desiredPos.x = targetWorldPos.x - Mathf.Sign(diff.x) * _deadzoneSize.x;
+                }
+            }
+            else
+            {
+                desiredPos.x = targetWorldPos.x;
+            }
+
+            if (_deadzoneSize.y > 0f)
+            {
+                if (Mathf.Abs(diff.y) > _deadzoneSize.y)
+                {
+                    desiredPos.y = targetWorldPos.y - Mathf.Sign(diff.y) * _deadzoneSize.y;
+                }
+            }
+            else
+            {
+                desiredPos.y = targetWorldPos.y;
+            }
+
+            desiredPos.z = targetWorldPos.z;
 
             // Smooth tracking
-            Vector3 nextPos = Vector3.SmoothDamp(transform.position, _targetPosition, ref _currentVelocity, _smoothTime);
+            Vector3 nextPos = Vector3.SmoothDamp(transform.position, desiredPos, ref _currentVelocity, _smoothTime);
 
             // Clamp to boundaries if enabled
             if (_useBoundaries && _boundaryBox != null)
