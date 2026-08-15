@@ -43,7 +43,7 @@ namespace TheLastKnight.Player
 
         [Header("Buff Settings (Key R)")]
         [SerializeField, Tooltip("Buff skill duration.")]
-        private float _buffDuration = 0.75f;
+        private float _buffDuration = 0.6f;
         [SerializeField, Tooltip("Cooldown between Buff uses.")]
         private float _buffCooldown = 1.0f;
 

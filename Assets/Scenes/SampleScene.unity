@@ -39450,7 +39450,7 @@ MonoBehaviour:
   _attackCooldown: 0.5
   _skillDuration: 0.5
   _skillCooldown: 1
-  _buffDuration: 3.8
+  _buffDuration: 0.6
   _buffCooldown: 1
   _excaliburDuration: 3.8
   _excaliburCooldown: 1
