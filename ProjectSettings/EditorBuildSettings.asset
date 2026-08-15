@@ -8,6 +8,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Maps/CityCenter.unity
+    guid: 147cccea0b04f5841b4e79f4250f7331
+  - enabled: 1
+    path: Assets/Scenes/Maps/OutdoorMarket.unity
+    guid: c60c3ec720c482a4e8b9381a667f8bf5
+  - enabled: 1
+    path: Assets/Scenes/Maps/Church.unity
+    guid: 0411152b200439641aa41fb3d826a750
+  - enabled: 1
+    path: Assets/Scenes/Maps/SuburbToForest.unity
+    guid: df4a6401a5dca4a4c9f76770b0c36d3e
+  - enabled: 1
+    path: Assets/Scenes/Maps/DemonCastle.unity
+    guid: 668fe0eacc35d754bb40473c570caa4b
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

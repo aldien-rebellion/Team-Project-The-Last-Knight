@@ -16,9 +16,10 @@ GameObject:
   - component: {fileID: 4473826929244499779}
   - component: {fileID: 1724093317913346435}
   - component: {fileID: 7102006163998495775}
+  - component: {fileID: 6242047841382246859}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -201,7 +202,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Player.PlayerController
   _inputHandler: {fileID: 0}
+  _animator: {fileID: 0}
+  _attackDuration: 0.25
+  _attackCooldown: 0.35
+  _skillDuration: 0.5
+  _skillCooldown: 1
+  _buffDuration: 0.75
+  _buffCooldown: 1
+  _excaliburDuration: 3.8
+  _excaliburCooldown: 1
+  _excaliburVFXController: {fileID: 0}
+  _drinkDuration: 2.5
+  _drinkCooldown: 1
+  _hurtFrame1Duration: 0.25
+  _hurtFrame2Duration: 0.17
   _baseMoveSpeed: 8
+  _baseSprintSpeed: 13
   _acceleration: 50
   _deceleration: 50
   _baseJumpForce: 16
@@ -247,3 +263,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75c95213123e3b746a0ca3a5842b3607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Input.PlayerInputHandler
+--- !u!95 &6242047841382246859
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3696692319623942783}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
