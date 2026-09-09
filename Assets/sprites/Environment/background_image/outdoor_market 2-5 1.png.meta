@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 85a77c80659344c41ac080389b296ea2
+guid: 3bfd0e6ef09abd74c99c65f88ff8442f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 258723600057441936
-    second: outdoor_market 2-5_0
+      213: -3890743069296710007
+    second: outdoor_market 2-5 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -72,10 +72,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: outdoor_market 2-5_0
+      name: outdoor_market 2-5 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 09e1f645ebb279300800000000000000
-      internalID: 258723600057441936
+      spriteID: 98ea142eacd410ac0800000000000000
+      internalID: -3890743069296710007
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      outdoor_market 2-5_0: 258723600057441936
+      outdoor_market 2-5 1_0: -3890743069296710007
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
