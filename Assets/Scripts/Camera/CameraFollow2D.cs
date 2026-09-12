@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace TheLastKnight.Camera
 {
+    [ExecuteAlways]
     public class CameraFollow2D : MonoBehaviour
     {
         [Header("Target Tracking")]
@@ -18,6 +19,12 @@ namespace TheLastKnight.Camera
 
         private Vector3 _currentVelocity;
         private Vector3 _targetPosition;
+        private UnityEngine.Camera _cam;
+
+        private void Awake()
+        {
+            _cam = GetComponent<UnityEngine.Camera>();
+        }
 
         private void LateUpdate()
         {
@@ -66,16 +73,32 @@ namespace TheLastKnight.Camera
             if (_useBoundaries && _boundaryBox != null)
             {
                 Bounds bounds = _boundaryBox.bounds;
-                float camHeight = UnityEngine.Camera.main.orthographicSize;
-                float camWidth = camHeight * UnityEngine.Camera.main.aspect;
+                if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
+                float camHeight = _cam != null ? _cam.orthographicSize : 5f;
+                float camWidth = camHeight * (_cam != null ? _cam.aspect : (16f / 9f));
 
                 float minX = bounds.min.x + camWidth;
                 float maxX = bounds.max.x - camWidth;
                 float minY = bounds.min.y + camHeight;
                 float maxY = bounds.max.y - camHeight;
 
-                nextPos.x = Mathf.Clamp(nextPos.x, minX, maxX);
-                nextPos.y = Mathf.Clamp(nextPos.y, minY, maxY);
+                if (minX > maxX)
+                {
+                    nextPos.x = bounds.center.x;
+                }
+                else
+                {
+                    nextPos.x = Mathf.Clamp(nextPos.x, minX, maxX);
+                }
+
+                if (minY > maxY)
+                {
+                    nextPos.y = bounds.center.y;
+                }
+                else
+                {
+                    nextPos.y = Mathf.Clamp(nextPos.y, minY, maxY);
+                }
             }
 
             transform.position = nextPos;

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 91e05d0d788fbf54094188fe9997b309
+guid: f8e9234abd5865a4b84b055646a7a6c5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6049293812260636640
-    second: stone floor_0
+      213: 948838125547679018
+    second: suburb_to_forest_chunk_2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,18 +37,18 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -72,10 +72,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: stone floor_0
+      name: suburb_to_forest_chunk_2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2396
-        height: 452
+        width: 5024
+        height: 768
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0287c3a04579c0ca0800000000000000
-      internalID: -6049293812260636640
+      spriteID: a2ded9e7f33fa2d00800000000000000
+      internalID: 948838125547679018
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      stone floor_0: -6049293812260636640
+      suburb_to_forest_chunk_2_0: 948838125547679018
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
