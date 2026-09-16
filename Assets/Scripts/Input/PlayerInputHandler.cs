@@ -19,6 +19,11 @@ namespace TheLastKnight.Input
         private InputAction _previousAction;
         private InputAction _useDrinkAction;
 
+        private void OnEnable()
+        {
+            EnablePlayerActions();
+        }
+
         private void Start()
         {
             if (InputSystem.actions == null)
@@ -52,29 +57,87 @@ namespace TheLastKnight.Input
             if (_useDrinkAction == null) Debug.LogWarning("[PlayerInputHandler] 'UseDrink' action not found in 'InputSystem.actions'.");
             if (_nextAction == null) Debug.LogWarning("[PlayerInputHandler] 'Next' action not found in 'InputSystem.actions'.");
             if (_previousAction == null) Debug.LogWarning("[PlayerInputHandler] 'Previous' action not found in 'InputSystem.actions'.");
+
+            EnablePlayerActions();
         }
 
-        public Vector2 MoveInput => _moveAction != null ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
+        public void EnablePlayerActions()
+        {
+            if (InputSystem.actions != null)
+            {
+                var playerMap = InputSystem.actions.FindActionMap("Player");
+                if (playerMap != null && !playerMap.enabled)
+                {
+                    playerMap.Enable();
+                }
+            }
 
-        public bool JumpTriggered => _jumpAction != null && _jumpAction.WasPressedThisFrame();
-        public bool JumpHeld => _jumpAction != null && _jumpAction.IsPressed();
-        public bool SprintHeld => (_sprintAction != null && _sprintAction.IsPressed()) ||
-                                  (Mouse.current != null && Mouse.current.rightButton.isPressed);
-        public bool DashTriggered => _dashAction != null && _dashAction.WasPressedThisFrame();
-        public bool AttackTriggered => _attackAction != null && _attackAction.WasPressedThisFrame();
-        public bool CounterTriggered => _counterAttackAction != null && _counterAttackAction.WasPressedThisFrame();
-        public bool UseSkillTriggered => _useSkillAction != null && _useSkillAction.WasPressedThisFrame();
-        public bool UseBuffTriggered => _useBuffAction != null && _useBuffAction.WasPressedThisFrame();
-        public bool UseExcaliburTriggered => _useExcaliburAction != null && _useExcaliburAction.WasPressedThisFrame();
-        public bool UseDrinkTriggered => _useDrinkAction != null && _useDrinkAction.WasPressedThisFrame();
+            _moveAction?.Enable();
+            _jumpAction?.Enable();
+            _sprintAction?.Enable();
+            _dashAction?.Enable();
+            _attackAction?.Enable();
+            _counterAttackAction?.Enable();
+            _useSkillAction?.Enable();
+            _useBuffAction?.Enable();
+            _useExcaliburAction?.Enable();
+            _useDrinkAction?.Enable();
+            _nextAction?.Enable();
+            _previousAction?.Enable();
+        }
+
+        private void OnDisable()
+        {
+            DisablePlayerActions();
+        }
+
+        public void DisablePlayerActions()
+        {
+            if (InputSystem.actions != null)
+            {
+                var playerMap = InputSystem.actions.FindActionMap("Player");
+                if (playerMap != null && playerMap.enabled)
+                {
+                    playerMap.Disable();
+                }
+            }
+
+            _moveAction?.Disable();
+            _jumpAction?.Disable();
+            _sprintAction?.Disable();
+            _dashAction?.Disable();
+            _attackAction?.Disable();
+            _counterAttackAction?.Disable();
+            _useSkillAction?.Disable();
+            _useBuffAction?.Disable();
+            _useExcaliburAction?.Disable();
+            _useDrinkAction?.Disable();
+            _nextAction?.Disable();
+            _previousAction?.Disable();
+        }
+
+        public Vector2 MoveInput => (enabled && _moveAction != null && _moveAction.enabled) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
+
+        public bool JumpTriggered => enabled && _jumpAction != null && _jumpAction.enabled && _jumpAction.WasPressedThisFrame();
+        public bool JumpHeld => enabled && _jumpAction != null && _jumpAction.enabled && _jumpAction.IsPressed();
+        public bool SprintHeld => enabled && ((_sprintAction != null && _sprintAction.enabled && _sprintAction.IsPressed()) ||
+                                  (Mouse.current != null && Mouse.current.rightButton.isPressed));
+        public bool DashTriggered => enabled && _dashAction != null && _dashAction.enabled && _dashAction.WasPressedThisFrame();
+        public bool AttackTriggered => enabled && _attackAction != null && _attackAction.enabled && _attackAction.WasPressedThisFrame();
+        public bool CounterTriggered => enabled && _counterAttackAction != null && _counterAttackAction.enabled && _counterAttackAction.WasPressedThisFrame();
+        public bool UseSkillTriggered => enabled && _useSkillAction != null && _useSkillAction.enabled && _useSkillAction.WasPressedThisFrame();
+        public bool UseBuffTriggered => enabled && _useBuffAction != null && _useBuffAction.enabled && _useBuffAction.WasPressedThisFrame();
+        public bool UseExcaliburTriggered => enabled && _useExcaliburAction != null && _useExcaliburAction.enabled && _useExcaliburAction.WasPressedThisFrame();
+        public bool UseDrinkTriggered => enabled && _useDrinkAction != null && _useDrinkAction.enabled && _useDrinkAction.WasPressedThisFrame();
 
         public float CycleSkillInput
         {
             get
             {
-                if (_nextAction != null && _nextAction.WasPressedThisFrame())
+                if (!enabled) return 0f;
+                if (_nextAction != null && _nextAction.enabled && _nextAction.WasPressedThisFrame())
                     return 1f;
-                if (_previousAction != null && _previousAction.WasPressedThisFrame())
+                if (_previousAction != null && _previousAction.enabled && _previousAction.WasPressedThisFrame())
                     return -1f;
                 return 0f;
             }

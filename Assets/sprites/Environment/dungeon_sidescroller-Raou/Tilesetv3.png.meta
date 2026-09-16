@@ -167,6 +167,2781 @@ TextureImporter:
   - first:
       213: -8304593484478528406
     second: Tilesetv3_54
+  - first:
+      213: 1706178659612770527
+    second: raou_000
+  - first:
+      213: 2375138445043400305
+    second: raou_R00_C00
+  - first:
+      213: 6904202065430790983
+    second: raou_R00_C01
+  - first:
+      213: -6366372661256059143
+    second: raou_R00_C02
+  - first:
+      213: 1218282572945335254
+    second: raou_R00_C03
+  - first:
+      213: 6278239602927598655
+    second: raou_R00_C04
+  - first:
+      213: -2773050348191951601
+    second: raou_R00_C05
+  - first:
+      213: -2700051306570544487
+    second: raou_R00_C06
+  - first:
+      213: 1250675908496220989
+    second: raou_R00_C07
+  - first:
+      213: -2319765539044139542
+    second: raou_R00_C08
+  - first:
+      213: 789260712389151773
+    second: raou_R00_C09
+  - first:
+      213: 1966226529020203371
+    second: raou_R00_C10
+  - first:
+      213: 3900329286890115481
+    second: raou_R00_C11
+  - first:
+      213: 3223604692391616726
+    second: raou_R00_C12
+  - first:
+      213: 6785976016656267045
+    second: raou_R00_C13
+  - first:
+      213: -3429508703925588869
+    second: raou_R00_C14
+  - first:
+      213: 409712715836859445
+    second: raou_R01_C00
+  - first:
+      213: 1258050255258968552
+    second: raou_R01_C02
+  - first:
+      213: 8049691259269634538
+    second: raou_R01_C03
+  - first:
+      213: 8628436509355356964
+    second: raou_R01_C04
+  - first:
+      213: 1328846586779995597
+    second: raou_R01_C05
+  - first:
+      213: -1401528098950534773
+    second: raou_R01_C06
+  - first:
+      213: -2308339019826598805
+    second: raou_R01_C07
+  - first:
+      213: -9110295467289391677
+    second: raou_R01_C08
+  - first:
+      213: -8132574166615355262
+    second: raou_R01_C09
+  - first:
+      213: 8720117010798788243
+    second: raou_R01_C10
+  - first:
+      213: 4635593027999152979
+    second: raou_R01_C11
+  - first:
+      213: 109029417858196080
+    second: raou_R01_C12
+  - first:
+      213: -4274640135092222803
+    second: raou_R01_C13
+  - first:
+      213: 932204473858221898
+    second: raou_R01_C14
+  - first:
+      213: 3967558180102923235
+    second: raou_R01_C15
+  - first:
+      213: 282490960432863094
+    second: raou_R02_C00
+  - first:
+      213: 3648379517002453946
+    second: raou_R02_C01
+  - first:
+      213: -1194607186140910135
+    second: raou_R02_C02
+  - first:
+      213: -2293675302341704340
+    second: raou_R02_C03
+  - first:
+      213: 233667538059309443
+    second: raou_R02_C04
+  - first:
+      213: 5314493888022013552
+    second: raou_R02_C05
+  - first:
+      213: -3559542452251316790
+    second: raou_R02_C06
+  - first:
+      213: -1398636598933671824
+    second: raou_R02_C07
+  - first:
+      213: -13567372645887691
+    second: raou_R02_C08
+  - first:
+      213: 9062823430765008218
+    second: raou_R02_C09
+  - first:
+      213: 4826865168363149953
+    second: raou_R02_C12
+  - first:
+      213: -6641564722278969349
+    second: raou_R02_C14
+  - first:
+      213: -8149219503018481723
+    second: raou_R02_C15
+  - first:
+      213: -5098044629183528914
+    second: raou_R03_C00
+  - first:
+      213: 8223944429182829487
+    second: raou_R03_C01
+  - first:
+      213: -1123811919127998235
+    second: raou_R03_C02
+  - first:
+      213: -5340529090959628605
+    second: raou_R03_C03
+  - first:
+      213: -7860408321373072835
+    second: raou_R03_C04
+  - first:
+      213: 1863077498039074974
+    second: raou_R03_C05
+  - first:
+      213: -4471527226375665775
+    second: raou_R03_C06
+  - first:
+      213: 143358398506504529
+    second: raou_R03_C07
+  - first:
+      213: -3152211764865010011
+    second: raou_R03_C08
+  - first:
+      213: -3232771036414490999
+    second: raou_R03_C09
+  - first:
+      213: -6454243126002501796
+    second: raou_R03_C10
+  - first:
+      213: -7403641440425573520
+    second: raou_R03_C11
+  - first:
+      213: 6219776348667112717
+    second: raou_R03_C12
+  - first:
+      213: -3427800706014058550
+    second: raou_R03_C13
+  - first:
+      213: -4986094491885945169
+    second: raou_R03_C14
+  - first:
+      213: -8706939224696198794
+    second: raou_R03_C15
+  - first:
+      213: -8462917843175387829
+    second: raou_R04_C00
+  - first:
+      213: 8904443579460412615
+    second: raou_R04_C01
+  - first:
+      213: -5325353339244724780
+    second: raou_R04_C02
+  - first:
+      213: 3154473753638034787
+    second: raou_R04_C03
+  - first:
+      213: -4083977548283157684
+    second: raou_R04_C04
+  - first:
+      213: 1320190715340133616
+    second: raou_R04_C05
+  - first:
+      213: -5663301615237860192
+    second: raou_R04_C06
+  - first:
+      213: 6648192661384000885
+    second: raou_R04_C07
+  - first:
+      213: 6232075249411276384
+    second: raou_R04_C08
+  - first:
+      213: -2385075134004364879
+    second: raou_R04_C09
+  - first:
+      213: -4418148464649181469
+    second: raou_R04_C10
+  - first:
+      213: 841528462994419581
+    second: raou_R04_C11
+  - first:
+      213: 4804260633176417256
+    second: raou_R04_C12
+  - first:
+      213: 5298550278104604894
+    second: raou_R04_C13
+  - first:
+      213: -5864867150801539861
+    second: raou_R04_C14
+  - first:
+      213: 2489691793088686522
+    second: raou_R04_C15
+  - first:
+      213: 7019349676265272228
+    second: raou_R05_C00
+  - first:
+      213: -5981853032022774991
+    second: raou_R05_C01
+  - first:
+      213: 7397695415484703560
+    second: raou_R05_C02
+  - first:
+      213: -4975175322433151197
+    second: raou_R05_C03
+  - first:
+      213: -4084215257255000608
+    second: raou_R05_C04
+  - first:
+      213: -2148563143633188294
+    second: raou_R05_C05
+  - first:
+      213: -6592690262687424045
+    second: raou_R05_C06
+  - first:
+      213: -7724159538297234807
+    second: raou_R05_C07
+  - first:
+      213: -293430287759633549
+    second: raou_R05_C08
+  - first:
+      213: 1900912471828591155
+    second: raou_R05_C09
+  - first:
+      213: 2935135584306069296
+    second: raou_R05_C10
+  - first:
+      213: -5112337531603625765
+    second: raou_R05_C11
+  - first:
+      213: 1984335219104190675
+    second: raou_R05_C12
+  - first:
+      213: 6078576439337970543
+    second: raou_R05_C13
+  - first:
+      213: 4278788875720952432
+    second: raou_R05_C14
+  - first:
+      213: 8336779366573361767
+    second: raou_R05_C15
+  - first:
+      213: -5486259278337207395
+    second: raou_R06_C00
+  - first:
+      213: -5097133890538863284
+    second: raou_R06_C01
+  - first:
+      213: 4598436472027121044
+    second: raou_R06_C02
+  - first:
+      213: 8212500207218587143
+    second: raou_R06_C03
+  - first:
+      213: 1752175984385321752
+    second: raou_R06_C04
+  - first:
+      213: 3606517844085098615
+    second: raou_R06_C05
+  - first:
+      213: -2628684598879507686
+    second: raou_R06_C06
+  - first:
+      213: 8500451675820852924
+    second: raou_R06_C07
+  - first:
+      213: -443546589831856851
+    second: raou_R06_C08
+  - first:
+      213: 8294195389487494211
+    second: raou_R06_C09
+  - first:
+      213: 5856378776007546025
+    second: raou_R06_C10
+  - first:
+      213: -6084538695716279010
+    second: raou_R06_C11
+  - first:
+      213: -6682572003519661634
+    second: raou_R06_C13
+  - first:
+      213: -3270972386768904341
+    second: raou_R06_C14
+  - first:
+      213: 2311321808167837645
+    second: raou_R06_C15
+  - first:
+      213: 2245627551716118090
+    second: raou_R06_C16
+  - first:
+      213: 1594253389082986841
+    second: raou_R07_C00
+  - first:
+      213: 3517175323489803534
+    second: raou_R07_C01
+  - first:
+      213: 3716160281814056780
+    second: raou_R07_C02
+  - first:
+      213: -9125533066334338655
+    second: raou_R07_C03
+  - first:
+      213: 118983848584502404
+    second: raou_R07_C04
+  - first:
+      213: 8566466684242949588
+    second: raou_R07_C05
+  - first:
+      213: 8238315213504893582
+    second: raou_R07_C06
+  - first:
+      213: -4871415523870262822
+    second: raou_R07_C07
+  - first:
+      213: 6858008136445395012
+    second: raou_R07_C08
+  - first:
+      213: 2203817278512795351
+    second: raou_R07_C09
+  - first:
+      213: 861665209589587003
+    second: raou_R07_C10
+  - first:
+      213: 1522921646400048049
+    second: raou_R07_C11
+  - first:
+      213: 5447141336156040558
+    second: raou_R07_C13
+  - first:
+      213: -681298440255252329
+    second: raou_R07_C14
+  - first:
+      213: 1344581401006870181
+    second: raou_R07_C15
+  - first:
+      213: -7335687360845649860
+    second: raou_R07_C16
+  - first:
+      213: -6103016395019713055
+    second: raou_R08_C00
+  - first:
+      213: -7279823316137819168
+    second: raou_R08_C01
+  - first:
+      213: 884969250843516757
+    second: raou_R08_C02
+  - first:
+      213: -5172326071000578669
+    second: raou_R08_C03
+  - first:
+      213: 4851418869057693091
+    second: raou_R08_C04
+  - first:
+      213: 4842934334467958023
+    second: raou_R08_C05
+  - first:
+      213: 6653097472265332233
+    second: raou_R08_C06
+  - first:
+      213: 1264937579021922959
+    second: raou_R08_C07
+  - first:
+      213: 6327953136487820238
+    second: raou_R08_C08
+  - first:
+      213: 2119712540624422830
+    second: raou_R08_C09
+  - first:
+      213: 8405448485511651528
+    second: raou_R08_C10
+  - first:
+      213: -4926957943174817377
+    second: raou_R08_C11
+  - first:
+      213: 1759458903301506924
+    second: raou_R08_C14
+  - first:
+      213: 4740123926297231157
+    second: raou_R08_C15
+  - first:
+      213: -8804893947690811644
+    second: raou_R09_C00
+  - first:
+      213: -3794028983979694870
+    second: raou_R09_C01
+  - first:
+      213: -671096068680119103
+    second: raou_R09_C02
+  - first:
+      213: 3862836424941584392
+    second: raou_R09_C03
+  - first:
+      213: -686749231143485803
+    second: raou_R09_C04
+  - first:
+      213: 3521011037587789830
+    second: raou_R09_C05
+  - first:
+      213: 8392550343725241674
+    second: raou_R09_C06
+  - first:
+      213: -6687622171892069668
+    second: raou_R09_C07
+  - first:
+      213: -7644025800977086928
+    second: raou_R09_C08
+  - first:
+      213: -1844217150632812780
+    second: raou_R09_C09
+  - first:
+      213: 48932093186071552
+    second: raou_R09_C10
+  - first:
+      213: 6936087941509605760
+    second: raou_R09_C11
+  - first:
+      213: 5634044173736827402
+    second: raou_R09_C12
+  - first:
+      213: -3516341002269961730
+    second: raou_R09_C13
+  - first:
+      213: 1484691862252778399
+    second: raou_R09_C14
+  - first:
+      213: -6413985630444442058
+    second: raou_R09_C15
+  - first:
+      213: 5646504554413772027
+    second: raou_R10_C00
+  - first:
+      213: 8651539775656098992
+    second: raou_R10_C01
+  - first:
+      213: 7907213496346861637
+    second: raou_R10_C02
+  - first:
+      213: 7429802420801063822
+    second: raou_R10_C03
+  - first:
+      213: -8211063746427196686
+    second: raou_R10_C04
+  - first:
+      213: -2001451650503495171
+    second: raou_R10_C05
+  - first:
+      213: 7178929280515867389
+    second: raou_R10_C06
+  - first:
+      213: 3608453383823586290
+    second: raou_R10_C07
+  - first:
+      213: -468383919057217658
+    second: raou_R10_C08
+  - first:
+      213: 6365437216827669240
+    second: raou_R10_C09
+  - first:
+      213: 2028912500598091781
+    second: raou_R10_C10
+  - first:
+      213: 3617976063471386572
+    second: raou_R10_C11
+  - first:
+      213: -5921283736632217999
+    second: raou_R10_C12
+  - first:
+      213: -6452851005096412784
+    second: raou_R10_C13
+  - first:
+      213: -661478902559985239
+    second: raou_R10_C14
+  - first:
+      213: 2410799666422327526
+    second: raou_R10_C15
+  - first:
+      213: -2745809369603738568
+    second: raou_R10_C16
+  - first:
+      213: -4824445744340686429
+    second: raou_R11_C00
+  - first:
+      213: -7308546878204845663
+    second: raou_R11_C01
+  - first:
+      213: -4199946762229341948
+    second: raou_R11_C02
+  - first:
+      213: 1072629846726039651
+    second: raou_R11_C03
+  - first:
+      213: -52630001149936614
+    second: raou_R11_C04
+  - first:
+      213: 6797940930261592833
+    second: raou_R11_C05
+  - first:
+      213: -1154814410255439598
+    second: raou_R11_C06
+  - first:
+      213: 604339418124381029
+    second: raou_R11_C07
+  - first:
+      213: -6899830699127635391
+    second: raou_R11_C08
+  - first:
+      213: 5546265223423245648
+    second: raou_R11_C09
+  - first:
+      213: -5330371799231140015
+    second: raou_R11_C10
+  - first:
+      213: 1259102792559023077
+    second: raou_R11_C11
+  - first:
+      213: 8999030990107908440
+    second: raou_R11_C12
+  - first:
+      213: 7378599421147236973
+    second: raou_R11_C13
+  - first:
+      213: -8936978148808127059
+    second: raou_R11_C14
+  - first:
+      213: -8232622368021443535
+    second: raou_R11_C15
+  - first:
+      213: 6917648010083711627
+    second: raou_R11_C16
+  - first:
+      213: -1968663739030787976
+    second: raou_R12_C00
+  - first:
+      213: -7514520786018694409
+    second: raou_R12_C02
+  - first:
+      213: -6628031079817384257
+    second: raou_R12_C03
+  - first:
+      213: 661093773064784644
+    second: raou_R12_C05
+  - first:
+      213: -5528777815979946726
+    second: raou_R12_C06
+  - first:
+      213: -3944038913353889041
+    second: raou_R12_C07
+  - first:
+      213: -309574849941124859
+    second: raou_R12_C08
+  - first:
+      213: -2872251068587241245
+    second: raou_R12_C09
+  - first:
+      213: 2388469643239097881
+    second: raou_R12_C10
+  - first:
+      213: 3284396993270307791
+    second: raou_R12_C11
+  - first:
+      213: -5576139299640445450
+    second: raou_R12_C12
+  - first:
+      213: 5171090712309059937
+    second: raou_R12_C13
+  - first:
+      213: 3196232715906969535
+    second: raou_R12_C14
+  - first:
+      213: -2465542971137260705
+    second: raou_R12_C15
+  - first:
+      213: -2899623354617614062
+    second: raou_R12_C16
+  - first:
+      213: -1670926055692103222
+    second: raou_R13_C00
+  - first:
+      213: 5851704685950960762
+    second: raou_R13_C01
+  - first:
+      213: -4193773351891860617
+    second: raou_R13_C02
+  - first:
+      213: 3570653246094687551
+    second: raou_R13_C03
+  - first:
+      213: 1532154327453781920
+    second: raou_R13_C04
+  - first:
+      213: -3053195385590838280
+    second: raou_R13_C06
+  - first:
+      213: 817768690130326208
+    second: raou_R13_C07
+  - first:
+      213: -7734962115432528768
+    second: raou_R13_C08
+  - first:
+      213: 8456055736683999156
+    second: raou_R13_C09
+  - first:
+      213: 4088379106666090606
+    second: raou_R13_C10
+  - first:
+      213: -1383831240072279419
+    second: raou_R13_C11
+  - first:
+      213: 513118430324978564
+    second: raou_R13_C12
+  - first:
+      213: -5077895090230900804
+    second: raou_R13_C13
+  - first:
+      213: 7749103697817781384
+    second: raou_R14_C00
+  - first:
+      213: -3442517532002596854
+    second: raou_R14_C01
+  - first:
+      213: -4602062461462163232
+    second: raou_R14_C02
+  - first:
+      213: -7757376351728234755
+    second: raou_R14_C03
+  - first:
+      213: -8429897528487807363
+    second: raou_R14_C04
+  - first:
+      213: 5505465737611096631
+    second: raou_R14_C05
+  - first:
+      213: 8152873191635170774
+    second: raou_R14_C06
+  - first:
+      213: -4586952469145134212
+    second: raou_R14_C07
+  - first:
+      213: -194675627012701256
+    second: raou_R14_C08
+  - first:
+      213: 6916286279669085947
+    second: raou_R14_C09
+  - first:
+      213: -1634815127647734563
+    second: raou_R14_C10
+  - first:
+      213: 8034763924114726431
+    second: raou_R14_C11
+  - first:
+      213: 4019568468655760038
+    second: raou_R14_C12
+  - first:
+      213: -3597796850715394529
+    second: raou_R14_C13
+  - first:
+      213: -8334042261038277202
+    second: raou_R15_C00
+  - first:
+      213: -5114773058927649882
+    second: raou_R15_C01
+  - first:
+      213: 1180305577286617910
+    second: raou_R15_C02
+  - first:
+      213: -5979644582464394785
+    second: raou_R15_C03
+  - first:
+      213: -3958311335805330420
+    second: raou_R15_C04
+  - first:
+      213: 4665339119338382398
+    second: raou_R15_C05
+  - first:
+      213: 2740493663605650420
+    second: raou_R15_C06
+  - first:
+      213: -3560698765091577118
+    second: raou_R15_C07
+  - first:
+      213: 9116992264413819180
+    second: raou_R15_C08
+  - first:
+      213: 1645361327872879887
+    second: raou_R15_C09
+  - first:
+      213: -3603900982806928535
+    second: raou_R15_C10
+  - first:
+      213: 388896938648512208
+    second: raou_R15_C11
+  - first:
+      213: 2092387126625585875
+    second: raou_R15_C12
+  - first:
+      213: 8786892406235187217
+    second: raou_R15_C13
+  - first:
+      213: 257179625968122308
+    second: raou_R16_C00
+  - first:
+      213: -1734889518639823707
+    second: raou_R16_C01
+  - first:
+      213: -5244462715387057385
+    second: raou_R16_C02
+  - first:
+      213: 5325062741363526540
+    second: raou_R16_C03
+  - first:
+      213: -7059970938002061991
+    second: raou_R16_C04
+  - first:
+      213: 4138601161966577705
+    second: raou_R16_C05
+  - first:
+      213: -937525646987971273
+    second: raou_R16_C06
+  - first:
+      213: 6262943997660521043
+    second: raou_R16_C07
+  - first:
+      213: 6746201141140910667
+    second: raou_R16_C08
+  - first:
+      213: 6645211785656444864
+    second: raou_R16_C09
+  - first:
+      213: 2652443491138960956
+    second: raou_R16_C10
+  - first:
+      213: 971996810144284625
+    second: raou_R16_C11
+  - first:
+      213: -330087722296337514
+    second: raou_R16_C12
+  - first:
+      213: -8761441318488267730
+    second: raou_R16_C13
+  - first:
+      213: 8295497974623270894
+    second: raou_R17_C00
+  - first:
+      213: -111555248256943283
+    second: raou_R17_C01
+  - first:
+      213: 4738137421578929344
+    second: raou_R17_C02
+  - first:
+      213: -9043831542763510961
+    second: raou_R17_C03
+  - first:
+      213: 7117205917285859216
+    second: raou_R17_C04
+  - first:
+      213: 5180578229185152981
+    second: raou_R17_C05
+  - first:
+      213: -6919628663204321161
+    second: raou_R17_C06
+  - first:
+      213: 6162252927961981206
+    second: raou_R17_C07
+  - first:
+      213: -7965924155769102909
+    second: raou_R17_C08
+  - first:
+      213: -6753013906049977447
+    second: raou_R17_C09
+  - first:
+      213: 67025234504944708
+    second: raou_R17_C10
+  - first:
+      213: -1496486356257371039
+    second: raou_R17_C11
+  - first:
+      213: -223442541123834780
+    second: raou_R17_C12
+  - first:
+      213: 7703796107382563981
+    second: raou_R17_C13
+  - first:
+      213: -928780037281670148
+    second: raou_R17_C14
+  - first:
+      213: -718022494895140070
+    second: raou_R17_C15
+  - first:
+      213: 5977238463225061491
+    second: raou_R17_C16
+  - first:
+      213: -3846494739331269646
+    second: raou_R18_C02
+  - first:
+      213: 5417141509309135019
+    second: raou_R18_C03
+  - first:
+      213: 8766039529529000329
+    second: raou_R18_C05
+  - first:
+      213: 1141599967849436655
+    second: raou_R18_C06
+  - first:
+      213: -112931769296811156
+    second: raou_R18_C07
+  - first:
+      213: 6511197817621390630
+    second: raou_R18_C08
+  - first:
+      213: 7667090922101988809
+    second: raou_R18_C09
+  - first:
+      213: 8113576591026737875
+    second: raou_R18_C10
+  - first:
+      213: -8650670024697741994
+    second: raou_R18_C11
+  - first:
+      213: -2161867819496191517
+    second: raou_R18_C12
+  - first:
+      213: -1950548347941982445
+    second: raou_R18_C13
+  - first:
+      213: 867656419931852807
+    second: raou_R18_C14
+  - first:
+      213: -3177572607919731993
+    second: raou_R18_C15
+  - first:
+      213: -693991864251112041
+    second: raou_R18_C16
+  - first:
+      213: 5260427501313666249
+    second: raou_R19_C00
+  - first:
+      213: 8162422315032569404
+    second: raou_R19_C01
+  - first:
+      213: 2450858351186734842
+    second: raou_R19_C02
+  - first:
+      213: -3737018161947661932
+    second: raou_R19_C03
+  - first:
+      213: 4503773485848344743
+    second: raou_R19_C04
+  - first:
+      213: -3120772806018058400
+    second: raou_R19_C05
+  - first:
+      213: 7871306222210965921
+    second: raou_R19_C06
+  - first:
+      213: 3925782276572385903
+    second: raou_R19_C07
+  - first:
+      213: 7824859660755672999
+    second: raou_R19_C08
+  - first:
+      213: 1843277509177110173
+    second: raou_R19_C09
+  - first:
+      213: -2204296828115976450
+    second: raou_R19_C10
+  - first:
+      213: -5278271309193779631
+    second: raou_R19_C11
+  - first:
+      213: -3265588737269445909
+    second: raou_R19_C12
+  - first:
+      213: -4697479004041468845
+    second: raou_R19_C13
+  - first:
+      213: -4107050607883097327
+    second: raou_R19_C14
+  - first:
+      213: 6961660943988936300
+    second: raou_R19_C15
+  - first:
+      213: -1731872454120916136
+    second: raou_R19_C16
+  - first:
+      213: 2210451627967828489
+    second: raou_R20_C00
+  - first:
+      213: -3650241204210975572
+    second: raou_R20_C01
+  - first:
+      213: 9044113957308651023
+    second: raou_R20_C02
+  - first:
+      213: -7263288638818244308
+    second: raou_R20_C03
+  - first:
+      213: 3290161427448557989
+    second: raou_R20_C04
+  - first:
+      213: -6946683607981549625
+    second: raou_R20_C05
+  - first:
+      213: -482784073827543004
+    second: raou_R20_C06
+  - first:
+      213: 7887423960931432550
+    second: raou_R20_C07
+  - first:
+      213: 2294003810995818219
+    second: raou_R20_C08
+  - first:
+      213: 3047516864271716024
+    second: raou_R20_C09
+  - first:
+      213: 3422508517902822325
+    second: raou_R20_C10
+  - first:
+      213: 4697386886986591611
+    second: raou_R20_C11
+  - first:
+      213: 3278660383459281572
+    second: raou_R20_C12
+  - first:
+      213: -5940662463855462121
+    second: raou_R20_C13
+  - first:
+      213: -6284320267243595175
+    second: raou_R21_C00
+  - first:
+      213: 4945121512957469579
+    second: raou_R21_C01
+  - first:
+      213: -2352216194969247875
+    second: raou_R21_C02
+  - first:
+      213: 1302978771087451050
+    second: raou_R21_C03
+  - first:
+      213: 8664426455249972338
+    second: raou_R21_C04
+  - first:
+      213: -5551300909464881789
+    second: raou_R21_C05
+  - first:
+      213: -3264421805326187365
+    second: raou_R21_C06
+  - first:
+      213: 8844084804361397173
+    second: raou_R21_C07
+  - first:
+      213: -9014037588902361153
+    second: raou_R21_C08
+  - first:
+      213: 5380766910690387947
+    second: raou_R21_C09
+  - first:
+      213: -2139717341486405961
+    second: raou_R21_C10
+  - first:
+      213: -4703068223683850289
+    second: raou_R21_C11
+  - first:
+      213: -7847484558020730123
+    second: raou_R21_C12
+  - first:
+      213: 6010918821580344255
+    second: raou_R21_C13
+  - first:
+      213: 7976130326694241471
+    second: raou_R22_C00
+  - first:
+      213: -2512086010022446544
+    second: raou_R22_C01
+  - first:
+      213: -5231615476165893821
+    second: raou_R22_C02
+  - first:
+      213: 7100216629389821532
+    second: raou_R22_C03
+  - first:
+      213: -8614166472065678694
+    second: raou_R22_C04
+  - first:
+      213: 1777096637023240676
+    second: raou_R22_C05
+  - first:
+      213: -8044473176861893182
+    second: raou_R22_C06
+  - first:
+      213: -5722669850579346109
+    second: raou_R22_C07
+  - first:
+      213: -473841665248719388
+    second: raou_R22_C08
+  - first:
+      213: 6041347893822068721
+    second: raou_R22_C09
+  - first:
+      213: 9135898389671776952
+    second: raou_R22_C10
+  - first:
+      213: -698962132778806630
+    second: raou_R22_C11
+  - first:
+      213: 8485363853988128541
+    second: raou_R22_C12
+  - first:
+      213: 3414205156140454088
+    second: raou_R22_C13
+  - first:
+      213: 7299786974390172472
+    second: raou_R23_C00
+  - first:
+      213: 8934382729660623580
+    second: raou_R23_C01
+  - first:
+      213: -6059254853024416744
+    second: raou_R23_C02
+  - first:
+      213: 4878673858011767905
+    second: raou_R23_C03
+  - first:
+      213: 962022690543772159
+    second: raou_R23_C04
+  - first:
+      213: -6452072305884418390
+    second: raou_R23_C05
+  - first:
+      213: 1852833516309386254
+    second: raou_R23_C06
+  - first:
+      213: -4718773907100572458
+    second: raou_R24_C00
+  - first:
+      213: -2687082178104733102
+    second: raou_R24_C01
+  - first:
+      213: -6755081030209389893
+    second: raou_R24_C02
+  - first:
+      213: 8289330446967085699
+    second: raou_R24_C03
+  - first:
+      213: -7815274059676250254
+    second: raou_R24_C05
+  - first:
+      213: -5560730975362455270
+    second: raou_R24_C06
+  - first:
+      213: 5719768759653758539
+    second: raou_R24_C11
+  - first:
+      213: -988399404085006221
+    second: raou_R24_C12
+  - first:
+      213: -5960612274953526750
+    second: raou_R24_C13
+  - first:
+      213: 8291441164934727722
+    second: raou_R24_C14
+  - first:
+      213: 2111161379857033231
+    second: raou_R25_C00
+  - first:
+      213: 8079715660000490903
+    second: raou_R25_C01
+  - first:
+      213: 6941775575822931860
+    second: raou_R25_C05
+  - first:
+      213: 3821785481267327732
+    second: raou_R25_C06
+  - first:
+      213: -3920117536833088859
+    second: raou_R25_C11
+  - first:
+      213: -432110079998565756
+    second: raou_R25_C12
+  - first:
+      213: 4970162577269782735
+    second: raou_R25_C13
+  - first:
+      213: 1262205948371173631
+    second: raou_R25_C14
+  - first:
+      213: -4462702186640182582
+    second: raou_R26_C00
+  - first:
+      213: 3956873719781054833
+    second: raou_R26_C01
+  - first:
+      213: 4029808167009825942
+    second: raou_R26_C02
+  - first:
+      213: 3554780915538369945
+    second: raou_R26_C03
+  - first:
+      213: -8113974270989290029
+    second: raou_R26_C05
+  - first:
+      213: -3082243044608976364
+    second: raou_R26_C06
+  - first:
+      213: -8178786818507504300
+    second: raou_R26_C07
+  - first:
+      213: -8078532456993274212
+    second: raou_R26_C08
+  - first:
+      213: 8985309841530974074
+    second: raou_R26_C09
+  - first:
+      213: 8046075989097180775
+    second: raou_R26_C11
+  - first:
+      213: 6441591954923787166
+    second: raou_R26_C12
+  - first:
+      213: -7294222354407030066
+    second: raou_R26_C13
+  - first:
+      213: 2684944648097610411
+    second: raou_R26_C14
+  - first:
+      213: 3605441976912406448
+    second: raou_R27_C00
+  - first:
+      213: 7367072410812602630
+    second: raou_R27_C01
+  - first:
+      213: 6382619151212356975
+    second: raou_R27_C02
+  - first:
+      213: 1048132812660328256
+    second: raou_R27_C03
+  - first:
+      213: 5688702176716824420
+    second: raou_R27_C05
+  - first:
+      213: 1587920808381057909
+    second: raou_R27_C06
+  - first:
+      213: -4436767120279156037
+    second: raou_R27_C07
+  - first:
+      213: -7411799992604942482
+    second: raou_R27_C08
+  - first:
+      213: 3799221445532731333
+    second: raou_R27_C09
+  - first:
+      213: -7712382110955005774
+    second: raou_R27_C11
+  - first:
+      213: -6923759621918145111
+    second: raou_R27_C12
+  - first:
+      213: 5401104574201444023
+    second: raou_R27_C13
+  - first:
+      213: -2819688382457865715
+    second: raou_R27_C14
+  - first:
+      213: -2921119037192252161
+    second: raou_R28_C00
+  - first:
+      213: 6553725741560302151
+    second: raou_R28_C01
+  - first:
+      213: -394290981613070761
+    second: raou_R28_C02
+  - first:
+      213: 2932974095116922902
+    second: raou_R28_C03
+  - first:
+      213: 9112146726728021278
+    second: raou_R28_C05
+  - first:
+      213: 3047941295392836237
+    second: raou_R28_C06
+  - first:
+      213: -9061822199784868202
+    second: raou_R28_C07
+  - first:
+      213: 6854283835989644927
+    second: raou_R28_C08
+  - first:
+      213: -1914771062862976295
+    second: raou_R28_C09
+  - first:
+      213: -2654792821403167297
+    second: raou_R28_C10
+  - first:
+      213: -5004768861214115768
+    second: raou_R28_C11
+  - first:
+      213: 7615165896795279186
+    second: raou_R28_C12
+  - first:
+      213: -15427048026672997
+    second: raou_R28_C13
+  - first:
+      213: 3424940832072672166
+    second: raou_R28_C14
+  - first:
+      213: 1057235409969045098
+    second: raou_R28_C15
+  - first:
+      213: -4887430454389524458
+    second: raou_R29_C00
+  - first:
+      213: -4572661864082860064
+    second: raou_R29_C01
+  - first:
+      213: 9099029869396939272
+    second: raou_R29_C02
+  - first:
+      213: 2968230709210253886
+    second: raou_R29_C03
+  - first:
+      213: -4507780412697737231
+    second: raou_R29_C05
+  - first:
+      213: -8882533764428397702
+    second: raou_R29_C06
+  - first:
+      213: -4841256703752692136
+    second: raou_R29_C07
+  - first:
+      213: 4147263325137801809
+    second: raou_R29_C08
+  - first:
+      213: 600818402364029048
+    second: raou_R29_C09
+  - first:
+      213: 6970459949080410923
+    second: raou_R29_C10
+  - first:
+      213: -2037709342838526298
+    second: raou_R29_C11
+  - first:
+      213: 4714157527668707722
+    second: raou_R29_C12
+  - first:
+      213: -8660601947445659840
+    second: raou_R29_C13
+  - first:
+      213: 4756342523480372539
+    second: raou_R29_C15
+  - first:
+      213: 7278932921950052166
+    second: raou_R30_C00
+  - first:
+      213: 1114893957730489565
+    second: raou_R30_C01
+  - first:
+      213: 8780496691233888205
+    second: raou_R30_C02
+  - first:
+      213: -8025252033927007867
+    second: raou_R30_C03
+  - first:
+      213: -2861022732436041554
+    second: raou_R30_C05
+  - first:
+      213: -2089329330842092293
+    second: raou_R30_C06
+  - first:
+      213: -7722115973762597320
+    second: raou_R30_C07
+  - first:
+      213: 6003182807420653696
+    second: raou_R30_C08
+  - first:
+      213: 3583470708941121778
+    second: raou_R30_C09
+  - first:
+      213: 6013341988781985321
+    second: raou_R30_C10
+  - first:
+      213: -1372022068323402060
+    second: raou_R30_C11
+  - first:
+      213: -7015917494733307677
+    second: raou_R30_C12
+  - first:
+      213: -1665603303689172087
+    second: raou_R30_C13
+  - first:
+      213: -6567055146184133253
+    second: raou_R30_C15
+  - first:
+      213: 4466891807447010063
+    second: raou_R31_C00
+  - first:
+      213: -899859587791511753
+    second: raou_R31_C01
+  - first:
+      213: -5144784234097797774
+    second: raou_R31_C02
+  - first:
+      213: -4292733476355133946
+    second: raou_R31_C03
+  - first:
+      213: -8125860623368129186
+    second: raou_R31_C05
+  - first:
+      213: 4450346091404119942
+    second: raou_R31_C06
+  - first:
+      213: 7738867927916017135
+    second: raou_R31_C07
+  - first:
+      213: -1645113518337930301
+    second: raou_R31_C08
+  - first:
+      213: -8705715732332574009
+    second: raou_R31_C09
+  - first:
+      213: 6021299644209415767
+    second: raou_R31_C10
+  - first:
+      213: -7919588210744708555
+    second: raou_R31_C11
+  - first:
+      213: 481823788014628033
+    second: raou_R31_C12
+  - first:
+      213: -2312044084396250353
+    second: raou_R31_C13
+  - first:
+      213: -1024167581093298861
+    second: raou_R31_C15
+  - first:
+      213: 8718962332098521707
+    second: raou_R32_C00
+  - first:
+      213: -1466463251385096982
+    second: raou_R32_C01
+  - first:
+      213: 4876837857681088735
+    second: raou_R32_C02
+  - first:
+      213: -1616387859509993387
+    second: raou_R32_C03
+  - first:
+      213: 3795428036344271760
+    second: raou_R32_C10
+  - first:
+      213: -7145948109635047750
+    second: raou_R32_C11
+  - first:
+      213: 8760084345219789595
+    second: raou_R32_C12
+  - first:
+      213: -6727778372980410527
+    second: raou_R32_C13
+  - first:
+      213: 118608840523302263
+    second: raou_R32_C14
+  - first:
+      213: -384608244256349982
+    second: raou_R32_C15
+  - first:
+      213: -4024955756682261523
+    second: raou_R33_C00
+  - first:
+      213: 4638173026048150160
+    second: raou_R33_C01
+  - first:
+      213: 4106316292535964149
+    second: raou_R33_C02
+  - first:
+      213: 1045201115464742656
+    second: raou_R33_C03
+  - first:
+      213: -3131189156136856145
+    second: raou_R33_C04
+  - first:
+      213: -7274800054511494775
+    second: raou_R33_C05
+  - first:
+      213: -8754052375945221357
+    second: raou_R33_C06
+  - first:
+      213: -3673577303475135640
+    second: raou_R33_C07
+  - first:
+      213: -4691188302087203177
+    second: raou_R33_C08
+  - first:
+      213: -3271470523040560759
+    second: raou_R33_C09
+  - first:
+      213: -3535552506054812545
+    second: raou_R33_C10
+  - first:
+      213: -6667078088505294294
+    second: raou_R33_C11
+  - first:
+      213: -8994725545028413071
+    second: raou_R33_C12
+  - first:
+      213: 7486723562963323552
+    second: raou_R33_C13
+  - first:
+      213: 3732882486146738144
+    second: raou_R33_C15
+  - first:
+      213: -7112098993854174932
+    second: raou_R34_C00
+  - first:
+      213: -5829536731831624640
+    second: raou_R34_C01
+  - first:
+      213: 6011579322641803164
+    second: raou_R34_C02
+  - first:
+      213: -3452911186806191169
+    second: raou_R34_C03
+  - first:
+      213: -7716274722116464020
+    second: raou_R34_C04
+  - first:
+      213: 781986886572250784
+    second: raou_R34_C05
+  - first:
+      213: 1368402406644630444
+    second: raou_R34_C06
+  - first:
+      213: -6883719199328974262
+    second: raou_R34_C07
+  - first:
+      213: 1916234256788696898
+    second: raou_R34_C08
+  - first:
+      213: 3101982611779307970
+    second: raou_R34_C09
+  - first:
+      213: -6535989879836662629
+    second: raou_R34_C10
+  - first:
+      213: 7742170174589896258
+    second: raou_R34_C11
+  - first:
+      213: 653858032072414619
+    second: raou_R34_C12
+  - first:
+      213: 4483060628919060943
+    second: raou_R34_C13
+  - first:
+      213: -1666430421548067753
+    second: raou_R34_C15
+  - first:
+      213: -6286175053922434175
+    second: raou_R35_C00
+  - first:
+      213: -1055942159394657522
+    second: raou_R35_C01
+  - first:
+      213: 4312026897228153758
+    second: raou_R35_C02
+  - first:
+      213: 5740761294889340293
+    second: raou_R35_C03
+  - first:
+      213: 9125231018218536265
+    second: raou_R35_C04
+  - first:
+      213: 8899247341709083300
+    second: raou_R35_C05
+  - first:
+      213: 9036598050888915682
+    second: raou_R35_C06
+  - first:
+      213: -4791245822149882476
+    second: raou_R35_C07
+  - first:
+      213: -1925780693311216877
+    second: raou_R35_C08
+  - first:
+      213: 3378038491050072891
+    second: raou_R35_C09
+  - first:
+      213: 5689529505090728124
+    second: raou_R35_C10
+  - first:
+      213: -3992056648057871715
+    second: raou_R35_C11
+  - first:
+      213: -4187631263573846357
+    second: raou_R35_C12
+  - first:
+      213: 1443152507162104469
+    second: raou_R35_C13
+  - first:
+      213: -1048950324950862903
+    second: raou_R35_C15
+  - first:
+      213: 2270408944250032946
+    second: raou_R36_C00
+  - first:
+      213: -2466172111526444298
+    second: raou_R36_C01
+  - first:
+      213: -2810895687958941783
+    second: raou_R36_C02
+  - first:
+      213: 6409030779288485535
+    second: raou_R36_C03
+  - first:
+      213: -5376978112041505448
+    second: raou_R36_C04
+  - first:
+      213: 7674866926860457298
+    second: raou_R36_C05
+  - first:
+      213: -6717987839103461249
+    second: raou_R36_C06
+  - first:
+      213: -3469186313799379993
+    second: raou_R36_C07
+  - first:
+      213: -4485443019357146392
+    second: raou_R36_C08
+  - first:
+      213: -1328108235159884977
+    second: raou_R36_C09
+  - first:
+      213: 7248517769748463467
+    second: raou_R36_C10
+  - first:
+      213: 5498331066247274575
+    second: raou_R36_C11
+  - first:
+      213: -1481892666008728174
+    second: raou_R36_C12
+  - first:
+      213: -3305375021887559568
+    second: raou_R36_C13
+  - first:
+      213: -626081871820568857
+    second: raou_R36_C14
+  - first:
+      213: 86227404737990580
+    second: raou_R36_C15
+  - first:
+      213: 3144103624646540254
+    second: raou_R37_C00
+  - first:
+      213: 5377281151448139959
+    second: raou_R37_C01
+  - first:
+      213: 4177285340040156505
+    second: raou_R37_C02
+  - first:
+      213: -7925041946845530898
+    second: raou_R37_C03
+  - first:
+      213: -1221686526534456191
+    second: raou_R37_C04
+  - first:
+      213: -5409400551330541983
+    second: raou_R37_C05
+  - first:
+      213: -9094115054638788238
+    second: raou_R37_C06
+  - first:
+      213: 2157839011098761132
+    second: raou_R37_C07
+  - first:
+      213: -5475082287069844261
+    second: raou_R37_C08
+  - first:
+      213: 6326886196181779822
+    second: raou_R37_C09
+  - first:
+      213: 6271621528274338797
+    second: raou_R37_C10
+  - first:
+      213: 2033339347675564439
+    second: raou_R37_C11
+  - first:
+      213: 2493985751786057008
+    second: raou_R37_C12
+  - first:
+      213: -2422185703415579401
+    second: raou_R37_C13
+  - first:
+      213: 5560640777610567152
+    second: raou_R37_C14
+  - first:
+      213: 1715319320239377488
+    second: raou_R37_C15
+  - first:
+      213: 3450179139644639826
+    second: raou_R38_C00
+  - first:
+      213: -8823586640519844863
+    second: raou_R38_C01
+  - first:
+      213: 4264538030708431674
+    second: raou_R38_C02
+  - first:
+      213: -3578584312797177037
+    second: raou_R38_C03
+  - first:
+      213: 7448893157771352481
+    second: raou_R38_C04
+  - first:
+      213: 3119183633975942332
+    second: raou_R38_C05
+  - first:
+      213: -3355348785803819397
+    second: raou_R38_C06
+  - first:
+      213: -18587521195625731
+    second: raou_R38_C07
+  - first:
+      213: -6603593645627652706
+    second: raou_R38_C08
+  - first:
+      213: 238246931550040151
+    second: raou_R38_C09
+  - first:
+      213: 1790815031913647173
+    second: raou_R38_C10
+  - first:
+      213: 4458763925370399729
+    second: raou_R38_C11
+  - first:
+      213: -1964231440267365974
+    second: raou_R38_C12
+  - first:
+      213: -1790483198701533947
+    second: raou_R38_C13
+  - first:
+      213: -8983850116373241158
+    second: raou_R38_C14
+  - first:
+      213: 8160759682411980497
+    second: raou_R38_C15
+  - first:
+      213: 8056265674307130170
+    second: raou_R39_C00
+  - first:
+      213: 2073378500807542967
+    second: raou_R39_C01
+  - first:
+      213: 5374977027449228569
+    second: raou_R39_C02
+  - first:
+      213: -8980378596747625946
+    second: raou_R39_C04
+  - first:
+      213: -241685793058988819
+    second: raou_R39_C05
+  - first:
+      213: 5448653289600756864
+    second: raou_R39_C06
+  - first:
+      213: -5116493548871849992
+    second: raou_R39_C07
+  - first:
+      213: 2559088816574332163
+    second: raou_R39_C08
+  - first:
+      213: 8638736630328608899
+    second: raou_R39_C09
+  - first:
+      213: -158332659188030423
+    second: raou_R39_C10
+  - first:
+      213: -8051828083360074285
+    second: raou_R39_C11
+  - first:
+      213: -7054933287929390478
+    second: raou_R39_C12
+  - first:
+      213: -4244532268646854915
+    second: raou_R39_C13
+  - first:
+      213: -3390229875894795464
+    second: raou_R39_C14
+  - first:
+      213: 5407502647148846233
+    second: raou_R39_C15
+  - first:
+      213: 211517591832310336
+    second: raou_R40_C00
+  - first:
+      213: -8981085574608593142
+    second: raou_R40_C01
+  - first:
+      213: 5057077128892690983
+    second: raou_R40_C02
+  - first:
+      213: 2900230346446659086
+    second: raou_R40_C04
+  - first:
+      213: 1940662027113103655
+    second: raou_R40_C05
+  - first:
+      213: 7555788000179743083
+    second: raou_R40_C06
+  - first:
+      213: 5059034285170249567
+    second: raou_R40_C07
+  - first:
+      213: -288798050375545695
+    second: raou_R40_C08
+  - first:
+      213: -3662446552478579442
+    second: raou_R40_C09
+  - first:
+      213: -1672926922098725199
+    second: raou_R40_C10
+  - first:
+      213: -6046485210145962785
+    second: raou_R40_C11
+  - first:
+      213: -3288872010594417202
+    second: raou_R40_C12
+  - first:
+      213: -3094712815331390459
+    second: raou_R40_C13
+  - first:
+      213: -7351548423436529299
+    second: raou_R40_C14
+  - first:
+      213: -2176288464652670440
+    second: raou_R40_C15
+  - first:
+      213: -3071195800660832169
+    second: raou_R41_C01
+  - first:
+      213: -3187474224685470083
+    second: raou_R41_C02
+  - first:
+      213: -475333586488956603
+    second: raou_R41_C03
+  - first:
+      213: -2954175398637896523
+    second: raou_R41_C04
+  - first:
+      213: -7853944279353768615
+    second: raou_R41_C05
+  - first:
+      213: 3692349061227079001
+    second: raou_R41_C06
+  - first:
+      213: 2478694217410330114
+    second: raou_R41_C07
+  - first:
+      213: 7099113050831352551
+    second: raou_R41_C08
+  - first:
+      213: -4523498423200458683
+    second: raou_R41_C09
+  - first:
+      213: 1874446219367236262
+    second: raou_R41_C10
+  - first:
+      213: -3092816055235390551
+    second: raou_R41_C11
+  - first:
+      213: 9093093006168338889
+    second: raou_R41_C12
+  - first:
+      213: 3679989189749008568
+    second: raou_R41_C13
+  - first:
+      213: 8314367249839384752
+    second: raou_R41_C14
+  - first:
+      213: 777008392440023323
+    second: raou_R41_C15
+  - first:
+      213: 5885963403115480876
+    second: raou_R42_C01
+  - first:
+      213: -2607129048524737752
+    second: raou_R42_C02
+  - first:
+      213: 7474435035547141790
+    second: raou_R42_C03
+  - first:
+      213: 5953579427732001764
+    second: raou_R42_C04
+  - first:
+      213: 819023252056890703
+    second: raou_R42_C05
+  - first:
+      213: -2849748973849085452
+    second: raou_R42_C06
+  - first:
+      213: 6819601460774704522
+    second: raou_R42_C07
+  - first:
+      213: -5150581778594216572
+    second: raou_R42_C08
+  - first:
+      213: -7958147212508966984
+    second: raou_R42_C09
+  - first:
+      213: 302663305481095977
+    second: raou_R43_C00
+  - first:
+      213: -6144249223500664592
+    second: raou_R43_C01
+  - first:
+      213: -7022225395163339483
+    second: raou_R43_C02
+  - first:
+      213: 2281119076685324116
+    second: raou_R43_C03
+  - first:
+      213: 5219072637986293224
+    second: raou_R43_C04
+  - first:
+      213: 4425346924014563790
+    second: raou_R43_C05
+  - first:
+      213: -2682234750824438471
+    second: raou_R43_C06
+  - first:
+      213: 9062232243521392352
+    second: raou_R43_C07
+  - first:
+      213: 1118016896911828985
+    second: raou_R43_C08
+  - first:
+      213: -7823855749194259852
+    second: raou_R43_C09
+  - first:
+      213: -4399275834964150159
+    second: raou_R43_C13
+  - first:
+      213: 7323947986201678390
+    second: raou_R44_C00
+  - first:
+      213: -7934682909235042822
+    second: raou_R44_C01
+  - first:
+      213: 6384492270879792991
+    second: raou_R44_C02
+  - first:
+      213: -7035545169017620117
+    second: raou_R44_C03
+  - first:
+      213: 5351615915285752428
+    second: raou_R44_C04
+  - first:
+      213: 958699237276716920
+    second: raou_R44_C05
+  - first:
+      213: -4981460030618885047
+    second: raou_R44_C06
+  - first:
+      213: -8936902750171834138
+    second: raou_R44_C07
+  - first:
+      213: -4538136337041792012
+    second: raou_R44_C08
+  - first:
+      213: 6342905577531175884
+    second: raou_R44_C09
+  - first:
+      213: 2805008713099453543
+    second: raou_R44_C11
+  - first:
+      213: -8783389398495866984
+    second: raou_R44_C12
+  - first:
+      213: 3560142634660888424
+    second: raou_R44_C13
+  - first:
+      213: 1975065026968547667
+    second: raou_R44_C14
+  - first:
+      213: -8068199544335920224
+    second: raou_R45_C00
+  - first:
+      213: 3430250359832615843
+    second: raou_R45_C01
+  - first:
+      213: -4813586360746474629
+    second: raou_R45_C02
+  - first:
+      213: 1012636577478961962
+    second: raou_R45_C04
+  - first:
+      213: -3791289740118574487
+    second: raou_R45_C05
+  - first:
+      213: -4767719069618736835
+    second: raou_R45_C06
+  - first:
+      213: 3902853695052013837
+    second: raou_R45_C07
+  - first:
+      213: 3200289918844077532
+    second: raou_R45_C08
+  - first:
+      213: 6848463010056301947
+    second: raou_R45_C09
+  - first:
+      213: -5909653070685963320
+    second: raou_R45_C12
+  - first:
+      213: -4242426919424972230
+    second: raou_R45_C13
+  - first:
+      213: -1077917792338928343
+    second: raou_R46_C04
+  - first:
+      213: 1674438050433012257
+    second: raou_R46_C05
+  - first:
+      213: 8183910796507993812
+    second: raou_R46_C06
+  - first:
+      213: -7070266732972818999
+    second: raou_R46_C07
+  - first:
+      213: -8844521237826767918
+    second: raou_R46_C08
+  - first:
+      213: -1789215945448482819
+    second: raou_R46_C09
+  - first:
+      213: -4280614150253624370
+    second: raou_R46_C10
+  - first:
+      213: -128197406178694877
+    second: raou_R46_C11
+  - first:
+      213: 1920415658500229615
+    second: raou_R46_C12
+  - first:
+      213: -1025538524567611488
+    second: raou_R47_C04
+  - first:
+      213: -209715169265529306
+    second: raou_R47_C05
+  - first:
+      213: -2631030633858564055
+    second: raou_R47_C06
+  - first:
+      213: 4452329546598417866
+    second: raou_R47_C07
+  - first:
+      213: 5884535163433730566
+    second: raou_R47_C08
+  - first:
+      213: 8462740434999445152
+    second: raou_R47_C09
+  - first:
+      213: -8797526982095211911
+    second: raou_R47_C12
+  - first:
+      213: -7736247180662843029
+    second: raou_R48_C04
+  - first:
+      213: 2441339529233394160
+    second: raou_R48_C05
+  - first:
+      213: 1192921716458921905
+    second: raou_R48_C06
+  - first:
+      213: -3520797082215362415
+    second: raou_R48_C07
+  - first:
+      213: -3487364276387126553
+    second: raou_R48_C08
+  - first:
+      213: -8662962158388394981
+    second: raou_R48_C09
+  - first:
+      213: -275241113282961235
+    second: raou_R48_C10
+  - first:
+      213: -3124365262244732560
+    second: raou_R48_C11
+  - first:
+      213: 4724043205765776956
+    second: raou_R48_C12
+  - first:
+      213: 5971826603079083708
+    second: raou_R49_C04
+  - first:
+      213: 4891139622761575799
+    second: raou_R49_C05
+  - first:
+      213: -8418818861013390574
+    second: raou_R49_C07
+  - first:
+      213: 7774287418143174042
+    second: raou_R49_C08
+  - first:
+      213: 8437054868658995146
+    second: raou_R49_C09
+  - first:
+      213: 4069199636726281798
+    second: raou_R49_C10
+  - first:
+      213: -982426996624046627
+    second: raou_R49_C11
+  - first:
+      213: 4428134501272097423
+    second: raou_R49_C12
+  - first:
+      213: 6654186080056515632
+    second: raou_R49_C13
+  - first:
+      213: -4231547020619393060
+    second: raou_R50_C04
+  - first:
+      213: 2526505496896645480
+    second: raou_R50_C05
+  - first:
+      213: -6143286949091877913
+    second: raou_R50_C07
+  - first:
+      213: -8123400634719188489
+    second: raou_R50_C08
+  - first:
+      213: 7296474735701014934
+    second: raou_R50_C09
+  - first:
+      213: -8230402268833869879
+    second: raou_R50_C11
+  - first:
+      213: -3273218597442628706
+    second: raou_R50_C12
+  - first:
+      213: 8978191567290836860
+    second: raou_R50_C13
+  - first:
+      213: 2789749060951215427
+    second: raou_R51_C10
+  - first:
+      213: 858361248956381144
+    second: raou_R51_C11
+  - first:
+      213: 3054327208580391023
+    second: raou_R51_C12
+  - first:
+      213: -7541882801944220405
+    second: raou_R51_C13
+  - first:
+      213: 1616159823961650327
+    second: raou_001
+  - first:
+      213: -6072915340764443116
+    second: raou_002
+  - first:
+      213: -2155605357358857009
+    second: raou_003
+  - first:
+      213: 8386730110410053341
+    second: raou_004
+  - first:
+      213: 5358858122730123061
+    second: raou_005
+  - first:
+      213: -7963515309614265084
+    second: raou_006
+  - first:
+      213: -5782082511702096835
+    second: raou_007
+  - first:
+      213: 7662605751008906080
+    second: raou_008
+  - first:
+      213: 4913247647753884368
+    second: raou_009
+  - first:
+      213: 6232251377410025132
+    second: raou_010
+  - first:
+      213: -6222754743662969906
+    second: raou_011
+  - first:
+      213: 8858871496345921446
+    second: raou_012
+  - first:
+      213: 7217460002678740687
+    second: raou_013
+  - first:
+      213: 1207036070282673125
+    second: raou_014
+  - first:
+      213: -8566164068309852232
+    second: raou_015
+  - first:
+      213: -2260252139857232156
+    second: raou_016
+  - first:
+      213: 4155906355183216999
+    second: raou_017
+  - first:
+      213: 8609885191269230679
+    second: raou_018
+  - first:
+      213: -6701589033963327227
+    second: raou_019
+  - first:
+      213: 4101627976907573280
+    second: raou_020
+  - first:
+      213: -9090770859871736750
+    second: raou_021
+  - first:
+      213: 5142851340887775862
+    second: raou_022
+  - first:
+      213: -2605314312309922794
+    second: raou_023
+  - first:
+      213: 5134380816838517744
+    second: raou_024
+  - first:
+      213: 7912794664519881029
+    second: raou_025
+  - first:
+      213: -8396336575661149987
+    second: raou_026
+  - first:
+      213: 1331656844076479970
+    second: raou_027
+  - first:
+      213: -631922523978570027
+    second: raou_028
+  - first:
+      213: -7721922327713427790
+    second: raou_029
+  - first:
+      213: 6133371961986852692
+    second: raou_030
+  - first:
+      213: -6903975867625948666
+    second: raou_031
+  - first:
+      213: 4959664780008429893
+    second: raou_032
+  - first:
+      213: 6394436493829014685
+    second: raou_033
+  - first:
+      213: 8790920113659219477
+    second: raou_034
+  - first:
+      213: -4756695242450230356
+    second: raou_035
+  - first:
+      213: 3675315314853956404
+    second: raou_036
+  - first:
+      213: 6757160291437076588
+    second: raou_037
+  - first:
+      213: 4735520566911849428
+    second: raou_038
+  - first:
+      213: -2279805066802361498
+    second: raou_039
+  - first:
+      213: 7320968519798938095
+    second: raou_040
+  - first:
+      213: 4435171087558522404
+    second: raou_041
+  - first:
+      213: 2097947089133726166
+    second: raou_042
+  - first:
+      213: -1039908314952797489
+    second: raou_043
+  - first:
+      213: -8513269188522391580
+    second: raou_044
+  - first:
+      213: 4697324457257890671
+    second: raou_045
+  - first:
+      213: -3927714107150253428
+    second: raou_046
+  - first:
+      213: 5645084693515889529
+    second: raou_047
+  - first:
+      213: 2462109247404390982
+    second: raou_048
+  - first:
+      213: 1928187041209209197
+    second: raou_049
+  - first:
+      213: 7563962003919814892
+    second: raou_050
+  - first:
+      213: -1785253683174978758
+    second: raou_051
+  - first:
+      213: -7480890953912058975
+    second: raou_052
+  - first:
+      213: 8062399915159985862
+    second: raou_053
+  - first:
+      213: 6909006489870921971
+    second: raou_054
+  - first:
+      213: 5045720675120057737
+    second: raou_055
+  - first:
+      213: 4065646412409742917
+    second: tombstone_cross
+  - first:
+      213: -4688588535329460173
+    second: tombstone_round
+  - first:
+      213: -8876445062366124988
+    second: candle_holder
+  - first:
+      213: -77400457057466481
+    second: cross_marker
+  - first:
+      213: -4886122106588626301
+    second: skull_decor
+  - first:
+      213: -7746278857152316402
+    second: clouds
+  - first:
+      213: 1475342266868531954
+    second: pillar_small
+  - first:
+      213: -5581790527274920917
+    second: key
+  - first:
+      213: 3554978186165488596
+    second: fence_iron
+  - first:
+      213: 2060134415710465488
+    second: statue_angel
+  - first:
+      213: 5251171323317982994
+    second: arch_door_top
+  - first:
+      213: 68401750102776231
+    second: cave_opening_left
+  - first:
+      213: -3691600005085257474
+    second: cave_opening_right
+  - first:
+      213: 5397086558349123586
+    second: mine_cart
+  - first:
+      213: 8499122774393151660
+    second: dead_tree
+  - first:
+      213: -3588809085970911614
+    second: gravestone_large
+  - first:
+      213: 4955565765600276925
+    second: gravestone_slab
+  - first:
+      213: -4251392424909191499
+    second: cave_hole_large
+  - first:
+      213: 8684473543857999896
+    second: tower_wall_left
+  - first:
+      213: 89050828029005227
+    second: tower_wall_right
+  - first:
+      213: -1080157909766471375
+    second: wall_bg_cave
+  - first:
+      213: 6623919442991524965
+    second: wall_section_A
+  - first:
+      213: 6579730752432534684
+    second: wall_brick_dark
+  - first:
+      213: 4451020272407779932
+    second: wall_brick_light
+  - first:
+      213: -7540411076793381924
+    second: wall_hanging_drip
+  - first:
+      213: -7783520257427890126
+    second: platform_wide
+  - first:
+      213: -2919697389268214734
+    second: wall_corner_left
+  - first:
+      213: 8558867548213892823
+    second: wall_corner_right
+  - first:
+      213: -5049305332974053812
+    second: sun_emblem
+  - first:
+      213: -455291393511070993
+    second: chess_piece
+  - first:
+      213: -7049641776520345113
+    second: statue_bust
+  - first:
+      213: 9118000884433664901
+    second: door_small_A
+  - first:
+      213: 2615715153790506866
+    second: door_small_B
+  - first:
+      213: -7236239796898818083
+    second: door_wooden
+  - first:
+      213: -2583968056524353664
+    second: door_large
+  - first:
+      213: 8358909537337059600
+    second: wood_panel
+  - first:
+      213: 8450573954201597074
+    second: arch_stone_A
+  - first:
+      213: -4159253464977330322
+    second: arch_stone_B
+  - first:
+      213: 8245829056415391846
+    second: bookshelf_A
+  - first:
+      213: -4608733692292821466
+    second: bookshelf_B
+  - first:
+      213: 7582563812468022774
+    second: dresser
+  - first:
+      213: -4970645020015018761
+    second: shelf_potions
+  - first:
+      213: -145935881152103960
+    second: table_candle
+  - first:
+      213: -2752755284566443713
+    second: shelf_books
+  - first:
+      213: 580466520514931505
+    second: window_bars_A
+  - first:
+      213: 5963270634520639704
+    second: window_bars_B
+  - first:
+      213: -8872649537081329699
+    second: wall_tile_A
+  - first:
+      213: 8857866566774222947
+    second: painting_frame
+  - first:
+      213: -9022736589983911497
+    second: fence_gate
+  - first:
+      213: -146892965785143285
+    second: railing_vert
+  - first:
+      213: 5697530563775131874
+    second: chain_hang
+  - first:
+      213: -4533273227258915902
+    second: lamp_wall
+  - first:
+      213: 6587758831544789272
+    second: bottle
+  - first:
+      213: 4623452970746488504
+    second: key_small
+  - first:
+      213: 8167850906926833937
+    second: skull_ground
+  - first:
+      213: -8206907176621761455
+    second: torch_wall
+  - first:
+      213: -622662280675953851
+    second: candle_small
+  - first:
+      213: -5643394485641182052
+    second: wall_brick_tileA
+  - first:
+      213: -979043331473560188
+    second: wall_brick_tileB
+  - first:
+      213: 6569198351171614826
+    second: wall_brick_tileC
+  - first:
+      213: -5749540202854284587
+    second: floor_tile_A
+  - first:
+      213: -5472742306697184026
+    second: floor_tile_B
+  - first:
+      213: -3976135408054794019
+    second: wall_top_edge
+  - first:
+      213: -6080682632301562557
+    second: wall_fill_large
+  - first:
+      213: -5283024019714457275
+    second: wall_fill_right
+  - first:
+      213: -8210599827270906204
+    second: wall_bottom_edge
+  - first:
+      213: -2892498393760592873
+    second: stairs_set_A
+  - first:
+      213: -5382109119007834230
+    second: stairs_set_B
+  - first:
+      213: 933484287428956351
+    second: railing_long
+  - first:
+      213: -8810627060404954713
+    second: platform_edge
+  - first:
+      213: 6583747193213568866
+    second: brick_base
+  - first:
+      213: -6186246234719349997
+    second: stairs_diagonal
+  - first:
+      213: -3772494300543299268
+    second: wall_section_bottom
+  - first:
+      213: 2098997359531818772
+    second: dead_tree_large
+  - first:
+      213: -7955128844225084450
+    second: floor_spikes
+  - first:
+      213: 8503916723200168856
+    second: railing_bottom
+  - first:
+      213: 4751528774425803275
+    second: raou_prop_1
+  - first:
+      213: 109252337243148128
+    second: raou_prop_2
+  - first:
+      213: -5165272125889972620
+    second: raou_prop_4
+  - first:
+      213: -7438287772813090929
+    second: raou_prop_5
+  - first:
+      213: 1084841933135494967
+    second: raou_prop_6
+  - first:
+      213: 5181984770518796477
+    second: raou_prop_7
+  - first:
+      213: 6945823432209048917
+    second: raou_prop_8
+  - first:
+      213: -755959367293766278
+    second: raou_prop_9
+  - first:
+      213: -2612718317050226459
+    second: raou_prop_10
+  - first:
+      213: -2481128665217959249
+    second: raou_prop_11
+  - first:
+      213: -292763519776119795
+    second: raou_prop_12
+  - first:
+      213: -4767862877337892267
+    second: raou_prop_13
+  - first:
+      213: 392309508608094773
+    second: raou_prop_14
+  - first:
+      213: -2318686998369852711
+    second: raou_prop_15
+  - first:
+      213: 3626881678950987130
+    second: raou_prop_16
+  - first:
+      213: -2913295035469758599
+    second: raou_prop_17
+  - first:
+      213: 3271915753400609457
+    second: raou_prop_18
+  - first:
+      213: 2969232900710634785
+    second: raou_prop_19
+  - first:
+      213: 4516626503905030564
+    second: raou_prop_20
+  - first:
+      213: 2951471302606695452
+    second: raou_prop_21
+  - first:
+      213: -5200698153583573284
+    second: raou_prop_22
+  - first:
+      213: -6961610632865658737
+    second: raou_prop_23
+  - first:
+      213: 1510862086984667318
+    second: raou_prop_24
+  - first:
+      213: 547432717436741036
+    second: raou_prop_25
+  - first:
+      213: 8833096462055194392
+    second: raou_prop_26
+  - first:
+      213: -6421925902462902379
+    second: raou_prop_27
+  - first:
+      213: 4066573801488474254
+    second: raou_prop_28
+  - first:
+      213: -2128079796736249121
+    second: raou_prop_29
+  - first:
+      213: 5423792867698166496
+    second: raou_prop_30
+  - first:
+      213: 2204049840177672431
+    second: raou_prop_31
+  - first:
+      213: 2446661608818622300
+    second: raou_prop_32
+  - first:
+      213: -5056084081898833493
+    second: raou_prop_33
+  - first:
+      213: 6787830119063295663
+    second: raou_prop_34
+  - first:
+      213: 8767870759049749858
+    second: raou_prop_35
+  - first:
+      213: -4722571721558462906
+    second: raou_prop_36
+  - first:
+      213: 3774665314407594203
+    second: raou_prop_37
+  - first:
+      213: 6957474854660500443
+    second: raou_prop_38
+  - first:
+      213: -7661344048717241401
+    second: raou_prop_39
+  - first:
+      213: 8456090947703489361
+    second: raou_prop_40
+  - first:
+      213: -8210479697377410611
+    second: raou_prop_41
+  - first:
+      213: -209235921324933829
+    second: raou_prop_42
+  - first:
+      213: 7325866771049976854
+    second: raou_prop_43
+  - first:
+      213: -2433491631347319592
+    second: raou_prop_44
+  - first:
+      213: -6593014563568037770
+    second: raou_prop_45
+  - first:
+      213: 540725266214371704
+    second: raou_prop_46
+  - first:
+      213: -4848110747880899748
+    second: raou_prop_47
+  - first:
+      213: -7731112848039113658
+    second: raou_prop_48
+  - first:
+      213: 7623772958337635896
+    second: raou_prop_49
+  - first:
+      213: 7952528540725089562
+    second: raou_prop_50
+  - first:
+      213: 3377406268465111926
+    second: raou_prop_51
+  - first:
+      213: 2717585143137903226
+    second: raou_prop_52
+  - first:
+      213: 7499980089368049889
+    second: raou_prop_53
+  - first:
+      213: -7349944940962278651
+    second: raou_prop_54
+  - first:
+      213: 5139554352822344807
+    second: raou_grave_rock1
+  - first:
+      213: -7228720268898462650
+    second: raou_grave_rock2
+  - first:
+      213: 244440175547709464
+    second: raou_grave_tombstone_round
+  - first:
+      213: 3071166830936121919
+    second: raou_grave_tombstone_cross
+  - first:
+      213: -4450442746946253760
+    second: raou_grave_cross_wood
+  - first:
+      213: 1827721962500122732
+    second: raou_grave_tombstone_arch
+  - first:
+      213: 5098328008518162388
+    second: raou_grave_cross_tall
+  - first:
+      213: 5650130630046981835
+    second: raou_grave_staff
+  - first:
+      213: 4669000890936182984
+    second: raou_grave_shovel_broom
+  - first:
+      213: -1060876292210710815
+    second: raou_wall_top_stone
+  - first:
+      213: 8178346389904227375
+    second: raou_statue_hooded_steps
+  - first:
+      213: 3886396392117093752
+    second: raou_arch_window_small
+  - first:
+      213: 6984465838613872972
+    second: raou_tree_dead_top
+  - first:
+      213: 4481374383192568766
+    second: raou_decor_clouds_fence
+  - first:
+      213: 2872464801462653554
+    second: raou_arch_entrance_stone
+  - first:
+      213: -8546783399116115496
+    second: raou_pillar_fluted_top
+  - first:
+      213: -419156618595572769
+    second: raou_fence_iron_wide
+  - first:
+      213: 7378585572318736460
+    second: raou_fence_iron_skull
+  - first:
+      213: 6115911308403028474
+    second: raou_cart_crystal_blocks
+  - first:
+      213: 7581333708481467658
+    second: raou_cart_crystals_minecart
+  - first:
+      213: 3262701030766531768
+    second: raou_railing_stone_top
+  - first:
+      213: -1864016328386022155
+    second: raou_railing_stone_bot
+  - first:
+      213: -4265036537239019214
+    second: raou_grave_pointed
+  - first:
+      213: -4116492936664563840
+    second: raou_grave_arched_large
+  - first:
+      213: -7203255598917460514
+    second: raou_cave_entrance_orange
+  - first:
+      213: -3401041147559772689
+    second: raou_cave_platform_orange
+  - first:
+      213: -6754540698574140228
+    second: raou_pillar_brick_column
+  - first:
+      213: 709037367263096181
+    second: raou_wall_brick_dark_block
+  - first:
+      213: 1125873767911509684
+    second: raou_wall_brick_platform_mid
+  - first:
+      213: 7889016388442624050
+    second: raou_wall_brick_trim_mid
+  - first:
+      213: -8270701484063925529
+    second: raou_cave_entrance_purple_crystal
+  - first:
+      213: -1226341810285080169
+    second: raou_wall_window_grate_frame
+  - first:
+      213: -6256044767182094181
+    second: raou_wall_railing_right
+  - first:
+      213: -8509537434903908771
+    second: raou_gate_gothic_wood
+  - first:
+      213: -7903088317996573863
+    second: raou_wall_carved_stone_blocks
+  - first:
+      213: 2553249166132230459
+    second: raou_lantern_skull_hanging
+  - first:
+      213: -230516633086698787
+    second: raou_arch_wall_trim_small
+  - first:
+      213: 5614100776491238315
+    second: raou_wood_panel_window
+  - first:
+      213: 2334198727823260965
+    second: raou_wood_panel_square
+  - first:
+      213: 7274718721105781891
+    second: raou_wood_panel_diagonal
+  - first:
+      213: 1430345704253460577
+    second: raou_arch_tower_top
+  - first:
+      213: -2895978650984368718
+    second: raou_arch_tower_mid
+  - first:
+      213: 857865112127215141
+    second: raou_arch_tower_bot
+  - first:
+      213: -7308916643917725492
+    second: raou_door_arch_stairs_left
+  - first:
+      213: -4835498553111062857
+    second: raou_door_arch_stairs_right
+  - first:
+      213: -6189573695390903138
+    second: raou_pillar_tower_side
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -186,7 +2961,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -199,7 +2974,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -213,7 +2988,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 14
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -234,10 +3009,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -262,29 +3037,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tilesetv3_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 415
-        width: 272
-        height: 417
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: eeacae48308125750800000000000000
-      internalID: 6292118032783952622
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Tilesetv3_1
+      name: raou_prop_1
       rect:
         serializedVersion: 2
         x: 6
@@ -292,21 +3045,21 @@ TextureImporter:
         width: 19
         height: 33
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e0a54e27718966fb0800000000000000
-      internalID: -4654865938361591282
+      spriteID: b0a72b3ee32d0f140800000000000000
+      internalID: 4751528774425803275
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_2
+      name: raou_prop_2
       rect:
         serializedVersion: 2
         x: 38
@@ -314,43 +3067,21 @@ TextureImporter:
         width: 19
         height: 33
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 08723704b29cbfb50800000000000000
-      internalID: 6628112464207882112
+      spriteID: 06f42400c64248100800000000000000
+      internalID: 109252337243148128
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_3
-      rect:
-        serializedVersion: 2
-        x: 79
-        y: 255
-        width: 178
-        height: 194
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c54f50f72eb6b5e70800000000000000
-      internalID: 9104989692197467228
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Tilesetv3_4
+      name: raou_prop_4
       rect:
         serializedVersion: 2
         x: 1
@@ -358,21 +3089,21 @@ TextureImporter:
         width: 31
         height: 44
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9372d0376e75a9bd0800000000000000
-      internalID: -2622687185705556167
+      spriteID: 476f9184e544158b0800000000000000
+      internalID: -5165272125889972620
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_5
+      name: raou_prop_5
       rect:
         serializedVersion: 2
         x: 35
@@ -380,21 +3111,21 @@ TextureImporter:
         width: 26
         height: 43
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: eca76bfb00d933e40800000000000000
-      internalID: 5635020185312590542
+      spriteID: f8f185c2ea4e5c890800000000000000
+      internalID: -7438287772813090929
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_6
+      name: raou_prop_6
       rect:
         serializedVersion: 2
         x: 0
@@ -402,21 +3133,21 @@ TextureImporter:
         width: 33
         height: 108
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2f1ef303769b1b920800000000000000
-      internalID: 3004386279275094514
+      spriteID: 73f3dfd8df12e0f00800000000000000
+      internalID: 1084841933135494967
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_7
+      name: raou_prop_7
       rect:
         serializedVersion: 2
         x: 35
@@ -424,21 +3155,21 @@ TextureImporter:
         width: 26
         height: 43
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 183a428d84e9925c0800000000000000
-      internalID: -4239683538491497599
+      spriteID: db8c14681bb1ae740800000000000000
+      internalID: 5181984770518796477
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_8
+      name: raou_prop_8
       rect:
         serializedVersion: 2
         x: 68
@@ -446,21 +3177,21 @@ TextureImporter:
         width: 27
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 28e182e7a8ae4b4f0800000000000000
-      internalID: -813767752104272254
+      spriteID: 555a76d6c95846060800000000000000
+      internalID: 6945823432209048917
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_9
+      name: raou_prop_9
       rect:
         serializedVersion: 2
         x: 31
@@ -468,21 +3199,21 @@ TextureImporter:
         width: 18
         height: 26
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f68f8a99ec27d4320800000000000000
-      internalID: 2543815596201015407
+      spriteID: a7573dfe5fa4285f0800000000000000
+      internalID: -755959367293766278
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_10
+      name: raou_prop_10
       rect:
         serializedVersion: 2
         x: 48
@@ -490,21 +3221,21 @@ TextureImporter:
         width: 17
         height: 23
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 66ee0a44a874732d0800000000000000
-      internalID: -3299089542843142554
+      spriteID: 5e8901e8882cdbbd0800000000000000
+      internalID: -2612718317050226459
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_11
+      name: raou_prop_11
       rect:
         serializedVersion: 2
         x: 66
@@ -512,21 +3243,21 @@ TextureImporter:
         width: 29
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 69b519217bf58e390800000000000000
-      internalID: -7788870315642102890
+      spriteID: faaf4a3ef92419dd0800000000000000
+      internalID: -2481128665217959249
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_12
+      name: raou_prop_12
       rect:
         serializedVersion: 2
         x: 64
@@ -534,21 +3265,21 @@ TextureImporter:
         width: 31
         height: 49
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 43e7d483f90722600800000000000000
-      internalID: 442039542582443572
+      spriteID: d042d804125efebf0800000000000000
+      internalID: -292763519776119795
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_13
+      name: raou_prop_13
       rect:
         serializedVersion: 2
         x: 69
@@ -556,21 +3287,21 @@ TextureImporter:
         width: 23
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ef34da1b1ed5cf520800000000000000
-      internalID: 2737165897464366078
+      spriteID: 55ac08a69f525ddb0800000000000000
+      internalID: -4767862877337892267
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_14
+      name: raou_prop_14
       rect:
         serializedVersion: 2
         x: 98
@@ -578,21 +3309,21 @@ TextureImporter:
         width: 28
         height: 61
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: abad3555fa44eee50800000000000000
-      internalID: 6840480403863886522
+      spriteID: 532f7966b63c17500800000000000000
+      internalID: 392309508608094773
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_15
+      name: raou_prop_15
       rect:
         serializedVersion: 2
         x: 136
@@ -600,21 +3331,21 @@ TextureImporter:
         width: 16
         height: 29
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8d65ef2a6e04d2b90800000000000000
-      internalID: -7265079264557508904
+      spriteID: 9d229dcb57e52dfd0800000000000000
+      internalID: -2318686998369852711
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_16
+      name: raou_prop_16
       rect:
         serializedVersion: 2
         x: 35
@@ -622,21 +3353,21 @@ TextureImporter:
         width: 26
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a0543fffc6079b410800000000000000
-      internalID: 1493348364902941962
+      spriteID: a75fe34cba5455230800000000000000
+      internalID: 3626881678950987130
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_17
+      name: raou_prop_17
       rect:
         serializedVersion: 2
         x: 164
@@ -644,21 +3375,21 @@ TextureImporter:
         width: 40
         height: 43
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 146b32ce4a73016e0800000000000000
-      internalID: -1868932663882828223
+      spriteID: 97f7aecb995e197d0800000000000000
+      internalID: -2913295035469758599
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_18
+      name: raou_prop_18
       rect:
         serializedVersion: 2
         x: 212
@@ -666,43 +3397,43 @@ TextureImporter:
         width: 40
         height: 43
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ac2fbf13de928d540800000000000000
-      internalID: 5032818682309112522
+      spriteID: 1baa278da0e286d20800000000000000
+      internalID: 3271915753400609457
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_19
+      name: raou_prop_19
       rect:
         serializedVersion: 2
-        x: 6
-        y: 175
-        width: 43
-        height: 43
+        x: 16
+        y: 176
+        width: 16
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: eb14b06e14038eda0800000000000000
-      internalID: -5915425050960641602
+      spriteID: 125924e6795d43920800000000000000
+      internalID: 2969232900710634785
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_20
+      name: raou_prop_20
       rect:
         serializedVersion: 2
         x: 35
@@ -710,21 +3441,21 @@ TextureImporter:
         width: 26
         height: 21
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 144c24309264638d0800000000000000
-      internalID: -2867026970812431295
+      spriteID: 4a1bf5c00e74eae30800000000000000
+      internalID: 4516626503905030564
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_21
+      name: raou_prop_21
       rect:
         serializedVersion: 2
         x: 69
@@ -732,21 +3463,21 @@ TextureImporter:
         width: 22
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a15d9698fb8a14b90800000000000000
-      internalID: -7259335583746894566
+      spriteID: c1ca1ac138bb5f820800000000000000
+      internalID: 2951471302606695452
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_22
+      name: raou_prop_22
       rect:
         serializedVersion: 2
         x: 130
@@ -754,21 +3485,21 @@ TextureImporter:
         width: 28
         height: 23
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 735e5a02305bbcdb0800000000000000
-      internalID: -4770520355231636169
+      spriteID: cd60f93759863d7b0800000000000000
+      internalID: -5200698153583573284
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_23
+      name: raou_prop_23
       rect:
         serializedVersion: 2
         x: 95
@@ -776,21 +3507,21 @@ TextureImporter:
         width: 33
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 796ef6fef29c34e90800000000000000
-      internalID: -7042564184559589737
+      spriteID: f88c57b7304636f90800000000000000
+      internalID: -6961610632865658737
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_24
+      name: raou_prop_24
       rect:
         serializedVersion: 2
         x: 133
@@ -798,21 +3529,21 @@ TextureImporter:
         width: 6
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 010cde3b8a16139a0800000000000000
-      internalID: -6255111030239805424
+      spriteID: 6b0935f2019a7f410800000000000000
+      internalID: 1510862086984667318
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_25
+      name: raou_prop_25
       rect:
         serializedVersion: 2
         x: 148
@@ -820,21 +3551,21 @@ TextureImporter:
         width: 8
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8bd931ce56011a7a0800000000000000
-      internalID: -6367790368186720840
+      spriteID: ca56e35f72fd89700800000000000000
+      internalID: 547432717436741036
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_26
+      name: raou_prop_26
       rect:
         serializedVersion: 2
         x: 164
@@ -842,21 +3573,21 @@ TextureImporter:
         width: 40
         height: 43
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b7e114a26405ee7d0800000000000000
-      internalID: -2887282048811065733
+      spriteID: 81f3f87be66759a70800000000000000
+      internalID: 8833096462055194392
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_27
+      name: raou_prop_27
       rect:
         serializedVersion: 2
         x: 212
@@ -864,21 +3595,21 @@ TextureImporter:
         width: 40
         height: 43
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2fe4e7047037d10f0800000000000000
-      internalID: -1144632255298253070
+      spriteID: 59f91d1aa6cb0e6a0800000000000000
+      internalID: -6421925902462902379
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_28
+      name: raou_prop_28
       rect:
         serializedVersion: 2
         x: 0
@@ -886,21 +3617,21 @@ TextureImporter:
         width: 8
         height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a790f5869890fa390800000000000000
-      internalID: -7805009143443551878
+      spriteID: e8061aaa35f5f6830800000000000000
+      internalID: 4066573801488474254
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_29
+      name: raou_prop_29
       rect:
         serializedVersion: 2
         x: 70
@@ -908,21 +3639,21 @@ TextureImporter:
         width: 21
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f701fdf5e08d24560800000000000000
-      internalID: 7296631902543220863
+      spriteID: fd2b9dd23ba8772e0800000000000000
+      internalID: -2128079796736249121
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_30
+      name: raou_prop_30
       rect:
         serializedVersion: 2
         x: 100
@@ -930,21 +3661,21 @@ TextureImporter:
         width: 27
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5ffe9a447269d3150800000000000000
-      internalID: 5854000186051391477
+      spriteID: 0ea427e60ee254b40800000000000000
+      internalID: 5423792867698166496
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_31
+      name: raou_prop_31
       rect:
         serializedVersion: 2
         x: 133
@@ -952,21 +3683,21 @@ TextureImporter:
         width: 6
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bee23809fd7ecf820800000000000000
-      internalID: 2953490403036442347
+      spriteID: fe0fb0fe6ab569e10800000000000000
+      internalID: 2204049840177672431
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_32
+      name: raou_prop_32
       rect:
         serializedVersion: 2
         x: 148
@@ -974,21 +3705,21 @@ TextureImporter:
         width: 8
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 63df3625e90ad8ff0800000000000000
-      internalID: -32193020474163914
+      spriteID: c5f383f25c944f120800000000000000
+      internalID: 2446661608818622300
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_33
+      name: raou_prop_33
       rect:
         serializedVersion: 2
         x: 15
@@ -996,21 +3727,21 @@ TextureImporter:
         width: 34
         height: 30
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8e8849bc94c15a440800000000000000
-      internalID: 4946390869010057448
+      spriteID: ba9b9e7d05e25d9b0800000000000000
+      internalID: -5056084081898833493
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_34
+      name: raou_prop_34
       rect:
         serializedVersion: 2
         x: 54
@@ -1018,21 +3749,21 @@ TextureImporter:
         width: 20
         height: 24
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5b42945c785ab8c80800000000000000
-      internalID: -8319373884087786315
+      spriteID: fa61772a787333e50800000000000000
+      internalID: 6787830119063295663
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_35
+      name: raou_prop_35
       rect:
         serializedVersion: 2
         x: 79
@@ -1040,21 +3771,21 @@ TextureImporter:
         width: 46
         height: 66
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0820de91b95df3b20800000000000000
-      internalID: 3116444329295282816
+      spriteID: 265e1bd400cbda970800000000000000
+      internalID: 8767870759049749858
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_36
+      name: raou_prop_36
       rect:
         serializedVersion: 2
         x: 132
@@ -1062,21 +3793,21 @@ TextureImporter:
         width: 10
         height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a8734fa6d692a7140800000000000000
-      internalID: 4718129109546579850
+      spriteID: 64ee33e5a0e067eb0800000000000000
+      internalID: -4722571721558462906
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_37
+      name: raou_prop_37
       rect:
         serializedVersion: 2
         x: 145
@@ -1084,21 +3815,21 @@ TextureImporter:
         width: 15
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6534f95b11ddb0090800000000000000
-      internalID: -8067111239372815530
+      spriteID: bd8b04bba1e426430800000000000000
+      internalID: 3774665314407594203
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_38
+      name: raou_prop_38
       rect:
         serializedVersion: 2
         x: 134
@@ -1106,21 +3837,21 @@ TextureImporter:
         width: 6
         height: 6
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: edd348251767e1140800000000000000
-      internalID: 4692318090854415838
+      spriteID: bdb60cd948aed8060800000000000000
+      internalID: 6957474854660500443
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_39
+      name: raou_prop_39
       rect:
         serializedVersion: 2
         x: 150
@@ -1128,21 +3859,21 @@ TextureImporter:
         width: 6
         height: 8
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b1e724c420c42f9c0800000000000000
-      internalID: -3894967154968986085
+      spriteID: 7c3e722ed207da590800000000000000
+      internalID: -7661344048717241401
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_40
+      name: raou_prop_40
       rect:
         serializedVersion: 2
         x: 0
@@ -1150,21 +3881,21 @@ TextureImporter:
         width: 49
         height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9885fe1e5574f87f0800000000000000
-      internalID: -608188990483375991
+      spriteID: 15343462ae11a5570800000000000000
+      internalID: 8456090947703489361
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_41
+      name: raou_prop_41
       rect:
         serializedVersion: 2
         x: 50
@@ -1172,21 +3903,21 @@ TextureImporter:
         width: 27
         height: 29
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b858dec858488a280800000000000000
-      internalID: -9031823343561636469
+      spriteID: dc1434a57348e0e80800000000000000
+      internalID: -8210479697377410611
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_42
+      name: raou_prop_42
       rect:
         serializedVersion: 2
         x: 120
@@ -1194,21 +3925,21 @@ TextureImporter:
         width: 33
         height: 34
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4057d562e4e805c90800000000000000
-      internalID: -7183084939353688828
+      spriteID: b3dfc23c905a81df0800000000000000
+      internalID: -209235921324933829
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_43
+      name: raou_prop_43
       rect:
         serializedVersion: 2
         x: 190
@@ -1216,21 +3947,21 @@ TextureImporter:
         width: 41
         height: 38
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5a0bf8db8805da080800000000000000
-      internalID: -9174588317657747291
+      spriteID: 6149540a305baa560800000000000000
+      internalID: 7325866771049976854
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_44
+      name: raou_prop_44
       rect:
         serializedVersion: 2
         x: 73
@@ -1238,21 +3969,21 @@ TextureImporter:
         width: 30
         height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5079da49f5d952a30800000000000000
-      internalID: 4189928062179972869
+      spriteID: 8dc38a521408a3ed0800000000000000
+      internalID: -2433491631347319592
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_45
+      name: raou_prop_45
       rect:
         serializedVersion: 2
         x: 121
@@ -1260,21 +3991,21 @@ TextureImporter:
         width: 30
         height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a679c29d7b92f01f0800000000000000
-      internalID: -1076595916318926998
+      spriteID: 670dc8b8f28e084a0800000000000000
+      internalID: -6593014563568037770
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_46
+      name: raou_prop_46
       rect:
         serializedVersion: 2
         x: 159
@@ -1282,21 +4013,21 @@ TextureImporter:
         width: 50
         height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5855811d114e6fee0800000000000000
-      internalID: -1227543083238271611
+      spriteID: 87149c5c3ca018700800000000000000
+      internalID: 540725266214371704
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_47
+      name: raou_prop_47
       rect:
         serializedVersion: 2
         x: 73
@@ -1304,21 +4035,21 @@ TextureImporter:
         width: 30
         height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3b9ef0f5a300e3e80800000000000000
-      internalID: -8197114021064742477
+      spriteID: c5b3ec016fc08bcb0800000000000000
+      internalID: -4848110747880899748
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_48
+      name: raou_prop_48
       rect:
         serializedVersion: 2
         x: 121
@@ -1326,21 +4057,21 @@ TextureImporter:
         width: 30
         height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f71e4fb9d75c04010800000000000000
-      internalID: 1171153046394429823
+      spriteID: 64c8b2e63d195b490800000000000000
+      internalID: -7731112848039113658
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_49
+      name: raou_prop_49
       rect:
         serializedVersion: 2
         x: 161
@@ -1348,21 +4079,21 @@ TextureImporter:
         width: 60
         height: 69
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ce1d3dfc215746b80800000000000000
-      internalID: -8402462281109876244
+      spriteID: 83691f5fc151dc960800000000000000
+      internalID: 7623772958337635896
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_50
+      name: raou_prop_50
       rect:
         serializedVersion: 2
         x: 64
@@ -1370,21 +4101,21 @@ TextureImporter:
         width: 17
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: dac29605da82918e0800000000000000
-      internalID: -1722300657648980819
+      spriteID: a151310d29e0d5e60800000000000000
+      internalID: 7952528540725089562
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_51
+      name: raou_prop_51
       rect:
         serializedVersion: 2
         x: 80
@@ -1392,21 +4123,21 @@ TextureImporter:
         width: 17
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 79f42ef8b55e0af40800000000000000
-      internalID: 5737838106688769943
+      spriteID: 6736a0e5b15fede20800000000000000
+      internalID: 3377406268465111926
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_52
+      name: raou_prop_52
       rect:
         serializedVersion: 2
         x: 121
@@ -1414,21 +4145,21 @@ TextureImporter:
         width: 30
         height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 60653de1640bb9060800000000000000
-      internalID: 6961351464242599430
+      spriteID: a722d9f0a4dc6b520800000000000000
+      internalID: 2717585143137903226
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_53
+      name: raou_prop_53
       rect:
         serializedVersion: 2
         x: 65
@@ -1436,21 +4167,21 @@ TextureImporter:
         width: 14
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1a4a02c74ea486fb0800000000000000
-      internalID: -4654387869691894623
+      spriteID: 1e8f8499728451860800000000000000
+      internalID: 7499980089368049889
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tilesetv3_54
+      name: raou_prop_54
       rect:
         serializedVersion: 2
         x: 81
@@ -1458,15 +4189,1027 @@ TextureImporter:
         width: 14
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a6442a9b93820cc80800000000000000
-      internalID: -8304593484478528406
+      spriteID: 50393439400cff990800000000000000
+      internalID: -7349944940962278651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_rock1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 816
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76cd9cf047d535740800000000000000
+      internalID: 5139554352822344807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_rock2
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 816
+        width: 13
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64414aff63d6eab90800000000000000
+      internalID: -7228720268898462650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_tombstone_round
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 800
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 818fa586b0d646300800000000000000
+      internalID: 244440175547709464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_tombstone_cross
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 800
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f32e8e306f9fe9a20800000000000000
+      internalID: 3071166830936121919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_cross_wood
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 800
+        width: 16
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04c0e0fa6e9dc32c0800000000000000
+      internalID: -4450442746946253760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_tombstone_arch
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 800
+        width: 16
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c68eff2f07f5d5910800000000000000
+      internalID: 1827721962500122732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_cross_tall
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 800
+        width: 16
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d75628cf46e0c640800000000000000
+      internalID: 5098328008518162388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_staff
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 800
+        width: 8
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bce11825fdb496e40800000000000000
+      internalID: 5650130630046981835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_shovel_broom
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 800
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c8cb38a29f9bc040800000000000000
+      internalID: 4669000890936182984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wall_top_stone
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 787
+        width: 64
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e6a52c02a20741f0800000000000000
+      internalID: -1060876292210710815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_statue_hooded_steps
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 769
+        width: 36
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2cf65cf5b25f7170800000000000000
+      internalID: 8178346389904227375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_arch_window_small
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 746
+        width: 24
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 875cf787de04fe530800000000000000
+      internalID: 3886396392117093752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_tree_dead_top
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 647
+        width: 68
+        height: 85
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c414e68ccaecde060800000000000000
+      internalID: 6984465838613872972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_decor_clouds_fence
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 800
+        width: 12
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb37ab7124a013e30800000000000000
+      internalID: 4481374383192568766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_arch_entrance_stone
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 702
+        width: 85
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2729ef8948b0dd720800000000000000
+      internalID: 2872464801462653554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_pillar_fluted_top
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 692
+        width: 32
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d17a7308c9b36980800000000000000
+      internalID: -8546783399116115496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_fence_iron_wide
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 768
+        width: 34
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd36b53b64bde2af0800000000000000
+      internalID: -419156618595572769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_fence_iron_skull
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 757
+        width: 17
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4071ee0c70066660800000000000000
+      internalID: 7378585572318736460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_cart_crystal_blocks
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 727
+        width: 82
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af138277ee410e450800000000000000
+      internalID: 6115911308403028474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_cart_crystals_minecart
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 692
+        width: 46
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a059bb917de463960800000000000000
+      internalID: 7581333708481467658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_railing_stone_top
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 646
+        width: 48
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b4d32b0d41774d20800000000000000
+      internalID: 3262701030766531768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_railing_stone_bot
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 626
+        width: 48
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f4f50b760fa126e0800000000000000
+      internalID: -1864016328386022155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_pointed
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 592
+        width: 28
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2316ec3dddb8fc4c0800000000000000
+      internalID: -4265036537239019214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_grave_arched_large
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 596
+        width: 36
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08f34b5fb774fd6c0800000000000000
+      internalID: -4116492936664563840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_cave_entrance_orange
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 625
+        width: 85
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edd5e208235e80c90800000000000000
+      internalID: -7203255598917460514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_cave_platform_orange
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 544
+        width: 45
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fed763588131dc0d0800000000000000
+      internalID: -3401041147559772689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_pillar_brick_columniiiii
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 607
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 4, z: 16, w: 12}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbcc190950d0342a0800000000000000
+      internalID: -6754540698574140228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wall_brick_dark_block
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 574
+        width: 80
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57de1389ab107d900800000000000000
+      internalID: 709037367263096181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wall_brick_platform_mid
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 672
+        width: 59
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4becb4e0a38ef9f00800000000000000
+      internalID: 1125873767911509684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wall_brick_trim_mid
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 677
+        width: 48
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 10}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2309b548b9a6b7d60800000000000000
+      internalID: 7889016388442624050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_cave_entrance_purple_crystal
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 477
+        width: 85
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ead21ff1d0983d80800000000000000
+      internalID: -8270701484063925529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wall_window_grate_frame
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 452
+        width: 144
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7919fb8fe982bfee0800000000000000
+      internalID: -1226341810285080169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wall_railing_right
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 432
+        width: 52
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b908b212e601e29a0800000000000000
+      internalID: -6256044767182094181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_gate_gothic_wood
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 367
+        width: 85
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5ee9a5d9cc08e980800000000000000
+      internalID: -8509537434903908771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wall_carved_stone_blocks
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 386
+        width: 144
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95b56411c07925290800000000000000
+      internalID: -7903088317996573863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_lantern_skull_hanging
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 357
+        width: 26
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b39bf52c696fe6320800000000000000
+      internalID: 2553249166132230459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_arch_wall_trim_small
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 344
+        width: 56
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dda5c02f75a0dccf0800000000000000
+      internalID: -230516633086698787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wood_panel_window
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 394
+        width: 51
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba3410459ea49ed40800000000000000
+      internalID: 5614100776491238315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wood_panel_square
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 394
+        width: 62
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52df217306db46020800000000000000
+      internalID: 2334198727823260965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_wood_panel_diagonal
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 318
+        width: 112
+        height: 76
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 384e46c322ef4f460800000000000000
+      internalID: 7274718721105781891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_arch_tower_top
+      rect:
+        serializedVersion: 2
+        x: 190
+        y: 394
+        width: 45
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1609808f6db99d310800000000000000
+      internalID: 1430345704253460577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_arch_tower_mid
+      rect:
+        serializedVersion: 2
+        x: 190
+        y: 324
+        width: 66
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b536fea2ca6fc7d0800000000000000
+      internalID: -2895978650984368718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_arch_tower_bot
+      rect:
+        serializedVersion: 2
+        x: 190
+        y: 256
+        width: 66
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5261b8936cfb7eb00800000000000000
+      internalID: 857865112127215141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_door_arch_stairs_left
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 272
+        width: 14
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc008526903819a90800000000000000
+      internalID: -7308916643917725492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_door_arch_stairs_right
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 272
+        width: 14
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b656ed7fabd4ecb0800000000000000
+      internalID: -4835498553111062857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: raou_pillar_tower_side
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 256
+        width: 30
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e949f1f84873a1aa0800000000000000
+      internalID: -6189573695390903138
       vertices: []
       indices: 
       edges: []
@@ -1475,7 +5218,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 90446917c1244244eae70d66496a4165
     internalID: 0
     vertices: []
     indices: 
@@ -1540,6 +5283,931 @@ TextureImporter:
       Tilesetv3_7: -4239683538491497599
       Tilesetv3_8: -813767752104272254
       Tilesetv3_9: 2543815596201015407
+      arch_door_top: 5251171323317982994
+      arch_stone_A: 8450573954201597074
+      arch_stone_B: -4159253464977330322
+      bookshelf_A: 8245829056415391846
+      bookshelf_B: -4608733692292821466
+      bottle: 6587758831544789272
+      brick_base: 6583747193213568866
+      candle_holder: -8876445062366124988
+      candle_small: -622662280675953851
+      cave_hole_large: -4251392424909191499
+      cave_opening_left: 68401750102776231
+      cave_opening_right: -3691600005085257474
+      chain_hang: 5697530563775131874
+      chess_piece: -455291393511070993
+      clouds: -7746278857152316402
+      cross_marker: -77400457057466481
+      dead_tree: 8499122774393151660
+      dead_tree_large: 2098997359531818772
+      door_large: -2583968056524353664
+      door_small_A: 9118000884433664901
+      door_small_B: 2615715153790506866
+      door_wooden: -7236239796898818083
+      dresser: 7582563812468022774
+      fence_gate: -9022736589983911497
+      fence_iron: 3554978186165488596
+      floor_spikes: -7955128844225084450
+      floor_tile_A: -5749540202854284587
+      floor_tile_B: -5472742306697184026
+      gravestone_large: -3588809085970911614
+      gravestone_slab: 4955565765600276925
+      key: -5581790527274920917
+      key_small: 4623452970746488504
+      lamp_wall: -4533273227258915902
+      mine_cart: 5397086558349123586
+      painting_frame: 8857866566774222947
+      pillar_small: 1475342266868531954
+      platform_edge: -8810627060404954713
+      platform_wide: -7783520257427890126
+      railing_bottom: 8503916723200168856
+      railing_long: 933484287428956351
+      railing_vert: -146892965785143285
+      raou_000: 1706178659612770527
+      raou_001: 1616159823961650327
+      raou_002: -6072915340764443116
+      raou_003: -2155605357358857009
+      raou_004: 8386730110410053341
+      raou_005: 5358858122730123061
+      raou_006: -7963515309614265084
+      raou_007: -5782082511702096835
+      raou_008: 7662605751008906080
+      raou_009: 4913247647753884368
+      raou_010: 6232251377410025132
+      raou_011: -6222754743662969906
+      raou_012: 8858871496345921446
+      raou_013: 7217460002678740687
+      raou_014: 1207036070282673125
+      raou_015: -8566164068309852232
+      raou_016: -2260252139857232156
+      raou_017: 4155906355183216999
+      raou_018: 8609885191269230679
+      raou_019: -6701589033963327227
+      raou_020: 4101627976907573280
+      raou_021: -9090770859871736750
+      raou_022: 5142851340887775862
+      raou_023: -2605314312309922794
+      raou_024: 5134380816838517744
+      raou_025: 7912794664519881029
+      raou_026: -8396336575661149987
+      raou_027: 1331656844076479970
+      raou_028: -631922523978570027
+      raou_029: -7721922327713427790
+      raou_030: 6133371961986852692
+      raou_031: -6903975867625948666
+      raou_032: 4959664780008429893
+      raou_033: 6394436493829014685
+      raou_034: 8790920113659219477
+      raou_035: -4756695242450230356
+      raou_036: 3675315314853956404
+      raou_037: 6757160291437076588
+      raou_038: 4735520566911849428
+      raou_039: -2279805066802361498
+      raou_040: 7320968519798938095
+      raou_041: 4435171087558522404
+      raou_042: 2097947089133726166
+      raou_043: -1039908314952797489
+      raou_044: -8513269188522391580
+      raou_045: 4697324457257890671
+      raou_046: -3927714107150253428
+      raou_047: 5645084693515889529
+      raou_048: 2462109247404390982
+      raou_049: 1928187041209209197
+      raou_050: 7563962003919814892
+      raou_051: -1785253683174978758
+      raou_052: -7480890953912058975
+      raou_053: 8062399915159985862
+      raou_054: 6909006489870921971
+      raou_055: 5045720675120057737
+      raou_R00_C00: 2375138445043400305
+      raou_R00_C01: 6904202065430790983
+      raou_R00_C02: -6366372661256059143
+      raou_R00_C03: 1218282572945335254
+      raou_R00_C04: 6278239602927598655
+      raou_R00_C05: -2773050348191951601
+      raou_R00_C06: -2700051306570544487
+      raou_R00_C07: 1250675908496220989
+      raou_R00_C08: -2319765539044139542
+      raou_R00_C09: 789260712389151773
+      raou_R00_C10: 1966226529020203371
+      raou_R00_C11: 3900329286890115481
+      raou_R00_C12: 3223604692391616726
+      raou_R00_C13: 6785976016656267045
+      raou_R00_C14: -3429508703925588869
+      raou_R01_C00: 409712715836859445
+      raou_R01_C02: 1258050255258968552
+      raou_R01_C03: 8049691259269634538
+      raou_R01_C04: 8628436509355356964
+      raou_R01_C05: 1328846586779995597
+      raou_R01_C06: -1401528098950534773
+      raou_R01_C07: -2308339019826598805
+      raou_R01_C08: -9110295467289391677
+      raou_R01_C09: -8132574166615355262
+      raou_R01_C10: 8720117010798788243
+      raou_R01_C11: 4635593027999152979
+      raou_R01_C12: 109029417858196080
+      raou_R01_C13: -4274640135092222803
+      raou_R01_C14: 932204473858221898
+      raou_R01_C15: 3967558180102923235
+      raou_R02_C00: 282490960432863094
+      raou_R02_C01: 3648379517002453946
+      raou_R02_C02: -1194607186140910135
+      raou_R02_C03: -2293675302341704340
+      raou_R02_C04: 233667538059309443
+      raou_R02_C05: 5314493888022013552
+      raou_R02_C06: -3559542452251316790
+      raou_R02_C07: -1398636598933671824
+      raou_R02_C08: -13567372645887691
+      raou_R02_C09: 9062823430765008218
+      raou_R02_C12: 4826865168363149953
+      raou_R02_C14: -6641564722278969349
+      raou_R02_C15: -8149219503018481723
+      raou_R03_C00: -5098044629183528914
+      raou_R03_C01: 8223944429182829487
+      raou_R03_C02: -1123811919127998235
+      raou_R03_C03: -5340529090959628605
+      raou_R03_C04: -7860408321373072835
+      raou_R03_C05: 1863077498039074974
+      raou_R03_C06: -4471527226375665775
+      raou_R03_C07: 143358398506504529
+      raou_R03_C08: -3152211764865010011
+      raou_R03_C09: -3232771036414490999
+      raou_R03_C10: -6454243126002501796
+      raou_R03_C11: -7403641440425573520
+      raou_R03_C12: 6219776348667112717
+      raou_R03_C13: -3427800706014058550
+      raou_R03_C14: -4986094491885945169
+      raou_R03_C15: -8706939224696198794
+      raou_R04_C00: -8462917843175387829
+      raou_R04_C01: 8904443579460412615
+      raou_R04_C02: -5325353339244724780
+      raou_R04_C03: 3154473753638034787
+      raou_R04_C04: -4083977548283157684
+      raou_R04_C05: 1320190715340133616
+      raou_R04_C06: -5663301615237860192
+      raou_R04_C07: 6648192661384000885
+      raou_R04_C08: 6232075249411276384
+      raou_R04_C09: -2385075134004364879
+      raou_R04_C10: -4418148464649181469
+      raou_R04_C11: 841528462994419581
+      raou_R04_C12: 4804260633176417256
+      raou_R04_C13: 5298550278104604894
+      raou_R04_C14: -5864867150801539861
+      raou_R04_C15: 2489691793088686522
+      raou_R05_C00: 7019349676265272228
+      raou_R05_C01: -5981853032022774991
+      raou_R05_C02: 7397695415484703560
+      raou_R05_C03: -4975175322433151197
+      raou_R05_C04: -4084215257255000608
+      raou_R05_C05: -2148563143633188294
+      raou_R05_C06: -6592690262687424045
+      raou_R05_C07: -7724159538297234807
+      raou_R05_C08: -293430287759633549
+      raou_R05_C09: 1900912471828591155
+      raou_R05_C10: 2935135584306069296
+      raou_R05_C11: -5112337531603625765
+      raou_R05_C12: 1984335219104190675
+      raou_R05_C13: 6078576439337970543
+      raou_R05_C14: 4278788875720952432
+      raou_R05_C15: 8336779366573361767
+      raou_R06_C00: -5486259278337207395
+      raou_R06_C01: -5097133890538863284
+      raou_R06_C02: 4598436472027121044
+      raou_R06_C03: 8212500207218587143
+      raou_R06_C04: 1752175984385321752
+      raou_R06_C05: 3606517844085098615
+      raou_R06_C06: -2628684598879507686
+      raou_R06_C07: 8500451675820852924
+      raou_R06_C08: -443546589831856851
+      raou_R06_C09: 8294195389487494211
+      raou_R06_C10: 5856378776007546025
+      raou_R06_C11: -6084538695716279010
+      raou_R06_C13: -6682572003519661634
+      raou_R06_C14: -3270972386768904341
+      raou_R06_C15: 2311321808167837645
+      raou_R06_C16: 2245627551716118090
+      raou_R07_C00: 1594253389082986841
+      raou_R07_C01: 3517175323489803534
+      raou_R07_C02: 3716160281814056780
+      raou_R07_C03: -9125533066334338655
+      raou_R07_C04: 118983848584502404
+      raou_R07_C05: 8566466684242949588
+      raou_R07_C06: 8238315213504893582
+      raou_R07_C07: -4871415523870262822
+      raou_R07_C08: 6858008136445395012
+      raou_R07_C09: 2203817278512795351
+      raou_R07_C10: 861665209589587003
+      raou_R07_C11: 1522921646400048049
+      raou_R07_C13: 5447141336156040558
+      raou_R07_C14: -681298440255252329
+      raou_R07_C15: 1344581401006870181
+      raou_R07_C16: -7335687360845649860
+      raou_R08_C00: -6103016395019713055
+      raou_R08_C01: -7279823316137819168
+      raou_R08_C02: 884969250843516757
+      raou_R08_C03: -5172326071000578669
+      raou_R08_C04: 4851418869057693091
+      raou_R08_C05: 4842934334467958023
+      raou_R08_C06: 6653097472265332233
+      raou_R08_C07: 1264937579021922959
+      raou_R08_C08: 6327953136487820238
+      raou_R08_C09: 2119712540624422830
+      raou_R08_C10: 8405448485511651528
+      raou_R08_C11: -4926957943174817377
+      raou_R08_C14: 1759458903301506924
+      raou_R08_C15: 4740123926297231157
+      raou_R09_C00: -8804893947690811644
+      raou_R09_C01: -3794028983979694870
+      raou_R09_C02: -671096068680119103
+      raou_R09_C03: 3862836424941584392
+      raou_R09_C04: -686749231143485803
+      raou_R09_C05: 3521011037587789830
+      raou_R09_C06: 8392550343725241674
+      raou_R09_C07: -6687622171892069668
+      raou_R09_C08: -7644025800977086928
+      raou_R09_C09: -1844217150632812780
+      raou_R09_C10: 48932093186071552
+      raou_R09_C11: 6936087941509605760
+      raou_R09_C12: 5634044173736827402
+      raou_R09_C13: -3516341002269961730
+      raou_R09_C14: 1484691862252778399
+      raou_R09_C15: -6413985630444442058
+      raou_R10_C00: 5646504554413772027
+      raou_R10_C01: 8651539775656098992
+      raou_R10_C02: 7907213496346861637
+      raou_R10_C03: 7429802420801063822
+      raou_R10_C04: -8211063746427196686
+      raou_R10_C05: -2001451650503495171
+      raou_R10_C06: 7178929280515867389
+      raou_R10_C07: 3608453383823586290
+      raou_R10_C08: -468383919057217658
+      raou_R10_C09: 6365437216827669240
+      raou_R10_C10: 2028912500598091781
+      raou_R10_C11: 3617976063471386572
+      raou_R10_C12: -5921283736632217999
+      raou_R10_C13: -6452851005096412784
+      raou_R10_C14: -661478902559985239
+      raou_R10_C15: 2410799666422327526
+      raou_R10_C16: -2745809369603738568
+      raou_R11_C00: -4824445744340686429
+      raou_R11_C01: -7308546878204845663
+      raou_R11_C02: -4199946762229341948
+      raou_R11_C03: 1072629846726039651
+      raou_R11_C04: -52630001149936614
+      raou_R11_C05: 6797940930261592833
+      raou_R11_C06: -1154814410255439598
+      raou_R11_C07: 604339418124381029
+      raou_R11_C08: -6899830699127635391
+      raou_R11_C09: 5546265223423245648
+      raou_R11_C10: -5330371799231140015
+      raou_R11_C11: 1259102792559023077
+      raou_R11_C12: 8999030990107908440
+      raou_R11_C13: 7378599421147236973
+      raou_R11_C14: -8936978148808127059
+      raou_R11_C15: -8232622368021443535
+      raou_R11_C16: 6917648010083711627
+      raou_R12_C00: -1968663739030787976
+      raou_R12_C02: -7514520786018694409
+      raou_R12_C03: -6628031079817384257
+      raou_R12_C05: 661093773064784644
+      raou_R12_C06: -5528777815979946726
+      raou_R12_C07: -3944038913353889041
+      raou_R12_C08: -309574849941124859
+      raou_R12_C09: -2872251068587241245
+      raou_R12_C10: 2388469643239097881
+      raou_R12_C11: 3284396993270307791
+      raou_R12_C12: -5576139299640445450
+      raou_R12_C13: 5171090712309059937
+      raou_R12_C14: 3196232715906969535
+      raou_R12_C15: -2465542971137260705
+      raou_R12_C16: -2899623354617614062
+      raou_R13_C00: -1670926055692103222
+      raou_R13_C01: 5851704685950960762
+      raou_R13_C02: -4193773351891860617
+      raou_R13_C03: 3570653246094687551
+      raou_R13_C04: 1532154327453781920
+      raou_R13_C06: -3053195385590838280
+      raou_R13_C07: 817768690130326208
+      raou_R13_C08: -7734962115432528768
+      raou_R13_C09: 8456055736683999156
+      raou_R13_C10: 4088379106666090606
+      raou_R13_C11: -1383831240072279419
+      raou_R13_C12: 513118430324978564
+      raou_R13_C13: -5077895090230900804
+      raou_R14_C00: 7749103697817781384
+      raou_R14_C01: -3442517532002596854
+      raou_R14_C02: -4602062461462163232
+      raou_R14_C03: -7757376351728234755
+      raou_R14_C04: -8429897528487807363
+      raou_R14_C05: 5505465737611096631
+      raou_R14_C06: 8152873191635170774
+      raou_R14_C07: -4586952469145134212
+      raou_R14_C08: -194675627012701256
+      raou_R14_C09: 6916286279669085947
+      raou_R14_C10: -1634815127647734563
+      raou_R14_C11: 8034763924114726431
+      raou_R14_C12: 4019568468655760038
+      raou_R14_C13: -3597796850715394529
+      raou_R15_C00: -8334042261038277202
+      raou_R15_C01: -5114773058927649882
+      raou_R15_C02: 1180305577286617910
+      raou_R15_C03: -5979644582464394785
+      raou_R15_C04: -3958311335805330420
+      raou_R15_C05: 4665339119338382398
+      raou_R15_C06: 2740493663605650420
+      raou_R15_C07: -3560698765091577118
+      raou_R15_C08: 9116992264413819180
+      raou_R15_C09: 1645361327872879887
+      raou_R15_C10: -3603900982806928535
+      raou_R15_C11: 388896938648512208
+      raou_R15_C12: 2092387126625585875
+      raou_R15_C13: 8786892406235187217
+      raou_R16_C00: 257179625968122308
+      raou_R16_C01: -1734889518639823707
+      raou_R16_C02: -5244462715387057385
+      raou_R16_C03: 5325062741363526540
+      raou_R16_C04: -7059970938002061991
+      raou_R16_C05: 4138601161966577705
+      raou_R16_C06: -937525646987971273
+      raou_R16_C07: 6262943997660521043
+      raou_R16_C08: 6746201141140910667
+      raou_R16_C09: 6645211785656444864
+      raou_R16_C10: 2652443491138960956
+      raou_R16_C11: 971996810144284625
+      raou_R16_C12: -330087722296337514
+      raou_R16_C13: -8761441318488267730
+      raou_R17_C00: 8295497974623270894
+      raou_R17_C01: -111555248256943283
+      raou_R17_C02: 4738137421578929344
+      raou_R17_C03: -9043831542763510961
+      raou_R17_C04: 7117205917285859216
+      raou_R17_C05: 5180578229185152981
+      raou_R17_C06: -6919628663204321161
+      raou_R17_C07: 6162252927961981206
+      raou_R17_C08: -7965924155769102909
+      raou_R17_C09: -6753013906049977447
+      raou_R17_C10: 67025234504944708
+      raou_R17_C11: -1496486356257371039
+      raou_R17_C12: -223442541123834780
+      raou_R17_C13: 7703796107382563981
+      raou_R17_C14: -928780037281670148
+      raou_R17_C15: -718022494895140070
+      raou_R17_C16: 5977238463225061491
+      raou_R18_C02: -3846494739331269646
+      raou_R18_C03: 5417141509309135019
+      raou_R18_C05: 8766039529529000329
+      raou_R18_C06: 1141599967849436655
+      raou_R18_C07: -112931769296811156
+      raou_R18_C08: 6511197817621390630
+      raou_R18_C09: 7667090922101988809
+      raou_R18_C10: 8113576591026737875
+      raou_R18_C11: -8650670024697741994
+      raou_R18_C12: -2161867819496191517
+      raou_R18_C13: -1950548347941982445
+      raou_R18_C14: 867656419931852807
+      raou_R18_C15: -3177572607919731993
+      raou_R18_C16: -693991864251112041
+      raou_R19_C00: 5260427501313666249
+      raou_R19_C01: 8162422315032569404
+      raou_R19_C02: 2450858351186734842
+      raou_R19_C03: -3737018161947661932
+      raou_R19_C04: 4503773485848344743
+      raou_R19_C05: -3120772806018058400
+      raou_R19_C06: 7871306222210965921
+      raou_R19_C07: 3925782276572385903
+      raou_R19_C08: 7824859660755672999
+      raou_R19_C09: 1843277509177110173
+      raou_R19_C10: -2204296828115976450
+      raou_R19_C11: -5278271309193779631
+      raou_R19_C12: -3265588737269445909
+      raou_R19_C13: -4697479004041468845
+      raou_R19_C14: -4107050607883097327
+      raou_R19_C15: 6961660943988936300
+      raou_R19_C16: -1731872454120916136
+      raou_R20_C00: 2210451627967828489
+      raou_R20_C01: -3650241204210975572
+      raou_R20_C02: 9044113957308651023
+      raou_R20_C03: -7263288638818244308
+      raou_R20_C04: 3290161427448557989
+      raou_R20_C05: -6946683607981549625
+      raou_R20_C06: -482784073827543004
+      raou_R20_C07: 7887423960931432550
+      raou_R20_C08: 2294003810995818219
+      raou_R20_C09: 3047516864271716024
+      raou_R20_C10: 3422508517902822325
+      raou_R20_C11: 4697386886986591611
+      raou_R20_C12: 3278660383459281572
+      raou_R20_C13: -5940662463855462121
+      raou_R21_C00: -6284320267243595175
+      raou_R21_C01: 4945121512957469579
+      raou_R21_C02: -2352216194969247875
+      raou_R21_C03: 1302978771087451050
+      raou_R21_C04: 8664426455249972338
+      raou_R21_C05: -5551300909464881789
+      raou_R21_C06: -3264421805326187365
+      raou_R21_C07: 8844084804361397173
+      raou_R21_C08: -9014037588902361153
+      raou_R21_C09: 5380766910690387947
+      raou_R21_C10: -2139717341486405961
+      raou_R21_C11: -4703068223683850289
+      raou_R21_C12: -7847484558020730123
+      raou_R21_C13: 6010918821580344255
+      raou_R22_C00: 7976130326694241471
+      raou_R22_C01: -2512086010022446544
+      raou_R22_C02: -5231615476165893821
+      raou_R22_C03: 7100216629389821532
+      raou_R22_C04: -8614166472065678694
+      raou_R22_C05: 1777096637023240676
+      raou_R22_C06: -8044473176861893182
+      raou_R22_C07: -5722669850579346109
+      raou_R22_C08: -473841665248719388
+      raou_R22_C09: 6041347893822068721
+      raou_R22_C10: 9135898389671776952
+      raou_R22_C11: -698962132778806630
+      raou_R22_C12: 8485363853988128541
+      raou_R22_C13: 3414205156140454088
+      raou_R23_C00: 7299786974390172472
+      raou_R23_C01: 8934382729660623580
+      raou_R23_C02: -6059254853024416744
+      raou_R23_C03: 4878673858011767905
+      raou_R23_C04: 962022690543772159
+      raou_R23_C05: -6452072305884418390
+      raou_R23_C06: 1852833516309386254
+      raou_R24_C00: -4718773907100572458
+      raou_R24_C01: -2687082178104733102
+      raou_R24_C02: -6755081030209389893
+      raou_R24_C03: 8289330446967085699
+      raou_R24_C05: -7815274059676250254
+      raou_R24_C06: -5560730975362455270
+      raou_R24_C11: 5719768759653758539
+      raou_R24_C12: -988399404085006221
+      raou_R24_C13: -5960612274953526750
+      raou_R24_C14: 8291441164934727722
+      raou_R25_C00: 2111161379857033231
+      raou_R25_C01: 8079715660000490903
+      raou_R25_C05: 6941775575822931860
+      raou_R25_C06: 3821785481267327732
+      raou_R25_C11: -3920117536833088859
+      raou_R25_C12: -432110079998565756
+      raou_R25_C13: 4970162577269782735
+      raou_R25_C14: 1262205948371173631
+      raou_R26_C00: -4462702186640182582
+      raou_R26_C01: 3956873719781054833
+      raou_R26_C02: 4029808167009825942
+      raou_R26_C03: 3554780915538369945
+      raou_R26_C05: -8113974270989290029
+      raou_R26_C06: -3082243044608976364
+      raou_R26_C07: -8178786818507504300
+      raou_R26_C08: -8078532456993274212
+      raou_R26_C09: 8985309841530974074
+      raou_R26_C11: 8046075989097180775
+      raou_R26_C12: 6441591954923787166
+      raou_R26_C13: -7294222354407030066
+      raou_R26_C14: 2684944648097610411
+      raou_R27_C00: 3605441976912406448
+      raou_R27_C01: 7367072410812602630
+      raou_R27_C02: 6382619151212356975
+      raou_R27_C03: 1048132812660328256
+      raou_R27_C05: 5688702176716824420
+      raou_R27_C06: 1587920808381057909
+      raou_R27_C07: -4436767120279156037
+      raou_R27_C08: -7411799992604942482
+      raou_R27_C09: 3799221445532731333
+      raou_R27_C11: -7712382110955005774
+      raou_R27_C12: -6923759621918145111
+      raou_R27_C13: 5401104574201444023
+      raou_R27_C14: -2819688382457865715
+      raou_R28_C00: -2921119037192252161
+      raou_R28_C01: 6553725741560302151
+      raou_R28_C02: -394290981613070761
+      raou_R28_C03: 2932974095116922902
+      raou_R28_C05: 9112146726728021278
+      raou_R28_C06: 3047941295392836237
+      raou_R28_C07: -9061822199784868202
+      raou_R28_C08: 6854283835989644927
+      raou_R28_C09: -1914771062862976295
+      raou_R28_C10: -2654792821403167297
+      raou_R28_C11: -5004768861214115768
+      raou_R28_C12: 7615165896795279186
+      raou_R28_C13: -15427048026672997
+      raou_R28_C14: 3424940832072672166
+      raou_R28_C15: 1057235409969045098
+      raou_R29_C00: -4887430454389524458
+      raou_R29_C01: -4572661864082860064
+      raou_R29_C02: 9099029869396939272
+      raou_R29_C03: 2968230709210253886
+      raou_R29_C05: -4507780412697737231
+      raou_R29_C06: -8882533764428397702
+      raou_R29_C07: -4841256703752692136
+      raou_R29_C08: 4147263325137801809
+      raou_R29_C09: 600818402364029048
+      raou_R29_C10: 6970459949080410923
+      raou_R29_C11: -2037709342838526298
+      raou_R29_C12: 4714157527668707722
+      raou_R29_C13: -8660601947445659840
+      raou_R29_C15: 4756342523480372539
+      raou_R30_C00: 7278932921950052166
+      raou_R30_C01: 1114893957730489565
+      raou_R30_C02: 8780496691233888205
+      raou_R30_C03: -8025252033927007867
+      raou_R30_C05: -2861022732436041554
+      raou_R30_C06: -2089329330842092293
+      raou_R30_C07: -7722115973762597320
+      raou_R30_C08: 6003182807420653696
+      raou_R30_C09: 3583470708941121778
+      raou_R30_C10: 6013341988781985321
+      raou_R30_C11: -1372022068323402060
+      raou_R30_C12: -7015917494733307677
+      raou_R30_C13: -1665603303689172087
+      raou_R30_C15: -6567055146184133253
+      raou_R31_C00: 4466891807447010063
+      raou_R31_C01: -899859587791511753
+      raou_R31_C02: -5144784234097797774
+      raou_R31_C03: -4292733476355133946
+      raou_R31_C05: -8125860623368129186
+      raou_R31_C06: 4450346091404119942
+      raou_R31_C07: 7738867927916017135
+      raou_R31_C08: -1645113518337930301
+      raou_R31_C09: -8705715732332574009
+      raou_R31_C10: 6021299644209415767
+      raou_R31_C11: -7919588210744708555
+      raou_R31_C12: 481823788014628033
+      raou_R31_C13: -2312044084396250353
+      raou_R31_C15: -1024167581093298861
+      raou_R32_C00: 8718962332098521707
+      raou_R32_C01: -1466463251385096982
+      raou_R32_C02: 4876837857681088735
+      raou_R32_C03: -1616387859509993387
+      raou_R32_C10: 3795428036344271760
+      raou_R32_C11: -7145948109635047750
+      raou_R32_C12: 8760084345219789595
+      raou_R32_C13: -6727778372980410527
+      raou_R32_C14: 118608840523302263
+      raou_R32_C15: -384608244256349982
+      raou_R33_C00: -4024955756682261523
+      raou_R33_C01: 4638173026048150160
+      raou_R33_C02: 4106316292535964149
+      raou_R33_C03: 1045201115464742656
+      raou_R33_C04: -3131189156136856145
+      raou_R33_C05: -7274800054511494775
+      raou_R33_C06: -8754052375945221357
+      raou_R33_C07: -3673577303475135640
+      raou_R33_C08: -4691188302087203177
+      raou_R33_C09: -3271470523040560759
+      raou_R33_C10: -3535552506054812545
+      raou_R33_C11: -6667078088505294294
+      raou_R33_C12: -8994725545028413071
+      raou_R33_C13: 7486723562963323552
+      raou_R33_C15: 3732882486146738144
+      raou_R34_C00: -7112098993854174932
+      raou_R34_C01: -5829536731831624640
+      raou_R34_C02: 6011579322641803164
+      raou_R34_C03: -3452911186806191169
+      raou_R34_C04: -7716274722116464020
+      raou_R34_C05: 781986886572250784
+      raou_R34_C06: 1368402406644630444
+      raou_R34_C07: -6883719199328974262
+      raou_R34_C08: 1916234256788696898
+      raou_R34_C09: 3101982611779307970
+      raou_R34_C10: -6535989879836662629
+      raou_R34_C11: 7742170174589896258
+      raou_R34_C12: 653858032072414619
+      raou_R34_C13: 4483060628919060943
+      raou_R34_C15: -1666430421548067753
+      raou_R35_C00: -6286175053922434175
+      raou_R35_C01: -1055942159394657522
+      raou_R35_C02: 4312026897228153758
+      raou_R35_C03: 5740761294889340293
+      raou_R35_C04: 9125231018218536265
+      raou_R35_C05: 8899247341709083300
+      raou_R35_C06: 9036598050888915682
+      raou_R35_C07: -4791245822149882476
+      raou_R35_C08: -1925780693311216877
+      raou_R35_C09: 3378038491050072891
+      raou_R35_C10: 5689529505090728124
+      raou_R35_C11: -3992056648057871715
+      raou_R35_C12: -4187631263573846357
+      raou_R35_C13: 1443152507162104469
+      raou_R35_C15: -1048950324950862903
+      raou_R36_C00: 2270408944250032946
+      raou_R36_C01: -2466172111526444298
+      raou_R36_C02: -2810895687958941783
+      raou_R36_C03: 6409030779288485535
+      raou_R36_C04: -5376978112041505448
+      raou_R36_C05: 7674866926860457298
+      raou_R36_C06: -6717987839103461249
+      raou_R36_C07: -3469186313799379993
+      raou_R36_C08: -4485443019357146392
+      raou_R36_C09: -1328108235159884977
+      raou_R36_C10: 7248517769748463467
+      raou_R36_C11: 5498331066247274575
+      raou_R36_C12: -1481892666008728174
+      raou_R36_C13: -3305375021887559568
+      raou_R36_C14: -626081871820568857
+      raou_R36_C15: 86227404737990580
+      raou_R37_C00: 3144103624646540254
+      raou_R37_C01: 5377281151448139959
+      raou_R37_C02: 4177285340040156505
+      raou_R37_C03: -7925041946845530898
+      raou_R37_C04: -1221686526534456191
+      raou_R37_C05: -5409400551330541983
+      raou_R37_C06: -9094115054638788238
+      raou_R37_C07: 2157839011098761132
+      raou_R37_C08: -5475082287069844261
+      raou_R37_C09: 6326886196181779822
+      raou_R37_C10: 6271621528274338797
+      raou_R37_C11: 2033339347675564439
+      raou_R37_C12: 2493985751786057008
+      raou_R37_C13: -2422185703415579401
+      raou_R37_C14: 5560640777610567152
+      raou_R37_C15: 1715319320239377488
+      raou_R38_C00: 3450179139644639826
+      raou_R38_C01: -8823586640519844863
+      raou_R38_C02: 4264538030708431674
+      raou_R38_C03: -3578584312797177037
+      raou_R38_C04: 7448893157771352481
+      raou_R38_C05: 3119183633975942332
+      raou_R38_C06: -3355348785803819397
+      raou_R38_C07: -18587521195625731
+      raou_R38_C08: -6603593645627652706
+      raou_R38_C09: 238246931550040151
+      raou_R38_C10: 1790815031913647173
+      raou_R38_C11: 4458763925370399729
+      raou_R38_C12: -1964231440267365974
+      raou_R38_C13: -1790483198701533947
+      raou_R38_C14: -8983850116373241158
+      raou_R38_C15: 8160759682411980497
+      raou_R39_C00: 8056265674307130170
+      raou_R39_C01: 2073378500807542967
+      raou_R39_C02: 5374977027449228569
+      raou_R39_C04: -8980378596747625946
+      raou_R39_C05: -241685793058988819
+      raou_R39_C06: 5448653289600756864
+      raou_R39_C07: -5116493548871849992
+      raou_R39_C08: 2559088816574332163
+      raou_R39_C09: 8638736630328608899
+      raou_R39_C10: -158332659188030423
+      raou_R39_C11: -8051828083360074285
+      raou_R39_C12: -7054933287929390478
+      raou_R39_C13: -4244532268646854915
+      raou_R39_C14: -3390229875894795464
+      raou_R39_C15: 5407502647148846233
+      raou_R40_C00: 211517591832310336
+      raou_R40_C01: -8981085574608593142
+      raou_R40_C02: 5057077128892690983
+      raou_R40_C04: 2900230346446659086
+      raou_R40_C05: 1940662027113103655
+      raou_R40_C06: 7555788000179743083
+      raou_R40_C07: 5059034285170249567
+      raou_R40_C08: -288798050375545695
+      raou_R40_C09: -3662446552478579442
+      raou_R40_C10: -1672926922098725199
+      raou_R40_C11: -6046485210145962785
+      raou_R40_C12: -3288872010594417202
+      raou_R40_C13: -3094712815331390459
+      raou_R40_C14: -7351548423436529299
+      raou_R40_C15: -2176288464652670440
+      raou_R41_C01: -3071195800660832169
+      raou_R41_C02: -3187474224685470083
+      raou_R41_C03: -475333586488956603
+      raou_R41_C04: -2954175398637896523
+      raou_R41_C05: -7853944279353768615
+      raou_R41_C06: 3692349061227079001
+      raou_R41_C07: 2478694217410330114
+      raou_R41_C08: 7099113050831352551
+      raou_R41_C09: -4523498423200458683
+      raou_R41_C10: 1874446219367236262
+      raou_R41_C11: -3092816055235390551
+      raou_R41_C12: 9093093006168338889
+      raou_R41_C13: 3679989189749008568
+      raou_R41_C14: 8314367249839384752
+      raou_R41_C15: 777008392440023323
+      raou_R42_C01: 5885963403115480876
+      raou_R42_C02: -2607129048524737752
+      raou_R42_C03: 7474435035547141790
+      raou_R42_C04: 5953579427732001764
+      raou_R42_C05: 819023252056890703
+      raou_R42_C06: -2849748973849085452
+      raou_R42_C07: 6819601460774704522
+      raou_R42_C08: -5150581778594216572
+      raou_R42_C09: -7958147212508966984
+      raou_R43_C00: 302663305481095977
+      raou_R43_C01: -6144249223500664592
+      raou_R43_C02: -7022225395163339483
+      raou_R43_C03: 2281119076685324116
+      raou_R43_C04: 5219072637986293224
+      raou_R43_C05: 4425346924014563790
+      raou_R43_C06: -2682234750824438471
+      raou_R43_C07: 9062232243521392352
+      raou_R43_C08: 1118016896911828985
+      raou_R43_C09: -7823855749194259852
+      raou_R43_C13: -4399275834964150159
+      raou_R44_C00: 7323947986201678390
+      raou_R44_C01: -7934682909235042822
+      raou_R44_C02: 6384492270879792991
+      raou_R44_C03: -7035545169017620117
+      raou_R44_C04: 5351615915285752428
+      raou_R44_C05: 958699237276716920
+      raou_R44_C06: -4981460030618885047
+      raou_R44_C07: -8936902750171834138
+      raou_R44_C08: -4538136337041792012
+      raou_R44_C09: 6342905577531175884
+      raou_R44_C11: 2805008713099453543
+      raou_R44_C12: -8783389398495866984
+      raou_R44_C13: 3560142634660888424
+      raou_R44_C14: 1975065026968547667
+      raou_R45_C00: -8068199544335920224
+      raou_R45_C01: 3430250359832615843
+      raou_R45_C02: -4813586360746474629
+      raou_R45_C04: 1012636577478961962
+      raou_R45_C05: -3791289740118574487
+      raou_R45_C06: -4767719069618736835
+      raou_R45_C07: 3902853695052013837
+      raou_R45_C08: 3200289918844077532
+      raou_R45_C09: 6848463010056301947
+      raou_R45_C12: -5909653070685963320
+      raou_R45_C13: -4242426919424972230
+      raou_R46_C04: -1077917792338928343
+      raou_R46_C05: 1674438050433012257
+      raou_R46_C06: 8183910796507993812
+      raou_R46_C07: -7070266732972818999
+      raou_R46_C08: -8844521237826767918
+      raou_R46_C09: -1789215945448482819
+      raou_R46_C10: -4280614150253624370
+      raou_R46_C11: -128197406178694877
+      raou_R46_C12: 1920415658500229615
+      raou_R47_C04: -1025538524567611488
+      raou_R47_C05: -209715169265529306
+      raou_R47_C06: -2631030633858564055
+      raou_R47_C07: 4452329546598417866
+      raou_R47_C08: 5884535163433730566
+      raou_R47_C09: 8462740434999445152
+      raou_R47_C12: -8797526982095211911
+      raou_R48_C04: -7736247180662843029
+      raou_R48_C05: 2441339529233394160
+      raou_R48_C06: 1192921716458921905
+      raou_R48_C07: -3520797082215362415
+      raou_R48_C08: -3487364276387126553
+      raou_R48_C09: -8662962158388394981
+      raou_R48_C10: -275241113282961235
+      raou_R48_C11: -3124365262244732560
+      raou_R48_C12: 4724043205765776956
+      raou_R49_C04: 5971826603079083708
+      raou_R49_C05: 4891139622761575799
+      raou_R49_C07: -8418818861013390574
+      raou_R49_C08: 7774287418143174042
+      raou_R49_C09: 8437054868658995146
+      raou_R49_C10: 4069199636726281798
+      raou_R49_C11: -982426996624046627
+      raou_R49_C12: 4428134501272097423
+      raou_R49_C13: 6654186080056515632
+      raou_R50_C04: -4231547020619393060
+      raou_R50_C05: 2526505496896645480
+      raou_R50_C07: -6143286949091877913
+      raou_R50_C08: -8123400634719188489
+      raou_R50_C09: 7296474735701014934
+      raou_R50_C11: -8230402268833869879
+      raou_R50_C12: -3273218597442628706
+      raou_R50_C13: 8978191567290836860
+      raou_R51_C10: 2789749060951215427
+      raou_R51_C11: 858361248956381144
+      raou_R51_C12: 3054327208580391023
+      raou_R51_C13: -7541882801944220405
+      raou_arch_entrance_stone: 2872464801462653554
+      raou_arch_tower_bot: 857865112127215141
+      raou_arch_tower_mid: -2895978650984368718
+      raou_arch_tower_top: 1430345704253460577
+      raou_arch_wall_trim_small: -230516633086698787
+      raou_arch_window_small: 3886396392117093752
+      raou_cart_crystal_blocks: 6115911308403028474
+      raou_cart_crystals_minecart: 7581333708481467658
+      raou_cave_entrance_orange: -7203255598917460514
+      raou_cave_entrance_purple_crystal: -8270701484063925529
+      raou_cave_platform_orange: -3401041147559772689
+      raou_decor_clouds_fence: 4481374383192568766
+      raou_door_arch_stairs_left: -7308916643917725492
+      raou_door_arch_stairs_right: -4835498553111062857
+      raou_fence_iron_skull: 7378585572318736460
+      raou_fence_iron_wide: -419156618595572769
+      raou_gate_gothic_wood: -8509537434903908771
+      raou_grave_arched_large: -4116492936664563840
+      raou_grave_cross_tall: 5098328008518162388
+      raou_grave_cross_wood: -4450442746946253760
+      raou_grave_pointed: -4265036537239019214
+      raou_grave_rock1: 5139554352822344807
+      raou_grave_rock2: -7228720268898462650
+      raou_grave_shovel_broom: 4669000890936182984
+      raou_grave_staff: 5650130630046981835
+      raou_grave_tombstone_arch: 1827721962500122732
+      raou_grave_tombstone_cross: 3071166830936121919
+      raou_grave_tombstone_round: 244440175547709464
+      raou_lantern_skull_hanging: 2553249166132230459
+      raou_pillar_brick_columniiiii: -6754540698574140228
+      raou_pillar_fluted_top: -8546783399116115496
+      raou_pillar_tower_side: -6189573695390903138
+      raou_prop_1: 4751528774425803275
+      raou_prop_10: -2612718317050226459
+      raou_prop_11: -2481128665217959249
+      raou_prop_12: -292763519776119795
+      raou_prop_13: -4767862877337892267
+      raou_prop_14: 392309508608094773
+      raou_prop_15: -2318686998369852711
+      raou_prop_16: 3626881678950987130
+      raou_prop_17: -2913295035469758599
+      raou_prop_18: 3271915753400609457
+      raou_prop_19: 2969232900710634785
+      raou_prop_2: 109252337243148128
+      raou_prop_20: 4516626503905030564
+      raou_prop_21: 2951471302606695452
+      raou_prop_22: -5200698153583573284
+      raou_prop_23: -6961610632865658737
+      raou_prop_24: 1510862086984667318
+      raou_prop_25: 547432717436741036
+      raou_prop_26: 8833096462055194392
+      raou_prop_27: -6421925902462902379
+      raou_prop_28: 4066573801488474254
+      raou_prop_29: -2128079796736249121
+      raou_prop_30: 5423792867698166496
+      raou_prop_31: 2204049840177672431
+      raou_prop_32: 2446661608818622300
+      raou_prop_33: -5056084081898833493
+      raou_prop_34: 6787830119063295663
+      raou_prop_35: 8767870759049749858
+      raou_prop_36: -4722571721558462906
+      raou_prop_37: 3774665314407594203
+      raou_prop_38: 6957474854660500443
+      raou_prop_39: -7661344048717241401
+      raou_prop_4: -5165272125889972620
+      raou_prop_40: 8456090947703489361
+      raou_prop_41: -8210479697377410611
+      raou_prop_42: -209235921324933829
+      raou_prop_43: 7325866771049976854
+      raou_prop_44: -2433491631347319592
+      raou_prop_45: -6593014563568037770
+      raou_prop_46: 540725266214371704
+      raou_prop_47: -4848110747880899748
+      raou_prop_48: -7731112848039113658
+      raou_prop_49: 7623772958337635896
+      raou_prop_5: -7438287772813090929
+      raou_prop_50: 7952528540725089562
+      raou_prop_51: 3377406268465111926
+      raou_prop_52: 2717585143137903226
+      raou_prop_53: 7499980089368049889
+      raou_prop_54: -7349944940962278651
+      raou_prop_6: 1084841933135494967
+      raou_prop_7: 5181984770518796477
+      raou_prop_8: 6945823432209048917
+      raou_prop_9: -755959367293766278
+      raou_railing_stone_bot: -1864016328386022155
+      raou_railing_stone_top: 3262701030766531768
+      raou_statue_hooded_steps: 8178346389904227375
+      raou_tree_dead_top: 6984465838613872972
+      raou_wall_brick_dark_block: 709037367263096181
+      raou_wall_brick_platform_mid: 1125873767911509684
+      raou_wall_brick_trim_mid: 7889016388442624050
+      raou_wall_carved_stone_blocks: -7903088317996573863
+      raou_wall_railing_right: -6256044767182094181
+      raou_wall_top_stone: -1060876292210710815
+      raou_wall_window_grate_frame: -1226341810285080169
+      raou_wood_panel_diagonal: 7274718721105781891
+      raou_wood_panel_square: 2334198727823260965
+      raou_wood_panel_window: 5614100776491238315
+      shelf_books: -2752755284566443713
+      shelf_potions: -4970645020015018761
+      skull_decor: -4886122106588626301
+      skull_ground: 8167850906926833937
+      stairs_diagonal: -6186246234719349997
+      stairs_set_A: -2892498393760592873
+      stairs_set_B: -5382109119007834230
+      statue_angel: 2060134415710465488
+      statue_bust: -7049641776520345113
+      sun_emblem: -5049305332974053812
+      table_candle: -145935881152103960
+      tombstone_cross: 4065646412409742917
+      tombstone_round: -4688588535329460173
+      torch_wall: -8206907176621761455
+      tower_wall_left: 8684473543857999896
+      tower_wall_right: 89050828029005227
+      wall_bg_cave: -1080157909766471375
+      wall_bottom_edge: -8210599827270906204
+      wall_brick_dark: 6579730752432534684
+      wall_brick_light: 4451020272407779932
+      wall_brick_tileA: -5643394485641182052
+      wall_brick_tileB: -979043331473560188
+      wall_brick_tileC: 6569198351171614826
+      wall_corner_left: -2919697389268214734
+      wall_corner_right: 8558867548213892823
+      wall_fill_large: -6080682632301562557
+      wall_fill_right: -5283024019714457275
+      wall_hanging_drip: -7540411076793381924
+      wall_section_A: 6623919442991524965
+      wall_section_bottom: -3772494300543299268
+      wall_tile_A: -8872649537081329699
+      wall_top_edge: -3976135408054794019
+      window_bars_A: 580466520514931505
+      window_bars_B: 5963270634520639704
+      wood_panel: 8358909537337059600
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

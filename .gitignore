@@ -81,6 +81,10 @@ crashlytics-build.properties
 *.slnx
 /Assets/Screenshots/
 
+# Custom Editor Helpers / Tools
+/Assets/Editor/Helpers/
+/Assets/Editor/Helpers.meta
+
 # --- Operating System generated files (Added for safety) ---
 .DS_Store
 .DS_Store?

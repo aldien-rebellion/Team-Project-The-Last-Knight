@@ -1,0 +1,845 @@
+fileFormatVersion: 2
+guid: 658c4b84908151b4db2ff61c2f828307
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6256250129054421075
+    second: Disappear_0015_0
+  - first:
+      213: -4069984767103837365
+    second: Disappear_0015_1
+  - first:
+      213: -1113731148522168104
+    second: Disappear_0015_2
+  - first:
+      213: -1142646791254840087
+    second: Disappear_0015_3
+  - first:
+      213: 1899326857136370708
+    second: Disappear_0015_4
+  - first:
+      213: -3757715293000252300
+    second: Disappear_0015_5
+  - first:
+      213: -3668210162437966794
+    second: Disappear_0015_6
+  - first:
+      213: 6999728203365819278
+    second: Disappear_0015_7
+  - first:
+      213: 4412344629750527895
+    second: Disappear_0015_8
+  - first:
+      213: 6547935556295878140
+    second: Disappear_0015_9
+  - first:
+      213: 2498866314642208302
+    second: Disappear_0015_10
+  - first:
+      213: -6793179898285837280
+    second: Disappear_0015_11
+  - first:
+      213: -7484944211114339263
+    second: Disappear_0015_12
+  - first:
+      213: 1532880645700621739
+    second: Disappear_0015_13
+  - first:
+      213: -6013000513289142489
+    second: Disappear_0015_14
+  - first:
+      213: -756753388069472825
+    second: Disappear_0015_15
+  - first:
+      213: 5376714631516061515
+    second: Disappear_0015_16
+  - first:
+      213: 345601918896890245
+    second: Disappear_0015_17
+  - first:
+      213: 6098149257878482187
+    second: Disappear_0015_18
+  - first:
+      213: 9178129934173421491
+    second: Disappear_0015_19
+  - first:
+      213: -2597000759411509584
+    second: Disappear_0015_20
+  - first:
+      213: 353609090214694695
+    second: Disappear_0015_21
+  - first:
+      213: -7791169409103786815
+    second: Disappear_0015_22
+  - first:
+      213: 827475662938555577
+    second: Disappear_0015_23
+  - first:
+      213: 3769125752413836640
+    second: Disappear_0015_24
+  - first:
+      213: 3439960665022004626
+    second: Disappear_0015_25
+  - first:
+      213: 4691987637919591377
+    second: Disappear_0015_26
+  - first:
+      213: 8065759837073370606
+    second: Disappear_0015_27
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Disappear_0015_0
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 161
+        width: 383
+        height: 231
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 350d748685aa2d650800000000000000
+      internalID: 6256250129054421075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_1
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 364
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4b56830b628487c0800000000000000
+      internalID: -4069984767103837365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_2
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 362
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d06c05db6b3b80f0800000000000000
+      internalID: -1113731148522168104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_3
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 342
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ece38f1cc08420f0800000000000000
+      internalID: -1142646791254840087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_4
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 327
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 414f8f7a6b3cb5a10800000000000000
+      internalID: 1899326857136370708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_5
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 326
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 474caa9a9d9e9dbc0800000000000000
+      internalID: -3757715293000252300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_6
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 319
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6343862da46e71dc0800000000000000
+      internalID: -3668210162437966794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_7
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 316
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8327edf6b7042160800000000000000
+      internalID: 6999728203365819278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_8
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 290
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 797f1ea201ccb3d30800000000000000
+      internalID: 4412344629750527895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_9
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 276
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf56a2d22b0feda50800000000000000
+      internalID: 6547935556295878140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_10
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 279
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2630717ca1cda220800000000000000
+      internalID: 2498866314642208302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_11
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 264
+        width: 7
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0243953dfd6c9b1a0800000000000000
+      internalID: -6793179898285837280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_12
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 258
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 144d9ec95e2202890800000000000000
+      internalID: -7484944211114339263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_13
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 261
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba59e0263d2e54510800000000000000
+      internalID: 1532880645700621739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_14
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 265
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72fb82334e78d8ca0800000000000000
+      internalID: -6013000513289142489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_15
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 258
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c5bb819dc87f75f0800000000000000
+      internalID: -756753388069472825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_16
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 251
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4ff826687ded9a40800000000000000
+      internalID: 5376714631516061515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_17
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 163
+        width: 19
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 581ea893d13dbc400800000000000000
+      internalID: 345601918896890245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_18
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 169
+        width: 19
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0da82fc07af0a450800000000000000
+      internalID: 6098149257878482187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_19
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 147
+        width: 37
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bf39cc1c844f5f70800000000000000
+      internalID: 9178129934173421491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_20
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 165
+        width: 67
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b67bdd919995fbd0800000000000000
+      internalID: -2597000759411509584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_21
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 167
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72f8893189548e400800000000000000
+      internalID: 353609090214694695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_22
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 150
+        width: 37
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cc8a79a3b430e390800000000000000
+      internalID: -7791169409103786815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_23
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 159
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b4cbb53bb8cb7b00800000000000000
+      internalID: 827475662938555577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_24
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 156
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0655762f6ef9e4430800000000000000
+      internalID: 3769125752413836640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_25
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 150
+        width: 19
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29df3f7cff13dbf20800000000000000
+      internalID: 3439960665022004626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_26
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 161
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1dba8b0c5e94d1140800000000000000
+      internalID: 4691987637919591377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Disappear_0015_27
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 143
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eedee5c66d55fef60800000000000000
+      internalID: 8065759837073370606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Disappear_0015_0: 6256250129054421075
+      Disappear_0015_1: -4069984767103837365
+      Disappear_0015_10: 2498866314642208302
+      Disappear_0015_11: -6793179898285837280
+      Disappear_0015_12: -7484944211114339263
+      Disappear_0015_13: 1532880645700621739
+      Disappear_0015_14: -6013000513289142489
+      Disappear_0015_15: -756753388069472825
+      Disappear_0015_16: 5376714631516061515
+      Disappear_0015_17: 345601918896890245
+      Disappear_0015_18: 6098149257878482187
+      Disappear_0015_19: 9178129934173421491
+      Disappear_0015_2: -1113731148522168104
+      Disappear_0015_20: -2597000759411509584
+      Disappear_0015_21: 353609090214694695
+      Disappear_0015_22: -7791169409103786815
+      Disappear_0015_23: 827475662938555577
+      Disappear_0015_24: 3769125752413836640
+      Disappear_0015_25: 3439960665022004626
+      Disappear_0015_26: 4691987637919591377
+      Disappear_0015_27: 8065759837073370606
+      Disappear_0015_3: -1142646791254840087
+      Disappear_0015_4: 1899326857136370708
+      Disappear_0015_5: -3757715293000252300
+      Disappear_0015_6: -3668210162437966794
+      Disappear_0015_7: 6999728203365819278
+      Disappear_0015_8: 4412344629750527895
+      Disappear_0015_9: 6547935556295878140
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

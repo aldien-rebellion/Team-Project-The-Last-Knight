@@ -114,5 +114,33 @@ namespace TheLastKnight.Camera
             _boundaryBox = boundaryBox;
             _useBoundaries = true;
         }
+
+        public void SnapTo(Vector3 worldPos)
+        {
+            Vector3 targetWorldPos = worldPos + _offset;
+            targetWorldPos.z = transform.position.z;
+
+            if (_useBoundaries && _boundaryBox != null)
+            {
+                Bounds bounds = _boundaryBox.bounds;
+                if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
+                float camHeight = _cam != null ? _cam.orthographicSize : 5f;
+                float camWidth = camHeight * (_cam != null ? _cam.aspect : (16f / 9f));
+
+                float minX = bounds.min.x + camWidth;
+                float maxX = bounds.max.x - camWidth;
+                float minY = bounds.min.y + camHeight;
+                float maxY = bounds.max.y - camHeight;
+
+                if (minX > maxX) targetWorldPos.x = bounds.center.x;
+                else targetWorldPos.x = Mathf.Clamp(targetWorldPos.x, minX, maxX);
+
+                if (minY > maxY) targetWorldPos.y = bounds.center.y;
+                else targetWorldPos.y = Mathf.Clamp(targetWorldPos.y, minY, maxY);
+            }
+
+            transform.position = targetWorldPos;
+            _currentVelocity = Vector3.zero;
+        }
     }
 }

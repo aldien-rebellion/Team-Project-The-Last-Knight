@@ -1,0 +1,222 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4824904710469874132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8309380733509379286}
+  m_Layer: 0
+  m_Name: RaouDungeon_Scenes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8309380733509379286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4824904710469874132}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5038003753812494361}
+  - {fileID: 3250621112818734807}
+  - {fileID: 8802330779435354972}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1170613337682251235
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8309380733509379286}
+    m_Modifications:
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6405215180062175275, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+      propertyPath: m_Name
+      value: Scene_Raou_GrandHall
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+--- !u!4 &5038003753812494361 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6184655154310448634, guid: dd4b00043d5641b4b847aee0efaec115, type: 3}
+  m_PrefabInstance: {fileID: 1170613337682251235}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6572806051921354583
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8309380733509379286}
+    m_Modifications:
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5093674260773902656, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+      propertyPath: m_Name
+      value: Scene_Raou_TowerShaft
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+--- !u!4 &8802330779435354972 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2386737870681674763, guid: 86fd769231a5108468b95f1c5e712c19, type: 3}
+  m_PrefabInstance: {fileID: 6572806051921354583}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8997325939851029146
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8309380733509379286}
+    m_Modifications:
+    - target: {fileID: 1773594530295053862, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_Name
+      value: Scene_Raou_DungeonCell
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+--- !u!4 &3250621112818734807 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5890825858436332621, guid: a6840d551d54cf946aaec471842f335c, type: 3}
+  m_PrefabInstance: {fileID: 8997325939851029146}
+  m_PrefabAsset: {fileID: 0}

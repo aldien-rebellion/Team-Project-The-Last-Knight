@@ -1,0 +1,897 @@
+fileFormatVersion: 2
+guid: 60dcae763d9ceb34eb73a4513a31ee4b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1213004952689408219
+    second: Shout_0
+  - first:
+      213: -3499359619786626587
+    second: Shout_1
+  - first:
+      213: -2781939512072519756
+    second: Shout_2
+  - first:
+      213: -3277227571993913424
+    second: Shout_3
+  - first:
+      213: -2736946424256110957
+    second: Shout_4
+  - first:
+      213: -1976214528117162348
+    second: Shout_5
+  - first:
+      213: -6229796454622210784
+    second: Shout_6
+  - first:
+      213: -237350223710904082
+    second: Shout_7
+  - first:
+      213: -4689494114766660194
+    second: Shout_8
+  - first:
+      213: 2958038386987126642
+    second: Shout_9
+  - first:
+      213: -2340727659509467109
+    second: Shout_10
+  - first:
+      213: -8693105096911921340
+    second: Shout_11
+  - first:
+      213: 286075682209520495
+    second: Shout_12
+  - first:
+      213: -5170520641982362220
+    second: Shout_13
+  - first:
+      213: 5529328916217725101
+    second: Shout_14
+  - first:
+      213: 5105001533642527295
+    second: Shout_15
+  - first:
+      213: 7000633746413285429
+    second: Shout_16
+  - first:
+      213: -5976278464232896676
+    second: Shout_17
+  - first:
+      213: 6583951728964271916
+    second: Shout_18
+  - first:
+      213: 4344280395159382162
+    second: Shout_19
+  - first:
+      213: 3987610301555212228
+    second: Shout_20
+  - first:
+      213: -6498440544492873009
+    second: Shout_21
+  - first:
+      213: -5399272706628222537
+    second: Shout_22
+  - first:
+      213: 4658497995979663025
+    second: Shout_23
+  - first:
+      213: 2096189319545129051
+    second: Shout_24
+  - first:
+      213: 2037487621487078581
+    second: Shout_25
+  - first:
+      213: 594939940278296295
+    second: Shout_26
+  - first:
+      213: -1061642440239558615
+    second: Shout_27
+  - first:
+      213: -4006403611688028328
+    second: Shout_28
+  - first:
+      213: -8309033223945202407
+    second: Shout_29
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Shout_0
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 1557
+        width: 234
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 527882c1c6a8a2fe0800000000000000
+      internalID: -1213004952689408219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_1
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 1557
+        width: 227
+        height: 246
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e9a54957f6cf6fc0800000000000000
+      internalID: -3499359619786626587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_2
+      rect:
+        serializedVersion: 2
+        x: 1140
+        y: 1557
+        width: 212
+        height: 238
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bf3b4cc0c09469d0800000000000000
+      internalID: -2781939512072519756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_3
+      rect:
+        serializedVersion: 2
+        x: 1669
+        y: 1557
+        width: 195
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b7df2303e2f482d0800000000000000
+      internalID: -3277227571993913424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_4
+      rect:
+        serializedVersion: 2
+        x: 2165
+        y: 1557
+        width: 211
+        height: 241
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39e50f46ab9640ad0800000000000000
+      internalID: -2736946424256110957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_5
+      rect:
+        serializedVersion: 2
+        x: 2674
+        y: 1557
+        width: 227
+        height: 226
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49e3c9b6b531394e0800000000000000
+      internalID: -1976214528117162348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_6
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 1174
+        width: 211
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0255143a1215b89a0800000000000000
+      internalID: -6229796454622210784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_7
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 1173
+        width: 203
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee02a54aa33c4bcf0800000000000000
+      internalID: -237350223710904082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_8
+      rect:
+        serializedVersion: 2
+        x: 1177
+        y: 1173
+        width: 199
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9d5c09d2f19beeb0800000000000000
+      internalID: -4689494114766660194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_9
+      rect:
+        serializedVersion: 2
+        x: 1691
+        y: 1173
+        width: 198
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27f46589d301d0920800000000000000
+      internalID: 2958038386987126642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_10
+      rect:
+        serializedVersion: 2
+        x: 2202
+        y: 1174
+        width: 199
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b18b10b6890148fd0800000000000000
+      internalID: -2340727659509467109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_11
+      rect:
+        serializedVersion: 2
+        x: 2711
+        y: 1173
+        width: 206
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44f5d6fe8f2eb5780800000000000000
+      internalID: -8693105096911921340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_12
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 789
+        width: 217
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6bd9f8315858f300800000000000000
+      internalID: 286075682209520495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_13
+      rect:
+        serializedVersion: 2
+        x: 649
+        y: 789
+        width: 228
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49d01d6eede9e38b0800000000000000
+      internalID: -5170520641982362220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_14
+      rect:
+        serializedVersion: 2
+        x: 1156
+        y: 789
+        width: 231
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da004798a5f1cbc40800000000000000
+      internalID: 5529328916217725101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_15
+      rect:
+        serializedVersion: 2
+        x: 1682
+        y: 789
+        width: 211
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f32569ee8db98d640800000000000000
+      internalID: 5105001533642527295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_16
+      rect:
+        serializedVersion: 2
+        x: 2203
+        y: 790
+        width: 201
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53073992d4f372160800000000000000
+      internalID: 7000633746413285429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_17
+      rect:
+        serializedVersion: 2
+        x: 2719
+        y: 789
+        width: 197
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c57c494866eff0da0800000000000000
+      internalID: -5976278464232896676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_18
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 406
+        width: 198
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2ffb37d635ee5b50800000000000000
+      internalID: 6583951728964271916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_19
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 405
+        width: 200
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2982b2e900cf94c30800000000000000
+      internalID: 4344280395159382162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_20
+      rect:
+        serializedVersion: 2
+        x: 1165
+        y: 405
+        width: 200
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cff2e62176d65730800000000000000
+      internalID: 3987610301555212228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_21
+      rect:
+        serializedVersion: 2
+        x: 1670
+        y: 405
+        width: 200
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fca918741c6e0d5a0800000000000000
+      internalID: -6498440544492873009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_22
+      rect:
+        serializedVersion: 2
+        x: 2175
+        y: 405
+        width: 201
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b186f3741ee115b0800000000000000
+      internalID: -5399272706628222537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_23
+      rect:
+        serializedVersion: 2
+        x: 2682
+        y: 405
+        width: 207
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b6ac3dde3f46a040800000000000000
+      internalID: 4658497995979663025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_24
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 21
+        width: 212
+        height: 224
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b58847d7419271d10800000000000000
+      internalID: 2096189319545129051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_25
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 21
+        width: 219
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bc2ef8523c964c10800000000000000
+      internalID: 2037487621487078581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_26
+      rect:
+        serializedVersion: 2
+        x: 1132
+        y: 21
+        width: 228
+        height: 234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7eedafa39b6a14800800000000000000
+      internalID: 594939940278296295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_27
+      rect:
+        serializedVersion: 2
+        x: 1639
+        y: 21
+        width: 234
+        height: 239
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 920da0f43d94441f0800000000000000
+      internalID: -1061642440239558615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_28
+      rect:
+        serializedVersion: 2
+        x: 2149
+        y: 21
+        width: 235
+        height: 242
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8573e7a54256668c0800000000000000
+      internalID: -4006403611688028328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shout_29
+      rect:
+        serializedVersion: 2
+        x: 2660
+        y: 21
+        width: 234
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 915d3d35e4260bc80800000000000000
+      internalID: -8309033223945202407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Shout_0: -1213004952689408219
+      Shout_1: -3499359619786626587
+      Shout_10: -2340727659509467109
+      Shout_11: -8693105096911921340
+      Shout_12: 286075682209520495
+      Shout_13: -5170520641982362220
+      Shout_14: 5529328916217725101
+      Shout_15: 5105001533642527295
+      Shout_16: 7000633746413285429
+      Shout_17: -5976278464232896676
+      Shout_18: 6583951728964271916
+      Shout_19: 4344280395159382162
+      Shout_2: -2781939512072519756
+      Shout_20: 3987610301555212228
+      Shout_21: -6498440544492873009
+      Shout_22: -5399272706628222537
+      Shout_23: 4658497995979663025
+      Shout_24: 2096189319545129051
+      Shout_25: 2037487621487078581
+      Shout_26: 594939940278296295
+      Shout_27: -1061642440239558615
+      Shout_28: -4006403611688028328
+      Shout_29: -8309033223945202407
+      Shout_3: -3277227571993913424
+      Shout_4: -2736946424256110957
+      Shout_5: -1976214528117162348
+      Shout_6: -6229796454622210784
+      Shout_7: -237350223710904082
+      Shout_8: -4689494114766660194
+      Shout_9: 2958038386987126642
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
