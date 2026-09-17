@@ -700,7 +700,7 @@ namespace TheLastKnight.Editor
                 var scenePortal = portal.GetComponent<ScenePortal>();
                 if (scenePortal != null)
                 {
-                    scenePortal.targetSceneName = "SuburbToForest";
+                    scenePortal.targetSceneName = "DemonCastleEntrance";
                 }
             }
 

@@ -26028,7 +26028,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1388783002097867473, guid: 20e6005936041e646a0759b4ed305454, type: 3}
       propertyPath: targetSceneName
-      value: SuburbToForest
+      value: DemonCastleEntrance
       objectReference: {fileID: 0}
     - target: {fileID: 2614710457200502749, guid: 20e6005936041e646a0759b4ed305454, type: 3}
       propertyPath: m_LayerOverridePriority
