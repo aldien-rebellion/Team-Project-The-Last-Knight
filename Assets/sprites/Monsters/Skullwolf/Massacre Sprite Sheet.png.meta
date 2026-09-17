@@ -98,6 +98,72 @@ TextureImporter:
   - first:
       213: -8774634776832783232
     second: Massacre Sprite Sheet_31
+  - first:
+      213: 3442044933411084741
+    second: Skullwolf_Idle_0
+  - first:
+      213: -1161350536274410165
+    second: Skullwolf_Idle_1
+  - first:
+      213: -7906651819022098171
+    second: Skullwolf_Idle_2
+  - first:
+      213: 3516375887777001745
+    second: Skullwolf_Idle_3
+  - first:
+      213: -3295965413408703969
+    second: Skullwolf_Idle_4
+  - first:
+      213: 6461344159550011344
+    second: Skullwolf_Idle_5
+  - first:
+      213: -8130644279942072208
+    second: Skullwolf_Attack_0
+  - first:
+      213: 3171999855673090297
+    second: Skullwolf_Attack_1
+  - first:
+      213: -4426249448269252400
+    second: Skullwolf_Attack_2
+  - first:
+      213: -1502673215759164691
+    second: Skullwolf_Attack_3
+  - first:
+      213: 5208257315213232068
+    second: Skullwolf_Attack_4
+  - first:
+      213: -5978907953049576371
+    second: Skullwolf_Hurt_0
+  - first:
+      213: -6346151978991532729
+    second: Skullwolf_Hurt_1
+  - first:
+      213: -1311964469399913562
+    second: Skullwolf_Hurt_2
+  - first:
+      213: -3390668414932447144
+    second: Skullwolf_Hurt_3
+  - first:
+      213: -7162052027705874122
+    second: Skullwolf_Death_0
+  - first:
+      213: 6312785798895019840
+    second: Skullwolf_Death_1
+  - first:
+      213: 8500080870913752590
+    second: Skullwolf_Death_2
+  - first:
+      213: 6660520264303049852
+    second: Skullwolf_Death_3
+  - first:
+      213: -5114823345623768933
+    second: Skullwolf_Death_4
+  - first:
+      213: -7129251893523262166
+    second: Skullwolf_Death_5
+  - first:
+      213: -5062185693893640217
+    second: Skullwolf_Death_6
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -130,7 +196,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -168,7 +234,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -193,705 +259,485 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_0
+      name: Skullwolf_Idle_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 191
-        width: 63
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1e84821f2ed0a4dc0800000000000000
-      internalID: -3654092879298017055
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_1
-      rect:
-        serializedVersion: 2
-        x: 65
-        y: 191
-        width: 63
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2483590362df2bda0800000000000000
-      internalID: -5930399418827851710
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_2
-      rect:
-        serializedVersion: 2
-        x: 129
-        y: 191
-        width: 63
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 84a0e1d73590cc480800000000000000
-      internalID: -8877710511268033976
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_3
-      rect:
-        serializedVersion: 2
-        x: 193
-        y: 191
-        width: 63
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e8ea71506b91babc0800000000000000
-      internalID: -3770891993432478066
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_4
-      rect:
-        serializedVersion: 2
-        x: 257
-        y: 191
-        width: 63
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bb0ad8502846a1300800000000000000
-      internalID: 223601641109954747
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_5
-      rect:
-        serializedVersion: 2
-        x: 321
-        y: 191
-        width: 63
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0d09cfb1652904aa0800000000000000
-      internalID: -6178777790217940784
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_6
-      rect:
-        serializedVersion: 2
-        x: 5
-        y: 127
-        width: 59
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f3d6f028b6f443330800000000000000
-      internalID: 3689661317885422911
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_7
-      rect:
-        serializedVersion: 2
-        x: 68
-        y: 129
-        width: 60
-        height: 33
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9a7e7ffab6cd404a0800000000000000
-      internalID: -6627930396510656599
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_8
-      rect:
-        serializedVersion: 2
-        x: 129
-        y: 133
+        x: 0
+        y: 192
         width: 64
-        height: 37
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: eb083b78ff4334730800000000000000
-      internalID: 3982084767623643326
+      spriteID: 5c996e451a994cf20800000000000000
+      internalID: 3442044933411084741
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_9
+      name: Skullwolf_Idle_1
       rect:
         serializedVersion: 2
-        x: 195
-        y: 132
-        width: 57
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 76c3c80efc39e1620800000000000000
-      internalID: 2746795343777381479
+      spriteID: b4587a127dd02efe0800000000000000
+      internalID: -1161350536274410165
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_10
+      name: Skullwolf_Idle_2
       rect:
         serializedVersion: 2
-        x: 261
-        y: 127
-        width: 57
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d6ea9699067b62740800000000000000
-      internalID: 5126986851326471789
+      spriteID: 501ed74df0ee54290800000000000000
+      internalID: -7906651819022098171
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_11
+      name: Skullwolf_Idle_3
       rect:
         serializedVersion: 2
-        x: 5
-        y: 63
-        width: 52
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 73827841ce555b070800000000000000
-      internalID: 8121491975477602359
+      spriteID: 11172b74d3dacc030800000000000000
+      internalID: 3516375887777001745
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_12
+      name: Skullwolf_Idle_4
       rect:
         serializedVersion: 2
-        x: 71
-        y: 63
-        width: 50
-        height: 23
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 65e4adeb7231e18e0800000000000000
-      internalID: -1720916946182320554
+      spriteID: f1afcc55be06242d0800000000000000
+      internalID: -3295965413408703969
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_13
+      name: Skullwolf_Idle_5
       rect:
         serializedVersion: 2
-        x: 133
-        y: 63
-        width: 52
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2216010fba23bf3b0800000000000000
-      internalID: -5477728807717674718
+      spriteID: 0d7f589874e4ba950800000000000000
+      internalID: 6461344159550011344
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_14
+      name: Skullwolf_Attack_0
       rect:
         serializedVersion: 2
-        x: 193
-        y: 63
-        width: 62
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ab6200f5956b88590800000000000000
-      internalID: -7671681470263449926
+      spriteID: 078bdfafa162a2f80800000000000000
+      internalID: -8130644279942072208
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_15
+      name: Skullwolf_Attack_1
       rect:
         serializedVersion: 2
-        x: 1
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f02cf01015350c20800000000000000
+      internalID: 3171999855673090297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skullwolf_Attack_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d874acf39dc292c0800000000000000
+      internalID: -4426249448269252400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skullwolf_Attack_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dea5e29fbae652be0800000000000000
+      internalID: -1502673215759164691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skullwolf_Attack_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c74d140f62774840800000000000000
+      internalID: 5208257315213232068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skullwolf_Hurt_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4cd8b1f4e6a60da0800000000000000
+      internalID: -5978907953049576371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skullwolf_Hurt_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74541910660fde7a0800000000000000
+      internalID: -6346151978991532729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skullwolf_Hurt_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6abfb732447facde0800000000000000
+      internalID: -1311964469399913562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skullwolf_Hurt_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85090d88a0de1f0d0800000000000000
+      internalID: -3390668414932447144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skullwolf_Death_0
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 0
-        width: 62
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f9b5b510d546a19a0800000000000000
-      internalID: -6261581981287752801
+      spriteID: 639a9b180a74b9c90800000000000000
+      internalID: -7162052027705874122
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_16
+      name: Skullwolf_Death_1
       rect:
         serializedVersion: 2
-        x: 26
-        y: 21
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0f4d41a58338fb6d0800000000000000
-      internalID: -2972512950988516112
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_17
-      rect:
-        serializedVersion: 2
-        x: 65
+        x: 64
         y: 0
-        width: 62
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 200f34f64d433a860800000000000000
-      internalID: 7539928288152776706
+      spriteID: 047a44ecc358b9750800000000000000
+      internalID: 6312785798895019840
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_18
+      name: Skullwolf_Death_2
       rect:
         serializedVersion: 2
-        x: 90
-        y: 28
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 44389b51cf07acd10800000000000000
-      internalID: 2146652400394011460
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_19
-      rect:
-        serializedVersion: 2
-        x: 129
+        x: 128
         y: 0
-        width: 58
-        height: 39
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 45cd26da417ad59b0800000000000000
-      internalID: -5089728296608670636
+      spriteID: e0e38e8448a56f570800000000000000
+      internalID: 8500080870913752590
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_20
+      name: Skullwolf_Death_3
       rect:
         serializedVersion: 2
-        x: 193
-        y: 7
-        width: 24
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 485e84b528be74050800000000000000
-      internalID: 5784851191490471300
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_21
-      rect:
-        serializedVersion: 2
-        x: 206
-        y: 21
-        width: 45
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a87a012eb68091de0800000000000000
-      internalID: -1362048152855599222
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_22
-      rect:
-        serializedVersion: 2
-        x: 216
+        x: 192
         y: 0
-        width: 39
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 16a753ed7cdad5e20800000000000000
-      internalID: 3341017572516919905
+      spriteID: c7cf21534ebee6c50800000000000000
+      internalID: 6660520264303049852
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_23
+      name: Skullwolf_Death_4
       rect:
         serializedVersion: 2
-        x: 257
-        y: 4
-        width: 24
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a2057ffa3150ae4f0800000000000000
-      internalID: -798820401790103510
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_24
-      rect:
-        serializedVersion: 2
-        x: 270
-        y: 22
-        width: 45
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 635b0e741b63e00e0800000000000000
-      internalID: -2301842224496724682
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_25
-      rect:
-        serializedVersion: 2
-        x: 321
+        x: 256
         y: 0
-        width: 56
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f3c75e4d72a2c1e40800000000000000
-      internalID: 5628419984870177855
+      spriteID: b906833444f7409b0800000000000000
+      internalID: -5114823345623768933
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_26
+      name: Skullwolf_Death_5
       rect:
         serializedVersion: 2
-        x: 182
-        y: 6
-        width: 9
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6387738be199876e0800000000000000
-      internalID: -1839552090562136010
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_27
-      rect:
-        serializedVersion: 2
-        x: 206
+        x: 320
         y: 0
-        width: 17
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0d78bfcb1847f1b40800000000000000
-      internalID: 5413173377692829648
+      spriteID: a25d34cdc2fcf0d90800000000000000
+      internalID: -7129251893523262166
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Massacre Sprite Sheet_28
+      name: Skullwolf_Death_6
       rect:
         serializedVersion: 2
-        x: 270
+        x: 384
         y: 0
-        width: 37
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b1c002b7a6fba6580800000000000000
-      internalID: -8833037255080670181
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_29
-      rect:
-        serializedVersion: 2
-        x: 344
-        y: 0
-        width: 24
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a6dd8849e4fbb8ed0800000000000000
-      internalID: -2410622831306416790
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_30
-      rect:
-        serializedVersion: 2
-        x: 385
-        y: 0
-        width: 29
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 09aee9341e8f43a80800000000000000
-      internalID: -8487885751300724080
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Massacre Sprite Sheet_31
-      rect:
-        serializedVersion: 2
-        x: 408
-        y: 0
-        width: 27
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 08cc715192c3a3680800000000000000
-      internalID: -8774634776832783232
+      spriteID: 7efb7689ee08fb9b0800000000000000
+      internalID: -5062185693893640217
       vertices: []
       indices: 
       edges: []
@@ -942,6 +788,28 @@ TextureImporter:
       Massacre Sprite Sheet_7: -6627930396510656599
       Massacre Sprite Sheet_8: 3982084767623643326
       Massacre Sprite Sheet_9: 2746795343777381479
+      Skullwolf_Attack_0: -8130644279942072208
+      Skullwolf_Attack_1: 3171999855673090297
+      Skullwolf_Attack_2: -4426249448269252400
+      Skullwolf_Attack_3: -1502673215759164691
+      Skullwolf_Attack_4: 5208257315213232068
+      Skullwolf_Death_0: -7162052027705874122
+      Skullwolf_Death_1: 6312785798895019840
+      Skullwolf_Death_2: 8500080870913752590
+      Skullwolf_Death_3: 6660520264303049852
+      Skullwolf_Death_4: -5114823345623768933
+      Skullwolf_Death_5: -7129251893523262166
+      Skullwolf_Death_6: -5062185693893640217
+      Skullwolf_Hurt_0: -5978907953049576371
+      Skullwolf_Hurt_1: -6346151978991532729
+      Skullwolf_Hurt_2: -1311964469399913562
+      Skullwolf_Hurt_3: -3390668414932447144
+      Skullwolf_Idle_0: 3442044933411084741
+      Skullwolf_Idle_1: -1161350536274410165
+      Skullwolf_Idle_2: -7906651819022098171
+      Skullwolf_Idle_3: 3516375887777001745
+      Skullwolf_Idle_4: -3295965413408703969
+      Skullwolf_Idle_5: 6461344159550011344
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

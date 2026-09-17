@@ -92,6 +92,51 @@ TextureImporter:
   - first:
       213: -6891181957460950615
     second: Hit_left_29
+  - first:
+      213: 8888016972603567750
+    second: Hit_left_0000
+  - first:
+      213: -5947731736113439454
+    second: Hit_left_0001
+  - first:
+      213: -2206941078830143282
+    second: Hit_left_0002
+  - first:
+      213: -7392680710251046316
+    second: Hit_left_0003
+  - first:
+      213: -8409615813026474215
+    second: Hit_left_0004
+  - first:
+      213: 7281622872766805885
+    second: Hit_left_0005
+  - first:
+      213: 4462320898440186745
+    second: Hit_left_0006
+  - first:
+      213: -4263078247273370140
+    second: Hit_left_0007
+  - first:
+      213: 877770419869369979
+    second: Hit_left_0008
+  - first:
+      213: -1110966978647661325
+    second: Hit_left_0009
+  - first:
+      213: 6151090199762818613
+    second: Hit_left_0010
+  - first:
+      213: -5062012898987776337
+    second: Hit_left_0011
+  - first:
+      213: 7548571177953844424
+    second: Hit_left_0012
+  - first:
+      213: -8003877642600573882
+    second: Hit_left_0013
+  - first:
+      213: 8635173813633688562
+    second: Hit_left_0014
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -124,7 +169,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -159,10 +204,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -187,661 +232,331 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Hit_left_0
+      name: Hit_left_0000
       rect:
         serializedVersion: 2
-        x: 519
-        y: 4202
-        width: 388
-        height: 304
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 3168
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 797411f61da533110800000000000000
-      internalID: 1239434178015086487
+      spriteID: 68eada98854985b70800000000000000
+      internalID: 8888016972603567750
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_1
+      name: Hit_left_0001
       rect:
         serializedVersion: 2
-        x: 1927
-        y: 4202
-        width: 388
-        height: 304
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1408
+        y: 3168
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a33d92806581b5080800000000000000
-      internalID: -9197731056190893254
+      spriteID: 22d14a99f79657da0800000000000000
+      internalID: -5947731736113439454
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_2
+      name: Hit_left_0002
       rect:
         serializedVersion: 2
-        x: 3335
-        y: 4202
-        width: 388
-        height: 303
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2816
+        y: 3168
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b08ea14c326c4fca0800000000000000
-      internalID: -5983940147952293877
+      spriteID: ec8ac1c18ce5f51e0800000000000000
+      internalID: -2206941078830143282
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_3
+      name: Hit_left_0003
       rect:
         serializedVersion: 2
-        x: 4743
-        y: 4202
-        width: 388
-        height: 303
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 4224
+        y: 3168
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8de8bec014cbb49d0800000000000000
-      internalID: -2788928556650230056
+      spriteID: 45a9a97ef0ce76990800000000000000
+      internalID: -7392680710251046316
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_4
+      name: Hit_left_0004
       rect:
         serializedVersion: 2
-        x: 6151
-        y: 4202
-        width: 388
-        height: 304
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 5632
+        y: 3168
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0298d120654361e90800000000000000
-      internalID: -7055394222221981408
+      spriteID: 9179c0f59fa0b4b80800000000000000
+      internalID: -8409615813026474215
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_5
+      name: Hit_left_0005
       rect:
         serializedVersion: 2
-        x: 567
-        y: 3410
-        width: 421
-        height: 357
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 1584
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c6a318f426eca8fc0800000000000000
-      internalID: -3491751639436412308
+      spriteID: d77ff9f4c658d0560800000000000000
+      internalID: 7281622872766805885
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_6
+      name: Hit_left_0006
       rect:
         serializedVersion: 2
-        x: 1973
-        y: 3410
-        width: 447
-        height: 357
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1408
+        y: 1584
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 663ac1c921c2c7470800000000000000
-      internalID: 8393632263951917926
+      spriteID: 97b4459f6395ded30800000000000000
+      internalID: 4462320898440186745
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_7
+      name: Hit_left_0007
       rect:
         serializedVersion: 2
-        x: 3359
-        y: 3410
-        width: 480
-        height: 357
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2816
+        y: 1584
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ef63181d110e75c30800000000000000
-      internalID: 4348190332383475454
+      spriteID: 4ed639dbbe086d4c0800000000000000
+      internalID: -4263078247273370140
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_8
+      name: Hit_left_0008
       rect:
         serializedVersion: 2
-        x: 4752
-        y: 3410
-        width: 433
-        height: 314
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 4224
+        y: 1584
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 505e88a0450b9f540800000000000000
-      internalID: 5042255132818466053
+      spriteID: b76c8a6db877e2c00800000000000000
+      internalID: 877770419869369979
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_9
+      name: Hit_left_0009
       rect:
         serializedVersion: 2
-        x: 6151
-        y: 3410
-        width: 388
-        height: 303
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 5632
+        y: 1584
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0d402210dc785d230800000000000000
-      internalID: 3662983186492818640
+      spriteID: 3f464884b6d0590f0800000000000000
+      internalID: -1110966978647661325
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_10
+      name: Hit_left_0010
       rect:
         serializedVersion: 2
-        x: 575
-        y: 2618
-        width: 376
-        height: 357
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a523dc6b587f94c10800000000000000
-      internalID: 2038432460031472218
+      spriteID: 536df3262ff0d5550800000000000000
+      internalID: 6151090199762818613
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_11
+      name: Hit_left_0011
       rect:
         serializedVersion: 2
-        x: 1982
-        y: 2618
-        width: 369
-        height: 357
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1408
+        y: 0
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fbb03dd59f6a36550800000000000000
-      internalID: 6152945105869409215
+      spriteID: fa6636b861e10c9b0800000000000000
+      internalID: -5062012898987776337
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_12
+      name: Hit_left_0012
       rect:
         serializedVersion: 2
-        x: 3387
-        y: 2618
-        width: 370
-        height: 358
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2816
+        y: 0
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4bdcba655ff99bd50800000000000000
-      internalID: 6753604992288673204
+      spriteID: 8ccd0b70e79e1c860800000000000000
+      internalID: 7548571177953844424
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_13
+      name: Hit_left_0013
       rect:
         serializedVersion: 2
-        x: 4797
-        y: 2618
-        width: 367
-        height: 358
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 4224
+        y: 0
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 747a4b4dbd3c104c0800000000000000
-      internalID: -4322958818365102265
+      spriteID: 6441a1fb0b38ce090800000000000000
+      internalID: -8003877642600573882
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hit_left_14
+      name: Hit_left_0014
       rect:
         serializedVersion: 2
-        x: 6203
-        y: 2618
-        width: 370
-        height: 357
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 5632
+        y: 0
+        width: 1408
+        height: 1584
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15530303}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ff71dabd2cd4ba3e0800000000000000
-      internalID: -2041452506777839617
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_15
-      rect:
-        serializedVersion: 2
-        x: 576
-        y: 1826
-        width: 446
-        height: 360
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9cac653e2f38e9420800000000000000
-      internalID: 2638691510905129673
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_16
-      rect:
-        serializedVersion: 2
-        x: 1984
-        y: 1826
-        width: 453
-        height: 360
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 03243772685bcd0b0800000000000000
-      internalID: -5702483440365780432
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_17
-      rect:
-        serializedVersion: 2
-        x: 3392
-        y: 1826
-        width: 469
-        height: 360
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4b3a77a7ba69120a0800000000000000
-      internalID: -6908074690171395148
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_18
-      rect:
-        serializedVersion: 2
-        x: 4800
-        y: 1826
-        width: 448
-        height: 358
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2d643d208f0ef7e00800000000000000
-      internalID: 1044800994377156306
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_19
-      rect:
-        serializedVersion: 2
-        x: 6207
-        y: 1826
-        width: 393
-        height: 357
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e50aeed7778746000800000000000000
-      internalID: 28279952280297566
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_20
-      rect:
-        serializedVersion: 2
-        x: 563
-        y: 1034
-        width: 438
-        height: 340
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1b7bdb2a934ce5650800000000000000
-      internalID: 6223627486895126449
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_21
-      rect:
-        serializedVersion: 2
-        x: 1978
-        y: 1034
-        width: 432
-        height: 343
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9d7065b2c1921d8c0800000000000000
-      internalID: -3976351795028555815
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_22
-      rect:
-        serializedVersion: 2
-        x: 3391
-        y: 1034
-        width: 428
-        height: 346
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 63fdeb63081435380800000000000000
-      internalID: -8983764812743909578
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_23
-      rect:
-        serializedVersion: 2
-        x: 4799
-        y: 1034
-        width: 430
-        height: 351
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 997b200e1204caa40800000000000000
-      internalID: 5380746169037272985
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_24
-      rect:
-        serializedVersion: 2
-        x: 6207
-        y: 1034
-        width: 436
-        height: 356
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 14c52a864ace2ac00800000000000000
-      internalID: 910550265556524097
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_25
-      rect:
-        serializedVersion: 2
-        x: 542
-        y: 241
-        width: 428
-        height: 315
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3eb466174c9a7cd40800000000000000
-      internalID: 5604634922467085283
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_26
-      rect:
-        serializedVersion: 2
-        x: 1954
-        y: 242
-        width: 434
-        height: 322
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f5663420003057f30800000000000000
-      internalID: 4572564295237461599
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_27
-      rect:
-        serializedVersion: 2
-        x: 3367
-        y: 242
-        width: 437
-        height: 327
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b1ac82c59f57fa670800000000000000
-      internalID: 8552183931253344795
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_28
-      rect:
-        serializedVersion: 2
-        x: 4779
-        y: 242
-        width: 438
-        height: 333
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f1494d87f3f7ceb10800000000000000
-      internalID: 2012123044114633759
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hit_left_29
-      rect:
-        serializedVersion: 2
-        x: 6193
-        y: 242
-        width: 438
-        height: 338
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9a185fe458a9d50a0800000000000000
-      internalID: -6891181957460950615
+      spriteID: 2f3246715dc46d770800000000000000
+      internalID: 8635173813633688562
       vertices: []
       indices: 
       edges: []
@@ -861,6 +576,21 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Hit_left_0: 1239434178015086487
+      Hit_left_0000: 8888016972603567750
+      Hit_left_0001: -5947731736113439454
+      Hit_left_0002: -2206941078830143282
+      Hit_left_0003: -7392680710251046316
+      Hit_left_0004: -8409615813026474215
+      Hit_left_0005: 7281622872766805885
+      Hit_left_0006: 4462320898440186745
+      Hit_left_0007: -4263078247273370140
+      Hit_left_0008: 877770419869369979
+      Hit_left_0009: -1110966978647661325
+      Hit_left_0010: 6151090199762818613
+      Hit_left_0011: -5062012898987776337
+      Hit_left_0012: 7548571177953844424
+      Hit_left_0013: -8003877642600573882
+      Hit_left_0014: 8635173813633688562
       Hit_left_1: -9197731056190893254
       Hit_left_10: 2038432460031472218
       Hit_left_11: 6152945105869409215

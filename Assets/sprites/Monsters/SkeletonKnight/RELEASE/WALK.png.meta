@@ -61,7 +61,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -96,10 +96,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -127,12 +127,12 @@ TextureImporter:
       name: WALK_0
       rect:
         serializedVersion: 2
-        x: 33
-        y: 43
-        width: 40
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -149,12 +149,12 @@ TextureImporter:
       name: WALK_1
       rect:
         serializedVersion: 2
-        x: 203
-        y: 43
-        width: 40
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 170
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -171,12 +171,12 @@ TextureImporter:
       name: WALK_2
       rect:
         serializedVersion: 2
-        x: 373
-        y: 43
-        width: 39
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 340
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -193,12 +193,12 @@ TextureImporter:
       name: WALK_3
       rect:
         serializedVersion: 2
-        x: 543
-        y: 43
-        width: 40
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 510
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -215,12 +215,12 @@ TextureImporter:
       name: WALK_4
       rect:
         serializedVersion: 2
-        x: 713
-        y: 43
-        width: 40
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 680
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -237,12 +237,12 @@ TextureImporter:
       name: WALK_5
       rect:
         serializedVersion: 2
-        x: 883
-        y: 43
-        width: 40
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 850
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -259,12 +259,12 @@ TextureImporter:
       name: WALK_6
       rect:
         serializedVersion: 2
-        x: 1053
-        y: 43
-        width: 40
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1020
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -281,12 +281,12 @@ TextureImporter:
       name: WALK_7
       rect:
         serializedVersion: 2
-        x: 1223
-        y: 43
-        width: 40
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1190
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -303,12 +303,12 @@ TextureImporter:
       name: WALK_8
       rect:
         serializedVersion: 2
-        x: 1393
-        y: 43
-        width: 40
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1360
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

@@ -61,7 +61,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -96,10 +96,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -127,12 +127,12 @@ TextureImporter:
       name: DOWN_SWING_0
       rect:
         serializedVersion: 2
-        x: 206
-        y: 43
-        width: 29
-        height: 60
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -149,12 +149,12 @@ TextureImporter:
       name: DOWN_SWING_1
       rect:
         serializedVersion: 2
-        x: 378
-        y: 43
-        width: 26
-        height: 61
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 170
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -171,12 +171,12 @@ TextureImporter:
       name: DOWN_SWING_2
       rect:
         serializedVersion: 2
-        x: 552
-        y: 42
-        width: 90
-        height: 63
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 340
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -193,12 +193,12 @@ TextureImporter:
       name: DOWN_SWING_3
       rect:
         serializedVersion: 2
-        x: 780
-        y: 100
-        width: 15
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 510
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -215,12 +215,12 @@ TextureImporter:
       name: DOWN_SWING_4
       rect:
         serializedVersion: 2
-        x: 896
-        y: 42
-        width: 97
-        height: 65
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 680
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -237,12 +237,12 @@ TextureImporter:
       name: DOWN_SWING_5
       rect:
         serializedVersion: 2
-        x: 33
-        y: 43
-        width: 40
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 850
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -259,12 +259,12 @@ TextureImporter:
       name: DOWN_SWING_6
       rect:
         serializedVersion: 2
-        x: 720
-        y: 43
-        width: 89
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1020
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -273,50 +273,6 @@ TextureImporter:
       bones: []
       spriteID: 66b5c7e1d5f110800800000000000000
       internalID: 576776712084020070
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: DOWN_SWING_7
-      rect:
-        serializedVersion: 2
-        x: 800
-        y: 46
-        width: 21
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7cfbf414663f2b1f0800000000000000
-      internalID: -1030493744206463033
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: DOWN_SWING_8
-      rect:
-        serializedVersion: 2
-        x: 1066
-        y: 42
-        width: 83
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0e303d0e8f2f12bc0800000000000000
-      internalID: -3809496659040992288
       vertices: []
       indices: 
       edges: []

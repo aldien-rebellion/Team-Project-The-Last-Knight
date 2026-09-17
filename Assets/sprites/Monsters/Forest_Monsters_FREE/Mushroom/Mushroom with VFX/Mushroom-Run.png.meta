@@ -26,6 +26,30 @@ TextureImporter:
   - first:
       213: 2396631267008995893
     second: Mushroom-Run_7
+  - first:
+      213: 3474226238125732767
+    second: Mushroom-Run_0000
+  - first:
+      213: 5226110878013798986
+    second: Mushroom-Run_0001
+  - first:
+      213: 4391354887737435232
+    second: Mushroom-Run_0002
+  - first:
+      213: -4691256751708693199
+    second: Mushroom-Run_0003
+  - first:
+      213: -9044528458621016291
+    second: Mushroom-Run_0004
+  - first:
+      213: 7906021785329992357
+    second: Mushroom-Run_0005
+  - first:
+      213: 1089083143263784573
+    second: Mushroom-Run_0006
+  - first:
+      213: 767491757777353164
+    second: Mushroom-Run_0007
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -58,7 +82,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -93,10 +117,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -121,177 +145,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mushroom-Run_0
+      name: Mushroom-Run_0000
       rect:
         serializedVersion: 2
-        x: 23
+        x: 0
         y: 0
-        width: 32
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 80
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0169454567c17fe20800000000000000
-      internalID: 3384204939538765328
+      spriteID: f9373d83b5ee63030800000000000000
+      internalID: 3474226238125732767
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mushroom-Run_1
+      name: Mushroom-Run_0001
       rect:
         serializedVersion: 2
-        x: 103
+        x: 80
         y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 80
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b0946d4901c3af3c0800000000000000
-      internalID: -4325078450221725429
+      spriteID: a4a31d88720e68840800000000000000
+      internalID: 5226110878013798986
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mushroom-Run_2
+      name: Mushroom-Run_0002
       rect:
         serializedVersion: 2
-        x: 183
+        x: 160
         y: 0
-        width: 32
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 80
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 44d466235d79b07f0800000000000000
-      internalID: -645255179668140732
+      spriteID: 064e346010a31fc30800000000000000
+      internalID: 4391354887737435232
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mushroom-Run_3
+      name: Mushroom-Run_0003
       rect:
         serializedVersion: 2
-        x: 263
-        y: 2
-        width: 32
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 93a5d4ee46968c2f0800000000000000
-      internalID: -952395438973167047
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Mushroom-Run_4
-      rect:
-        serializedVersion: 2
-        x: 343
+        x: 240
         y: 0
-        width: 32
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 80
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e47aa488dce597400800000000000000
-      internalID: 322393085181601614
+      spriteID: 13d1044f6de45eeb0800000000000000
+      internalID: -4691256751708693199
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mushroom-Run_5
+      name: Mushroom-Run_0004
       rect:
         serializedVersion: 2
-        x: 423
+        x: 320
         y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 80
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9a74eacb5d6152150800000000000000
-      internalID: 5847104798459840425
+      spriteID: d17abfe69416b7280800000000000000
+      internalID: -9044528458621016291
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mushroom-Run_6
+      name: Mushroom-Run_0005
       rect:
         serializedVersion: 2
-        x: 503
+        x: 400
         y: 0
-        width: 32
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 80
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2a3f5bcda50702610800000000000000
-      internalID: 1594397803641435042
+      spriteID: 5a208150de4d7bd60800000000000000
+      internalID: 7906021785329992357
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mushroom-Run_7
+      name: Mushroom-Run_0006
       rect:
         serializedVersion: 2
-        x: 583
-        y: 2
-        width: 32
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 480
+        y: 0
+        width: 80
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5326aaf707b824120800000000000000
-      internalID: 2396631267008995893
+      spriteID: d7e8a1d39533d1f00800000000000000
+      internalID: 1089083143263784573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mushroom-Run_0007
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 0
+        width: 80
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc9fb56ffada6aa00800000000000000
+      internalID: 767491757777353164
       vertices: []
       indices: 
       edges: []
@@ -311,6 +335,14 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Mushroom-Run_0: 3384204939538765328
+      Mushroom-Run_0000: 3474226238125732767
+      Mushroom-Run_0001: 5226110878013798986
+      Mushroom-Run_0002: 4391354887737435232
+      Mushroom-Run_0003: -4691256751708693199
+      Mushroom-Run_0004: -9044528458621016291
+      Mushroom-Run_0005: 7906021785329992357
+      Mushroom-Run_0006: 1089083143263784573
+      Mushroom-Run_0007: 767491757777353164
       Mushroom-Run_1: -4325078450221725429
       Mushroom-Run_2: -645255179668140732
       Mushroom-Run_3: -952395438973167047

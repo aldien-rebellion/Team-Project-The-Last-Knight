@@ -14,6 +14,18 @@ TextureImporter:
   - first:
       213: -6329420634031446844
     second: Attack_3
+  - first:
+      213: 4290095493653885358
+    second: Attack_0000
+  - first:
+      213: -3940931916513456266
+    second: Attack_0001
+  - first:
+      213: 3441725350997406801
+    second: Attack_0002
+  - first:
+      213: 6297905109876602176
+    second: Attack_0003
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -81,10 +93,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -109,89 +121,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Attack_0
+      name: Attack_0000
       rect:
         serializedVersion: 2
-        x: 5
+        x: 0
         y: 0
-        width: 96
-        height: 83
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8c481db598d1dbe90800000000000000
-      internalID: -7008412969330441016
+      spriteID: ea17ebf1f1b798b30800000000000000
+      internalID: 4290095493653885358
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack_1
+      name: Attack_0001
       rect:
         serializedVersion: 2
-        x: 131
+        x: 128
         y: 0
-        width: 96
-        height: 83
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 15a29dc9988924490800000000000000
-      internalID: -7763475090823894447
+      spriteID: 67f47384d4ffe49c0800000000000000
+      internalID: -3940931916513456266
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack_2
+      name: Attack_0002
       rect:
         serializedVersion: 2
-        x: 266
+        x: 256
         y: 0
-        width: 106
-        height: 83
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ca9d35cefa2333400800000000000000
-      internalID: 302641331129538988
+      spriteID: 15438a0c8f673cf20800000000000000
+      internalID: 3441725350997406801
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack_3
+      name: Attack_0003
       rect:
         serializedVersion: 2
-        x: 397
+        x: 384
         y: 0
-        width: 111
-        height: 83
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4c42782d7716928a0800000000000000
-      internalID: -6329420634031446844
+      spriteID: 045ff476457a66750800000000000000
+      internalID: 6297905109876602176
       vertices: []
       indices: 
       edges: []
@@ -211,6 +223,10 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Attack_0: -7008412969330441016
+      Attack_0000: 4290095493653885358
+      Attack_0001: -3940931916513456266
+      Attack_0002: 3441725350997406801
+      Attack_0003: 6297905109876602176
       Attack_1: -7763475090823894447
       Attack_2: 302641331129538988
       Attack_3: -6329420634031446844

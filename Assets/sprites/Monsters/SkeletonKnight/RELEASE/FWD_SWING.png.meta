@@ -61,7 +61,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -96,10 +96,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -127,12 +127,12 @@ TextureImporter:
       name: FWD_SWING_0
       rect:
         serializedVersion: 2
-        x: 31
-        y: 84
-        width: 41
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -149,12 +149,12 @@ TextureImporter:
       name: FWD_SWING_1
       rect:
         serializedVersion: 2
-        x: 60
-        y: 43
-        width: 31
-        height: 44
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 170
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -171,12 +171,12 @@ TextureImporter:
       name: FWD_SWING_2
       rect:
         serializedVersion: 2
-        x: 225
-        y: 43
-        width: 112
-        height: 42
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 340
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -193,12 +193,12 @@ TextureImporter:
       name: FWD_SWING_3
       rect:
         serializedVersion: 2
-        x: 397
-        y: 43
-        width: 96
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 510
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -215,12 +215,12 @@ TextureImporter:
       name: FWD_SWING_4
       rect:
         serializedVersion: 2
-        x: 495
-        y: 61
-        width: 16
-        height: 11
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 680
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -237,12 +237,12 @@ TextureImporter:
       name: FWD_SWING_5
       rect:
         serializedVersion: 2
-        x: 574
-        y: 43
-        width: 88
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 850
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -259,12 +259,12 @@ TextureImporter:
       name: FWD_SWING_6
       rect:
         serializedVersion: 2
-        x: 752
-        y: 43
-        width: 80
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1020
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -273,50 +273,6 @@ TextureImporter:
       bones: []
       spriteID: 9cc698374d9bc0c50800000000000000
       internalID: 6632880673332489417
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FWD_SWING_7
-      rect:
-        serializedVersion: 2
-        x: 922
-        y: 43
-        width: 81
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 78b82d2e06e9cb7d0800000000000000
-      internalID: -2901269920973943929
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FWD_SWING_8
-      rect:
-        serializedVersion: 2
-        x: 1092
-        y: 43
-        width: 81
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ba00000d79a53f400800000000000000
-      internalID: 356728403568623787
       vertices: []
       indices: 
       edges: []

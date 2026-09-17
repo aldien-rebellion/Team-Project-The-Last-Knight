@@ -61,7 +61,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -96,10 +96,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -127,12 +127,12 @@ TextureImporter:
       name: SIDE_SWING_0
       rect:
         serializedVersion: 2
-        x: 368
-        y: 43
-        width: 104
-        height: 65
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -149,12 +149,12 @@ TextureImporter:
       name: SIDE_SWING_1
       rect:
         serializedVersion: 2
-        x: 534
-        y: 80
-        width: 42
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 170
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -171,12 +171,12 @@ TextureImporter:
       name: SIDE_SWING_2
       rect:
         serializedVersion: 2
-        x: 542
-        y: 95
-        width: 73
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 340
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -193,12 +193,12 @@ TextureImporter:
       name: SIDE_SWING_3
       rect:
         serializedVersion: 2
-        x: 704
-        y: 43
-        width: 62
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 510
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -215,12 +215,12 @@ TextureImporter:
       name: SIDE_SWING_4
       rect:
         serializedVersion: 2
-        x: 874
-        y: 43
-        width: 57
-        height: 59
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 680
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -237,12 +237,12 @@ TextureImporter:
       name: SIDE_SWING_5
       rect:
         serializedVersion: 2
-        x: 1050
-        y: 43
-        width: 51
-        height: 63
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 850
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -259,12 +259,12 @@ TextureImporter:
       name: SIDE_SWING_6
       rect:
         serializedVersion: 2
-        x: 46
-        y: 43
-        width: 80
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1020
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -273,50 +273,6 @@ TextureImporter:
       bones: []
       spriteID: ed0feb0ebcdacedc0800000000000000
       internalID: -3608318110270033698
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SIDE_SWING_7
-      rect:
-        serializedVersion: 2
-        x: 223
-        y: 43
-        width: 71
-        height: 41
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 75d2353e09f30d030800000000000000
-      internalID: 3517381200498077015
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SIDE_SWING_8
-      rect:
-        serializedVersion: 2
-        x: 547
-        y: 43
-        width: 44
-        height: 47
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 59edf79b25d131530800000000000000
-      internalID: 3824432749704371861
       vertices: []
       indices: 
       edges: []

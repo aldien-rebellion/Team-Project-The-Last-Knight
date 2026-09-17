@@ -221,6 +221,207 @@ TextureImporter:
   - first:
       213: 4941684481991326430
     second: Character_sheet_72
+  - first:
+      213: 3358541013563233973
+    second: Golem_Idle_0
+  - first:
+      213: 4603746703920835238
+    second: Golem_Idle_1
+  - first:
+      213: -2495250544292010335
+    second: Golem_Idle_2
+  - first:
+      213: 2249079383216680613
+    second: Golem_Idle_3
+  - first:
+      213: 7276200448131683043
+    second: Golem_Glow_0
+  - first:
+      213: 4884948671212692260
+    second: Golem_Glow_1
+  - first:
+      213: -4865749677911293952
+    second: Golem_Glow_2
+  - first:
+      213: 1864277959287224710
+    second: Golem_Glow_3
+  - first:
+      213: -2038258656901308836
+    second: Golem_Glow_4
+  - first:
+      213: -6181136865114163880
+    second: Golem_Glow_5
+  - first:
+      213: 7248372481880889423
+    second: Golem_Glow_6
+  - first:
+      213: -8975356172083633815
+    second: Golem_Glow_7
+  - first:
+      213: 4548852529261655358
+    second: Golem_Shoot_0
+  - first:
+      213: 9038307795309566913
+    second: Golem_Shoot_1
+  - first:
+      213: -3473008679436427478
+    second: Golem_Shoot_2
+  - first:
+      213: 2834247772372014611
+    second: Golem_Shoot_3
+  - first:
+      213: 4784118396702164683
+    second: Golem_Shoot_4
+  - first:
+      213: -2501320344944322716
+    second: Golem_Shoot_5
+  - first:
+      213: -7692020686735485832
+    second: Golem_Shoot_6
+  - first:
+      213: -4516753023262469494
+    second: Golem_Shoot_7
+  - first:
+      213: -4773723822045947952
+    second: Golem_Shoot_8
+  - first:
+      213: 7690340117485037217
+    second: Golem_Immune_0
+  - first:
+      213: -220141802500283241
+    second: Golem_Immune_1
+  - first:
+      213: -2861716364310147654
+    second: Golem_Immune_2
+  - first:
+      213: 8236111089188671005
+    second: Golem_Immune_3
+  - first:
+      213: -3195427703953603320
+    second: Golem_Immune_4
+  - first:
+      213: 8883318862117350131
+    second: Golem_Immune_5
+  - first:
+      213: -4689499879706455800
+    second: Golem_Immune_6
+  - first:
+      213: -6370941999424755985
+    second: Golem_Immune_7
+  - first:
+      213: -1300162841533612141
+    second: Golem_Melee_0
+  - first:
+      213: -2262009992378912894
+    second: Golem_Melee_1
+  - first:
+      213: -2093321632469741510
+    second: Golem_Melee_2
+  - first:
+      213: 1094775719853628531
+    second: Golem_Melee_3
+  - first:
+      213: -1210251590707176727
+    second: Golem_Melee_4
+  - first:
+      213: -106449968064563754
+    second: Golem_Melee_5
+  - first:
+      213: 2025988314203239594
+    second: Golem_Melee_6
+  - first:
+      213: 7619352532600766215
+    second: Golem_LaserCast_0
+  - first:
+      213: -2221326861823027395
+    second: Golem_LaserCast_1
+  - first:
+      213: -3395666876232292303
+    second: Golem_LaserCast_2
+  - first:
+      213: 7115281196903427028
+    second: Golem_LaserCast_3
+  - first:
+      213: -4026628631555588278
+    second: Golem_LaserCast_4
+  - first:
+      213: 2393859148382316611
+    second: Golem_LaserCast_5
+  - first:
+      213: -6076515356792266872
+    second: Golem_LaserCast_6
+  - first:
+      213: 1936533021785722665
+    second: Golem_ShieldCast_0
+  - first:
+      213: 3489472783517176963
+    second: Golem_ShieldCast_1
+  - first:
+      213: -4941393256472265982
+    second: Golem_ShieldCast_2
+  - first:
+      213: -8379017642734293813
+    second: Golem_ShieldCast_3
+  - first:
+      213: -8388832184753138721
+    second: Golem_ShieldCast_4
+  - first:
+      213: 460517868001408057
+    second: Golem_ShieldCast_5
+  - first:
+      213: 6271574460144910682
+    second: Golem_ShieldCast_6
+  - first:
+      213: -7969617648869837159
+    second: Golem_ShieldCast_7
+  - first:
+      213: 8225909534279337758
+    second: Golem_ShieldCast_8
+  - first:
+      213: 8879004618920365327
+    second: Golem_ShieldCast_9
+  - first:
+      213: 1413406648231760709
+    second: Golem_Death_0
+  - first:
+      213: 2113898380802255406
+    second: Golem_Death_1
+  - first:
+      213: 8527605088656053818
+    second: Golem_Death_2
+  - first:
+      213: 6716583967786114218
+    second: Golem_Death_3
+  - first:
+      213: 1463550449754119872
+    second: Golem_Death_4
+  - first:
+      213: -7418050301205727
+    second: Golem_Death_5
+  - first:
+      213: 3880886872292551809
+    second: Golem_Death_6
+  - first:
+      213: -2125197490802021934
+    second: Golem_Death_7
+  - first:
+      213: 7666087462247994852
+    second: Golem_Death_8
+  - first:
+      213: 3701945347018062794
+    second: Golem_Death_9
+  - first:
+      213: -4308884098191094020
+    second: Golem_Death_10
+  - first:
+      213: -1725655097269564418
+    second: Golem_Death_11
+  - first:
+      213: -7256766412004695398
+    second: Golem_Death_12
+  - first:
+      213: 9145635572161948496
+    second: Golem_Death_13
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -253,7 +454,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -291,7 +492,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -316,1607 +517,1475 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Character_sheet_0
+      name: Golem_Idle_0
       rect:
         serializedVersion: 2
-        x: 24
-        y: 929
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 900
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 07e815eac698d01b0800000000000000
-      internalID: -5688739654425014672
+      spriteID: 5b6540de14feb9e20800000000000000
+      internalID: 3358541013563233973
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_1
+      name: Golem_Idle_1
       rect:
         serializedVersion: 2
-        x: 124
-        y: 930
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 100
+        y: 900
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 25f9b631f7ca5b120800000000000000
-      internalID: 2429037235822894930
+      spriteID: 6aaa31b4c3bc3ef30800000000000000
+      internalID: 4603746703920835238
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_2
+      name: Golem_Idle_2
       rect:
         serializedVersion: 2
-        x: 224
-        y: 929
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 200
+        y: 900
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 15dc5ea8094505970800000000000000
-      internalID: 8741579856508472657
+      spriteID: 1a6efd1b9d61f5dd0800000000000000
+      internalID: -2495250544292010335
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_3
+      name: Golem_Idle_3
       rect:
         serializedVersion: 2
-        x: 324
-        y: 929
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 900
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 390c626d2f12f50e0800000000000000
-      internalID: -2279065559567515501
+      spriteID: 5aee84c68c5563f10800000000000000
+      internalID: 2249079383216680613
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_4
+      name: Golem_Glow_0
       rect:
         serializedVersion: 2
-        x: 24
-        y: 829
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 800
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 40baec4fd8d0be9e0800000000000000
-      internalID: -1591163139996603644
+      spriteID: 3e25d61b1c14af460800000000000000
+      internalID: 7276200448131683043
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_5
+      name: Golem_Glow_1
       rect:
         serializedVersion: 2
-        x: 124
-        y: 829
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 100
+        y: 800
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7b9f749f5b9b75df0800000000000000
-      internalID: -191480267917493833
+      spriteID: 42326a55fe2dac340800000000000000
+      internalID: 4884948671212692260
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_6
+      name: Golem_Glow_2
       rect:
         serializedVersion: 2
-        x: 224
-        y: 829
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 200
+        y: 800
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5e652e07258afffc0800000000000000
-      internalID: -3458860916762585371
+      spriteID: 0004022a272697cb0800000000000000
+      internalID: -4865749677911293952
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_7
+      name: Golem_Glow_3
       rect:
         serializedVersion: 2
-        x: 324
-        y: 829
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 800
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e50185117eadbab90800000000000000
-      internalID: -7229444090849914786
+      spriteID: 689b7e53dee3fd910800000000000000
+      internalID: 1864277959287224710
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_8
+      name: Golem_Glow_4
       rect:
         serializedVersion: 2
-        x: 424
-        y: 829
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 400
+        y: 800
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 77d4b18351e706960800000000000000
-      internalID: 7593207601347382647
+      spriteID: c5e580bfc86a6b3e0800000000000000
+      internalID: -2038258656901308836
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_9
+      name: Golem_Glow_5
       rect:
         serializedVersion: 2
-        x: 524
-        y: 829
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 500
+        y: 800
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c23356188666d63b0800000000000000
-      internalID: -5517641369425464532
+      spriteID: 8557cce25c0383aa0800000000000000
+      internalID: -6181136865114163880
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_10
+      name: Golem_Glow_6
       rect:
         serializedVersion: 2
-        x: 624
-        y: 829
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 600
+        y: 800
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ca0a0dadc845d450800000000000000
-      internalID: 6112872117433928386
+      spriteID: f481a366e54679460800000000000000
+      internalID: 7248372481880889423
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_11
+      name: Golem_Glow_7
       rect:
         serializedVersion: 2
-        x: 724
-        y: 829
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 700
+        y: 800
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 92da4d378481a5bb0800000000000000
-      internalID: -4946614541253038807
+      spriteID: 961685e6d11217380800000000000000
+      internalID: -8975356172083633815
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_12
+      name: Golem_Shoot_0
       rect:
         serializedVersion: 2
-        x: 24
-        y: 729
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 700
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 240002a063ba80940800000000000000
-      internalID: 5262644413168877634
+      spriteID: e3537464645c02f30800000000000000
+      internalID: 4548852529261655358
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_13
+      name: Golem_Shoot_1
       rect:
         serializedVersion: 2
-        x: 124
-        y: 729
-        width: 53
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 100
+        y: 700
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9c3812cb434c23fa0800000000000000
-      internalID: -5822375637462973495
+      spriteID: 1cb12168d058e6d70800000000000000
+      internalID: 9038307795309566913
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_14
+      name: Golem_Shoot_2
       rect:
         serializedVersion: 2
-        x: 224
-        y: 729
-        width: 59
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 200
+        y: 700
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ac0cd6860e37d3dc0800000000000000
-      internalID: -3657639914693082934
+      spriteID: a2fd750c1056dcfc0800000000000000
+      internalID: -3473008679436427478
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_15
+      name: Golem_Shoot_3
       rect:
         serializedVersion: 2
-        x: 324
-        y: 729
-        width: 68
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 700
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 97c59122cfc501280800000000000000
-      internalID: -9074651011177948039
+      spriteID: 3161dad1555455720800000000000000
+      internalID: 2834247772372014611
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_16
+      name: Golem_Shoot_4
       rect:
         serializedVersion: 2
-        x: 424
-        y: 729
-        width: 68
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 400
+        y: 700
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6029a3f77cfc6f1e0800000000000000
-      internalID: -2164314115164958202
+      spriteID: bc608de955a946240800000000000000
+      internalID: 4784118396702164683
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_17
+      name: Golem_Shoot_5
       rect:
         serializedVersion: 2
-        x: 524
-        y: 729
-        width: 70
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 500
+        y: 700
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b65ddfc6c34d26ce0800000000000000
-      internalID: -1413333977049213589
+      spriteID: 467d22a1666894dd0800000000000000
+      internalID: -2501320344944322716
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_18
+      name: Golem_Shoot_6
       rect:
         serializedVersion: 2
-        x: 624
-        y: 729
-        width: 70
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 600
+        y: 700
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 48ad676aab4b08df0800000000000000
-      internalID: -179945271345096060
+      spriteID: 874dc2280f3704590800000000000000
+      internalID: -7692020686735485832
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_19
+      name: Golem_Shoot_7
       rect:
         serializedVersion: 2
-        x: 724
-        y: 729
-        width: 72
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 700
+        y: 700
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 94c90a57aa6633e90800000000000000
-      internalID: -7047176109600760759
+      spriteID: a82d44e5e054151c0800000000000000
+      internalID: -4516753023262469494
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_20
+      name: Golem_Shoot_8
       rect:
         serializedVersion: 2
-        x: 823
-        y: 729
-        width: 51
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 800
+        y: 700
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f72a3b3b60b610c80800000000000000
-      internalID: -8358281756894059905
+      spriteID: 0d79123e97350cdb0800000000000000
+      internalID: -4773723822045947952
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_21
+      name: Golem_Immune_0
       rect:
         serializedVersion: 2
-        x: 24
-        y: 629
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 600
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 03906f507d247d0a0800000000000000
-      internalID: -6856938416362878672
+      spriteID: 1a6a1a8779399ba60800000000000000
+      internalID: 7690340117485037217
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_22
+      name: Golem_Immune_1
       rect:
         serializedVersion: 2
-        x: 126
-        y: 629
-        width: 46
-        height: 47
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 100
+        y: 600
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 756620b66fc14da70800000000000000
-      internalID: 8850731012372719191
+      spriteID: 794a1cd6236e1fcf0800000000000000
+      internalID: -220141802500283241
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_23
+      name: Golem_Immune_2
       rect:
         serializedVersion: 2
-        x: 228
-        y: 629
-        width: 42
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 200
+        y: 600
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3b3a33c837113c4a0800000000000000
-      internalID: -6574391843059686477
+      spriteID: abd0f51f0242948d0800000000000000
+      internalID: -2861716364310147654
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_24
+      name: Golem_Immune_3
       rect:
         serializedVersion: 2
-        x: 330
-        y: 629
-        width: 38
-        height: 45
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 600
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e2b409785d38f1d50800000000000000
-      internalID: 6710226922930981678
+      spriteID: d1e0fb9166b8c4270800000000000000
+      internalID: 8236111089188671005
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_25
+      name: Golem_Immune_4
       rect:
         serializedVersion: 2
-        x: 431
-        y: 629
-        width: 36
-        height: 45
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 400
+        y: 600
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 639e92224be058f40800000000000000
-      internalID: 5730002267728898358
+      spriteID: 8054760fe6f87a3d0800000000000000
+      internalID: -3195427703953603320
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_26
+      name: Golem_Immune_5
       rect:
         serializedVersion: 2
-        x: 531
-        y: 629
-        width: 36
-        height: 45
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 500
+        y: 600
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b39159a317295b1d0800000000000000
-      internalID: -3335598933986174661
+      spriteID: 3fa28037073e74b70800000000000000
+      internalID: 8883318862117350131
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_27
+      name: Golem_Immune_6
       rect:
         serializedVersion: 2
-        x: 631
-        y: 629
-        width: 36
-        height: 45
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 600
+        y: 600
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f0bcc1737f7c9b730800000000000000
-      internalID: 4015460407372991247
+      spriteID: 8011cd794bc8beeb0800000000000000
+      internalID: -4689499879706455800
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_28
+      name: Golem_Immune_7
       rect:
         serializedVersion: 2
-        x: 731
-        y: 629
-        width: 36
-        height: 45
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 700
+        y: 600
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 05c144122b28d2c10800000000000000
-      internalID: 2030422708587863120
+      spriteID: fe6aba7910ed597a0800000000000000
+      internalID: -6370941999424755985
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_29
+      name: Golem_Melee_0
       rect:
         serializedVersion: 2
-        x: 24
-        y: 529
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 500
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 18bbe8a7dcf597300800000000000000
-      internalID: 250336590424882049
+      spriteID: 39ff930c8c4e4fde0800000000000000
+      internalID: -1300162841533612141
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_30
+      name: Golem_Melee_1
       rect:
         serializedVersion: 2
-        x: 124
-        y: 529
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 100
+        y: 500
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 319fdc52841698d70800000000000000
-      internalID: 9045868289050147091
+      spriteID: 28feed585e9bb90e0800000000000000
+      internalID: -2262009992378912894
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_31
+      name: Golem_Melee_2
       rect:
         serializedVersion: 2
-        x: 224
-        y: 529
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 200
+        y: 500
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6d691c748a8d4a740800000000000000
-      internalID: 5162489290143405782
+      spriteID: a301000f01703f2e0800000000000000
+      internalID: -2093321632469741510
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_32
+      name: Golem_Melee_3
       rect:
         serializedVersion: 2
-        x: 324
-        y: 529
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 500
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8fa37342b67443d90800000000000000
-      internalID: -7118986585471239432
+      spriteID: 37c199287bc613f00800000000000000
+      internalID: 1094775719853628531
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_33
+      name: Golem_Melee_4
       rect:
         serializedVersion: 2
-        x: 424
-        y: 529
-        width: 49
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 400
+        y: 500
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 920650c19322512a0800000000000000
-      internalID: -6767465236375707607
+      spriteID: 9ea1c072792543fe0800000000000000
+      internalID: -1210251590707176727
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_34
+      name: Golem_Melee_5
       rect:
         serializedVersion: 2
-        x: 524
-        y: 530
-        width: 51
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 500
+        y: 500
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1a7bdd7f40463dda0800000000000000
-      internalID: -5921279112560920671
+      spriteID: 6d5f82b6150d58ef0800000000000000
+      internalID: -106449968064563754
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_35
+      name: Golem_Melee_6
       rect:
         serializedVersion: 2
-        x: 624
-        y: 528
-        width: 43
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 600
+        y: 500
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 88484e636982bf950800000000000000
-      internalID: 6483820714161112200
+      spriteID: aa43d2b33a1cd1c10800000000000000
+      internalID: 2025988314203239594
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_36
+      name: Golem_LaserCast_0
       rect:
         serializedVersion: 2
-        x: 670
-        y: 526
-        width: 17
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 400
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9278022eabc679f60800000000000000
-      internalID: 8041015209606809385
+      spriteID: 70f342462c06db960800000000000000
+      internalID: 7619352532600766215
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_37
+      name: Golem_LaserCast_1
       rect:
         serializedVersion: 2
-        x: 24
-        y: 429
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 100
+        y: 400
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0af7517e03223b100800000000000000
-      internalID: 122479208299855776
+      spriteID: d37510ffcf24c21e0800000000000000
+      internalID: -2221326861823027395
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_38
+      name: Golem_LaserCast_2
       rect:
         serializedVersion: 2
-        x: 124
-        y: 429
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 200
+        y: 400
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 56b58e5fb174c00e0800000000000000
-      internalID: -2302387124077831323
+      spriteID: 1382d9297fa20e0d0800000000000000
+      internalID: -3395666876232292303
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_39
+      name: Golem_LaserCast_3
       rect:
         serializedVersion: 2
-        x: 224
-        y: 429
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 400
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 76f9cb9ccbc345100800000000000000
-      internalID: 95768273617723239
+      spriteID: 4dbe17adc8e8eb260800000000000000
+      internalID: 7115281196903427028
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_40
+      name: Golem_LaserCast_4
       rect:
         serializedVersion: 2
-        x: 324
-        y: 429
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 400
+        y: 400
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 58dd5074567517770800000000000000
-      internalID: 8606756455376608645
+      spriteID: a4f36b5f79a8e18c0800000000000000
+      internalID: -4026628631555588278
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_41
+      name: Golem_LaserCast_5
       rect:
         serializedVersion: 2
-        x: 424
-        y: 429
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 500
+        y: 400
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1f6ee58da0bb57410800000000000000
-      internalID: 1474290108287870705
+      spriteID: 348a5a55632b83120800000000000000
+      internalID: 2393859148382316611
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_42
+      name: Golem_LaserCast_6
       rect:
         serializedVersion: 2
-        x: 524
-        y: 429
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 600
+        y: 400
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: abeaba349fcdf4b40800000000000000
-      internalID: 5426799039145029306
+      spriteID: 88fd03e4a71ebaba0800000000000000
+      internalID: -6076515356792266872
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_43
+      name: Golem_ShieldCast_0
       rect:
         serializedVersion: 2
-        x: 624
-        y: 429
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b5560c76b66899840800000000000000
-      internalID: 5231360238027826523
+      spriteID: 92f0a5be582ffda10800000000000000
+      internalID: 1936533021785722665
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_44
+      name: Golem_ShieldCast_1
       rect:
         serializedVersion: 2
-        x: 24
-        y: 329
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 100
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 346ba672f162294a0800000000000000
-      internalID: -6588161389642467773
+      spriteID: 3845fe232091d6030800000000000000
+      internalID: 3489472783517176963
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_45
+      name: Golem_ShieldCast_2
       rect:
         serializedVersion: 2
-        x: 124
-        y: 329
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 200
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 466677facea6a2430800000000000000
-      internalID: 3758934403782764132
+      spriteID: 20bb57c8305ac6bb0800000000000000
+      internalID: -4941393256472265982
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_46
+      name: Golem_ShieldCast_3
       rect:
         serializedVersion: 2
-        x: 224
-        y: 329
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c3a36dcad6a566dc0800000000000000
-      internalID: -3646127421212181956
+      spriteID: bcc671e09dfb7bb80800000000000000
+      internalID: -8379017642734293813
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_47
+      name: Golem_ShieldCast_4
       rect:
         serializedVersion: 2
-        x: 326
-        y: 329
-        width: 46
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 400
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 42402aaf5c99bbdc0800000000000000
-      internalID: -3622132399696903132
+      spriteID: fd3dc6be291e49b80800000000000000
+      internalID: -8388832184753138721
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_48
+      name: Golem_ShieldCast_5
       rect:
         serializedVersion: 2
-        x: 424
-        y: 325
-        width: 50
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 500
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4106b419f755ff7d0800000000000000
-      internalID: -2882491230106984428
+      spriteID: 934b1fe9f86146600800000000000000
+      internalID: 460517868001408057
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_49
+      name: Golem_ShieldCast_6
       rect:
         serializedVersion: 2
-        x: 524
-        y: 329
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 600
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 831d9fb3aeccb20c0800000000000000
-      internalID: -4599357288028188360
+      spriteID: a5189574ebb190750800000000000000
+      internalID: 6271574460144910682
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_50
+      name: Golem_ShieldCast_7
       rect:
         serializedVersion: 2
-        x: 624
-        y: 329
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 700
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6e5f4ac6e06a40250800000000000000
-      internalID: 5910031191899436518
+      spriteID: 996fd6329fa366190800000000000000
+      internalID: -7969617648869837159
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_51
+      name: Golem_ShieldCast_8
       rect:
         serializedVersion: 2
-        x: 724
-        y: 329
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 800
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: be41008a19d1065a0800000000000000
-      internalID: -6530186948261178133
+      spriteID: e170831832d482270800000000000000
+      internalID: 8225909534279337758
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_52
+      name: Golem_ShieldCast_9
       rect:
         serializedVersion: 2
-        x: 824
-        y: 329
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 900
+        y: 300
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 89003f535cf3dea70800000000000000
-      internalID: 8857806158353858712
+      spriteID: f0d0dcd68af883b70800000000000000
+      internalID: 8879004618920365327
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_53
+      name: Golem_Death_0
       rect:
         serializedVersion: 2
-        x: 924
-        y: 329
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6352210d4a47cceb0800000000000000
-      internalID: -4698252060039961290
+      spriteID: 5439707abdd6d9310800000000000000
+      internalID: 1413406648231760709
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_54
+      name: Golem_Death_1
       rect:
         serializedVersion: 2
-        x: 24
-        y: 229
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 100
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 25b3e145c8ada1f90800000000000000
-      internalID: -6982027976042988718
+      spriteID: e2aedfe9063165d10800000000000000
+      internalID: 2113898380802255406
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_55
+      name: Golem_Death_2
       rect:
         serializedVersion: 2
-        x: 124
-        y: 229
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 200
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ddd511871f1a74510800000000000000
-      internalID: 1533372256616537565
+      spriteID: a36582e95a3285670800000000000000
+      internalID: 8527605088656053818
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_56
+      name: Golem_Death_3
       rect:
         serializedVersion: 2
-        x: 224
-        y: 229
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 52be3194253ecfa30800000000000000
-      internalID: 4250522090883771173
+      spriteID: aac99ff5889163d50800000000000000
+      internalID: 6716583967786114218
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_57
+      name: Golem_Death_4
       rect:
         serializedVersion: 2
-        x: 324
-        y: 229
-        width: 50
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 400
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4df0ccceaae162980800000000000000
-      internalID: -8564123921932349484
+      spriteID: 0ce157c31639f4410800000000000000
+      internalID: 1463550449754119872
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_58
+      name: Golem_Death_5
       rect:
         serializedVersion: 2
-        x: 425
-        y: 228
-        width: 48
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 500
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4af043aecd1225050800000000000000
-      internalID: 5787725703830310820
+      spriteID: 123eed29255a5eff0800000000000000
+      internalID: -7418050301205727
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_59
+      name: Golem_Death_6
       rect:
         serializedVersion: 2
-        x: 525
-        y: 226
-        width: 48
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 600
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6957c9c31b51333a0800000000000000
-      internalID: -6686977170744773226
+      spriteID: 18c697c6c0eabd530800000000000000
+      internalID: 3880886872292551809
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_60
+      name: Golem_Death_7
       rect:
         serializedVersion: 2
-        x: 626
-        y: 223
-        width: 46
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 700
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 868da90b96395f230800000000000000
-      internalID: 3672003153334294632
+      spriteID: 2d9a1335428c182e0800000000000000
+      internalID: -2125197490802021934
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_61
+      name: Golem_Death_8
       rect:
         serializedVersion: 2
-        x: 726
-        y: 216
-        width: 46
-        height: 55
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 800
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4040b50a66e8f8a20800000000000000
-      internalID: 3066826442690724868
+      spriteID: 4e51e542ee9636a60800000000000000
+      internalID: 7666087462247994852
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_62
+      name: Golem_Death_9
       rect:
         serializedVersion: 2
-        x: 826
-        y: 207
-        width: 14
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 900
+        y: 200
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e3cf42ea81edf9e30800000000000000
-      internalID: 4512569549230767166
+      spriteID: acbfbeaeda3ff5330800000000000000
+      internalID: 3701945347018062794
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_63
+      name: Golem_Death_10
       rect:
         serializedVersion: 2
-        x: 832
-        y: 223
-        width: 35
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 100
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: deb7ec4093276b300800000000000000
-      internalID: 267526817094466541
+      spriteID: cfe8dfcfdb4c334c0800000000000000
+      internalID: -4308884098191094020
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_64
+      name: Golem_Death_11
       rect:
         serializedVersion: 2
-        x: 859
-        y: 207
-        width: 13
-        height: 33
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 100
+        y: 100
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8e1e99da25b980f50800000000000000
-      internalID: 6847894012819005928
+      spriteID: efbc76af4dd3d08e0800000000000000
+      internalID: -1725655097269564418
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_65
+      name: Golem_Death_12
       rect:
         serializedVersion: 2
-        x: 924
-        y: 206
-        width: 17
-        height: 30
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 200
+        y: 100
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0986606c8d1814560800000000000000
-      internalID: 7296255639352141968
+      spriteID: a9269727569ca4b90800000000000000
+      internalID: -7256766412004695398
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_sheet_66
+      name: Golem_Death_13
       rect:
         serializedVersion: 2
-        x: 932
-        y: 223
-        width: 35
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 100
+        width: 100
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b6726cd04abaa9130800000000000000
-      internalID: 3574357975365986155
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Character_sheet_67
-      rect:
-        serializedVersion: 2
-        x: 958
-        y: 206
-        width: 15
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bc60b9c267e071480800000000000000
-      internalID: -8928651835521431861
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Character_sheet_68
-      rect:
-        serializedVersion: 2
-        x: 24
-        y: 106
-        width: 43
-        height: 61
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 41176ea01d8403a60800000000000000
-      internalID: 7651695829570711828
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Character_sheet_69
-      rect:
-        serializedVersion: 2
-        x: 58
-        y: 106
-        width: 15
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5e8fdf83a00047960800000000000000
-      internalID: 7598698515186710757
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Character_sheet_70
-      rect:
-        serializedVersion: 2
-        x: 124
-        y: 105
-        width: 49
-        height: 45
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: cee95f9fee32799e0800000000000000
-      internalID: -1614782432086221076
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Character_sheet_71
-      rect:
-        serializedVersion: 2
-        x: 224
-        y: 106
-        width: 49
-        height: 38
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 54267bb7faaa80a90800000000000000
-      internalID: -7347435121383349691
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Character_sheet_72
-      rect:
-        serializedVersion: 2
-        x: 324
-        y: 106
-        width: 49
-        height: 38
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: eda372daad3649440800000000000000
-      internalID: 4941684481991326430
+      spriteID: 05ba3e3e813dbee70800000000000000
+      internalID: 9145635572161948496
       vertices: []
       indices: 
       edges: []
@@ -2008,6 +2077,73 @@ TextureImporter:
       Character_sheet_72: 4941684481991326430
       Character_sheet_8: 7593207601347382647
       Character_sheet_9: -5517641369425464532
+      Golem_Death_0: 1413406648231760709
+      Golem_Death_1: 2113898380802255406
+      Golem_Death_10: -4308884098191094020
+      Golem_Death_11: -1725655097269564418
+      Golem_Death_12: -7256766412004695398
+      Golem_Death_13: 9145635572161948496
+      Golem_Death_2: 8527605088656053818
+      Golem_Death_3: 6716583967786114218
+      Golem_Death_4: 1463550449754119872
+      Golem_Death_5: -7418050301205727
+      Golem_Death_6: 3880886872292551809
+      Golem_Death_7: -2125197490802021934
+      Golem_Death_8: 7666087462247994852
+      Golem_Death_9: 3701945347018062794
+      Golem_Glow_0: 7276200448131683043
+      Golem_Glow_1: 4884948671212692260
+      Golem_Glow_2: -4865749677911293952
+      Golem_Glow_3: 1864277959287224710
+      Golem_Glow_4: -2038258656901308836
+      Golem_Glow_5: -6181136865114163880
+      Golem_Glow_6: 7248372481880889423
+      Golem_Glow_7: -8975356172083633815
+      Golem_Idle_0: 3358541013563233973
+      Golem_Idle_1: 4603746703920835238
+      Golem_Idle_2: -2495250544292010335
+      Golem_Idle_3: 2249079383216680613
+      Golem_Immune_0: 7690340117485037217
+      Golem_Immune_1: -220141802500283241
+      Golem_Immune_2: -2861716364310147654
+      Golem_Immune_3: 8236111089188671005
+      Golem_Immune_4: -3195427703953603320
+      Golem_Immune_5: 8883318862117350131
+      Golem_Immune_6: -4689499879706455800
+      Golem_Immune_7: -6370941999424755985
+      Golem_LaserCast_0: 7619352532600766215
+      Golem_LaserCast_1: -2221326861823027395
+      Golem_LaserCast_2: -3395666876232292303
+      Golem_LaserCast_3: 7115281196903427028
+      Golem_LaserCast_4: -4026628631555588278
+      Golem_LaserCast_5: 2393859148382316611
+      Golem_LaserCast_6: -6076515356792266872
+      Golem_Melee_0: -1300162841533612141
+      Golem_Melee_1: -2262009992378912894
+      Golem_Melee_2: -2093321632469741510
+      Golem_Melee_3: 1094775719853628531
+      Golem_Melee_4: -1210251590707176727
+      Golem_Melee_5: -106449968064563754
+      Golem_Melee_6: 2025988314203239594
+      Golem_ShieldCast_0: 1936533021785722665
+      Golem_ShieldCast_1: 3489472783517176963
+      Golem_ShieldCast_2: -4941393256472265982
+      Golem_ShieldCast_3: -8379017642734293813
+      Golem_ShieldCast_4: -8388832184753138721
+      Golem_ShieldCast_5: 460517868001408057
+      Golem_ShieldCast_6: 6271574460144910682
+      Golem_ShieldCast_7: -7969617648869837159
+      Golem_ShieldCast_8: 8225909534279337758
+      Golem_ShieldCast_9: 8879004618920365327
+      Golem_Shoot_0: 4548852529261655358
+      Golem_Shoot_1: 9038307795309566913
+      Golem_Shoot_2: -3473008679436427478
+      Golem_Shoot_3: 2834247772372014611
+      Golem_Shoot_4: 4784118396702164683
+      Golem_Shoot_5: -2501320344944322716
+      Golem_Shoot_6: -7692020686735485832
+      Golem_Shoot_7: -4516753023262469494
+      Golem_Shoot_8: -4773723822045947952
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

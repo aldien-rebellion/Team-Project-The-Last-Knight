@@ -115,7 +115,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -150,10 +150,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -181,12 +181,12 @@ TextureImporter:
       name: FULL_COMBO_0
       rect:
         serializedVersion: 2
-        x: 206
-        y: 43
-        width: 29
-        height: 60
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -203,12 +203,12 @@ TextureImporter:
       name: FULL_COMBO_1
       rect:
         serializedVersion: 2
-        x: 378
-        y: 43
-        width: 26
-        height: 61
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 170
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -225,12 +225,12 @@ TextureImporter:
       name: FULL_COMBO_2
       rect:
         serializedVersion: 2
-        x: 552
-        y: 42
-        width: 90
-        height: 63
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 340
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -247,12 +247,12 @@ TextureImporter:
       name: FULL_COMBO_3
       rect:
         serializedVersion: 2
-        x: 780
-        y: 100
-        width: 15
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 510
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -269,12 +269,12 @@ TextureImporter:
       name: FULL_COMBO_4
       rect:
         serializedVersion: 2
-        x: 896
-        y: 42
-        width: 97
-        height: 65
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 680
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -291,12 +291,12 @@ TextureImporter:
       name: FULL_COMBO_5
       rect:
         serializedVersion: 2
-        x: 1558
-        y: 43
-        width: 104
-        height: 65
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 850
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -313,12 +313,12 @@ TextureImporter:
       name: FULL_COMBO_6
       rect:
         serializedVersion: 2
-        x: 1724
-        y: 80
-        width: 42
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1020
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -335,12 +335,12 @@ TextureImporter:
       name: FULL_COMBO_7
       rect:
         serializedVersion: 2
-        x: 1732
-        y: 95
-        width: 73
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1190
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -357,12 +357,12 @@ TextureImporter:
       name: FULL_COMBO_8
       rect:
         serializedVersion: 2
-        x: 1894
-        y: 43
-        width: 62
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1360
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -379,12 +379,12 @@ TextureImporter:
       name: FULL_COMBO_9
       rect:
         serializedVersion: 2
-        x: 2064
-        y: 43
-        width: 57
-        height: 59
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1530
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -401,12 +401,12 @@ TextureImporter:
       name: FULL_COMBO_10
       rect:
         serializedVersion: 2
-        x: 2240
-        y: 43
-        width: 51
-        height: 63
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1700
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -423,12 +423,12 @@ TextureImporter:
       name: FULL_COMBO_11
       rect:
         serializedVersion: 2
-        x: 2411
-        y: 84
-        width: 41
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1870
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -445,12 +445,12 @@ TextureImporter:
       name: FULL_COMBO_12
       rect:
         serializedVersion: 2
-        x: 33
-        y: 43
-        width: 40
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2040
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -467,12 +467,12 @@ TextureImporter:
       name: FULL_COMBO_13
       rect:
         serializedVersion: 2
-        x: 720
-        y: 43
-        width: 89
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2210
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -489,12 +489,12 @@ TextureImporter:
       name: FULL_COMBO_14
       rect:
         serializedVersion: 2
-        x: 800
-        y: 46
-        width: 21
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2380
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -511,12 +511,12 @@ TextureImporter:
       name: FULL_COMBO_15
       rect:
         serializedVersion: 2
-        x: 1066
-        y: 42
-        width: 83
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2550
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -533,12 +533,12 @@ TextureImporter:
       name: FULL_COMBO_16
       rect:
         serializedVersion: 2
-        x: 1236
-        y: 43
-        width: 80
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2720
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -555,12 +555,12 @@ TextureImporter:
       name: FULL_COMBO_17
       rect:
         serializedVersion: 2
-        x: 1413
-        y: 43
-        width: 71
-        height: 41
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2890
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -577,12 +577,12 @@ TextureImporter:
       name: FULL_COMBO_18
       rect:
         serializedVersion: 2
-        x: 1737
-        y: 43
-        width: 44
-        height: 47
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3060
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -599,12 +599,12 @@ TextureImporter:
       name: FULL_COMBO_19
       rect:
         serializedVersion: 2
-        x: 2440
-        y: 43
-        width: 31
-        height: 44
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3230
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -621,12 +621,12 @@ TextureImporter:
       name: FULL_COMBO_20
       rect:
         serializedVersion: 2
-        x: 2605
-        y: 43
-        width: 112
-        height: 42
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3400
+        y: 0
+        width: 170
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -635,138 +635,6 @@ TextureImporter:
       bones: []
       spriteID: f8058c6d6399e6170800000000000000
       internalID: 8173638834534764687
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FULL_COMBO_21
-      rect:
-        serializedVersion: 2
-        x: 2777
-        y: 43
-        width: 96
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8541013366c6244a0800000000000000
-      internalID: -6610602116827311016
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FULL_COMBO_22
-      rect:
-        serializedVersion: 2
-        x: 2875
-        y: 61
-        width: 16
-        height: 11
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 19eb144de0cb3d280800000000000000
-      internalID: -9019658856816329071
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FULL_COMBO_23
-      rect:
-        serializedVersion: 2
-        x: 2954
-        y: 43
-        width: 88
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 890115dc0c2e45fd0800000000000000
-      internalID: -2354007387501686632
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FULL_COMBO_24
-      rect:
-        serializedVersion: 2
-        x: 3132
-        y: 43
-        width: 80
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a2e05a231f74402d0800000000000000
-      internalID: -3313444324575474134
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FULL_COMBO_25
-      rect:
-        serializedVersion: 2
-        x: 3302
-        y: 43
-        width: 81
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 801a4db7e2bd3d520800000000000000
-      internalID: 2725763192181793032
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FULL_COMBO_26
-      rect:
-        serializedVersion: 2
-        x: 3472
-        y: 43
-        width: 81
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f83a657dfb93e6800800000000000000
-      internalID: 607486495855911823
       vertices: []
       indices: 
       edges: []

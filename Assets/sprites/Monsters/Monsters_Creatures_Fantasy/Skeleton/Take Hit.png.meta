@@ -14,6 +14,18 @@ TextureImporter:
   - first:
       213: -9206091644520726168
     second: Take Hit_3
+  - first:
+      213: -4244879404125738187
+    second: Take Hit_0000
+  - first:
+      213: -2565400446302694034
+    second: Take Hit_0001
+  - first:
+      213: -8484567386524879540
+    second: Take Hit_0002
+  - first:
+      213: -6136173986106689598
+    second: Take Hit_0003
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -81,10 +93,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -109,89 +121,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Take Hit_0
+      name: Take Hit_0000
       rect:
         serializedVersion: 2
-        x: 59
-        y: 48
-        width: 47
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 150
+        height: 150
+      alignment: 9
+      pivot: {x: 0.5, y: 0.32666665}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 57eedf966c138e790800000000000000
-      internalID: -7500690451134026123
+      spriteID: 53ba6ba1ca82715c0800000000000000
+      internalID: -4244879404125738187
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Take Hit_1
+      name: Take Hit_0001
       rect:
         serializedVersion: 2
-        x: 209
-        y: 48
-        width: 47
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 150
+        y: 0
+        width: 150
+        height: 150
+      alignment: 9
+      pivot: {x: 0.5, y: 0.32666665}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1e4c0dd4d9596a3f0800000000000000
-      internalID: -889859373511162655
+      spriteID: e65df7bd2edd56cd0800000000000000
+      internalID: -2565400446302694034
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Take Hit_2
+      name: Take Hit_0002
       rect:
         serializedVersion: 2
-        x: 349
-        y: 48
-        width: 52
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 300
+        y: 0
+        width: 150
+        height: 150
+      alignment: 9
+      pivot: {x: 0.5, y: 0.32666665}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1b416439782e125d0800000000000000
-      internalID: -3088938797480143695
+      spriteID: c45f1554ae2c04a80800000000000000
+      internalID: -8484567386524879540
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Take Hit_3
+      name: Take Hit_0003
       rect:
         serializedVersion: 2
-        x: 501
-        y: 48
-        width: 52
-        height: 55
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 450
+        y: 0
+        width: 150
+        height: 150
+      alignment: 9
+      pivot: {x: 0.5, y: 0.32666665}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 86186aedc646d3080800000000000000
-      internalID: -9206091644520726168
+      spriteID: 2c73e1e354ee7daa0800000000000000
+      internalID: -6136173986106689598
       vertices: []
       indices: 
       edges: []
@@ -211,6 +223,10 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Take Hit_0: -7500690451134026123
+      Take Hit_0000: -4244879404125738187
+      Take Hit_0001: -2565400446302694034
+      Take Hit_0002: -8484567386524879540
+      Take Hit_0003: -6136173986106689598
       Take Hit_1: -889859373511162655
       Take Hit_2: -3088938797480143695
       Take Hit_3: -9206091644520726168
