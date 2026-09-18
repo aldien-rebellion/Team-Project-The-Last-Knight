@@ -47,6 +47,36 @@ TextureImporter:
   - first:
       213: 8579060703403201141
     second: Idle_left_0004
+  - first:
+      213: 455356427524749840
+    second: Idle_left_00
+  - first:
+      213: 6764669299879414934
+    second: Idle_left_01
+  - first:
+      213: 6510190223755908447
+    second: Idle_left_02
+  - first:
+      213: -1790647617566858958
+    second: Idle_left_03
+  - first:
+      213: -8942892982973637089
+    second: Idle_left_04
+  - first:
+      213: 3347474115637110768
+    second: Idle_left_05
+  - first:
+      213: 6843792118196860255
+    second: Idle_left_06
+  - first:
+      213: -7821923497068727885
+    second: Idle_left_07
+  - first:
+      213: 1455911101068586605
+    second: Idle_left_08
+  - first:
+      213: 1263698229346590289
+    second: Idle_left_09
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -66,7 +96,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -142,111 +172,221 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Idle_left_0000
+      name: Idle_left_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bd41553a071d024d86cd1251e71ae7c
+      internalID: 455356427524749840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_left_01
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b657b5d7195912419c9440cc3b79ecb
+      internalID: 6764669299879414934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_left_02
+      rect:
+        serializedVersion: 2
+        x: 2816
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9054f44846be3840b9f6ef76947af0a
+      internalID: 6510190223755908447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_left_03
+      rect:
+        serializedVersion: 2
+        x: 4224
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e34039f6a0e3fff42a9705f3b94990e4
+      internalID: -1790647617566858958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_left_04
+      rect:
+        serializedVersion: 2
+        x: 5632
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10ccce5c75050c141a50250e33d29552
+      internalID: -8942892982973637089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_left_05
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 91d1925492d2514f0800000000000000
-      internalID: -858730498666980071
+      spriteID: d3e9c1b74c4675e49a428029eaf16f1b
+      internalID: 3347474115637110768
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_left_0001
+      name: Idle_left_06
       rect:
         serializedVersion: 2
         x: 1408
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 2367d0644a39d75b0800000000000000
-      internalID: -5368972846996556238
+      spriteID: 77960f6b285e9ab4da7842b8590dd84e
+      internalID: 6843792118196860255
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_left_0002
+      name: Idle_left_07
       rect:
         serializedVersion: 2
         x: 2816
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 0a2d612895f7465e0800000000000000
-      internalID: -1917267518941637984
+      spriteID: fa28c52b3aec39a4eb2ea3cfc14bd599
+      internalID: -7821923497068727885
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_left_0003
+      name: Idle_left_08
       rect:
         serializedVersion: 2
         x: 4224
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 4c2934035233ee260800000000000000
-      internalID: 7128691494990615236
+      spriteID: 4e2035030f027a843936af083ecd1090
+      internalID: 1455911101068586605
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_left_0004
+      name: Idle_left_09
       rect:
         serializedVersion: 2
         x: 5632
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 5725cd48142fe0770800000000000000
-      internalID: 8579060703403201141
+      spriteID: b4e2b0a847fccaf4e8ba52b2853351e0
+      internalID: 1263698229346590289
       vertices: []
       indices: 
       edges: []
@@ -255,7 +395,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: e52f842753d3d964699d6db45c05d813
     internalID: 0
     vertices: []
     indices: 
@@ -266,11 +406,21 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Idle_left_0: -384863430394946757
+      Idle_left_00: 455356427524749840
       Idle_left_0000: -858730498666980071
       Idle_left_0001: -5368972846996556238
       Idle_left_0002: -1917267518941637984
       Idle_left_0003: 7128691494990615236
       Idle_left_0004: 8579060703403201141
+      Idle_left_01: 6764669299879414934
+      Idle_left_02: 6510190223755908447
+      Idle_left_03: -1790647617566858958
+      Idle_left_04: -8942892982973637089
+      Idle_left_05: 3347474115637110768
+      Idle_left_06: 6843792118196860255
+      Idle_left_07: -7821923497068727885
+      Idle_left_08: 1455911101068586605
+      Idle_left_09: 1263698229346590289
       Idle_left_1: 1395481340253070628
       Idle_left_2: 4212775447455087210
       Idle_left_3: -861925106286215378

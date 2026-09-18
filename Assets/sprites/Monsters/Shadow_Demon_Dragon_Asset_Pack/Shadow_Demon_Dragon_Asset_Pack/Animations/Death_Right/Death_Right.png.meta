@@ -92,6 +92,36 @@ TextureImporter:
   - first:
       213: 7587049457346093901
     second: Death_Right_0009
+  - first:
+      213: -4955204249691177939
+    second: Death_Right_00
+  - first:
+      213: -5681511683921669737
+    second: Death_Right_01
+  - first:
+      213: -1803716872852294566
+    second: Death_Right_02
+  - first:
+      213: -5194466159180457603
+    second: Death_Right_03
+  - first:
+      213: 3437137125560107712
+    second: Death_Right_04
+  - first:
+      213: 5818449729504493346
+    second: Death_Right_05
+  - first:
+      213: -7507710793491878736
+    second: Death_Right_06
+  - first:
+      213: -8786907283509974836
+    second: Death_Right_07
+  - first:
+      213: -5368809185692753170
+    second: Death_Right_08
+  - first:
+      213: 8509479619500613223
+    second: Death_Right_09
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -111,7 +141,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -187,221 +217,441 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Death_Right_0000
+      name: Death_Right_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2376
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb7bf50a24101744a961ecb0d0fb24a7
+      internalID: -4955204249691177939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_01
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 2376
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06d59a58d77f48b4cb69ef968db8d542
+      internalID: -5681511683921669737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_02
+      rect:
+        serializedVersion: 2
+        x: 2816
+        y: 2376
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a215605c57cf774582343537d4939a6
+      internalID: -1803716872852294566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_03
+      rect:
+        serializedVersion: 2
+        x: 4224
+        y: 2376
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad42ca72957eea24abfad5d495bbf5a4
+      internalID: -5194466159180457603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_04
+      rect:
+        serializedVersion: 2
+        x: 5632
+        y: 2376
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70fa0081673cd8046bb6d6b61ba5c5d6
+      internalID: 3437137125560107712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_05
       rect:
         serializedVersion: 2
         x: 0
         y: 1584
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 9926ea48d51ca7830800000000000000
-      internalID: 4069777820684804761
+      spriteID: 04b6d5734e30f544ea75b3167cd74e50
+      internalID: 5818449729504493346
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Death_Right_0001
+      name: Death_Right_06
       rect:
         serializedVersion: 2
         x: 1408
         y: 1584
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b77536b939980d000800000000000000
-      internalID: 58698062215993211
+      spriteID: b8f7a3361a284754882ddda5eaeff599
+      internalID: -7507710793491878736
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Death_Right_0002
+      name: Death_Right_07
       rect:
         serializedVersion: 2
         x: 2816
         y: 1584
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: e93f6649c952691c0800000000000000
-      internalID: -4497365823447960674
+      spriteID: d5facc4a19ebf094fb343849dc089100
+      internalID: -8786907283509974836
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Death_Right_0003
+      name: Death_Right_08
       rect:
         serializedVersion: 2
         x: 4224
         y: 1584
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: baafa17331fdf3800800000000000000
-      internalID: 594438949458082475
+      spriteID: 4a1e384748c5f8e4294c6170a5677f07
+      internalID: -5368809185692753170
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Death_Right_0004
+      name: Death_Right_09
       rect:
         serializedVersion: 2
         x: 5632
         y: 1584
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 5b92659da2e422aa0800000000000000
-      internalID: -6187296992111744587
+      spriteID: 913ee119a8b9851438f854a3543f5ede
+      internalID: 8509479619500613223
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Death_Right_0005
+      name: Death_Right_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8afb7c19aeca3364aae43a1cfee4cd89
+      internalID: 6796291067175978938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_11
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9025dc9758e8e44d944af75833e90d1
+      internalID: -2243635571101509940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_12
+      rect:
+        serializedVersion: 2
+        x: 2816
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c9e7baafa2c1114395af960774a287b
+      internalID: 6287588037913752649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_13
+      rect:
+        serializedVersion: 2
+        x: 4224
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62de27a96a524424db44a0c7b2d9a014
+      internalID: 5566091105485936925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_14
+      rect:
+        serializedVersion: 2
+        x: 5632
+        y: 792
+        width: 1408
+        height: 792
+      alignment: 9
+      pivot: {x: 0.5, y: 0.31}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8d6836363f8dd745addf9a6f9bd798e
+      internalID: -1042730188773148467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Right_15
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 28748cb8900abc9d0800000000000000
-      internalID: -2752930784346617982
+      spriteID: f9f0608662985984dabe59b6a52da6a5
+      internalID: 3961545261793727080
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Death_Right_0006
+      name: Death_Right_16
       rect:
         serializedVersion: 2
         x: 1408
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: d548b1b23787cbdc0800000000000000
-      internalID: -3621887564272925603
+      spriteID: ebfbc7446bb9429488c38cf20b9874a7
+      internalID: 7844404473686884412
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Death_Right_0007
+      name: Death_Right_17
       rect:
         serializedVersion: 2
         x: 2816
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6ee2b40b8fca0f5a0800000000000000
-      internalID: -6489496878931300634
+      spriteID: b22b9c8cd7870504081694d10b691301
+      internalID: 3089635168684179921
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Death_Right_0008
+      name: Death_Right_18
       rect:
         serializedVersion: 2
         x: 4224
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: e09c9350db0c52240800000000000000
-      internalID: 4766427698710563086
+      spriteID: 192847bffa3239b4b8146e2342c1b0d3
+      internalID: 6349699755834141234
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Death_Right_0009
+      name: Death_Right_19
       rect:
         serializedVersion: 2
         x: 5632
         y: 0
         width: 1408
-        height: 1584
+        height: 792
       alignment: 9
-      pivot: {x: 0.5, y: 0.15530303}
+      pivot: {x: 0.5, y: 0.31}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: d432f66984d9a4960800000000000000
-      internalID: 7587049457346093901
+      spriteID: 702f7c8d7c5740348990467e6d71e9f8
+      internalID: 5974761371377956879
       vertices: []
       indices: 
       edges: []
@@ -410,7 +660,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: f01ea007f9334e64d963e505e6853070
     internalID: 0
     vertices: []
     indices: 
@@ -421,6 +671,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Death_Right_0: 8917758891886350350
+      Death_Right_00: -4955204249691177939
       Death_Right_0000: 4069777820684804761
       Death_Right_0001: 58698062215993211
       Death_Right_0002: -4497365823447960674
@@ -431,6 +682,15 @@ TextureImporter:
       Death_Right_0007: -6489496878931300634
       Death_Right_0008: 4766427698710563086
       Death_Right_0009: 7587049457346093901
+      Death_Right_01: -5681511683921669737
+      Death_Right_02: -1803716872852294566
+      Death_Right_03: -5194466159180457603
+      Death_Right_04: 3437137125560107712
+      Death_Right_05: 5818449729504493346
+      Death_Right_06: -7507710793491878736
+      Death_Right_07: -8786907283509974836
+      Death_Right_08: -5368809185692753170
+      Death_Right_09: 8509479619500613223
       Death_Right_1: 3199294914911123909
       Death_Right_10: 6796291067175978938
       Death_Right_11: -2243635571101509940
