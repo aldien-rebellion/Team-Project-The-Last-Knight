@@ -63,6 +63,13 @@ namespace TheLastKnight.Environment
         public static float LastTeleportTime = -99f;
         private static readonly List<TeleportDoor> s_ActiveDoors = new List<TeleportDoor>();
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            LastTeleportTime = -99f;
+            s_ActiveDoors.Clear();
+        }
+
         private bool _playerInRange = false;
         private GameObject _player;
         private Collider2D _playerCollider;
@@ -96,11 +103,20 @@ namespace TheLastKnight.Environment
 
         private void Awake()
         {
+            if (LastTeleportTime > Time.time)
+            {
+                LastTeleportTime = -99f;
+            }
+
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _doorCollider = GetComponent<BoxCollider2D>();
             if (_doorCollider != null)
             {
                 _doorCollider.isTrigger = true;
+                if (_doorCollider.size.x < 0.5f || _doorCollider.size.y < 0.5f)
+                {
+                    _doorCollider.size = new Vector2(1.85f, 3.0f);
+                }
             }
 
             if (_promptUI != null)
@@ -416,16 +432,21 @@ namespace TheLastKnight.Environment
 #if ENABLE_INPUT_SYSTEM
             if (Keyboard.current != null)
             {
-                if (_interactKey == KeyCode.F && Keyboard.current.fKey.wasPressedThisFrame) return true;
-                if (_interactKey == KeyCode.E && Keyboard.current.eKey.wasPressedThisFrame) return true;
-                if (Keyboard.current.fKey.wasPressedThisFrame) return true;
+                if (Keyboard.current.fKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame) return true;
+            }
+            if (Gamepad.current != null)
+            {
+                if (Gamepad.current.buttonNorth.wasPressedThisFrame || Gamepad.current.buttonSouth.wasPressedThisFrame) return true;
+            }
+            if (InputSystem.actions != null)
+            {
+                var interactAction = InputSystem.actions.FindAction("Interact");
+                if (interactAction != null && interactAction.WasPressedThisFrame()) return true;
             }
 #endif
             try
             {
-                if (UnityEngine.Input.GetKeyDown(_interactKey))
-                    return true;
-                if (UnityEngine.Input.GetKeyDown(KeyCode.F))
+                if (UnityEngine.Input.GetKeyDown(_interactKey) || UnityEngine.Input.GetKeyDown(KeyCode.F) || UnityEngine.Input.GetKeyDown(KeyCode.E))
                     return true;
             }
             catch {}
@@ -434,7 +455,7 @@ namespace TheLastKnight.Environment
 
         private void HandleInteraction()
         {
-            if (Time.time - LastTeleportTime < 0.5f) return;
+            if (LastTeleportTime >= 0f && (Time.time - LastTeleportTime) < 0.5f && Time.time >= LastTeleportTime) return;
 
             var dests = GetFormattedDestinations();
 
@@ -467,7 +488,7 @@ namespace TheLastKnight.Environment
         public void TeleportTo(string targetId)
         {
             if (string.IsNullOrEmpty(targetId)) return;
-            if (Time.time - LastTeleportTime < 0.3f) return;
+            if (LastTeleportTime >= 0f && (Time.time - LastTeleportTime) < 0.3f && Time.time >= LastTeleportTime) return;
 
             LastTeleportTime = Time.time;
 
