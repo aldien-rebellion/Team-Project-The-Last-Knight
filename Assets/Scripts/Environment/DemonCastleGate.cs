@@ -169,6 +169,7 @@ namespace TheLastKnight.Environment
                 if (!string.IsNullOrEmpty(targetSceneName))
                 {
                     ScenePortal.lastPortalUsed = "Portal_Right"; // Remember which side we entered from
+                    ScenePortal.lastSceneLoaded = "DemonCastleEntrance";
                     SceneManager.LoadScene(targetSceneName);
                 }
                 else
