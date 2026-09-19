@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5568644890782889420}
   - component: {fileID: 6189019469205524702}
   - component: {fileID: 7648256870994595719}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 3635446038543774965}
   - component: {fileID: 4690375989480042473}
   - component: {fileID: 3760965858865483754}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FantasyMushroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,9 +159,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5012434068729627006, guid: ebfe22a47a671df48af5693967d81ff8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 4971434121036043537}
   - component: {fileID: 5826691348812438860}
   - component: {fileID: 3000281288331464535}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,8 +467,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &5927245736766780434
 MonoBehaviour:
@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 6686962709894478984}
   - component: {fileID: 7733371954487178343}
   - component: {fileID: 9021532765108166674}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

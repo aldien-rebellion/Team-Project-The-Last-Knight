@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 4943072264429293147}
   - component: {fileID: 2306318584033488972}
   - component: {fileID: 7653207656683907803}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ShadowDemonDragon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,9 +86,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 455356427524749840, guid: 40714487ed655e84f8b3b108be73360a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -364,7 +364,7 @@ GameObject:
   - component: {fileID: 3260325232883349484}
   - component: {fileID: 847919112810501203}
   - component: {fileID: 1782165753281260771}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -488,8 +488,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &7739487232139169746
 MonoBehaviour:
@@ -519,7 +519,7 @@ GameObject:
   - component: {fileID: 2458893074571672870}
   - component: {fileID: 6942595109564297582}
   - component: {fileID: 2576119180831577580}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -616,7 +616,7 @@ GameObject:
   - component: {fileID: 7118717393037274702}
   - component: {fileID: 5847105518094264144}
   - component: {fileID: 9141244105733372767}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

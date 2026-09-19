@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3786965586773083670}
   - component: {fileID: 6589299378552616157}
   - component: {fileID: 5591003214953748959}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 6616486443221967164}
   - component: {fileID: 3436741107080655852}
   - component: {fileID: 4631645671950882567}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SkeletonKnight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,9 +159,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 815424164945274260, guid: 7db3c0b4941054b48b7691be19ada459, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 8758800573500529007}
   - component: {fileID: 3158660718872062926}
   - component: {fileID: 6292866819894938988}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,8 +467,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &8396938359999956530
 MonoBehaviour:
@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 4143985881550663610}
   - component: {fileID: 8621081968653476648}
   - component: {fileID: 7754307930535216460}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

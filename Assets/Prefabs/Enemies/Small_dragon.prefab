@@ -60,8 +60,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &480194379582729064
 MonoBehaviour:
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 8786189572073719075}
   - component: {fileID: 2763558586275487053}
   - component: {fileID: 7316380124622260858}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 7408211415342999673}
   - component: {fileID: 8168947306985531486}
   - component: {fileID: 7609501103673646341}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 7191085886234889690}
   - component: {fileID: 471400589019011581}
   - component: {fileID: 3630377749458865951}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 1879553174993967886}
   - component: {fileID: 7575238928451910995}
   - component: {fileID: 4442976050015818493}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Small_dragon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,9 +411,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: a6b2b59d77fc36a47a157e52dd1098cc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

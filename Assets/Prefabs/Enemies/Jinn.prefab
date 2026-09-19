@@ -60,8 +60,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &1440468449698018110
 MonoBehaviour:
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 260495227355925043}
   - component: {fileID: 2710398824459416063}
   - component: {fileID: 3731022036105865503}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 5904520661760787958}
   - component: {fileID: 4357699531093230360}
   - component: {fileID: 8433192401779087340}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Jinn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,9 +239,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 54324a58a94618b4db952d19bac57bda, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 3365115481975369176}
   - component: {fileID: 3504352170585892274}
   - component: {fileID: 4861107102733425532}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -476,7 +476,7 @@ GameObject:
   - component: {fileID: 7710659278140729836}
   - component: {fileID: 7225594577683994063}
   - component: {fileID: 2931016957372233236}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

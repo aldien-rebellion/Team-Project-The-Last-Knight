@@ -19,13 +19,26 @@ namespace TheLastKnight.Input
         private InputAction _previousAction;
         private InputAction _useDrinkAction;
 
+        private void Awake()
+        {
+            InitializeActions();
+        }
+
         private void OnEnable()
         {
+            InitializeActions();
             EnablePlayerActions();
         }
 
         private void Start()
         {
+            InitializeActions();
+            EnablePlayerActions();
+        }
+
+        private void InitializeActions()
+        {
+            if (_moveAction != null) return;
             if (InputSystem.actions == null)
             {
                 Debug.LogError("[PlayerInputHandler] InputSystem.actions is null! Make sure the project-wide Input Actions asset is assigned.");
@@ -57,8 +70,6 @@ namespace TheLastKnight.Input
             if (_useDrinkAction == null) Debug.LogWarning("[PlayerInputHandler] 'UseDrink' action not found in 'InputSystem.actions'.");
             if (_nextAction == null) Debug.LogWarning("[PlayerInputHandler] 'Next' action not found in 'InputSystem.actions'.");
             if (_previousAction == null) Debug.LogWarning("[PlayerInputHandler] 'Previous' action not found in 'InputSystem.actions'.");
-
-            EnablePlayerActions();
         }
 
         public void EnablePlayerActions()

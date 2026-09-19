@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4146996769151392129}
   - component: {fileID: 3876091200533178840}
   - component: {fileID: -3420717016733148902}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 5874628167264463589}
   - component: {fileID: 7259656874056797631}
   - component: {fileID: 6267027116502589837}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PanelRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,7 +185,7 @@ GameObject:
   - component: {fileID: 6287538175380818767}
   - component: {fileID: 659095627136336664}
   - component: {fileID: 4716612610072100671}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PromptUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -289,7 +289,7 @@ GameObject:
   - component: {fileID: 1533271630627203784}
   - component: {fileID: 788369053322313979}
   - component: {fileID: 3488971771113249848}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SelectionMenuCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 93025437810086067}
   - component: {fileID: 4043987803219600907}
   - component: {fileID: 9162079095101209086}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -504,7 +504,7 @@ GameObject:
   - component: {fileID: 3442830137274003572}
   - component: {fileID: 1119392594963187812}
   - component: {fileID: -5367104418236885284}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -600,7 +600,7 @@ GameObject:
   - component: {fileID: 9074416022170879267}
   - component: {fileID: 8156574858617056196}
   - component: {fileID: 6687688088633345157}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AnywhereDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -669,9 +669,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: 1834504875
+  m_SortingLayer: 3
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5181984770518796477, guid: 2bf0f4852b1b43b4a8e6295752872ab1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -763,7 +763,7 @@ GameObject:
   - component: {fileID: 6176940689553625691}
   - component: {fileID: 6829768602672698300}
   - component: {fileID: 6264722188019761644}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ButtonTemplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -883,7 +883,7 @@ GameObject:
   - component: {fileID: 720185299854505400}
   - component: {fileID: 5231072282296226815}
   - component: {fileID: 94201690072918676}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -963,7 +963,7 @@ GameObject:
   - component: {fileID: 5903486795231722014}
   - component: {fileID: 4591258614664442037}
   - component: {fileID: 6160548766084666573}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CloseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1082,7 +1082,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3122334290634905496}
   - component: {fileID: 6005401054801490830}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ButtonContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1146,7 +1146,7 @@ GameObject:
   - component: {fileID: 5220100839328335992}
   - component: {fileID: 1326127644995160170}
   - component: {fileID: 7081553393469001458}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}

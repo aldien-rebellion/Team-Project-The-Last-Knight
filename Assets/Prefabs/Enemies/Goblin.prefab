@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4210842404837932869}
   - component: {fileID: 8730576763418257114}
   - component: {fileID: 1022075540112235742}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 4937565521420373607}
   - component: {fileID: 6957000009416388979}
   - component: {fileID: 9062661474185472561}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 6653588536189099430}
   - component: {fileID: 291610269889353437}
   - component: {fileID: 4321245110823902204}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Goblin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -234,9 +234,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5012434068729627006, guid: 5cf8c0d8449a68c4191086315ab48f27, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -445,8 +445,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &8577157609416037274
 MonoBehaviour:
@@ -476,7 +476,7 @@ GameObject:
   - component: {fileID: 5422238685205429070}
   - component: {fileID: 7462011422518946354}
   - component: {fileID: 4856323766018077973}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

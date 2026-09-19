@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 523378810207018500}
   - component: {fileID: 3935052734570509036}
   - component: {fileID: 2057091558078863220}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 8089564041795457364}
   - component: {fileID: 1474771177947265885}
   - component: {fileID: 8437037983067367903}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,8 +232,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &1512854169714299527
 MonoBehaviour:
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 2628761125403843292}
   - component: {fileID: 5085082451178915604}
   - component: {fileID: 6481707335467519010}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 7927146704942969781}
   - component: {fileID: 1689999212813470605}
   - component: {fileID: 512073509840440937}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FlyingEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,9 +411,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4290095493653885358, guid: f0c67d4a3c0cd4045a04383b3e04842a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

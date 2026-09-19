@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3041016618191306721}
   - component: {fileID: 1653635942435354654}
   - component: {fileID: 7840318724944557848}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 3868687501017033158}
   - component: {fileID: 1651603626899836737}
   - component: {fileID: 3759819579243811750}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MechaStoneGolem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,9 +159,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3358541013563233973, guid: ee5d5f9aa2135944782224ea2e04e37d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 269762372763047210}
   - component: {fileID: 6011274674533023430}
   - component: {fileID: 6197793789570024690}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -445,8 +445,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &3501821173277179409
 MonoBehaviour:
@@ -476,7 +476,7 @@ GameObject:
   - component: {fileID: 2991203256037454933}
   - component: {fileID: 7629760802897522632}
   - component: {fileID: 1713513609663691069}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

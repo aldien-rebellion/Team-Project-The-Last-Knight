@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3287950871891244799}
   - component: {fileID: 2614710457200502749}
   - component: {fileID: 1388783002097867473}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,9 +80,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingLayerID: 1834504875
+  m_SortingLayer: 3
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4223314462301811501, guid: 0b673411c03bcd4499140afec3c86a69, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.4}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 2628053805022887896}
   - component: {fileID: 5682376988520293606}
   - component: {fileID: 6470030400701505728}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PopupText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 6375714787479367005}
   - component: {fileID: 6449947253729142256}
   - component: {fileID: 2256978165318142134}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PopupCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 5683189750292904421}
   - component: {fileID: 1659944054473472046}
   - component: {fileID: 1908263874893137689}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PopupBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}

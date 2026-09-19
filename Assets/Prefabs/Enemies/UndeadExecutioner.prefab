@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7283100025021670860}
   - component: {fileID: 1829934999993905847}
   - component: {fileID: 1726584100635572320}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 5554570396443251755}
   - component: {fileID: 414494224122971684}
   - component: {fileID: 2114830047653526261}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 964875439889870765}
   - component: {fileID: 1962333255332142308}
   - component: {fileID: 8438389146235463729}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,8 +307,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &3541887131364238103
 MonoBehaviour:
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 4732666122890099706}
   - component: {fileID: 8325051469047293834}
   - component: {fileID: 5916732871693478112}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UndeadExecutioner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,9 +411,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 8793639957104055765, guid: 9464527ee0e770d47911b7a28c724931, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

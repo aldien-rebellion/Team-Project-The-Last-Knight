@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3080697302110725147}
   - component: {fileID: 4274343394985581389}
   - component: {fileID: 8567328612352917888}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 4371970769181413460}
   - component: {fileID: 1635720771869411262}
   - component: {fileID: 8759801726866902932}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 1981270814240022201}
   - component: {fileID: 3798922646203173292}
   - component: {fileID: 299598731170541727}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Necromancer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,9 +256,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -3350093174063237959, guid: 7f8e52cecaceb524c8f71014e7759695, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -467,8 +467,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &6413501888506394989
 MonoBehaviour:
@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 3123211746393819039}
   - component: {fileID: 3878447177029141787}
   - component: {fileID: 1024478085997186626}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

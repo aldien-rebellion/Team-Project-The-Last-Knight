@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2223325990925955551}
   - component: {fileID: 1517218429481593845}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ChargeBurstPillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,8 +78,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1268951153
+  m_SortingLayer: 8
   m_SortingOrder: 11
   m_MaskInteraction: 0
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 5001442681523156483}
   - component: {fileID: 373074786825142395}
   - component: {fileID: 4556150028947521925}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RadialExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4952,8 +4952,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1268951153
+  m_SortingLayer: 8
   m_SortingOrder: 12
   m_MaskInteraction: 0
   m_RenderMode: 0

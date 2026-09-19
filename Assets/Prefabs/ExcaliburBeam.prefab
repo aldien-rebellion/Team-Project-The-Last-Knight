@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5058999444217488490}
   - component: {fileID: 5791466401032083561}
   - component: {fileID: 3824526611915933772}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ImpactSparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4859,8 +4859,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1268951153
+  m_SortingLayer: 8
   m_SortingOrder: -4
   m_MaskInteraction: 0
   m_RenderMode: 0
@@ -4903,7 +4903,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3834232099786930963}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ExcaliburBeam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4937,7 +4937,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3643063136687826200}
   - component: {fileID: 4570248024259749838}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BeamVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5004,8 +5004,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1268951153
+  m_SortingLayer: 8
   m_SortingOrder: -5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}

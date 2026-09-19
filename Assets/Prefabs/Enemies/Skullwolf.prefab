@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5600266220579992232}
   - component: {fileID: 1166631481874670465}
   - component: {fileID: 6411550186747838505}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 7433405520492070497}
   - component: {fileID: 915999745347223901}
   - component: {fileID: 7699903501548086980}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 7481240720648826396}
   - component: {fileID: 6099982817288018625}
   - component: {fileID: 5942199366294830987}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Skullwolf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,9 +256,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3442044933411084741, guid: 274f4627bcbdd6344a96c671ad2289b9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -467,8 +467,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &7357283728681469143
 MonoBehaviour:
@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 4461398565339462244}
   - component: {fileID: 8970390017378471315}
   - component: {fileID: 9158190045924037902}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

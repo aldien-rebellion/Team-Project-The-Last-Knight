@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5209292794130455130}
   - component: {fileID: 890836323637058205}
   - component: {fileID: 1026033411528712036}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 7156323438423448605}
   - component: {fileID: 4624910996065291292}
   - component: {fileID: 8036376436895113427}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FireWorm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,9 +159,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4723107735738678597, guid: bc915152595ccb048bd0b41477cc0e07, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -370,8 +370,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &1990307779034962678
 MonoBehaviour:
@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 6349628044243848207}
   - component: {fileID: 8353816779421277492}
   - component: {fileID: 1434385273736634505}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -476,7 +476,7 @@ GameObject:
   - component: {fileID: 4046388965963887564}
   - component: {fileID: 6069768368725656143}
   - component: {fileID: 1991679503552939359}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

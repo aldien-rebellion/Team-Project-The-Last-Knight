@@ -417,6 +417,8 @@ namespace TheLastKnight.Editor
                 GameObject runeGo = new GameObject($"RunePickup_{i + 1}");
                 runeGo.transform.SetParent(pickupsGroup.transform, false);
                 runeGo.transform.position = new Vector3(xPositions[i], -1.8f, 0f);
+                int itemDropLayer = LayerMask.NameToLayer("ItemDrop");
+                if (itemDropLayer != -1) runeGo.layer = itemDropLayer;
 
                 var col = runeGo.AddComponent<CircleCollider2D>();
                 col.isTrigger = true;
@@ -442,7 +444,8 @@ namespace TheLastKnight.Editor
                 {
                     sr.sprite = runeSprites[i];
                 }
-                sr.sortingOrder = 5;
+                sr.sortingLayerName = "ItemDrops";
+                sr.sortingOrder = 0;
                 runeGo.transform.localScale = new Vector3(1.5f, 1.5f, 1f);
             }
         }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 10770654441689374}
   - component: {fileID: 1837642880105661686}
   - component: {fileID: 2752822148578193105}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 5555721463780699752}
   - component: {fileID: 2469531235182873687}
   - component: {fileID: 21549541337754494}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 2920892825707359393}
   - component: {fileID: 4846401942593497865}
   - component: {fileID: 5990148815398917501}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,8 +307,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &3891425942283360589
 MonoBehaviour:
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 7925780363749162548}
   - component: {fileID: 4851102697083955173}
   - component: {fileID: 8789570380798454756}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoonstoneKeeper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,9 +411,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 12d6ae138a7943a489623770f2ab2f6d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

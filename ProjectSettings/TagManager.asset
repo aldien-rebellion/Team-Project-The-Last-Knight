@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags: []
   layers:
   - Default
@@ -11,14 +11,14 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - OneWayPlatform
+  - Interactable
+  - Player
+  - Enemy
+  - PlayerAttack
+  - EnemyAttack
+  - ItemDrop
   - 
   - 
   - 
@@ -38,6 +38,42 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background_Far
+    uniqueID: 3546924575
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Environment_Back
+    uniqueID: 1042713781
+    locked: 0
+  - name: Terrain
+    uniqueID: 703362245
+    locked: 0
+  - name: Interactable_Back
+    uniqueID: 1834504875
+    locked: 0
+  - name: Enemies
+    uniqueID: 2952370869
+    locked: 0
+  - name: Player
+    uniqueID: 332267243
+    locked: 0
+  - name: Environment_Front
+    uniqueID: 1538698557
+    locked: 0
+  - name: ItemDrops
+    uniqueID: 3975429669
+    locked: 0
+  - name: VFX
+    uniqueID: 1268951153
+    locked: 0
+  - name: InGame_UI
+    uniqueID: 2756783255
+    locked: 0
+  - name: Overlay_UI
+    uniqueID: 4042626405
+    locked: 0
+  m_RenderingLayers:
+  - Default
+  m_MigratedRenderPipelines: []

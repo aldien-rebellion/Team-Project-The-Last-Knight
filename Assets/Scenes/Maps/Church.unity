@@ -15173,7 +15173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1388783002097867473, guid: 20e6005936041e646a0759b4ed305454, type: 3}
       propertyPath: spawnOffset.x
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1388783002097867473, guid: 20e6005936041e646a0759b4ed305454, type: 3}
       propertyPath: targetSceneName
@@ -15185,11 +15185,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8147968779319115661, guid: 20e6005936041e646a0759b4ed305454, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -38
+      value: 39.5
       objectReference: {fileID: 0}
     - target: {fileID: 8147968779319115661, guid: 20e6005936041e646a0759b4ed305454, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3
+      value: -2.75
       objectReference: {fileID: 0}
     - target: {fileID: 8147968779319115661, guid: 20e6005936041e646a0759b4ed305454, type: 3}
       propertyPath: m_LocalPosition.z
@@ -39629,7 +39629,7 @@ Transform:
   m_GameObject: {fileID: 677225472}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.26, z: -10}
+  m_LocalPosition: {x: 0, y: -3.54, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -39690,6 +39690,10 @@ PrefabInstance:
     - target: {fileID: 6687688088633345157, guid: e78ef1fc526fac84e94c2f334ef22d55, type: 3}
       propertyPath: _isInvisible
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6687688088633345157, guid: e78ef1fc526fac84e94c2f334ef22d55, type: 3}
+      propertyPath: _spawnOffset.x
+      value: -1.8
       objectReference: {fileID: 0}
     - target: {fileID: 6687688088633345157, guid: e78ef1fc526fac84e94c2f334ef22d55, type: 3}
       propertyPath: customDestinations.Array.size
@@ -44889,7 +44893,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1164823627}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -49861,9 +49865,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 7
+  m_SortingLayerID: 1538698557
+  m_SortingLayer: 6
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -4043461621416405605, guid: a1147620e4904714ab7f738fbed558d8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -49963,7 +49967,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1243522998}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -54936,7 +54940,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1271839044}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -59918,7 +59922,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1376417274}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -60009,7 +60013,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1407693274}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -65492,7 +65496,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1424006715}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -75286,6 +75290,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6687688088633345157, guid: e78ef1fc526fac84e94c2f334ef22d55, type: 3}
+      propertyPath: _spawnOffset.x
+      value: -1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6687688088633345157, guid: e78ef1fc526fac84e94c2f334ef22d55, type: 3}
       propertyPath: customDestinations.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -80181,7 +80189,7 @@ GameObject:
   - component: {fileID: 1536335261}
   - component: {fileID: 1536335260}
   - component: {fileID: 1536335259}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -80374,8 +80382,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 332267243
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 1ab59fc5bf423274dab3f48b9a884858, type: 3}
@@ -80488,7 +80496,7 @@ Transform:
   m_GameObject: {fileID: 1536335258}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9, y: -3.26, z: 0}
+  m_LocalPosition: {x: 0.9, y: -4.54, z: 0}
   m_LocalScale: {x: 1.1835439, y: 1.0754129, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -100007,7 +100015,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671436391}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -100144,7 +100152,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1773873285}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -100465,7 +100473,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1980279666}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -100571,7 +100579,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 000000001fc669d3b58c263ec574ec29ab52586db59af9afebfecd133dadb65b253ef4ec71a8a24b972c51a46595f5f0
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -100707,7 +100715,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2077706555}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

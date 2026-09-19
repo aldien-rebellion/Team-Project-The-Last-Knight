@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5899830651727604593}
   - component: {fileID: 1958324888215232931}
   - component: {fileID: 7356394897853624703}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DemonBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,9 +84,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4723107735738678597, guid: 92d7ae2a477d9514eadd65130cff5182, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 5384510708568902407}
   - component: {fileID: 874420837321070910}
   - component: {fileID: 7419888125698773595}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 4085805585436411663}
   - component: {fileID: 3958997998935510501}
   - component: {fileID: 8397615432478340575}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 4705631247399259147}
   - component: {fileID: 7353775386974968496}
   - component: {fileID: 959359176723093475}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -542,8 +542,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &1452465090837610136
 MonoBehaviour:

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4457074926019544044}
   - component: {fileID: 2314566132895239956}
   - component: {fileID: 7555979791027402754}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 1079565756038239298}
   - component: {fileID: 7411590003232078854}
   - component: {fileID: 2796674860297678760}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 1783561092863423554}
   - component: {fileID: 7903177222660796793}
   - component: {fileID: 3613625794532227425}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,8 +307,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &5560593837116419734
 MonoBehaviour:
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 7949144223473529938}
   - component: {fileID: 1188425600521551158}
   - component: {fileID: 7449588073238095416}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Minotaur_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,9 +411,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5012434068729627006, guid: 2baaa10af54f3db4dbd6df50dcbf0e8c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

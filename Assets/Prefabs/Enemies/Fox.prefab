@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9029621443633256819}
   - component: {fileID: 5578676450618566082}
   - component: {fileID: 4322808201785142309}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 5281216083324866837}
   - component: {fileID: 8208695607551455820}
   - component: {fileID: 4724114470847085577}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,9 +159,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5012434068729627006, guid: 3bd1f3b4c9371814c8934b80502c95e9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 6845517186808519453}
   - component: {fileID: 1071643228128330443}
   - component: {fileID: 5483226896548133410}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,8 +467,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &6867517760686683277
 MonoBehaviour:
@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 8426943046849484802}
   - component: {fileID: 482721848052269321}
   - component: {fileID: 8524167474131337892}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

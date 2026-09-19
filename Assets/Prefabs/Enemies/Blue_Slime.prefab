@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4371574391461696212}
   - component: {fileID: 1374529983469036475}
   - component: {fileID: 3357301266475332290}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,8 +135,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 10
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &8018238192783137460
 MonoBehaviour:
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 3253358628206440430}
   - component: {fileID: 3664560854479182072}
   - component: {fileID: 7688360406256829609}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Blue_Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -241,8 +241,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -8296385383580801948, guid: a420cb350fd60b746894702eb195f293, type: 3}
@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 8727651414363994005}
   - component: {fileID: 8221410609731900626}
   - component: {fileID: 1073641511371422802}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

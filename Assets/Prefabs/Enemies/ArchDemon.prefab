@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3057717983530878303}
   - component: {fileID: 2511465598149549475}
   - component: {fileID: 7530007329177600488}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,8 +135,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &4432070219432848707
 MonoBehaviour:
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 8320436840600715744}
   - component: {fileID: 6129539466723273371}
   - component: {fileID: 7243117045744266914}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 3627429482634873419}
   - component: {fileID: 3808974237342669305}
   - component: {fileID: 6633631750662538358}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ArchDemon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -314,9 +314,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 2764273851807834643, guid: 0396649935979c14fb5e29d6583304f3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -476,7 +476,7 @@ GameObject:
   - component: {fileID: 8897622250457812365}
   - component: {fileID: 5187220341166422596}
   - component: {fileID: 6958509199365633157}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

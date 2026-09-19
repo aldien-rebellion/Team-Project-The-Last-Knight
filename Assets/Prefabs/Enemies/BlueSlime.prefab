@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 709298496497818995}
   - component: {fileID: 1928070989282936426}
   - component: {fileID: 5146067683217121233}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 6449396136475945068}
   - component: {fileID: 4347883734464979851}
   - component: {fileID: 3636799132960694305}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BlueSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,9 +159,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4723107735738678597, guid: 6a2d422f996931846a10c1c8653b2295, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 4418914476005007436}
   - component: {fileID: 3765090083838021860}
   - component: {fileID: 499836555035379811}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -418,7 +418,7 @@ GameObject:
   - component: {fileID: 2293391219740635029}
   - component: {fileID: 4396658249667079335}
   - component: {fileID: 3709043336949966334}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -542,8 +542,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &8657414650833358414
 MonoBehaviour:

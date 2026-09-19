@@ -294,7 +294,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 000000001fc669d3b58c263ec574ec29ab52586db59af9afebfecd133dadb65b253ef4ec71a8a24b972c51a46595f5f0
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -780,7 +780,7 @@ GameObject:
   - component: {fileID: 377797661}
   - component: {fileID: 377797660}
   - component: {fileID: 377797659}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: RunePickup_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -848,9 +848,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: -319537627
+  m_SortingLayer: 7
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: b98395bcfad0be74b8e82584df401f54, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -973,7 +973,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 000000001fc669d3b58c263ec574ec29ab52586db59af9afebfecd133dadb65b253ef4ec71a8a24b972c51a46595f5f0
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -1074,7 +1074,7 @@ MonoBehaviour:
   m_Intensity: 0.85
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 000000001fc669d3b58c263ec574ec29ab52586db59af9afebfecd133dadb65b253ef4ec71a8a24b972c51a46595f5f0
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -1692,7 +1692,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 000000001fc669d3b58c263ec574ec29ab52586db59af9afebfecd133dadb65b253ef4ec71a8a24b972c51a46595f5f0
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -1793,7 +1793,7 @@ MonoBehaviour:
   m_Intensity: 1.3
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 000000001fc669d3b58c263ec574ec29ab52586db59af9afebfecd133dadb65b253ef4ec71a8a24b972c51a46595f5f0
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -2211,7 +2211,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 000000001fc669d3b58c263ec574ec29ab52586db59af9afebfecd133dadb65b253ef4ec71a8a24b972c51a46595f5f0
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -2360,7 +2360,7 @@ GameObject:
   - component: {fileID: 1467460120}
   - component: {fileID: 1467460119}
   - component: {fileID: 1467460118}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: RunePickup_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2428,9 +2428,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: -319537627
+  m_SortingLayer: 7
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 8a3182907dc84894591fad0bb50c5cad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2509,7 +2509,7 @@ GameObject:
   - component: {fileID: 1535139548}
   - component: {fileID: 1535139547}
   - component: {fileID: 1535139546}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: RunePickup_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2577,9 +2577,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: -319537627
+  m_SortingLayer: 7
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 4bad5ad282c9fcf44b0789f334d2e797, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2698,6 +2698,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4306708916375369770, guid: 990fe944d7a8e5a4f86e210af7fed1a6, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2722,7 +2726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1388783002097867473, guid: 20e6005936041e646a0759b4ed305454, type: 3}
       propertyPath: spawnOffset.y
-      value: -0.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1388783002097867473, guid: 20e6005936041e646a0759b4ed305454, type: 3}
       propertyPath: targetSceneName
@@ -3000,7 +3004,7 @@ GameObject:
   - component: {fileID: 1677070137}
   - component: {fileID: 1677070136}
   - component: {fileID: 1677070135}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: RunePickup_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3068,9 +3072,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: -319537627
+  m_SortingLayer: 7
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 7bfa55553f874cb4ea69d4dfff9ad162, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

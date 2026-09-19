@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3461703854693351262}
   - component: {fileID: 6406445017849334945}
   - component: {fileID: 7681025776881044541}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ForestMushroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,9 +84,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1342596427
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 2315546217660556217, guid: be04175be69fe564a960827db460acc2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -295,8 +295,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 20
+  m_SortingLayerID: -1538184041
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &4452129003608399903
 MonoBehaviour:
@@ -326,7 +326,7 @@ GameObject:
   - component: {fileID: 3747471020237624160}
   - component: {fileID: 1525865749493374197}
   - component: {fileID: 3228164673343452864}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 9216962146179378422}
   - component: {fileID: 5397244952295717757}
   - component: {fileID: 384450811716457081}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 1703599889452316641}
   - component: {fileID: 6763446627571662260}
   - component: {fileID: 2959012182279267098}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

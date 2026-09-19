@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2547844609833142509}
   - component: {fileID: 2513888871899084718}
   - component: {fileID: 7198394782313255323}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BringerOfDeath_Spell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,9 +80,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: 1268951153
+  m_SortingLayer: 8
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -4909067000698195473, guid: 4537964403fe617438df01d3e7cc9f39, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

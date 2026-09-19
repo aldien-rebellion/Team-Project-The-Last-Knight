@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6778868331046392991}
   - component: {fileID: 5383688124396961481}
   - component: {fileID: 8753779798580691268}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RadialExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4859,8 +4859,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1268951153
+  m_SortingLayer: 8
   m_SortingOrder: 12
   m_MaskInteraction: 0
   m_RenderMode: 0
@@ -4904,7 +4904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4765127524912647445}
   - component: {fileID: 2878314178709822338}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SwordBurst
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4972,8 +4972,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1268951153
+  m_SortingLayer: 8
   m_SortingOrder: 11
   m_MaskInteraction: 0
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
