@@ -289,8 +289,8 @@ flowchart LR
   - เมื่อเลือกโหมด Hard มอนสเตอร์ตีแรงขึ้นอย่างชัดเจน และไม่มี UI ช่วยเล่นใดๆ แสดงบนจอ
 
 #### Task 5.2: หน้าจอเมนูหลัก (Main Menu Scene)
-> **[มอบหมายให้เพื่อนร่วมทีมคนที่ 2 - AI AGENT ห้ามทำส่วนนี้]**
-- **ผู้รับผิดชอบ:** เพื่อนร่วมทีมคนที่ 2
+> **[AI AGENT รับผิดชอบทำส่วนนี้ - พร้อมทำ]**
+- **ผู้รับผิดชอบ:** AI Agent
 - **Branch:** `feature/main-menu-scene`
 - **ไฟล์เป้าหมาย:** `Assets/Scenes/MainMenu.unity`, `MainMenuController.cs`
 - **สิ่งที่ต้องทำ:**
@@ -348,6 +348,6 @@ flowchart LR
 | **M4.2** | Medusa Save & Respawn | `feature/medusa-save-respawn` | 27 ก.ย. 12:00 น. | เซฟและรีเลือดที่รูปปั้น ตายแล้ว Respawn ได้ |
 | **M4.3** | Intro & Ending Story Cutscenes | `feature/story-dialogue-system` | 27 ก.ย. 23:59 น. | คัทซีนเล่าเรื่องเปิดเกมและฉากจบเกม |
 | **M5.1** | Easy / Normal / Hard Difficulty | `feature/difficulty-system` | 28 ก.ย. 18:00 น. | ปรับสเกลดาเมจและ UI ตัวช่วย 3 โหมด |
-| **M5.2** | Main Menu Scene `[เพื่อน 2]` | `feature/main-menu-scene` | 29 ก.ย. 18:00 น. | สร้าง Scene เมนูหลัก (เลือกความยาก, โหลดเกม, ตั้งค่า, ออก) |
+| **M5.2** | Main Menu Scene `[AI AGENT]` | `feature/main-menu-scene` | 29 ก.ย. 18:00 น. | สร้าง Scene เมนูหลัก (เลือกความยาก, โหลดเกม, ตั้งค่า, ออก) |
 | **M6.1** | Full QA Playthrough & Balance | `bugfix/final-qa-balancing` | 30 ก.ย. 12:00 น. | เล่นจบได้ลื่นไหล ไม่พบข้อผิดพลาดสีแดง |
 | **M6.2** | Windows Standalone (.exe) Build | `feature/standalone-build` | **30 ก.ย. 18:00 น.** | **ไฟล์ .exe พร้อมส่งมอบให้อาจารย์** |

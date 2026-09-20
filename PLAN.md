@@ -14,8 +14,7 @@
    - Quick Potion: Q | Interact/Save: F
 5. **HUMAN TEAMMATE ASSIGNMENTS (DO NOT EXECUTE BY AI AGENT):**
    - `[TASK M4.1A]` (Audio Sourcing & `CREDITS.md`) is assigned to **Human Teammate 1**. AI Agent MUST NOT execute.
-   - `[TASK M5.2]` (`MainMenu.unity` Scene & UI) is assigned to **Human Teammate 2**. AI Agent MUST NOT execute.
-   - **NOTE:** AI Agent STILL executes `[TASK M4.1B]` (`AudioManager.cs` coding, BGM/SFX audio playback integration across Player, Enemy, and UI).
+   - **NOTE:** AI Agent executes `[TASK M4.1B]` (`AudioManager.cs` coding, SFX integration) and `[TASK M5.2]` (`MainMenu.unity` Scene & UI).
 
 ---
 
@@ -222,8 +221,8 @@
 - **DoD:** Switching difficulty alters damage calculation and toggles helper UI according to spec.
 
 #### [TASK M5.2] Main Menu Scene
-<!-- [ASSIGNED TO HUMAN TEAMMATE 2 - AI AGENT DO NOT EXECUTE] -->
-- **Assignee:** Human Teammate 2
+<!-- [AI AGENT TASK - ACTIVE] -->
+- **Assignee:** AI Agent
 - **Branch:** `feature/main-menu-scene`
 - **Target Files:** `Assets/Scenes/MainMenu.unity`, `MainMenuController.cs`
 - **Spec:**
@@ -265,6 +264,6 @@
 | **M4.2** | Medusa Save & Respawn | `feature/medusa-save-respawn` | 09-27 12:00 | F saves/heals; YOU DIED respawn functions |
 | **M4.3** | Story Dialogue Cutscenes | `feature/story-dialogue-system` | 09-27 23:59 | Intro prologue + victory ending cutscenes |
 | **M5.1** | Easy / Normal / Hard | `feature/difficulty-system` | 09-28 18:00 | Scaled dmg/regen and UI visibility toggles |
-| **M5.2** | Main Menu Scene `[HUMAN 2]` | `feature/main-menu-scene` | 09-29 18:00 | Play (difficulty), continue, settings, exit |
+| **M5.2** | Main Menu Scene `[AI AGENT]` | `feature/main-menu-scene` | 09-29 18:00 | Play (difficulty), continue, settings, exit |
 | **M6.1** | QA Playthrough Polish | `bugfix/final-qa-balancing` | 09-30 12:00 | 0 console exceptions across full game run |
 | **M6.2** | Standalone .exe Build | `feature/standalone-build` | **09-30 18:00** | **Functional Windows standalone .exe delivered** |
