@@ -43,6 +43,18 @@ namespace TheLastKnight.UI
         {
             if (_playerStats == null) _playerStats = FindAnyObjectByType<PlayerStats>();
             if (_playerStats == null) return;
+            var root = _uiDocument != null ? _uiDocument.rootVisualElement : null;
+            if (root != null)
+            {
+                var gold = root.Q<Label>("GoldValue");
+                var potions = root.Q<Label>("PotionValue");
+                var hp = root.Q<Label>("HealthText");
+                var level = root.Q<Label>("LevelValue");
+                if (gold != null) gold.text = $"GOLD  {_playerStats.Gold}";
+                if (potions != null) potions.text = $"Q  POTIONS  {_playerStats.HealingPotions}/5";
+                if (hp != null) hp.text = _playerStats.HPText;
+                if (level != null) level.text = _playerStats.Level.ToString();
+            }
             if (_staminaFill != null) _staminaFill.style.width = Length.Percent(_playerStats.StaminaPercentage * 100f);
             
             // Manually update bar widths/scales as UIToolkit binding for styles is version-dependent

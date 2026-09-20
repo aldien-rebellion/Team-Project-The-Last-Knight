@@ -672,6 +672,8 @@ namespace TheLastKnight.Player
 
         private void StartDrink()
         {
+            var stats = GetComponent<PlayerStats>();
+            if (stats.HealingPotions <= 0 || stats.CurrentHP >= stats.MaxHP) return;
             CurrentState = PlayerState.Drinking;
             _drinkTimer = _drinkDuration;
             _drinkCooldownTimer = _drinkDuration + _drinkCooldown;
@@ -711,6 +713,7 @@ namespace TheLastKnight.Player
 
         private void EndDrink()
         {
+            GetComponent<PlayerStats>().CompletePotionDrink();
             if (_kinematicController.IsGrounded)
             {
                 float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;

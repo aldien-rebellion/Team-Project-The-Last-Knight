@@ -2,6 +2,8 @@
     <Style src="project:/Assets/UI/HUD/PlayerHUD.uss" />
     <ui:VisualElement name="HUD" class="hud-root">
         <ui:VisualElement class="hud-container">
+            <ui:Label name="GoldValue" text="GOLD  0" style="color: rgb(230, 200, 120);" />
+            <ui:Label name="PotionValue" text="Q  POTIONS  3/5" style="color: white;" />
             <ui:VisualElement class="level-container">
                 <ui:Label text="LVL " class="level-text" />
                 <ui:Label name="LevelValue" text="1" class="level-text" binding-path="Level" />

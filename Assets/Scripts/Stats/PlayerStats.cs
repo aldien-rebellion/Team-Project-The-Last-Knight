@@ -28,6 +28,37 @@ namespace TheLastKnight.Stats
         public float CurrentStamina => _currentStamina;
         public float StaminaPercentage => _currentStamina / MaxStamina;
         public bool IsDead => _currentHP <= 0;
+        [SerializeField] private int _gold;
+        [SerializeField] private int _healingPotions = 3;
+        public int Gold => _gold;
+        public int HealingPotions => _healingPotions;
+        public const int MaxHealingPotions = 5;
+        public void AddGold(int amount) => _gold += Mathf.Max(0, amount);
+        public bool TrySpendGold(int amount)
+        {
+            if (amount < 0 || _gold < amount) return false;
+            _gold -= amount;
+            return true;
+        }
+        public bool AddPotion()
+        {
+            if (_healingPotions >= MaxHealingPotions) return false;
+            _healingPotions++;
+            return true;
+        }
+        public bool CompletePotionDrink()
+        {
+            if (_healingPotions <= 0 || IsDead) return false;
+            _healingPotions--;
+            Heal(50f);
+            return true;
+        }
+        public bool AddStatPotion(string stat)
+        {
+            if (stat != "STR" && stat != "VIT" && stat != "DEX" && stat != "AGI") return false;
+            _availableStatPoints++;
+            return UpgradeStat(stat);
+        }
         private readonly System.Collections.Generic.HashSet<Object> _regenAuras = new System.Collections.Generic.HashSet<Object>();
 
         public void SetRegenAura(Object source, bool active)
@@ -157,7 +188,7 @@ namespace TheLastKnight.Stats
         /// </summary>
         public void AddEXP(int amount)
         {
-            _currentEXP += amount;
+            _currentEXP += Mathf.Max(0, amount);
             Debug.Log($"[PlayerStats] Gained +{amount} EXP. Total: {_currentEXP}/{EXPNeeded}");
 
             while (_currentEXP >= EXPNeeded)
