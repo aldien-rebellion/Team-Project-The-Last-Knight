@@ -125,7 +125,9 @@ namespace TheLastKnight.Player
         public PlayerState CurrentState { get; private set; } = PlayerState.Idle;
 
         // Dash State Variables
-        public bool IsInvincible { get; private set; } = false;
+        private bool _dashInvincible;
+        private float _parryInvincibleUntil;
+        public bool IsInvincible { get => _dashInvincible || Time.time < _parryInvincibleUntil; private set => _dashInvincible = value; }
         private float _dashTimer = 0f;
         private float _dashCooldownTimer = 0f;
         private bool _hasDashedInAir = false;
@@ -394,6 +396,11 @@ namespace TheLastKnight.Player
         private void StartAttack()
         {
             _attackTargets.Clear();
+            foreach (var hit in Physics2D.OverlapCircleAll(transform.position, 2.5f))
+            {
+                var parry = hit.GetComponentInParent<ParryReceiver>();
+                if (parry != null && parry.TryParry()) _parryInvincibleUntil = Time.time + 0.3f;
+            }
             CurrentState = PlayerState.Attacking;
             _isAttacking = true;
             _attackTimer = _attackDuration;
@@ -478,7 +485,8 @@ namespace TheLastKnight.Player
                 if (collider.transform.root == transform.root) continue;
                 var target = collider.GetComponentInParent<IDamageable>();
                 if (target == null || !_attackTargets.Add(target)) continue;
-                bool critical = Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
+                var parry = collider.GetComponentInParent<ParryReceiver>();
+                bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
                 float damage = stats.AttackPower * (critical ? 2f : 1f);
                 Vector2 point = collider.ClosestPoint(center);
                 target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
