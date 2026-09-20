@@ -290,8 +290,26 @@ namespace TheLastKnight.Stats
 
         private void Die()
         {
-            Debug.LogError("[PlayerStats] Arthur has perished!");
-            // TODO: Trigger save system reload, death screen, or custom respawn event
+            TheLastKnight.Core.GameManager.Instance?.PlayerDied();
+        }
+
+        public void Capture(TheLastKnight.Core.PlayerSaveData state)
+        {
+            state.initialized = true;
+            state.hp = _currentHP; state.stamina = _currentStamina;
+            state.level = _currentLevel; state.exp = _currentEXP; state.statPoints = _availableStatPoints;
+            state.strength = _strength; state.vitality = _vitality; state.dexterity = _dexterity; state.agility = _agility;
+            state.gold = _gold; state.potions = _healingPotions;
+        }
+
+        public void Restore(TheLastKnight.Core.PlayerSaveData state)
+        {
+            _currentLevel = state.level; _currentEXP = state.exp; _availableStatPoints = state.statPoints;
+            _strength = state.strength; _vitality = state.vitality; _dexterity = state.dexterity; _agility = state.agility;
+            _gold = state.gold; _healingPotions = state.potions;
+            RecalculateStats();
+            _currentHP = Mathf.Clamp(state.hp, 0, MaxHP);
+            _currentStamina = Mathf.Clamp(state.stamina, 0, MaxStamina);
         }
     }
 }

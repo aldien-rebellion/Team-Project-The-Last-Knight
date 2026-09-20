@@ -250,7 +250,7 @@ public class ScenePortal : MonoBehaviour
                 lastPortalUsed = this.gameObject.name;
                 targetPortalExpected = this.targetPortalName;
 
-                SceneManager.LoadScene(targetSceneName);
+                TheLastKnight.Core.GameManager.Instance.Travel(targetSceneName);
             }
             else
             {

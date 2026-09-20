@@ -20,7 +20,7 @@ namespace TheLastKnight.Environment
         };
 
         [Header("Collected State")]
-        [SerializeField] private bool[] _collectedRunes = new bool[4];
+        private bool[] _collectedRunes => TheLastKnight.Core.GameManager.Instance.State.runes;
 
         public event Action OnRunesChanged;
 
@@ -43,12 +43,11 @@ namespace TheLastKnight.Environment
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(gameObject);
+                Destroy(this);
                 return;
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         public bool HasRune(int runeId)
@@ -113,7 +112,7 @@ namespace TheLastKnight.Environment
 
         private void Update()
         {
-            HandleDebugHotkeys();
+            // Rune acquisition is driven by world interactions, never debug keys in a build.
         }
 
         private void HandleDebugHotkeys()
