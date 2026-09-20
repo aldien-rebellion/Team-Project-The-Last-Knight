@@ -20,7 +20,11 @@ namespace TheLastKnight.Environment
                 FloatingCombatText.Show(transform.position + Vector3.up, "Church Key acquired", Color.yellow);
             }
             if (runeIndex >= 0) DemonRuneManager.Instance.CollectRune(runeIndex);
-            if (finalBoss) GameManager.Instance.State.victory = true;
+            if (finalBoss)
+            {
+                GameManager.Instance.State.victory = true;
+                GameManager.Instance.GetComponent<TheLastKnight.UI.StoryDialogueUI>().Ending();
+            }
         }
     }
 }

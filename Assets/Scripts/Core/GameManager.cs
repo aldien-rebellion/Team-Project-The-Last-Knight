@@ -34,6 +34,7 @@ namespace TheLastKnight.Core
             SceneManager.sceneLoaded += OnSceneLoaded;
             gameObject.AddComponent<TheLastKnight.Environment.DemonRuneManager>();
             gameObject.AddComponent<TheLastKnight.Audio.AudioManager>();
+            gameObject.AddComponent<StoryDialogueUI>();
         }
 
         private void OnDestroy()
@@ -66,6 +67,11 @@ namespace TheLastKnight.Core
             }
             _restorePosition = false;
             _restoring = false;
+            if (Player != null && SceneManager.GetActiveScene().name == "CityCenter" && !State.introSeen)
+            {
+                State.introSeen = true;
+                GetComponent<StoryDialogueUI>().Intro();
+            }
         }
 
         private void LateUpdate()
