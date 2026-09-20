@@ -33,6 +33,7 @@ namespace TheLastKnight.Core
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
             gameObject.AddComponent<TheLastKnight.Environment.DemonRuneManager>();
+            gameObject.AddComponent<TheLastKnight.Audio.AudioManager>();
         }
 
         private void OnDestroy()

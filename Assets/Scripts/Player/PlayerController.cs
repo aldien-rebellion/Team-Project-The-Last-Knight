@@ -339,6 +339,7 @@ namespace TheLastKnight.Player
         {
             if (!GetComponent<PlayerStats>().TrySpendStamina(20f)) return;
             CurrentState = PlayerState.Dashing;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("dash");
             IsInvincible = true;
             _dashTimer = DashDuration;
             _dashCooldownTimer = _dashCooldown;
@@ -406,6 +407,7 @@ namespace TheLastKnight.Player
                 if (parry != null && parry.TryParry()) _parryInvincibleUntil = Time.time + 0.3f;
             }
             CurrentState = PlayerState.Attacking;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("slash");
             _isAttacking = true;
             _attackTimer = _attackDuration;
             _attackCooldownTimer = _attackDuration + _attackCooldown;
@@ -502,6 +504,7 @@ namespace TheLastKnight.Player
         {
             if (!GetComponent<PlayerStats>().TrySpendStamina(25f)) return;
             CurrentState = PlayerState.UsingSkill;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("skill");
             _skillTimer = _skillDuration;
             _skillCooldownTimer = _skillDuration + _skillCooldown;
 
@@ -613,6 +616,7 @@ namespace TheLastKnight.Player
         {
             if (!GetComponent<PlayerStats>().TrySpendStamina(50f)) return;
             CurrentState = PlayerState.Excalibur;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("excalibur");
             _excaliburTimer = _excaliburDuration;
             _excaliburCooldownTimer = _excaliburDuration + _excaliburCooldown;
 
@@ -675,6 +679,7 @@ namespace TheLastKnight.Player
             var stats = GetComponent<PlayerStats>();
             if (stats.HealingPotions <= 0 || stats.CurrentHP >= stats.MaxHP) return;
             CurrentState = PlayerState.Drinking;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("drink");
             _drinkTimer = _drinkDuration;
             _drinkCooldownTimer = _drinkDuration + _drinkCooldown;
 
@@ -735,6 +740,7 @@ namespace TheLastKnight.Player
         public void OnTakeDamage()
         {
             CurrentState = PlayerState.Hurt;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("hurt");
             _hurtTimer = _hurtFrame1Duration + _hurtFrame2Duration;
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
@@ -844,6 +850,7 @@ namespace TheLastKnight.Player
 
             if (jumpRequested && canJump)
             {
+                TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
                 _velocity.y = JumpForce;
                 _jumpBufferCounter = -1f;
                 _coyoteTimeCounter = -1f;

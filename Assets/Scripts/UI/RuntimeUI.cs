@@ -60,7 +60,7 @@ namespace TheLastKnight.UI
             var label = Label(go.transform, text);
             var rect = label.rectTransform;
             rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.offsetMin = rect.offsetMax = Vector2.zero;
-            button.onClick.AddListener(action);
+            button.onClick.AddListener(() => { TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("click"); action(); });
             return button;
         }
     }

@@ -61,6 +61,7 @@ namespace TheLastKnight.Combat
             if (IsDead) return;
 
             float actualDamage = Mathf.Max(1f, damageData.amount - _defense);
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
             CurrentHealth = Mathf.Max(0f, CurrentHealth - actualDamage);
 
             OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
@@ -110,6 +111,7 @@ namespace TheLastKnight.Combat
         {
             if (IsDead) return;
             IsDead = true;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_death");
             CurrentHealth = 0f;
             var player = FindAnyObjectByType<TheLastKnight.Stats.PlayerStats>();
             if (player != null)

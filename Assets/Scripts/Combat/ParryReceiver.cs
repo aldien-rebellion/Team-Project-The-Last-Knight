@@ -33,6 +33,7 @@ namespace TheLastKnight.Combat
             if (!_windingUp || !InPerfectWindow(Time.time - _start) || GetComponent<EnemyStats>().IsDead) return false;
             _windingUp = false;
             _staggerUntil = Time.time + 1.5f;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("parry");
             GetComponent<EnemyController>()?.CancelAttack();
             GetComponent<EnemyStats>().ApplyStatus(StatusEffect.Stunned, 1.5f);
             FloatingCombatText.Show(transform.position, "PARRY", Color.yellow);

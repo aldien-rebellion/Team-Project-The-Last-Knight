@@ -63,6 +63,8 @@ namespace TheLastKnight.Environment
             if (!_collectedRunes[runeId])
             {
                 _collectedRunes[runeId] = true;
+                TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("rune");
+                TheLastKnight.Combat.FloatingCombatText.Show(TheLastKnight.Core.GameManager.Instance.Player != null ? TheLastKnight.Core.GameManager.Instance.Player.transform.position : transform.position, "Rune acquired", Color.yellow);
                 string name = (runeId < runeNames.Length) ? runeNames[runeId] : $"Rune #{runeId + 1}";
                 Debug.Log($"<color=red>[DemonRuneManager]</color> รวบรวมสำเร็จ: {name} (ปัจจุบัน: {CollectedCount}/4)");
                 OnRunesChanged?.Invoke();
