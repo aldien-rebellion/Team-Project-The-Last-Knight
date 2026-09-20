@@ -200,6 +200,8 @@ namespace TheLastKnight.Player
 
         private void Update()
         {
+            var stats = GetComponent<PlayerStats>();
+            if (stats != null && stats.IsDead) return;
             // Update Dash Cooldown
             if (_dashCooldownTimer > 0f)
             {
@@ -265,7 +267,7 @@ namespace TheLastKnight.Player
             }
 
             // Check for Skill Trigger (Carnage Burst - Key E)
-            if (_inputHandler != null && _inputHandler.UseSkillTriggered && !isBusy && _skillCooldownTimer <= 0f)
+            if (_inputHandler != null && _inputHandler.UseSkillTriggered && !isBusy && CurrentState != PlayerState.Attacking && _skillCooldownTimer <= 0f)
             {
                 StartSkill();
             }
@@ -289,7 +291,7 @@ namespace TheLastKnight.Player
             }
 
             // Check for Dash Trigger
-            if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f && CurrentState != PlayerState.Hurt)
+            if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f && !isBusy && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill)
             {
                 bool canDash = _kinematicController.IsGrounded || !_hasDashedInAir;
                 if (canDash)
@@ -335,6 +337,7 @@ namespace TheLastKnight.Player
 
         private void StartDash()
         {
+            if (!GetComponent<PlayerStats>().TrySpendStamina(20f)) return;
             CurrentState = PlayerState.Dashing;
             IsInvincible = true;
             _dashTimer = DashDuration;
@@ -395,6 +398,7 @@ namespace TheLastKnight.Player
 
         private void StartAttack()
         {
+            if (!GetComponent<PlayerStats>().TrySpendStamina(15f)) return;
             _attackTargets.Clear();
             foreach (var hit in Physics2D.OverlapCircleAll(transform.position, 2.5f))
             {
@@ -487,7 +491,7 @@ namespace TheLastKnight.Player
                 if (target == null || !_attackTargets.Add(target)) continue;
                 var parry = collider.GetComponentInParent<ParryReceiver>();
                 bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
-                float damage = stats.AttackPower * (critical ? 2f : 1f);
+                float damage = stats.AttackPower * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
                 target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
                 FloatingCombatText.Show(point, Mathf.CeilToInt(damage).ToString() + (critical ? "!" : ""), critical ? Color.yellow : Color.white);
@@ -496,6 +500,7 @@ namespace TheLastKnight.Player
 
         private void StartSkill()
         {
+            if (!GetComponent<PlayerStats>().TrySpendStamina(25f)) return;
             CurrentState = PlayerState.UsingSkill;
             _skillTimer = _skillDuration;
             _skillCooldownTimer = _skillDuration + _skillCooldown;
@@ -606,6 +611,7 @@ namespace TheLastKnight.Player
 
         private void StartExcalibur()
         {
+            if (!GetComponent<PlayerStats>().TrySpendStamina(50f)) return;
             CurrentState = PlayerState.Excalibur;
             _excaliburTimer = _excaliburDuration;
             _excaliburCooldownTimer = _excaliburDuration + _excaliburCooldown;
@@ -793,6 +799,11 @@ namespace TheLastKnight.Player
             // Horizontal Movement with acceleration/deceleration
             bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
             float currentMoveSpeed = isSprinting ? SprintSpeed : MoveSpeed;
+            if (isSprinting && Mathf.Abs(moveInputX) > 0.01f && !GetComponent<PlayerStats>().TrySpendStamina(15f * Time.deltaTime))
+            {
+                isSprinting = false;
+                currentMoveSpeed = MoveSpeed;
+            }
             float targetXSpeed = moveInputX * currentMoveSpeed;
             float accelRate = Mathf.Abs(targetXSpeed) > 0.01f ? _acceleration : _deceleration;
             _velocity.x = Mathf.MoveTowards(_velocity.x, targetXSpeed, accelRate * Time.deltaTime);

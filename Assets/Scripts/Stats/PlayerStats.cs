@@ -23,6 +23,36 @@ namespace TheLastKnight.Stats
 
         [Header("Runtime Status")]
         [SerializeField] private float _currentHP;
+        [SerializeField] private float _currentStamina = 100f;
+        public float MaxStamina => 100f;
+        public float CurrentStamina => _currentStamina;
+        public float StaminaPercentage => _currentStamina / MaxStamina;
+        public bool IsDead => _currentHP <= 0;
+        private readonly System.Collections.Generic.HashSet<Object> _regenAuras = new System.Collections.Generic.HashSet<Object>();
+
+        public void SetRegenAura(Object source, bool active)
+        {
+            if (active) _regenAuras.Add(source); else _regenAuras.Remove(source);
+        }
+
+        public bool TrySpendStamina(float amount)
+        {
+            if (amount < 0 || _currentStamina < amount || IsDead) return false;
+            _currentStamina -= amount;
+            return true;
+        }
+
+        private void Update()
+        {
+            if (IsDead || _playerController == null) return;
+            _regenAuras.RemoveWhere(source => source == null);
+            if (_playerController.CurrentState == PlayerState.Idle || _playerController.CurrentState == PlayerState.Walking)
+                _currentStamina = Mathf.Min(MaxStamina, _currentStamina + (_regenAuras.Count > 0 ? 40f : 20f)
+                    * TheLastKnight.Core.GameDifficultyManager.Regeneration * Time.deltaTime);
+        }
+
+        public void Heal(float amount) => _currentHP = Mathf.Min(MaxHP, _currentHP + Mathf.Max(0, amount));
+        public void Rest() { _currentHP = MaxHP; _currentStamina = MaxStamina; }
 
         // Derived calculations (cached for other systems to query)
         [CreateProperty]
@@ -210,6 +240,8 @@ namespace TheLastKnight.Stats
                 return;
             }
 
+            if (IsDead) return;
+            damage = Mathf.Max(0f, damage) * TheLastKnight.Core.GameDifficultyManager.EnemyDamage;
             _currentHP -= damage;
             _currentHP = Mathf.Max(_currentHP, 0);
             Debug.Log($"[PlayerStats] Arthur took {damage} damage! HP: {_currentHP}/{MaxHP}");

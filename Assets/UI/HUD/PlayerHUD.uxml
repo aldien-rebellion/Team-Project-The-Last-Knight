@@ -16,6 +16,12 @@
             </ui:VisualElement>
 
             <ui:VisualElement class="stat-row">
+                <ui:Label text="STAMINA" class="stat-label" />
+                <ui:VisualElement name="StaminaBar" class="bar-container">
+                    <ui:VisualElement name="StaminaFill" class="bar-fill" style="background-color: rgb(60, 185, 90);" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="stat-row">
                 <ui:Label text="EXP" class="stat-label" />
                 <ui:VisualElement name="ExpBar" class="bar-container">
                     <ui:VisualElement name="ExpFill" class="bar-fill exp-fill" />

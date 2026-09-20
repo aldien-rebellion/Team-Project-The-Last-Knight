@@ -41,7 +41,7 @@ namespace TheLastKnight.Combat
 
         private void LateUpdate()
         {
-            bool visible = _windingUp && !GetComponent<EnemyStats>().IsDead;
+            bool visible = _windingUp && !GetComponent<EnemyStats>().IsDead && TheLastKnight.Core.GameDifficultyManager.ShowHelpers;
             if (_ring == null && visible)
             {
                 _ring = CreateRing("Parry timing");
