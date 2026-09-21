@@ -1,0 +1,819 @@
+fileFormatVersion: 2
+guid: 0a17db04cd0f6e04bb7da1e32086620d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6348743942454541793
+    second: RuneChest_0
+  - first:
+      213: 1565685096700020578
+    second: RuneChest_1
+  - first:
+      213: 5367385635888417594
+    second: RuneChest_2
+  - first:
+      213: -5343603982048015285
+    second: RuneChest_3
+  - first:
+      213: -8737450886070657363
+    second: RuneChest_4
+  - first:
+      213: -1431709159345420455
+    second: RuneChest_5
+  - first:
+      213: -1170044689432958960
+    second: RuneChest_6
+  - first:
+      213: -5689615140090321170
+    second: RuneChest_7
+  - first:
+      213: 6073087941036622376
+    second: RuneChest_8
+  - first:
+      213: 9114809383576366634
+    second: RuneChest_9
+  - first:
+      213: 244025430173442082
+    second: RuneChest_10
+  - first:
+      213: -8368873627851211768
+    second: RuneChest_11
+  - first:
+      213: -2475224518311665797
+    second: RuneChest_12
+  - first:
+      213: 3246521850353935157
+    second: RuneChest_13
+  - first:
+      213: -1735966242806370014
+    second: RuneChest_14
+  - first:
+      213: 3596408403964581110
+    second: RuneChest_15
+  - first:
+      213: 738459533994051366
+    second: RuneChest_16
+  - first:
+      213: 4809057940844483048
+    second: RuneChest_17
+  - first:
+      213: -1463589500984141267
+    second: RuneChest_18
+  - first:
+      213: 2553928282809175238
+    second: RuneChest_19
+  - first:
+      213: 6526448570191459501
+    second: RuneChest_20
+  - first:
+      213: 135095920558635883
+    second: RuneChest_21
+  - first:
+      213: 780319804276541089
+    second: RuneChest_22
+  - first:
+      213: -8382765908835822080
+    second: RuneChest_23
+  - first:
+      213: 8584020525712439519
+    second: RuneChest_24
+  - first:
+      213: 1202492530539448075
+    second: RuneChest_25
+  - first:
+      213: 4800625088803253249
+    second: RuneChest_26
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 650
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: RuneChest_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 0
+        width: 1362
+        height: 1105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ed7ae38af44b1850800000000000000
+      internalID: 6348743942454541793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_1
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 1070
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2678de2dc4e6ab510800000000000000
+      internalID: 1565685096700020578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_2
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 1074
+        width: 19
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3bc9a75cc8cc7a40800000000000000
+      internalID: 5367385635888417594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_3
+      rect:
+        serializedVersion: 2
+        x: 509
+        y: 1080
+        width: 22
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4c4aad6d74b7d5b0800000000000000
+      internalID: -5343603982048015285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_4
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 1068
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dae165d46b65eb680800000000000000
+      internalID: -8737450886070657363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_5
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 1069
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9570b87ea1c812ce0800000000000000
+      internalID: -1431709159345420455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_6
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 1045
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 018240bdd8a23cfe0800000000000000
+      internalID: -1170044689432958960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_7
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 1037
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee66b3acc2d6a01b0800000000000000
+      internalID: -5689615140090321170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_8
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 651
+        width: 41
+        height: 155
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82242374e41f74450800000000000000
+      internalID: 6073087941036622376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_9
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 715
+        width: 10
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2e677f87de4e7e70800000000000000
+      internalID: 9114809383576366634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_10
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 377
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22066a9f5d3f26300800000000000000
+      internalID: 244025430173442082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_11
+      rect:
+        serializedVersion: 2
+        x: 1322
+        y: 321
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80c3bc196c9cbdb80800000000000000
+      internalID: -8368873627851211768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_12
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 281
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7f12b63a6c36add0800000000000000
+      internalID: -2475224518311665797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_13
+      rect:
+        serializedVersion: 2
+        x: 1324
+        y: 136
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 533e3ed0c66fd0d20800000000000000
+      internalID: 3246521850353935157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_14
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 100
+        width: 48
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 221f47356eb98e7e0800000000000000
+      internalID: -1735966242806370014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_15
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 96
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f4d989836209e130800000000000000
+      internalID: 3596408403964581110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_16
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 101
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62747bc98098f3a00800000000000000
+      internalID: 738459533994051366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_17
+      rect:
+        serializedVersion: 2
+        x: 547
+        y: 71
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e19e4cb7b43db240800000000000000
+      internalID: 4809057940844483048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_18
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 74
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2a59d07a1940bbe0800000000000000
+      internalID: -1463589500984141267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_19
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 70
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cc0aaeed30617320800000000000000
+      internalID: 2553928282809175238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_20
+      rect:
+        serializedVersion: 2
+        x: 713
+        y: 79
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da43e1f556a929a50800000000000000
+      internalID: 6526448570191459501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_21
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 60
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6b70832605ffd100800000000000000
+      internalID: 135095920558635883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_22
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 53
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a60b194ab044da00800000000000000
+      internalID: 780319804276541089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_23
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 45
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0061698d1de6aab80800000000000000
+      internalID: -8382765908835822080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_24
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 47
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd870c32031902770800000000000000
+      internalID: 8584020525712439519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_25
+      rect:
+        serializedVersion: 2
+        x: 1045
+        y: 33
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b074ddfd59c10b010800000000000000
+      internalID: 1202492530539448075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuneChest_26
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 29
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10c22fd551f3f9240800000000000000
+      internalID: 4800625088803253249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      RuneChest_0: 6348743942454541793
+      RuneChest_1: 1565685096700020578
+      RuneChest_10: 244025430173442082
+      RuneChest_11: -8368873627851211768
+      RuneChest_12: -2475224518311665797
+      RuneChest_13: 3246521850353935157
+      RuneChest_14: -1735966242806370014
+      RuneChest_15: 3596408403964581110
+      RuneChest_16: 738459533994051366
+      RuneChest_17: 4809057940844483048
+      RuneChest_18: -1463589500984141267
+      RuneChest_19: 2553928282809175238
+      RuneChest_2: 5367385635888417594
+      RuneChest_20: 6526448570191459501
+      RuneChest_21: 135095920558635883
+      RuneChest_22: 780319804276541089
+      RuneChest_23: -8382765908835822080
+      RuneChest_24: 8584020525712439519
+      RuneChest_25: 1202492530539448075
+      RuneChest_26: 4800625088803253249
+      RuneChest_3: -5343603982048015285
+      RuneChest_4: -8737450886070657363
+      RuneChest_5: -1431709159345420455
+      RuneChest_6: -1170044689432958960
+      RuneChest_7: -5689615140090321170
+      RuneChest_8: 6073087941036622376
+      RuneChest_9: 9114809383576366634
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

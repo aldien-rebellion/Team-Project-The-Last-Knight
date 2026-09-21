@@ -131,9 +131,9 @@ namespace TheLastKnight.Input
 
         public bool JumpTriggered => enabled && _jumpAction != null && _jumpAction.enabled && _jumpAction.WasPressedThisFrame();
         public bool JumpHeld => enabled && _jumpAction != null && _jumpAction.enabled && _jumpAction.IsPressed();
-        public bool SprintHeld => enabled && ((_sprintAction != null && _sprintAction.enabled && _sprintAction.IsPressed()) ||
-                                  (Mouse.current != null && Mouse.current.rightButton.isPressed));
-        public bool DashTriggered => enabled && _dashAction != null && _dashAction.enabled && _dashAction.WasPressedThisFrame();
+        public bool SprintHeld => enabled && _sprintAction != null && _sprintAction.enabled && _sprintAction.IsPressed();
+        public bool DashTriggered => enabled && ((_dashAction != null && _dashAction.enabled && _dashAction.WasPressedThisFrame()) ||
+            (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame));
         public bool AttackTriggered => enabled && _attackAction != null && _attackAction.enabled && _attackAction.WasPressedThisFrame();
         public bool CounterTriggered => enabled && _counterAttackAction != null && _counterAttackAction.enabled && _counterAttackAction.WasPressedThisFrame();
         public bool UseSkillTriggered => enabled && _useSkillAction != null && _useSkillAction.enabled && _useSkillAction.WasPressedThisFrame();

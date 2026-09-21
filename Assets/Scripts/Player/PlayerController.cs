@@ -1,6 +1,9 @@
 using UnityEngine;
 using TheLastKnight.Input;
 using TheLastKnight.Physics;
+using TheLastKnight.Combat;
+using TheLastKnight.Stats;
+using System.Collections.Generic;
 
 namespace TheLastKnight.Player
 {
@@ -122,7 +125,9 @@ namespace TheLastKnight.Player
         public PlayerState CurrentState { get; private set; } = PlayerState.Idle;
 
         // Dash State Variables
-        public bool IsInvincible { get; private set; } = false;
+        private bool _dashInvincible;
+        private float _parryInvincibleUntil;
+        public bool IsInvincible { get => _dashInvincible || Time.time < _parryInvincibleUntil; private set => _dashInvincible = value; }
         private float _dashTimer = 0f;
         private float _dashCooldownTimer = 0f;
         private bool _hasDashedInAir = false;
@@ -141,6 +146,10 @@ namespace TheLastKnight.Player
         private float _attackTimer = 0f;
         private float _attackCooldownTimer = 0f;
         private bool _isAttacking = false;
+        [SerializeField] private Vector2 _attackSize = new Vector2(2.2f, 2f);
+        [SerializeField] private Vector2 _attackOffset = new Vector2(1.1f, 0f);
+        [SerializeField] private LayerMask _attackLayers = ~0;
+        private readonly HashSet<IDamageable> _attackTargets = new HashSet<IDamageable>();
 
         // Skill State Variables
         private float _skillTimer = 0f;
@@ -191,6 +200,8 @@ namespace TheLastKnight.Player
 
         private void Update()
         {
+            var stats = GetComponent<PlayerStats>();
+            if (stats != null && stats.IsDead) return;
             // Update Dash Cooldown
             if (_dashCooldownTimer > 0f)
             {
@@ -256,7 +267,7 @@ namespace TheLastKnight.Player
             }
 
             // Check for Skill Trigger (Carnage Burst - Key E)
-            if (_inputHandler != null && _inputHandler.UseSkillTriggered && !isBusy && _skillCooldownTimer <= 0f)
+            if (_inputHandler != null && _inputHandler.UseSkillTriggered && !isBusy && CurrentState != PlayerState.Attacking && _skillCooldownTimer <= 0f)
             {
                 StartSkill();
             }
@@ -280,7 +291,7 @@ namespace TheLastKnight.Player
             }
 
             // Check for Dash Trigger
-            if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f && CurrentState != PlayerState.Hurt)
+            if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f && !isBusy && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill)
             {
                 bool canDash = _kinematicController.IsGrounded || !_hasDashedInAir;
                 if (canDash)
@@ -326,7 +337,9 @@ namespace TheLastKnight.Player
 
         private void StartDash()
         {
+            if (!GetComponent<PlayerStats>().TrySpendStamina(20f)) return;
             CurrentState = PlayerState.Dashing;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("dash");
             IsInvincible = true;
             _dashTimer = DashDuration;
             _dashCooldownTimer = _dashCooldown;
@@ -386,7 +399,15 @@ namespace TheLastKnight.Player
 
         private void StartAttack()
         {
+            if (!GetComponent<PlayerStats>().TrySpendStamina(15f)) return;
+            _attackTargets.Clear();
+            foreach (var hit in Physics2D.OverlapCircleAll(transform.position, 2.5f))
+            {
+                var parry = hit.GetComponentInParent<ParryReceiver>();
+                if (parry != null && parry.TryParry()) _parryInvincibleUntil = Time.time + 0.3f;
+            }
             CurrentState = PlayerState.Attacking;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("slash");
             _isAttacking = true;
             _attackTimer = _attackDuration;
             _attackCooldownTimer = _attackDuration + _attackCooldown;
@@ -402,6 +423,7 @@ namespace TheLastKnight.Player
 
         private void UpdateAttack()
         {
+            ApplyAttackHits();
             _attackTimer -= Time.deltaTime;
 
             // Apply gravity during attack if in air
@@ -458,9 +480,31 @@ namespace TheLastKnight.Player
             }
         }
 
+        private void ApplyAttackHits()
+        {
+            var stats = GetComponent<PlayerStats>();
+            if (stats == null) return;
+            float facing = IsFacingRight ? 1f : -1f;
+            Vector2 center = (Vector2)transform.position + new Vector2(_attackOffset.x * facing, _attackOffset.y);
+            foreach (var collider in Physics2D.OverlapBoxAll(center, _attackSize, 0f, _attackLayers))
+            {
+                if (collider.transform.root == transform.root) continue;
+                var target = collider.GetComponentInParent<IDamageable>();
+                if (target == null || !_attackTargets.Add(target)) continue;
+                var parry = collider.GetComponentInParent<ParryReceiver>();
+                bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
+                float damage = stats.AttackPower * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
+                Vector2 point = collider.ClosestPoint(center);
+                target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
+                FloatingCombatText.Show(point, Mathf.CeilToInt(damage).ToString() + (critical ? "!" : ""), critical ? Color.yellow : Color.white);
+            }
+        }
+
         private void StartSkill()
         {
+            if (!GetComponent<PlayerStats>().TrySpendStamina(25f)) return;
             CurrentState = PlayerState.UsingSkill;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("skill");
             _skillTimer = _skillDuration;
             _skillCooldownTimer = _skillDuration + _skillCooldown;
 
@@ -570,7 +614,9 @@ namespace TheLastKnight.Player
 
         private void StartExcalibur()
         {
+            if (!GetComponent<PlayerStats>().TrySpendStamina(50f)) return;
             CurrentState = PlayerState.Excalibur;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("excalibur");
             _excaliburTimer = _excaliburDuration;
             _excaliburCooldownTimer = _excaliburDuration + _excaliburCooldown;
 
@@ -630,7 +676,10 @@ namespace TheLastKnight.Player
 
         private void StartDrink()
         {
+            var stats = GetComponent<PlayerStats>();
+            if (stats.HealingPotions <= 0 || stats.CurrentHP >= stats.MaxHP) return;
             CurrentState = PlayerState.Drinking;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("drink");
             _drinkTimer = _drinkDuration;
             _drinkCooldownTimer = _drinkDuration + _drinkCooldown;
 
@@ -669,6 +718,7 @@ namespace TheLastKnight.Player
 
         private void EndDrink()
         {
+            GetComponent<PlayerStats>().CompletePotionDrink();
             if (_kinematicController.IsGrounded)
             {
                 float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
@@ -690,6 +740,7 @@ namespace TheLastKnight.Player
         public void OnTakeDamage()
         {
             CurrentState = PlayerState.Hurt;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("hurt");
             _hurtTimer = _hurtFrame1Duration + _hurtFrame2Duration;
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
@@ -757,6 +808,11 @@ namespace TheLastKnight.Player
             // Horizontal Movement with acceleration/deceleration
             bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
             float currentMoveSpeed = isSprinting ? SprintSpeed : MoveSpeed;
+            if (isSprinting && Mathf.Abs(moveInputX) > 0.01f && !GetComponent<PlayerStats>().TrySpendStamina(15f * Time.deltaTime))
+            {
+                isSprinting = false;
+                currentMoveSpeed = MoveSpeed;
+            }
             float targetXSpeed = moveInputX * currentMoveSpeed;
             float accelRate = Mathf.Abs(targetXSpeed) > 0.01f ? _acceleration : _deceleration;
             _velocity.x = Mathf.MoveTowards(_velocity.x, targetXSpeed, accelRate * Time.deltaTime);
@@ -794,6 +850,7 @@ namespace TheLastKnight.Player
 
             if (jumpRequested && canJump)
             {
+                TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
                 _velocity.y = JumpForce;
                 _jumpBufferCounter = -1f;
                 _coyoteTimeCounter = -1f;

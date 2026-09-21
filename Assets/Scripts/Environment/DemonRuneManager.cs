@@ -20,7 +20,7 @@ namespace TheLastKnight.Environment
         };
 
         [Header("Collected State")]
-        [SerializeField] private bool[] _collectedRunes = new bool[4];
+        private bool[] _collectedRunes => TheLastKnight.Core.GameManager.Instance.State.runes;
 
         public event Action OnRunesChanged;
 
@@ -43,12 +43,11 @@ namespace TheLastKnight.Environment
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(gameObject);
+                Destroy(this);
                 return;
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         public bool HasRune(int runeId)
@@ -64,6 +63,8 @@ namespace TheLastKnight.Environment
             if (!_collectedRunes[runeId])
             {
                 _collectedRunes[runeId] = true;
+                TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("rune");
+                TheLastKnight.Combat.FloatingCombatText.Show(TheLastKnight.Core.GameManager.Instance.Player != null ? TheLastKnight.Core.GameManager.Instance.Player.transform.position : transform.position, "Rune acquired", Color.yellow);
                 string name = (runeId < runeNames.Length) ? runeNames[runeId] : $"Rune #{runeId + 1}";
                 Debug.Log($"<color=red>[DemonRuneManager]</color> รวบรวมสำเร็จ: {name} (ปัจจุบัน: {CollectedCount}/4)");
                 OnRunesChanged?.Invoke();
@@ -113,7 +114,7 @@ namespace TheLastKnight.Environment
 
         private void Update()
         {
-            HandleDebugHotkeys();
+            // Rune acquisition is driven by world interactions, never debug keys in a build.
         }
 
         private void HandleDebugHotkeys()

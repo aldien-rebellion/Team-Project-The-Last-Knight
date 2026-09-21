@@ -18,6 +18,9 @@ namespace TheLastKnight.Combat
         [SerializeField] private float _maxHealth = 50f;
         [SerializeField] private float _defense = 0f;
         [SerializeField] private float _attackPower = 10f;
+        [SerializeField] private int _goldReward = 8;
+        [SerializeField] private int _expReward = 15;
+        public void SetRewards(int gold, int experience) { _goldReward = gold; _expReward = experience; }
 
         [Header("Status Effect")]
         [SerializeField] private StatusEffect _currentStatus = StatusEffect.None;
@@ -58,6 +61,7 @@ namespace TheLastKnight.Combat
             if (IsDead) return;
 
             float actualDamage = Mathf.Max(1f, damageData.amount - _defense);
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
             CurrentHealth = Mathf.Max(0f, CurrentHealth - actualDamage);
 
             OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
@@ -107,7 +111,15 @@ namespace TheLastKnight.Combat
         {
             if (IsDead) return;
             IsDead = true;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_death");
             CurrentHealth = 0f;
+            var player = FindAnyObjectByType<TheLastKnight.Stats.PlayerStats>();
+            if (player != null)
+            {
+                player.AddGold(_goldReward);
+                player.AddEXP(_expReward);
+                FloatingCombatText.Show(transform.position, $"+{_goldReward} Gold / +{_expReward} EXP", Color.yellow);
+            }
             OnDeath?.Invoke();
         }
     }

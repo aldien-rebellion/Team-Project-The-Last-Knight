@@ -391,6 +391,8 @@ namespace TheLastKnight.Environment
 
         private void Update()
         {
+            if (TheLastKnight.Core.GameManager.Instance != null &&
+                (TheLastKnight.Core.GameManager.Instance.ArenaLocked || TheLastKnight.Core.GameManager.Instance.InputBlocked)) return;
             if (!_playerInRange)
             {
                 CheckPlayerOverlap();

@@ -51,6 +51,7 @@ namespace TheLastKnight.Combat
 
         private void LateUpdate()
         {
+            if (_canvas != null) _canvas.enabled = TheLastKnight.Core.GameDifficultyManager.ShowHelpers;
             // Counteract parent flipping so health bar always stays upright and correctly oriented
             if (_maintainWorldScale && transform.parent != null)
             {

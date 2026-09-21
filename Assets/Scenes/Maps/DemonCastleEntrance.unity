@@ -153,7 +153,6 @@ MonoBehaviour:
   - "Rune of the Demon Hand (\u0E23\u0E39\u0E19\u0E2B\u0E31\u0E15\u0E16\u0E4C\u0E1B\u0E35\u0E28\u0E32\u0E08)"
   - "Rune of the Evil Eye (\u0E23\u0E39\u0E19\u0E40\u0E19\u0E15\u0E23\u0E2D\u0E2A\u0E39\u0E23)"
   - "Rune of the Trident (\u0E23\u0E39\u0E19\u0E15\u0E23\u0E35\u0E28\u0E39\u0E25\u0E17\u0E21\u0E34\u0E2C)"
-  _collectedRunes: 00000000
 --- !u!4 &21316461
 Transform:
   m_ObjectHideFlags: 0
@@ -2800,6 +2799,7 @@ GameObject:
   - component: {fileID: 1624647998}
   - component: {fileID: 1624647997}
   - component: {fileID: 1624647996}
+  - component: {fileID: 1624647999}
   m_Layer: 0
   m_Name: DemonCastleGate
   m_TagString: Untagged
@@ -2913,6 +2913,20 @@ Transform:
   - {fileID: 243099387}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1624647999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624647995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edffa16463001b2469a1b3a027d891c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.DemonCastleGateVN
+  arthurBackView: {fileID: 21300000, guid: 14927d0ba8019a04c8a155155519e351, type: 3}
+  gate: {fileID: 1624647996}
 --- !u!1 &1635488871
 GameObject:
   m_ObjectHideFlags: 0

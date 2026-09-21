@@ -56,6 +56,8 @@ namespace TheLastKnight.Combat
         private void TryDealDamage(GameObject target)
         {
             if (!_isActive) return;
+            var owner = GetComponentInParent<TheLastKnight.AI.EnemyController>();
+            if (owner != null && !owner.CanDealMeleeDamage) return;
 
             // Check if target is Player
             bool isPlayer = target.CompareTag("Player") || target.name.Equals("Player", System.StringComparison.OrdinalIgnoreCase);

@@ -23,6 +23,67 @@ namespace TheLastKnight.Stats
 
         [Header("Runtime Status")]
         [SerializeField] private float _currentHP;
+        [SerializeField] private float _currentStamina = 100f;
+        public float MaxStamina => 100f;
+        public float CurrentStamina => _currentStamina;
+        public float StaminaPercentage => _currentStamina / MaxStamina;
+        public bool IsDead => _currentHP <= 0;
+        [SerializeField] private int _gold;
+        [SerializeField] private int _healingPotions = 3;
+        public int Gold => _gold;
+        public int HealingPotions => _healingPotions;
+        public const int MaxHealingPotions = 5;
+        public void AddGold(int amount) => _gold += Mathf.Max(0, amount);
+        public bool TrySpendGold(int amount)
+        {
+            if (amount < 0 || _gold < amount) return false;
+            _gold -= amount;
+            return true;
+        }
+        public bool AddPotion()
+        {
+            if (_healingPotions >= MaxHealingPotions) return false;
+            _healingPotions++;
+            return true;
+        }
+        public bool CompletePotionDrink()
+        {
+            if (_healingPotions <= 0 || IsDead) return false;
+            _healingPotions--;
+            Heal(50f);
+            return true;
+        }
+        public bool AddStatPotion(string stat)
+        {
+            if (stat != "STR" && stat != "VIT" && stat != "DEX" && stat != "AGI") return false;
+            _availableStatPoints++;
+            return UpgradeStat(stat);
+        }
+        private readonly System.Collections.Generic.HashSet<Object> _regenAuras = new System.Collections.Generic.HashSet<Object>();
+
+        public void SetRegenAura(Object source, bool active)
+        {
+            if (active) _regenAuras.Add(source); else _regenAuras.Remove(source);
+        }
+
+        public bool TrySpendStamina(float amount)
+        {
+            if (amount < 0 || _currentStamina < amount || IsDead) return false;
+            _currentStamina -= amount;
+            return true;
+        }
+
+        private void Update()
+        {
+            if (IsDead || _playerController == null) return;
+            _regenAuras.RemoveWhere(source => source == null);
+            if (_playerController.CurrentState == PlayerState.Idle || _playerController.CurrentState == PlayerState.Walking)
+                _currentStamina = Mathf.Min(MaxStamina, _currentStamina + (_regenAuras.Count > 0 ? 40f : 20f)
+                    * TheLastKnight.Core.GameDifficultyManager.Regeneration * Time.deltaTime);
+        }
+
+        public void Heal(float amount) => _currentHP = Mathf.Min(MaxHP, _currentHP + Mathf.Max(0, amount));
+        public void Rest() { _currentHP = MaxHP; _currentStamina = MaxStamina; }
 
         // Derived calculations (cached for other systems to query)
         [CreateProperty]
@@ -127,7 +188,7 @@ namespace TheLastKnight.Stats
         /// </summary>
         public void AddEXP(int amount)
         {
-            _currentEXP += amount;
+            _currentEXP += Mathf.Max(0, amount);
             Debug.Log($"[PlayerStats] Gained +{amount} EXP. Total: {_currentEXP}/{EXPNeeded}");
 
             while (_currentEXP >= EXPNeeded)
@@ -210,6 +271,8 @@ namespace TheLastKnight.Stats
                 return;
             }
 
+            if (IsDead) return;
+            damage = Mathf.Max(0f, damage) * TheLastKnight.Core.GameDifficultyManager.EnemyDamage;
             _currentHP -= damage;
             _currentHP = Mathf.Max(_currentHP, 0);
             Debug.Log($"[PlayerStats] Arthur took {damage} damage! HP: {_currentHP}/{MaxHP}");
@@ -227,8 +290,26 @@ namespace TheLastKnight.Stats
 
         private void Die()
         {
-            Debug.LogError("[PlayerStats] Arthur has perished!");
-            // TODO: Trigger save system reload, death screen, or custom respawn event
+            TheLastKnight.Core.GameManager.Instance?.PlayerDied();
+        }
+
+        public void Capture(TheLastKnight.Core.PlayerSaveData state)
+        {
+            state.initialized = true;
+            state.hp = _currentHP; state.stamina = _currentStamina;
+            state.level = _currentLevel; state.exp = _currentEXP; state.statPoints = _availableStatPoints;
+            state.strength = _strength; state.vitality = _vitality; state.dexterity = _dexterity; state.agility = _agility;
+            state.gold = _gold; state.potions = _healingPotions;
+        }
+
+        public void Restore(TheLastKnight.Core.PlayerSaveData state)
+        {
+            _currentLevel = state.level; _currentEXP = state.exp; _availableStatPoints = state.statPoints;
+            _strength = state.strength; _vitality = state.vitality; _dexterity = state.dexterity; _agility = state.agility;
+            _gold = state.gold; _healingPotions = state.potions;
+            RecalculateStats();
+            _currentHP = Mathf.Clamp(state.hp, 0, MaxHP);
+            _currentStamina = Mathf.Clamp(state.stamina, 0, MaxStamina);
         }
     }
 }

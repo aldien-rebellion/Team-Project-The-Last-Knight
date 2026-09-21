@@ -53,6 +53,10 @@ namespace TheLastKnight.AI
         private float _nextMeleeTime = 0f;
         private float _nextRangedTime = 0f;
         private bool _isActionLocked = false;
+        private ParryReceiver _parry;
+        private float _damageUntil;
+        private bool _projectileSpawned;
+        public bool CanDealMeleeDamage => !_stats.IsDead && !_parry.IsStaggered && Time.time < _damageUntil;
 
         public EnemyAIState CurrentState => _currentState;
         public bool IsFlying => _isFlying;
@@ -64,6 +68,8 @@ namespace TheLastKnight.AI
             _rb = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _stats = GetComponent<EnemyStats>();
+            _parry = GetComponent<ParryReceiver>();
+            if (_parry == null) _parry = gameObject.AddComponent<ParryReceiver>();
             _colliders = GetComponentsInChildren<Collider2D>();
 
             _isFacingRight = _initialFacingRight;
@@ -145,6 +151,12 @@ namespace TheLastKnight.AI
         private void Update()
         {
             if (_stats.IsDead) return;
+
+            if (_parry.IsStaggered)
+            {
+                _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);
+                return;
+            }
 
             if (_player == null)
             {
@@ -284,9 +296,8 @@ namespace TheLastKnight.AI
             _rb.linearVelocity = Vector2.zero;
             SetAnimBool("IsMoving", false);
             SetAnimBool("IsChasing", false);
-            SetAnimTrigger("Attack");
-
             _nextMeleeTime = Time.time + _meleeCooldown;
+            StartCoroutine(WindupAttack(false));
         }
 
         private void PerformRangedAttack()
@@ -297,12 +308,34 @@ namespace TheLastKnight.AI
             SetAnimBool("IsChasing", false);
 
             // Trigger animation
-            SetAnimTrigger("Attack");
-
             _nextRangedTime = Time.time + _rangedCooldown;
 
             // Spawn projectile with a slight anticipation delay
-            StartCoroutine(DelayedProjectileRoutine(0.35f));
+            StartCoroutine(WindupAttack(true));
+        }
+
+        private IEnumerator WindupAttack(bool ranged)
+        {
+            _isActionLocked = true;
+            _projectileSpawned = false;
+            _parry.BeginWindup();
+            yield return new WaitForSeconds(ParryReceiver.WindupDuration + ParryReceiver.TimingTolerance);
+            _parry.FinishWindup();
+            if (_stats.IsDead || _parry.IsStaggered) yield break;
+            SetAnimTrigger("Attack");
+            _damageUntil = Time.time + 0.35f;
+            if (ranged) SpawnProjectile();
+            yield return new WaitForSeconds(0.35f);
+            _isActionLocked = false;
+        }
+
+        public void CancelAttack()
+        {
+            StopAllCoroutines();
+            _damageUntil = 0f;
+            _isActionLocked = false;
+            _currentState = EnemyAIState.Hurt;
+            SetAnimTrigger("Hurt");
         }
 
         private IEnumerator DelayedProjectileRoutine(float delay)
@@ -318,7 +351,8 @@ namespace TheLastKnight.AI
         /// </summary>
         public void SpawnProjectile()
         {
-            if (_stats.IsDead) return;
+            if (_stats.IsDead || _parry.IsStaggered || _parry.IsWindingUp || _projectileSpawned) return;
+            _projectileSpawned = true;
 
             // Ground spell check (e.g. BringerOfDeath Spell, Jinn Magic)
             if (_groundSpellPrefab != null && _player != null)
