@@ -14,9 +14,9 @@ namespace TheLastKnight.Tests
     [TestFixture]
     public class PlayerAnimationTests
     {
-        private const string AnimationFolder = "Assets/Animations/";
+        private const string AnimationFolder = "Assets/Animations/player/";
         private const string SpriteFolder = "Assets/Sprites/Player/";
-        private const string ControllerPath = "Assets/Animations/_Player.controller";
+        private const string ControllerPath = AnimationFolder + "_Player.controller";
 
         private AnimatorController _controller;
 

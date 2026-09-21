@@ -20,7 +20,7 @@ namespace TheLastKnight.Audio
             if (Instance != null && Instance != this) { Destroy(this); return; }
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            _catalog = Resources.Load<AudioCatalog>("AudioCatalog");
+            if (_catalog == null) _catalog = Resources.Load<AudioCatalog>("AudioCatalog");
             _bgmA = gameObject.AddComponent<AudioSource>(); _bgmB = gameObject.AddComponent<AudioSource>();
             _sfx = gameObject.AddComponent<AudioSource>();
             _bgmA.loop = _bgmB.loop = true;
@@ -35,8 +35,9 @@ namespace TheLastKnight.Audio
             if (Instance == this) Instance = null;
         }
 
-        private void SceneChanged(Scene scene, LoadSceneMode mode) => PlayMusic(scene.name == "Church" ? "Church" :
-            scene.name == "SuburbToForest" ? "Forest" : scene.name.Contains("Castle") ? "Castle" : "Town");
+        private void SceneChanged(Scene scene, LoadSceneMode mode) => PlaySceneMusic(scene.name);
+        public void PlaySceneMusic(string sceneName) => PlayMusic(sceneName == "Church" ? "Church" :
+            sceneName == "SuburbToForest" ? "Forest" : sceneName.Contains("Castle") ? "Castle" : "Town");
 
         public void PlaySfx(string id)
         {

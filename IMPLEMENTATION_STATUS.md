@@ -14,7 +14,7 @@ Updated 2026-09-21. The goal is **active**, not complete.
 
 - Gate scene serializes `player-behind_0`; runtime uses it with both player input and controller disabled.
 - All four save-point scenes (CityCenter, OutdoorMarket, SuburbToForest, DemonCastle) serialize the supplied Medusa sprite.
-- Screenshots inspected in `Captures/gate-player-behind-verified.png` and `Captures/medusa-statue-verified.png`.
+- Gate and Medusa screenshots were inspected earlier; those capture files were subsequently removed, so they are historical evidence only.
 - Gate's return button loads SuburbToForest; an unowned rune is rejected.
 - Legacy gate prompt colliders are disabled to prevent old trigger callbacks displaying overlapping UI.
 - Four obsolete entrance test rune pickups are disabled in the saved scene.
@@ -25,15 +25,25 @@ Updated 2026-09-21. The goal is **active**, not complete.
 
 ## Implemented but not fully accepted yet
 
+### Runtime integration verification (2026-09-21)
+
+- 61 checks passed in `Captures/RuntimeQA/20260921-090738/report.txt`. This is component-driven integration, not a physical full-map playthrough.
+- Q drinking and F saving used synthetic keyboard input through the focused Game View. Checks covered interrupted drinking, stamina rejection, measured regeneration, damage multipliers, helper visibility, actual enemy windup/parry/stagger/critical, rewards, shop pricing, checkpoint death/respawn, Continue, all four gate sockets and final-story triggering.
+- Arena trigger entry enabled barriers, denied travel, and boss death released them. The runner waits for physics processing and gate scene completion instead of assuming editor wall time equals game time.
+- Existing real save and backup contents remained unchanged. QA saves use an editor-only path override.
+- Temporary in-memory clips verified music/SFX gains and crossfade. Resource AudioCatalog now provides human assignment slots, FloatingCombatText has a resource prefab, and MainMenu has one AudioListener.
+- World prompts, floating damage and parry rings now use the InGame_UI sorting layer. Boss death restores the current scene's music. Portals respect input/arena locks before changing arrival state and use F rather than the E skill key.
+- Focused combat/save EditMode regression passed 5/5 (job `196b89729c0948928125b326166f2e20`). Broader AnimationTests ran 103 tests after correcting obsolete animation folder paths; six existing Walk/Jump clip and transition expectation failures remain (job `f9e688ed252f44a1b131346491f659b0`). Investigate intended animation behavior before changing assets or assertions. This broader suite is not green.
+
 Combat/parry/stamina, rewards/potions/shop, persistent state/save/respawn, progression sources, map placements, gate interaction, audio manager, narrative dialogue, difficulty and main menu have implementation code. This is not evidence that every PLAN.md acceptance criterion is satisfied.
 
 ## Remaining acceptance work
 
 1. Exercise complete route and real acquisition sources: church boss/key/chest, Medusa rune/save, market purchases, fox rune, four gate insertions and final boss ending. Check traversal, floor placement, arena locks, enemy AI, camera bounds and return paths.
-2. Verify stamina costs, aura regeneration, interrupted drinking, parry cancellation/stagger/critical timing, difficulty damage and helper visibility in Play Mode. Newly added Easy-only enemy level labels need visual checking. Simultaneous action inputs now use a single priority chain.
-3. Verify save/Continue/respawn through gameplay UI while isolating QA from the existing user save. File-level save tests passed, but they do not prove scene restoration.
-4. Complete audio catalog setup and verify playback using test clips without sourcing human-assigned audio. Main menu lacked an AudioListener; its scene still needs updating (the scene factory now includes one).
-5. Check floating damage prefab requirement, final-boss ending visuals/credits, shop layout, gate completion animation and settings sliders against PLAN.md.
+2. Visually inspect helper labels, parry rings, floating damage, shop layout, gate animation and settings sliders. Runtime behavior passed the integration checks above.
+3. Implement the final-boss ending's rebuilt-kingdom view and rolling credits; current ending is a static narrative overlay.
+4. Audio sourcing and catalog clip assignment remain human work; audio code and assignment slots are verified.
+5. Complete traversal and visual QA without treating direct component calls and direct boss damage in the integration suite as a full playthrough.
 6. Run appropriate regression checks and final requirement-by-requirement audit; only then finalize branch integration.
 7. Git pushes remain unapproved: automatic review rejected the earlier push to the existing GitHub remote because destination trust/privacy were unverified. An explicit approval question was sent; no answer is present in this task's current context. Do not retry a push without resolving this.
 

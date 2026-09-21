@@ -214,6 +214,9 @@ public class ScenePortal : MonoBehaviour
 
     void Update()
     {
+        var manager = TheLastKnight.Core.GameManager.Instance;
+        if (manager == null || manager.InputBlocked || manager.ArenaLocked) return;
+
         if (!playerInRange)
         {
             CheckPlayerOverlap();
@@ -226,7 +229,7 @@ public class ScenePortal : MonoBehaviour
         bool interactPressed = false;
 
 #if ENABLE_INPUT_SYSTEM
-        if (Keyboard.current != null && (Keyboard.current.fKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame))
+        if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
         {
             interactPressed = true;
         }
@@ -235,7 +238,7 @@ public class ScenePortal : MonoBehaviour
             interactPressed = true;
         }
 #else
-        if (Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             interactPressed = true;
         }

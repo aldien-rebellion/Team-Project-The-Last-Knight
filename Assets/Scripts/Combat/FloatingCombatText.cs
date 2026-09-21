@@ -21,6 +21,7 @@ namespace TheLastKnight.Combat
             popup._text.characterSize = 0.06f;
             popup._text.anchor = TextAnchor.MiddleCenter;
             popup.GetComponent<MeshRenderer>().sortingOrder = 100;
+            popup.GetComponent<MeshRenderer>().sortingLayerName = "InGame_UI";
         }
 
         private void Update()

@@ -6,7 +6,20 @@ namespace TheLastKnight.Core
 {
     public static class SaveSystem
     {
-        public static string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
+#if UNITY_EDITOR
+        // Editor integration checks can exercise the real UI without touching a player's save.
+        public static string EditorTestSavePath { get; set; }
+#endif
+        public static string SavePath
+        {
+            get
+            {
+#if UNITY_EDITOR
+                if (!string.IsNullOrEmpty(EditorTestSavePath)) return EditorTestSavePath;
+#endif
+                return Path.Combine(Application.persistentDataPath, "save.json");
+            }
+        }
         public static bool HasSave => TryLoad(out _);
         public static bool Save(PlayerSaveData state, out string error, string path = null)
         {

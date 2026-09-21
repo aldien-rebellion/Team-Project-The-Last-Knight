@@ -33,6 +33,7 @@ namespace TheLastKnight.Environment
                 _prompt = go.AddComponent<TextMesh>(); _prompt.fontSize = 40; _prompt.characterSize = 0.055f;
                 _prompt.anchor = TextAnchor.MiddleCenter;
                 go.GetComponent<MeshRenderer>().sortingOrder = 110;
+                go.GetComponent<MeshRenderer>().sortingLayerName = "InGame_UI";
             }
             _prompt.gameObject.SetActive(selected);
             _prompt.text = prompt;
