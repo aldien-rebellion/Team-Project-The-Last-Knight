@@ -37,11 +37,17 @@ Updated 2026-09-21. The goal is **active**, not complete.
 
 Combat/parry/stamina, rewards/potions/shop, persistent state/save/respawn, progression sources, map placements, gate interaction, audio manager, narrative dialogue, difficulty and main menu have implementation code. This is not evidence that every PLAN.md acceptance criterion is satisfied.
 
+### Ending artwork provenance
+
+`Assets/Resources/RebuiltMoa.png` was created with the built-in imagegen tool using the supplied player-behind and citycinter3 images as visual references. Final prompt:
+
+> Use case: stylized-concept. Asset: landscape 16:9 victory cutscene illustration for The Last Knight Unity game. Reference 1 defines Arthur: back-facing silver armored knight, worn crimson cape, sword lowered at left. Reference 2 defines kingdom Moa architecture and painterly dark-fantasy game style. Create a NEW composition: Arthur stands in the lower left foreground on a castle stone terrace, back toward viewer, looking over the REBUILT peaceful kingdom at golden dawn. Beyond him a broad valley town of restored timber-and-stone houses with red roofs, an intact Gothic clocktower, busy tiny market silhouettes, trees and distant hills. Hopeful warm light after victory, detailed painted 2D game art matching town reference. Arthur occupies about one quarter of image height, skyline dominates. Keep center and right composition readable for later credits overlay. No writing, no logos, no watermark. All architecture repaired, no fires, no battle. Full bleed.
+
 ## Remaining acceptance work
 
 1. Exercise complete route and real acquisition sources: church boss/key/chest, Medusa rune/save, market purchases, fox rune, four gate insertions and final boss ending. Check traversal, floor placement, arena locks, enemy AI, camera bounds and return paths.
 2. Visually inspect helper labels, parry rings, floating damage, shop layout, gate animation and settings sliders. Runtime behavior passed the integration checks above.
-3. Implement the final-boss ending's rebuilt-kingdom view and rolling credits; current ending is a static narrative overlay.
+3. Ending now has rebuilt-Moa artwork, two timed epilogue pages, and a 24-second masked credit roll using unscaled time. Epilogue and sampled midpoint visually inspected in `Captures/ending-epilogue.png` and `Captures/ending-credits-midpoint.png`. Resuming the sampled roll automatically returned to MainMenu with input unblocked and timeScale 1. Updated final-boss/Skip regression passed in the 61-check run `Captures/RuntimeQA/20260921-091947/report.txt`, with zero console errors in that run. Earlier manual tool-driven sampling produced editor PlayerLoop recursion and null errors; these were not reproduced in the clean regression.
 4. Audio sourcing and catalog clip assignment remain human work; audio code and assignment slots are verified.
 5. Complete traversal and visual QA without treating direct component calls and direct boss damage in the integration suite as a full playthrough.
 6. Run appropriate regression checks and final requirement-by-requirement audit; only then finalize branch integration.
