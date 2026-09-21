@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: 6a5f6a21e84d2e14c99a20f8ee474c75
+guid: 48ac088f1c0490641a7b7312835607cb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7940411196656140119
-    second: Volcanox_walk7_0
+      213: -3548203803499009341
+    second: Volcanox_Magma Punch2_0
+  - first:
+      213: 857790454006627931
+    second: Volcanox_Magma Punch2_1
+  - first:
+      213: 6004778654075859695
+    second: Volcanox_Magma Punch2_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,8 +55,8 @@ TextureImporter:
   spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 7
-  spritePivot: {x: 0.5, y: 0}
+  alignment: 9
+  spritePivot: {x: 0.5041629, y: 0.33091795}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -100,23 +106,67 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Volcanox_walk7_0
+      name: Volcanox_Magma Punch2_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
-        width: 348
-        height: 372
-      alignment: 9
-      pivot: {x: 0.50650793, y: 0.3569327}
+        x: 0
+        y: 0
+        width: 365
+        height: 450
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9a0c6c4361efdc190800000000000000
-      internalID: -7940411196656140119
+      spriteID: 3ca60cd907f32cec0800000000000000
+      internalID: -3548203803499009341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Magma Punch2_1
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 157
+        width: 20
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5e39c68fdb77eb00800000000000000
+      internalID: 857790454006627931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Magma Punch2_2
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 114
+        width: 19
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe23a070f52455350800000000000000
+      internalID: 6004778654075859695
       vertices: []
       indices: 
       edges: []
@@ -125,8 +175,8 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 8376dd34f43866b48b38e8d31e9a377d
-    internalID: 0
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -135,7 +185,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Volcanox_walk7_0: -7940411196656140119
+      Volcanox_Magma Punch2_0: -3548203803499009341
+      Volcanox_Magma Punch2_1: 857790454006627931
+      Volcanox_Magma Punch2_2: 6004778654075859695
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

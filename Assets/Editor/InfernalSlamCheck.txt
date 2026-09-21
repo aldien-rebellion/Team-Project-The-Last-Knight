@@ -1,0 +1,3 @@
+Infernal Slam Sprites:
+Assets/sprites/Volcanox/Volcanox_Infernal Slam1.png -> Mode: Multiple, Pivot: (0.50, 0.50)
+Assets/sprites/Volcanox/Volcanox_Infernal Slam2.png -> Mode: Multiple, Pivot: (0.50, 0.50)
