@@ -267,31 +267,31 @@ namespace TheLastKnight.Player
             }
 
             // Check for Skill Trigger (Carnage Burst - Key E)
-            if (_inputHandler != null && _inputHandler.UseSkillTriggered && !isBusy && CurrentState != PlayerState.Attacking && _skillCooldownTimer <= 0f)
+            else if (_inputHandler != null && _inputHandler.UseSkillTriggered && !isBusy && _skillCooldownTimer <= 0f)
             {
                 StartSkill();
             }
 
             // Check for Buff Trigger (Key R)
-            if (_inputHandler != null && _inputHandler.UseBuffTriggered && !isBusy && _buffCooldownTimer <= 0f)
+            else if (_inputHandler != null && _inputHandler.UseBuffTriggered && !isBusy && _buffCooldownTimer <= 0f)
             {
                 StartBuff();
             }
 
             // Check for Excalibur Trigger (Key T)
-            if (_inputHandler != null && _inputHandler.UseExcaliburTriggered && !isBusy && _excaliburCooldownTimer <= 0f)
+            else if (_inputHandler != null && _inputHandler.UseExcaliburTriggered && !isBusy && _excaliburCooldownTimer <= 0f)
             {
                 StartExcalibur();
             }
 
             // Check for Drink Trigger (Key Q)
-            if (_inputHandler != null && _inputHandler.UseDrinkTriggered && !isBusy && _drinkCooldownTimer <= 0f)
+            else if (_inputHandler != null && _inputHandler.UseDrinkTriggered && !isBusy && _drinkCooldownTimer <= 0f)
             {
                 StartDrink();
             }
 
             // Check for Dash Trigger
-            if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f && !isBusy && CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill)
+            else if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f && !isBusy)
             {
                 bool canDash = _kinematicController.IsGrounded || !_hasDashedInAir;
                 if (canDash)

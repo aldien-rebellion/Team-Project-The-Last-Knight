@@ -8,20 +8,22 @@ namespace TheLastKnight.Core
     {
         public static string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
         public static bool HasSave => TryLoad(out _);
-        public static bool Save(PlayerSaveData state, out string error)
+        public static bool Save(PlayerSaveData state, out string error, string path = null)
         {
+            if (!IsValid(state)) { error = "Could not save: player state is invalid."; return false; }
+            path = path ?? SavePath;
             try
             {
-                Directory.CreateDirectory(Application.persistentDataPath);
-                string temporary = SavePath + ".tmp";
+                Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
+                string temporary = path + ".tmp";
                 using (var stream = new FileStream(temporary, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     byte[] bytes = System.Text.Encoding.UTF8.GetBytes(JsonUtility.ToJson(state, true));
                     stream.Write(bytes, 0, bytes.Length);
                     stream.Flush(true);
                 }
-                if (File.Exists(SavePath)) File.Replace(temporary, SavePath, SavePath + ".bak");
-                else File.Move(temporary, SavePath);
+                if (File.Exists(path)) File.Replace(temporary, path, path + ".bak");
+                else File.Move(temporary, path);
                 error = null;
                 return true;
             }
@@ -32,7 +34,11 @@ namespace TheLastKnight.Core
             }
         }
 
-        public static bool TryLoad(out PlayerSaveData state) => TryRead(SavePath, out state) || TryRead(SavePath + ".bak", out state);
+        public static bool TryLoad(out PlayerSaveData state, string path = null)
+        {
+            path = path ?? SavePath;
+            return TryRead(path, out state) || TryRead(path + ".bak", out state);
+        }
 
         public static bool IsValid(PlayerSaveData state)
         {
