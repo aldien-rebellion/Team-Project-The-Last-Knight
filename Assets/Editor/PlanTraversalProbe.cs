@@ -73,9 +73,12 @@ public static class PlanTraversalProbe
         if (enemy != null)
         {
             var parry = enemy.GetComponent<ParryReceiver>();
-            bool strike = parry == null || parry.IsStaggered || (parry.IsWindingUp && parry.Progress >= 0.55f);
+            // Save the next swing for the incoming windup instead of spending its
+            // cooldown on a late stagger hit and missing the following parry.
+            bool strike = parry == null || (parry.IsWindingUp && parry.Progress >= 0.55f);
             if (strike && Time.time - _lastAttack > 0.65f)
             {
+                Rows.Add($"Attack input: enemy={enemy.name}, HP={enemy.CurrentHealth:F0}, winding={parry != null && parry.IsWindingUp}, stagger={parry != null && parry.IsStaggered}, stamina={p.CurrentStamina:F0}, playerState={p.GetComponent<TheLastKnight.Player.PlayerController>().CurrentState}");
                 InputSystem.QueueStateEvent(_mouse, new MouseState().WithButton(MouseButton.Left));
                 _lastAttack = Time.time;
             }
