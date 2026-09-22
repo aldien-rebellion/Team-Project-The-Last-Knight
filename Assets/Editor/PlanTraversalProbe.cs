@@ -15,6 +15,7 @@ public static class PlanTraversalProbe
     private static Keyboard _keyboard, _original;
     private static Mouse _mouse, _originalMouse;
     private static float _lastAttack;
+    private static InputSettings _originalSettings, _probeSettings;
     private static float _target, _startTime, _lastSample;
     private static string _destination, _source;
     private static int _frame;
@@ -25,6 +26,11 @@ public static class PlanTraversalProbe
     {
         if (!Application.isPlaying || GameManager.Instance.Player == null) throw new InvalidOperationException("Enter gameplay first.");
         Stop("Replaced by new probe");
+        // Isolate editor focus routing in memory; never dirty the project settings asset.
+        _originalSettings = InputSystem.settings;
+        _probeSettings = UnityEngine.Object.Instantiate(_originalSettings);
+        _probeSettings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
+        InputSystem.settings = _probeSettings;
         _original = Keyboard.current;
         _keyboard = InputSystem.AddDevice<Keyboard>(); _keyboard.MakeCurrent();
         _originalMouse = Mouse.current; _mouse = InputSystem.AddDevice<Mouse>(); _mouse.MakeCurrent();
@@ -95,6 +101,9 @@ public static class PlanTraversalProbe
         _mouse = null;
         if (_originalMouse != null && _originalMouse.added) _originalMouse.MakeCurrent();
         if (_original != null && _original.added) _original.MakeCurrent();
+        if (_originalSettings != null) InputSystem.settings = _originalSettings;
+        if (_probeSettings != null) UnityEngine.Object.DestroyImmediate(_probeSettings);
+        _originalSettings = _probeSettings = null;
         Status = reason; Rows.Add(reason);
         string folder = Path.GetFullPath(Path.Combine(Application.dataPath, "../Captures/TraversalQA"));
         Directory.CreateDirectory(folder);

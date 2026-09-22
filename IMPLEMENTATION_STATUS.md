@@ -46,6 +46,14 @@ Combat/parry/stamina, rewards/potions/shop, persistent state/save/respawn, progr
 
 ## Remaining acceptance work
 
+### Physical route QA, 2026-09-22
+
+- `PlanTraversalProbe` drives keyboard movement and timed mouse attacks with no teleportation, direct damage, healing or loot grants. It temporarily clones editor input settings in memory to allow the test to run while Unity is unfocused, and restores the original settings on stop.
+- Found and fixed Skeleton Attack/Attack3 states lacking exit transitions. This trapped the AI in the attack animation after its first strike. Both now return to Idle after the clip.
+- After the fix, the physical CityCenter-to-Church route passed: five enemies defeated, 40 gold earned, HP 100 at Church arrival `(42.5, -4.54)`. Traversal logs are under `Captures/TraversalQA`. Camera and HUD inspected during combat and arrival.
+- The following Church boss attempt ended in player death at x=58.4 with 40 gold and no ChurchKey. No console errors. Boss combat, upstairs access and later route segments remain unverified by full traversal; the component integration suite is not a substitute for them.
+- Workspace now includes user commits through `5e99876` merging main into the feature branch; preserve those changes and re-audit integration before finalizing.
+
 1. Exercise complete route and real acquisition sources: church boss/key/chest, Medusa rune/save, market purchases, fox rune, four gate insertions and final boss ending. Check traversal, floor placement, arena locks, enemy AI, camera bounds and return paths.
 2. Visually inspect helper labels, parry rings, floating damage, shop layout, gate animation and settings sliders. Runtime behavior passed the integration checks above.
 3. Ending now has rebuilt-Moa artwork, two timed epilogue pages, and a 24-second masked credit roll using unscaled time. Epilogue and sampled midpoint visually inspected in `Captures/ending-epilogue.png` and `Captures/ending-credits-midpoint.png`. Resuming the sampled roll automatically returned to MainMenu with input unblocked and timeScale 1. Updated final-boss/Skip regression passed in the 61-check run `Captures/RuntimeQA/20260921-091947/report.txt`, with zero console errors in that run. Earlier manual tool-driven sampling produced editor PlayerLoop recursion and null errors; these were not reproduced in the clean regression.
