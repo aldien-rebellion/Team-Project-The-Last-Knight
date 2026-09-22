@@ -1,0 +1,30 @@
+FAILED: Entering boss arena enables red barriers
+Component-driven integration only; physical traversal not covered.
+PASS New game opens intro and blocks input
+PASS Skip restores player controls
+PASS Completed drink heals and consumes exactly one potion
+PASS Damage interrupts drink without healing or consuming a potion
+PASS Insufficient stamina rejects dash and both skills
+PASS Medusa heals, restores stamina, grants rune 2 and saves
+PASS Incoming damage multiplier for Easy
+PASS Outgoing attack damage multiplier for Easy
+PASS Enemy health helper visibility for Easy
+PASS Enemy level helper visibility for Easy
+PASS Incoming damage multiplier for Normal
+PASS Outgoing attack damage multiplier for Normal
+PASS Enemy health helper visibility for Normal
+PASS Enemy level helper visibility for Normal
+PASS Incoming damage multiplier for Hard
+PASS Outgoing attack damage multiplier for Hard
+PASS Enemy health helper visibility for Hard
+PASS Enemy level helper visibility for Hard
+PASS Measured stamina regeneration 0 at 20.0/s
+PASS Measured stamina regeneration 1 at 40.0/s
+PASS Measured stamina regeneration 2 at 20.0/s
+PASS Enemy AI begins a real attack windup
+PASS Timed player attack cancels enemy strike and grants parry invulnerability
+PASS Staggered enemy takes guaranteed critical damage
+PASS Parry stagger expires after 1.5 seconds
+PASS Scene transition retains rune and potion state
+PASS Church chest rejects missing key
+PASS Existing user save and backup unchanged

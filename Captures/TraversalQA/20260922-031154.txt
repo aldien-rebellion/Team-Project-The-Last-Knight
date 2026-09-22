@@ -1,0 +1,22 @@
+Actual keyboard movement and timed mouse attacks; no teleport, healing, direct damage, loot grants or save writes.
+Running CityCenter: x=0.9, y=-3.3, HP=100, seconds=0
+Running CityCenter: x=-24.0, y=-4.5, HP=100, seconds=5
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=10
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=15
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=20
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=25
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=30
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=35
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=40
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=45
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=50
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=55
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=60
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=65
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=70
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=75
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=80
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=85
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=90
+Running CityCenter: x=-58.4, y=-4.5, HP=100, seconds=95
+Paused for skeleton visual inspection

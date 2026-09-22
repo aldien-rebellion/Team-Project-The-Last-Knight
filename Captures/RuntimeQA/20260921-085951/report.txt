@@ -1,0 +1,5 @@
+FAILED: Completed drink heals and consumes exactly one potion
+Component-driven integration only; physical traversal not covered.
+PASS New game opens intro and blocks input
+PASS Skip restores player controls
+PASS Existing user save and backup unchanged

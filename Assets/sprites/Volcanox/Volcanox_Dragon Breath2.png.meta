@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: 74fc54b5c2f1900468168260a9e7baef
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 467221088281234062
+    second: Volcanox_Dragon Breath2_0
+  - first:
+      213: -4767557492900854529
+    second: Volcanox_Dragon Breath2_1
+  - first:
+      213: 3145985990075274871
+    second: Volcanox_Dragon Breath2_2
+  - first:
+      213: 7415934479137034754
+    second: Volcanox_Dragon Breath2_3
+  - first:
+      213: -7366837614413574988
+    second: Volcanox_Dragon Breath2_4
+  - first:
+      213: 315776474305548073
+    second: Volcanox_Dragon Breath2_5
+  - first:
+      213: 7654328603490867760
+    second: Volcanox_Dragon Breath2_6
+  - first:
+      213: -6111235177867108220
+    second: Volcanox_Dragon Breath2_7
+  - first:
+      213: 3968318647291145051
+    second: Volcanox_Dragon Breath2_8
+  - first:
+      213: 3074409890167933629
+    second: Volcanox_Dragon Breath2_9
+  - first:
+      213: 8484008206919522490
+    second: Volcanox_Dragon Breath2_10
+  - first:
+      213: 5692958243210621983
+    second: Volcanox_Dragon Breath2_11
+  - first:
+      213: 3762573869607223247
+    second: Volcanox_Dragon Breath2_12
+  - first:
+      213: 6680245507586811127
+    second: Volcanox_Dragon Breath2_13
+  - first:
+      213: 4875448080542426843
+    second: Volcanox_Dragon Breath2_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.40685296, y: 0.4696225}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 327
+        height: 289
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8a0396ba17eb7600800000000000000
+      internalID: 467221088281234062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_1
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 212
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff4846548bb36ddb0800000000000000
+      internalID: -4767557492900854529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_2
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 192
+        width: 33
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 776dacef699c8ab20800000000000000
+      internalID: 3145985990075274871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_3
+      rect:
+        serializedVersion: 2
+        x: 361
+        y: 214
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 202d8821e11bae660800000000000000
+      internalID: 7415934479137034754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_4
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 128
+        width: 81
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bc84ea883cb3c990800000000000000
+      internalID: -7366837614413574988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_5
+      rect:
+        serializedVersion: 2
+        x: 362
+        y: 194
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92f4863c70dd16400800000000000000
+      internalID: 315776474305548073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_6
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 175
+        width: 11
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03a5f2d7f43a93a60800000000000000
+      internalID: 7654328603490867760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_7
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 176
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4802c540cf7803ba0800000000000000
+      internalID: -6111235177867108220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_8
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 161
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5be85fd8cc421730800000000000000
+      internalID: 3968318647291145051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_9
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 153
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dba4865918f7aaa20800000000000000
+      internalID: 3074409890167933629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_10
+      rect:
+        serializedVersion: 2
+        x: 365
+        y: 147
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab8dfe493804db570800000000000000
+      internalID: 8484008206919522490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_11
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 132
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1473bf0c53710f40800000000000000
+      internalID: 5692958243210621983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_12
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 104
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcffa1bdff8573430800000000000000
+      internalID: 3762573869607223247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_13
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 117
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f46c1c45eff4bc50800000000000000
+      internalID: 6680245507586811127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Volcanox_Dragon Breath2_14
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 106
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd66791b23219a340800000000000000
+      internalID: 4875448080542426843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Volcanox_Dragon Breath2_0: 467221088281234062
+      Volcanox_Dragon Breath2_1: -4767557492900854529
+      Volcanox_Dragon Breath2_10: 8484008206919522490
+      Volcanox_Dragon Breath2_11: 5692958243210621983
+      Volcanox_Dragon Breath2_12: 3762573869607223247
+      Volcanox_Dragon Breath2_13: 6680245507586811127
+      Volcanox_Dragon Breath2_14: 4875448080542426843
+      Volcanox_Dragon Breath2_2: 3145985990075274871
+      Volcanox_Dragon Breath2_3: 7415934479137034754
+      Volcanox_Dragon Breath2_4: -7366837614413574988
+      Volcanox_Dragon Breath2_5: 315776474305548073
+      Volcanox_Dragon Breath2_6: 7654328603490867760
+      Volcanox_Dragon Breath2_7: -6111235177867108220
+      Volcanox_Dragon Breath2_8: 3968318647291145051
+      Volcanox_Dragon Breath2_9: 3074409890167933629
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
