@@ -1,0 +1,69 @@
+PASSED 66 checks
+Component-driven integration only; physical traversal not covered.
+PASS New game opens intro and blocks input
+PASS Skip restores player controls
+PASS D movement advances player across CityCenter floor
+PASS Held sprint reaches Running after dash
+PASS Space physically lifts player while sprinting
+PASS Sprint jump enters takeoff animation
+PASS Jump lands back on CityCenter floor
+PASS Completed drink heals and consumes exactly one potion
+PASS Damage interrupts drink without healing or consuming a potion
+PASS Insufficient stamina rejects dash and both skills
+PASS Medusa heals, restores stamina, grants rune 2 and saves
+PASS Incoming damage multiplier for Easy
+PASS Outgoing attack damage multiplier for Easy
+PASS Enemy health helper visibility for Easy
+PASS Enemy level helper visibility for Easy
+PASS Incoming damage multiplier for Normal
+PASS Outgoing attack damage multiplier for Normal
+PASS Enemy health helper visibility for Normal
+PASS Enemy level helper visibility for Normal
+PASS Incoming damage multiplier for Hard
+PASS Outgoing attack damage multiplier for Hard
+PASS Enemy health helper visibility for Hard
+PASS Enemy level helper visibility for Hard
+PASS Measured stamina regeneration 0 at 20.0/s
+PASS Measured stamina regeneration 1 at 40.0/s
+PASS Measured stamina regeneration 2 at 20.0/s
+PASS Enemy AI begins a real attack windup
+PASS Timed player attack cancels enemy strike and grants parry invulnerability
+PASS Staggered enemy takes guaranteed critical damage
+PASS Parry stagger expires after 1.5 seconds
+PASS Scene transition retains rune and potion state
+PASS Church chest rejects missing key
+PASS Entering boss arena enables red barriers
+PASS Locked boss arena prevents scene escape
+PASS Boss death releases arena barriers
+PASS Church boss awards key, gold and EXP
+PASS Church key unlocks rune 1
+PASS Shop modal freezes gameplay
+PASS Insufficient gold cannot buy rune
+PASS Market rune purchase charges exactly 150 gold
+PASS Duplicate rune purchase is rejected without a charge
+PASS Healing potion purchase charges 50 gold
+PASS STR potion is purchasable
+PASS VIT potion is purchasable
+PASS DEX potion is purchasable
+PASS AGI potion is purchasable
+PASS Stat potions apply once and each charge 100 gold
+PASS Shop close restores gameplay
+PASS Fox death completes all four acquired runes
+PASS Player death blocks controls and opens death UI
+PASS Respawn restores checkpoint health, inventory and runes
+PASS Respawn restores checkpoint position
+PASS Main Menu Continue loads saved progression
+PASS VN gate disables player controls
+PASS Gate accepts owned rune once
+PASS Gate accepts owned rune 2
+PASS Gate accepts owned rune 3
+PASS Gate accepts owned rune 4
+PASS Four socketed runes open the castle
+PASS Final boss death opens victory story
+PASS Ending returns to Main Menu
+PASS Music channel starts assigned clip with master gain
+PASS SFX channel plays assigned clip with independent gain
+PASS BGM transition crossfades both active channels
+PASS BGM crossfade completes and stops previous track
+PASS Main Menu has exactly one audio listener
+PASS Existing user save and backup unchanged

@@ -1,0 +1,6 @@
+Actual keyboard movement; no teleport, healing, combat automation or save writes.
+Running CityCenter: x=0.9, y=-3.3, HP=100, seconds=0
+Running CityCenter: x=-24.5, y=-4.5, HP=90, seconds=5
+Running CityCenter: x=-24.5, y=-4.5, HP=50, seconds=10
+Running CityCenter: x=-24.5, y=-4.5, HP=20, seconds=15
+Stopped: player input blocked at Running CityCenter: x=-24.5, y=-4.5, HP=0, seconds=17
