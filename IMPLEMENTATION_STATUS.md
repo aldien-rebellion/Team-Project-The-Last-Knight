@@ -1,6 +1,6 @@
 # PLAN.md implementation evidence
 
-Updated 2026-09-21. The goal is **active**, not complete.
+Updated 2026-09-22. The goal is **active**, not complete.
 
 ## Current scope
 
@@ -33,7 +33,8 @@ Updated 2026-09-21. The goal is **active**, not complete.
 - Existing real save and backup contents remained unchanged. QA saves use an editor-only path override.
 - Temporary in-memory clips verified music/SFX gains and crossfade. Resource AudioCatalog now provides human assignment slots, FloatingCombatText has a resource prefab, and MainMenu has one AudioListener.
 - World prompts, floating damage and parry rings now use the InGame_UI sorting layer. Boss death restores the current scene's music. Portals respect input/arena locks before changing arrival state and use F rather than the E skill key.
-- Focused combat/save EditMode regression passed 5/5 (job `196b89729c0948928125b326166f2e20`). Broader AnimationTests ran 103 tests after correcting obsolete animation folder paths; six existing Walk/Jump clip and transition expectation failures remain (job `f9e688ed252f44a1b131346491f659b0`). Investigate intended animation behavior before changing assets or assertions. This broader suite is not green.
+- Latest AnimationTests passed 105/105, no skips or inconclusive tests (job `14c6dfea71ee42e19afd218cd6050a2e`, 2026-09-22); console returned zero errors. Corrected stale walk expectations to the authored eight poses at 6 fps with pose seven held. Restored missing jump takeoff frame and Run-to-Jump transition. Player prefab now has its default idle sprite and controller; asset tests inspect the prefab independently of the test runner's temporary scene.
+- Runtime integration passed 66 checks in `Captures/RuntimeQA/20260921-092657/report.txt`, including synthetic D/Shift movement, Space lift, takeoff animation and physical landing in CityCenter. This proves a short locomotion segment, not full-map traversal. Existing user save and backup remained unchanged.
 
 Combat/parry/stamina, rewards/potions/shop, persistent state/save/respawn, progression sources, map placements, gate interaction, audio manager, narrative dialogue, difficulty and main menu have implementation code. This is not evidence that every PLAN.md acceptance criterion is satisfied.
 

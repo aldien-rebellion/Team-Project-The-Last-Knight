@@ -139,6 +139,7 @@ public class PlanRuntimeChecks
         Check(Manager.Player != null && Manager.InputBlocked && GameObject.Find("Skip") != null, "New game opens intro and blocks input");
         Click("Skip");
         Check(!Manager.InputBlocked && Manager.Player.CurrentHP == Manager.Player.MaxHP, "Skip restores player controls");
+        yield return LocomotionChecks();
         Manager.Player.TakeDamage(30);
         yield return new Pause(0.5);
         yield return PressKey(Key.Q);
@@ -234,6 +235,37 @@ public class PlanRuntimeChecks
         Click("Skip"); yield return Settled();
         Check(SceneManager.GetActiveScene().name == "MainMenu", "Ending returns to Main Menu");
         yield return AudioChecks();
+    }
+
+    private IEnumerator LocomotionChecks()
+    {
+        var original = Keyboard.current;
+        var keyboard = InputSystem.AddDevice<Keyboard>();
+        try
+        {
+            keyboard.MakeCurrent();
+            var player = Manager.Player;
+            var start = player.transform.position;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.D, Key.LeftShift));
+            yield return new Pause(0.9);
+            Check(player.transform.position.x > start.x + 2, "D movement advances player across CityCenter floor");
+            Check(player.GetComponent<PlayerController>().CurrentState == PlayerState.Running, "Held sprint reaches Running after dash");
+            float floor = player.transform.position.y;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.D, Key.LeftShift, Key.Space));
+            yield return new Pause(0.18);
+            var animator = player.GetComponent<Animator>();
+            Check(player.transform.position.y > floor + 0.2f, "Space physically lifts player while sprinting");
+            Check(animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") || animator.GetNextAnimatorStateInfo(0).IsName("Jump"), "Sprint jump enters takeoff animation");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return new Pause(1.6);
+            Check(Mathf.Abs(player.transform.position.y - floor) < 0.2f, "Jump lands back on CityCenter floor");
+            player.Rest();
+        }
+        finally
+        {
+            InputSystem.RemoveDevice(keyboard);
+            if (original != null && original.added) original.MakeCurrent();
+        }
     }
 
     private IEnumerator CombatChecks()
