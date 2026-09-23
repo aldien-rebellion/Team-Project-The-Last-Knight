@@ -1,6 +1,25 @@
 # PLAN.md implementation evidence
 
-Updated 2026-09-22. The goal is **active**, not complete.
+Updated 2026-09-23. The requested local commit handoff is complete; full PLAN.md acceptance remains outstanding.
+
+## Local commit handoff (2026-09-23)
+
+- Player-behind at the gate and Medusa save-point artwork are already committed. This handoff records the pending slope fix and optional full-route mode in `PlanRuntimeChecks.Run(true)` on `feature/map-bosses-placement`.
+- Kinematic collision selection now ignores contacts that do not oppose movement and selects the nearest opposing hit. Existing `SlopeMovementTests` passed 2/2 with no skips (job `5dae55df0ad64db0a15d0e2955dc1c2b`): walking along a shallow slope and stopping at a wall. `git diff --check` passed.
+- Physical route report `Captures/RuntimeQA/20260923-021111/report.txt` verifies Church boss/key/upstairs Rune 1, City Medusa Rune 2 and isolated save, market Rune 4 purchase, and arrival in SuburbToForest. It timed out at forest x=-125.5; it does not verify the full route after the slope fix.
+- The later route report `Captures/RuntimeQA/20260923-024320/report.txt` was aborted on leaving Play Mode and contains Input System assertions. Both reports confirm the existing user save and backup remained unchanged.
+- Unity was idle with compilation complete at handoff. The current Console still contains Input System `Assertion failed` entries during Play Mode state changes; zero-console-error acceptance is not established. No full playthrough was rerun for this commit-only request.
+
+| PLAN.md scope | Handoff status |
+|---|---|
+| M1, M2 | Implemented; prior component integration checks passed. Full acceptance audit remains. |
+| M3.1-M3.3 | Placements, rune sources and gate implemented; player-behind complete. Physical route verified through market and forest arrival; complete route remains. |
+| M4.1A | Human teammate audio sourcing, licensing and clip assignment remain. |
+| M4.1B, M4.2, M4.3 | Audio code, Medusa save/respawn and story implemented with prior integration evidence; final acceptance remains. |
+| M5.1-M5.2 | Difficulty and main menu implemented with prior integration evidence; final acceptance remains. |
+| M6.1 | Open: rerun complete physical route after slope fix, finish visual QA, and resolve/recheck Console errors. |
+| M6.2 | Not built, following the earlier instruction not to produce an executable. |
+| M0 / branch integration | Local feature-branch commit only; main merge and remote push are not completed by this handoff. |
 
 ## Current scope
 

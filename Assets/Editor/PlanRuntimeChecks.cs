@@ -29,13 +29,16 @@ public class PlanRuntimeChecks
     private readonly List<string> _errors = new List<string>();
     private string _realSave, _realBackup, _saveContents, _backupContents, _reportPath;
     private bool _ownsOverride;
+    private bool _fullRoute;
+    private InputSettings _routeOriginalSettings, _routeSettings;
     private GameManager Manager => GameManager.Instance;
 
-    public static string Run()
+    public static string Run(bool fullRoute = false)
     {
         if (!Application.isPlaying) throw new InvalidOperationException("Enter Play Mode first.");
         if (_active != null) return Status;
         _active = new PlanRuntimeChecks();
+        _active._fullRoute = fullRoute;
         // Synthetic gameplay input is routed to the focused Game View by the
         // project's existing Input System editor policy.
         EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView")).Focus();
@@ -80,7 +83,14 @@ public class PlanRuntimeChecks
         SaveSystem.EditorTestSavePath = Path.Combine(directory, "save.json");
         _ownsOverride = true;
         Application.logMessageReceived += OnLog;
-        var suite = Checks();
+        if (_fullRoute)
+        {
+            _routeOriginalSettings = InputSystem.settings;
+            _routeSettings = UnityEngine.Object.Instantiate(_routeOriginalSettings);
+            _routeSettings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
+            InputSystem.settings = _routeSettings;
+        }
+        var suite = _fullRoute ? RouteChecks() : Checks();
         while (true)
         {
             bool more; object next = null;
@@ -130,6 +140,56 @@ public class PlanRuntimeChecks
             InputSystem.RemoveDevice(keyboard);
             if (original != null && original.added) original.MakeCurrent();
         }
+    }
+
+    private IEnumerator WalkTo(float x, string scene = "")
+    {
+        PlanTraversalProbe.Start(x, scene);
+        while (PlanTraversalProbe.Status.StartsWith("Running"))
+        {
+            Status = "Route: " + PlanTraversalProbe.Status;
+            yield return null;
+        }
+        Check(PlanTraversalProbe.Status.StartsWith("PASS:"), PlanTraversalProbe.Status);
+        yield return Settled();
+    }
+
+    private IEnumerator RouteChecks()
+    {
+        Manager.NewGame(GameDifficulty.Easy); yield return Settled();
+        Click("Skip");
+        yield return WalkTo(-212.75f, "Church");
+        yield return WalkTo(82.38f);
+        Check(Manager.State.churchKey && !Manager.ArenaLocked, "Church boss defeated through attack input; arena released");
+        yield return PressKey(Key.F); yield return Settled();
+        Check(Manager.Player.transform.position.y > 10, "Church stairs and F door reach second floor");
+        yield return WalkTo(76f); yield return PressKey(Key.F);
+        Check(Manager.State.runes[0], "F opens keyed upstairs chest for Rune 1");
+        yield return WalkTo(85.85f); yield return PressKey(Key.F); yield return Settled();
+        Check(Manager.Player.transform.position.y < 10, "Church door returns downstairs");
+        yield return WalkTo(39.5f, "CityCenter");
+        yield return WalkTo(5f); yield return PressKey(Key.F);
+        Check(Manager.State.runes[1] && SaveSystem.HasSave, "City Medusa grants Rune 2 and writes isolated QA save");
+        yield return WalkTo(177f, "OutdoorMarket");
+        yield return WalkTo(-105f); yield return PressKey(Key.F);
+        Check(Manager.InputBlocked, "F opens market shop on physical route");
+        Click("Rune of the Trident — 150 Gold");
+        Check(Manager.State.runes[3], "Earned combat gold buys Rune 4");
+        Click("Close");
+        yield return WalkTo(118.61f, "SuburbToForest");
+        yield return WalkTo(93.25f, "DemonCastleEntrance");
+        Check(Manager.State.runes.All(r => r), "Forest combat acquires Rune 3 and retains every rune");
+        foreach (string rune in new[] { "Pentagram", "Demon Hand", "Evil Eye", "Trident" }) Click(rune);
+        double deadline = EditorApplication.timeSinceStartup + 20;
+        while (SceneManager.GetActiveScene().name != "DemonCastle" && EditorApplication.timeSinceStartup < deadline) yield return null;
+        Check(SceneManager.GetActiveScene().name == "DemonCastle", "Four rune buttons open castle during physical route");
+        yield return Settled();
+        PlanTraversalProbe.Start(32f);
+        while (PlanTraversalProbe.Status.StartsWith("Running") && !Manager.State.victory) yield return null;
+        PlanTraversalProbe.Stop("Final encounter finished");
+        Check(Manager.State.victory && GameObject.Find("A KINGDOM REBORN") != null, "Final boss defeated through attack input and ending displayed");
+        Click("Skip"); yield return Settled();
+        Check(SceneManager.GetActiveScene().name == "MainMenu", "Complete physical route returns to menu");
     }
 
     private IEnumerator Checks()
@@ -388,7 +448,7 @@ public class PlanRuntimeChecks
             && (File.Exists(_realBackup) ? File.ReadAllText(_realBackup) : null) == _backupContents;
         _results.Add((unchanged ? "PASS" : "FAIL") + " Existing user save and backup unchanged");
         if (!unchanged) Status = "FAILED: user save changed";
-        File.WriteAllText(_reportPath, Status + "\nComponent-driven integration only; physical traversal not covered.\n" + string.Join("\n", _results) + "\n" + string.Join("\n", _errors));
+        File.WriteAllText(_reportPath, Status + (_fullRoute ? "\nPhysical keyboard/mouse route; UI buttons invoked through their click events.\n" : "\nComponent-driven integration only; physical traversal not covered.\n") + string.Join("\n", _results) + "\n" + string.Join("\n", _errors));
         Status += " | " + _reportPath;
         Cleanup();
     }
@@ -398,6 +458,9 @@ public class PlanRuntimeChecks
         _active = null;
         Application.logMessageReceived -= OnLog;
         if (_ownsOverride) SaveSystem.EditorTestSavePath = null;
+        if (_fullRoute) PlanTraversalProbe.Stop("Route check ended");
+        if (_routeOriginalSettings != null) InputSystem.settings = _routeOriginalSettings;
+        if (_routeSettings != null) DestroyImmediate(_routeSettings);
         Time.timeScale = 1;
     }
 }

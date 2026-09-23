@@ -84,7 +84,7 @@ namespace TheLastKnight.Physics
             float castDistance = Mathf.Abs(xDist) + _skinWidth;
 
             int count = _rigidbody.Cast(directionX, _contactFilter, _hitBuffer, castDistance);
-            RaycastHit2D closestHit = GetClosestValidHit(count);
+            RaycastHit2D closestHit = GetClosestValidHit(count, directionX);
 
             if (closestHit.collider != null)
             {
@@ -106,7 +106,7 @@ namespace TheLastKnight.Physics
                     // Cast along the slope direction to verify if there's an obstacle on the slope
                     Vector2 slopeDirection = new Vector2(closestHit.normal.y, -closestHit.normal.x) * Mathf.Sign(xDist);
                     int slopeCount = _rigidbody.Cast(slopeDirection, _contactFilter, _hitBuffer, absX + _skinWidth);
-                    RaycastHit2D slopeHit = GetClosestValidHit(slopeCount);
+                    RaycastHit2D slopeHit = GetClosestValidHit(slopeCount, slopeDirection);
 
                     if (slopeHit.collider != null)
                     {
@@ -142,7 +142,7 @@ namespace TheLastKnight.Physics
             Vector2 directionY = new Vector2(0, Mathf.Sign(yDist == 0 ? -1f : yDist));
 
             int count = _rigidbody.Cast(directionY, _contactFilter, _hitBuffer, castDistance);
-            RaycastHit2D closestHit = GetClosestValidHit(count);
+            RaycastHit2D closestHit = GetClosestValidHit(count, directionY);
 
             if (closestHit.collider != null)
             {
@@ -171,7 +171,7 @@ namespace TheLastKnight.Physics
 
             // Small downward cast to detect if the character is standing on the ground
             int count = _rigidbody.Cast(Vector2.down, _contactFilter, _hitBuffer, _skinWidth * 2f);
-            RaycastHit2D closestHit = GetClosestValidHit(count);
+            RaycastHit2D closestHit = GetClosestValidHit(count, Vector2.down);
 
             if (closestHit.collider != null)
             {
@@ -183,17 +183,18 @@ namespace TheLastKnight.Physics
             }
         }
 
-        private RaycastHit2D GetClosestValidHit(int count)
+        private RaycastHit2D GetClosestValidHit(int count, Vector2 direction)
         {
             RaycastHit2D closestHit = default;
 
             for (int i = 0; i < count; i++)
             {
                 var hit = _hitBuffer[i];
-                if (hit.collider != null && !hit.collider.isTrigger)
+                if (hit.collider != null && !hit.collider.isTrigger && Vector2.Dot(hit.normal, direction) < -0.001f)
                 {
-                    // Since Rigidbody.Cast returns ordered list, the first non-trigger hit is the closest
-                    return hit;
+                    // Touching the floor is not an obstruction when moving along
+                    // it or away from it. Only keep surfaces opposing movement.
+                    if (closestHit.collider == null || hit.distance < closestHit.distance) closestHit = hit;
                 }
             }
 
