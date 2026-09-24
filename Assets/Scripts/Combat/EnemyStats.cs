@@ -18,6 +18,8 @@ namespace TheLastKnight.Combat
         [SerializeField] private float _maxHealth = 50f;
         [SerializeField] private float _defense = 0f;
         [SerializeField] private float _attackPower = 10f;
+        [SerializeField, Min(1)] private int _level = 1;
+        public int Level => _level;
         [SerializeField] private int _goldReward = 8;
         [SerializeField] private int _expReward = 15;
         public void SetRewards(int gold, int experience) { _goldReward = gold; _expReward = experience; }

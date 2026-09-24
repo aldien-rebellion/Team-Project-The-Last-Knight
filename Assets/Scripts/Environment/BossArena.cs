@@ -28,7 +28,7 @@ namespace TheLastKnight.Environment
         {
             GameManager.Instance.ArenaLocked = false;
             foreach (var barrier in barriers) if (barrier != null) barrier.SetActive(false);
-            TheLastKnight.Audio.AudioManager.Instance?.PlayMusic("Castle");
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySceneMusic(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
         private void OnDestroy() { if (boss != null) boss.OnDeath -= Unlock; }
     }

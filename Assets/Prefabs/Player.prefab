@@ -76,10 +76,10 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 2.56, y: 2.56}
+    newSize: {x: 2.56, y: 2.56}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
@@ -175,18 +175,18 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 332267243
-  m_SortingLayer: 6
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 9a651654adb8a61418a9ae18f1e21f6f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
 --- !u!114 &4473826929244499779
@@ -230,6 +230,11 @@ MonoBehaviour:
   _baseDashSpeed: 20
   _baseDashDuration: 0.2
   _dashCooldown: 0.5
+  _attackSize: {x: 2.2, y: 2}
+  _attackOffset: {x: 1.1, y: 0}
+  _attackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &1724093317913346435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,6 +256,9 @@ MonoBehaviour:
   _dexterity: 0
   _agility: 0
   _currentHP: 0
+  _currentStamina: 100
+  _gold: 0
+  _healingPotions: 3
 --- !u!114 &7102006163998495775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,7 +281,7 @@ Animator:
   m_GameObject: {fileID: 3696692319623942783}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1fb6a927a6113be419e95c0395dcced3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -66,6 +66,7 @@ namespace TheLastKnight.Combat
             ring.material = new Material(Shader.Find("Sprites/Default"));
             ring.startColor = ring.endColor = Color.yellow;
             ring.sortingOrder = 101;
+            ring.sortingLayerName = "InGame_UI";
             return ring;
         }
 

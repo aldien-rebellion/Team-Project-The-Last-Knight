@@ -14,9 +14,9 @@ namespace TheLastKnight.Tests
     [TestFixture]
     public class PlayerAnimationTests
     {
-        private const string AnimationFolder = "Assets/Animations/";
+        private const string AnimationFolder = "Assets/Animations/player/";
         private const string SpriteFolder = "Assets/Sprites/Player/";
-        private const string ControllerPath = "Assets/Animations/_Player.controller";
+        private const string ControllerPath = AnimationFolder + "_Player.controller";
 
         private AnimatorController _controller;
 
@@ -47,7 +47,8 @@ namespace TheLastKnight.Tests
         private static readonly object[] ClipSpriteData =
         {
             new object[] { "Idle",      "player-idle",      3 },
-            new object[] { "Walk",      "player-walk",      6 },
+            // Eight authored poses, with pose seven held across two keyframes.
+            new object[] { "Walk",      "player-walk",      9 },
             new object[] { "Run",       "player-run",       4 },
             new object[] { "Attack",    "player-attack",    3 },
             new object[] { "Dash",      "player-dash",      4 },
@@ -112,7 +113,8 @@ namespace TheLastKnight.Tests
                 var sprite = keyframes[i].value as Sprite;
                 Assert.IsNotNull(sprite, $"Keyframe {i} is not a Sprite");
 
-                string expectedNamePrefix = spriteBase + (i + 1);
+                int pose = clipName == "Walk" ? new[] { 1, 2, 3, 4, 5, 6, 7, 7, 8 }[i] : i + 1;
+                string expectedNamePrefix = spriteBase + pose;
                 Assert.IsTrue(sprite.name.StartsWith(expectedNamePrefix),
                     $"Clip '{clipName}' keyframe {i}: expected sprite name starting with '{expectedNamePrefix}' but got '{sprite.name}'");
             }
@@ -126,7 +128,7 @@ namespace TheLastKnight.Tests
         {
             //             clip name,    expectedLoop, minFrameRate
             new object[] { "Idle",       true,  4f },
-            new object[] { "Walk",       true,  8f },
+            new object[] { "Walk",       true,  6f },
             new object[] { "Run",        true,  8f },
             new object[] { "Attack",     false, 8f },
             new object[] { "Dash",       false, 8f },
@@ -311,20 +313,27 @@ namespace TheLastKnight.Tests
                 "AnyState->Dash should use 'IsDashing' parameter");
         }
 
-        [Test]
-        public void Transition_AnyStateToJump_OnIsJumping()
+        [TestCase("Idle")]
+        [TestCase("Walk")]
+        [TestCase("Run")]
+        public void Transition_LocomotionToJump_OnIsJumping(string source)
         {
             Assert.IsNotNull(_controller);
             var rootSM = _controller.layers[0].stateMachine;
 
-            var anyTransition = rootSM.anyStateTransitions
+            // Jump starts from locomotion; an AnyState transition could restart
+            // the takeoff pose while already airborne or interrupt combat.
+            var state = rootSM.states.First(s => s.state.name == source).state;
+            var anyTransition = state.transitions
                 .FirstOrDefault(t => t.destinationState != null && t.destinationState.name == "Jump");
-            Assert.IsNotNull(anyTransition, "No AnyState transition to Jump");
+            Assert.IsNotNull(anyTransition, $"No {source} transition to Jump");
 
             var condition = anyTransition.conditions
                 .FirstOrDefault(c => c.parameter == "IsJumping");
             Assert.IsTrue(condition.parameter == "IsJumping",
-                "AnyState->Jump should use 'IsJumping' parameter");
+                $"{source}->Jump should use 'IsJumping' parameter");
+            Assert.AreEqual(AnimatorConditionMode.If, condition.mode);
+            Assert.IsFalse(anyTransition.hasExitTime, "Jump must respond immediately");
         }
 
         [Test]
@@ -393,13 +402,9 @@ namespace TheLastKnight.Tests
         [Test]
         public void Player_SpriteRendererHasSprite()
         {
-            // Load from scene - find Player prefab or check current scene
-            var player = GameObject.Find("Player");
-            if (player == null)
-            {
-                Assert.Inconclusive("Player GameObject not found in current scene. Open a scene with Player to run this test.");
-                return;
-            }
+            // Asset checks must not depend on the test runner's temporary scene.
+            var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab");
+            Assert.IsNotNull(player, "Player prefab is missing");
 
             var sr = player.GetComponent<SpriteRenderer>();
             Assert.IsNotNull(sr, "Player has no SpriteRenderer");
@@ -409,12 +414,8 @@ namespace TheLastKnight.Tests
         [Test]
         public void Player_AnimatorHasController()
         {
-            var player = GameObject.Find("Player");
-            if (player == null)
-            {
-                Assert.Inconclusive("Player GameObject not found in current scene.");
-                return;
-            }
+            var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab");
+            Assert.IsNotNull(player, "Player prefab is missing");
 
             var animator = player.GetComponent<Animator>();
             Assert.IsNotNull(animator, "Player has no Animator component");
