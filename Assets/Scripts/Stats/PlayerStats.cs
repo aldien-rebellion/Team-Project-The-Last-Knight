@@ -60,6 +60,11 @@ namespace TheLastKnight.Stats
             return UpgradeStat(stat);
         }
         private readonly System.Collections.Generic.HashSet<Object> _regenAuras = new System.Collections.Generic.HashSet<Object>();
+        private float _lastDamageTime = -100f;
+        public const float HPRegenDelay = 5f;
+        public const float BaseHPRegenRate = 0.02f; // 2% of MaxHP per second
+        public float LastDamageTime => _lastDamageTime;
+        public void SetLastDamageTimeForTesting(float time) => _lastDamageTime = time;
 
         public void SetRegenAura(Object source, bool active)
         {
@@ -78,12 +83,26 @@ namespace TheLastKnight.Stats
             if (IsDead || _playerController == null) return;
             _regenAuras.RemoveWhere(source => source == null);
             if (_playerController.CurrentState == PlayerState.Idle || _playerController.CurrentState == PlayerState.Walking)
+            {
                 _currentStamina = Mathf.Min(MaxStamina, _currentStamina + (_regenAuras.Count > 0 ? 40f : 20f)
                     * TheLastKnight.Core.GameDifficultyManager.Regeneration * Time.deltaTime);
+
+                RegenerateHP(Time.deltaTime);
+            }
+        }
+
+        public void RegenerateHP(float deltaTime)
+        {
+            if (IsDead || _playerController == null) return;
+            if (_playerController.CurrentState != PlayerState.Idle && _playerController.CurrentState != PlayerState.Walking) return;
+            if (Time.time - _lastDamageTime < HPRegenDelay || _currentHP >= MaxHP) return;
+
+            float regenRate = BaseHPRegenRate * TheLastKnight.Core.GameDifficultyManager.Regeneration;
+            _currentHP = Mathf.Min(MaxHP, _currentHP + MaxHP * regenRate * deltaTime);
         }
 
         public void Heal(float amount) => _currentHP = Mathf.Min(MaxHP, _currentHP + Mathf.Max(0, amount));
-        public void Rest() { _currentHP = MaxHP; _currentStamina = MaxStamina; }
+        public void Rest() { _currentHP = MaxHP; _currentStamina = MaxStamina; _lastDamageTime = -100f; }
 
         // Derived calculations (cached for other systems to query)
         [CreateProperty]
@@ -273,6 +292,10 @@ namespace TheLastKnight.Stats
 
             if (IsDead) return;
             damage = Mathf.Max(0f, damage) * TheLastKnight.Core.GameDifficultyManager.EnemyDamage;
+            if (damage > 0f)
+            {
+                _lastDamageTime = Time.time;
+            }
             _currentHP -= damage;
             _currentHP = Mathf.Max(_currentHP, 0);
             Debug.Log($"[PlayerStats] Arthur took {damage} damage! HP: {_currentHP}/{MaxHP}");
@@ -310,6 +333,7 @@ namespace TheLastKnight.Stats
             RecalculateStats();
             _currentHP = Mathf.Clamp(state.hp, 0, MaxHP);
             _currentStamina = Mathf.Clamp(state.stamina, 0, MaxStamina);
+            _lastDamageTime = -100f;
         }
     }
 }
