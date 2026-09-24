@@ -2,6 +2,8 @@
 
 Updated 2026-09-23. The requested local commit handoff is complete; full PLAN.md acceptance remains outstanding.
 
+Latest M1–M5 source/acceptance audit: [M1_M5_ACCEPTANCE_AUDIT.md](M1_M5_ACCEPTANCE_AUDIT.md). Direct HTTP MCP session recovered live access after the built-in connector's HTTP 404; fresh EditMode tests passed 107/107 (job `d07dbc6bb18b4ea98a39b918a755983c`). Latest sampled Console errors are Unity AI `NoSubscription` exceptions. Identified gaps include missing human audio assets/catalog assignments and unspecified/unimplemented HP regeneration scaling in Hard; do not mark M1–M5 fully accepted.
+
 ## Local commit handoff (2026-09-23)
 
 - Player-behind at the gate and Medusa save-point artwork are already committed. This handoff records the pending slope fix and optional full-route mode in `PlanRuntimeChecks.Run(true)` on `feature/map-bosses-placement`.
@@ -22,6 +24,8 @@ Updated 2026-09-23. The requested local commit handoff is complete; full PLAN.md
 | M0 / branch integration | Local feature-branch commit only; main merge and remote push are not completed by this handoff. |
 
 ## Current scope
+
+- M5.1 completed: User confirmed HP regeneration rules (2% of MaxHP/s for Easy/Normal, 1% of MaxHP/s for Hard when standing/walking and 5s after taking damage) and confirmed keeping helper UI hiding scope (hide enemy floating health bar and parry circle on Hard, hide enemy level on Normal/Hard). Implemented in `PlayerStats.cs` and expanded `DifficultyTests.cs`. All 117/117 EditMode tests passed without errors or skips (job `98c6a707c7c44305bf29133bb7e8c3f5`).
 
 - Implement the AI-assigned work in PLAN.md.
 - Use `Assets/sprites/Player/player-behind.png` at DemonCastleEntrance.
