@@ -80,6 +80,7 @@ crashlytics-build.properties
 
 *.slnx
 /Assets/Screenshots/
+/Captures/
 
 # Custom Editor Helpers / Tools
 /Assets/Editor/Helpers/
