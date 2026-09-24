@@ -26525,7 +26525,13 @@ MonoBehaviour:
   _target: {fileID: 1794657369}
   _smoothTime: 0.2
   _offset: {x: 0, y: 0, z: -10}
-  _deadzoneSize: {x: 1, y: 1}
+  _useFeetFraming: 1
+  _targetViewportY: 0.1
+  _enableZoom: 1
+  _maxZoomMultiplier: 4
+  _zoomStep: 1
+  _zoomSmoothTime: 0.15
+  _deadzoneSize: {x: 1, y: 0}
   _useBoundaries: 0
   _boundaryBox: {fileID: 0}
 --- !u!114 &488874008
@@ -26640,7 +26646,7 @@ Transform:
   m_GameObject: {fileID: 488874006}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.558698, y: 17.438961, z: -10}
+  m_LocalPosition: {x: -25, y: 3.1000001, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
