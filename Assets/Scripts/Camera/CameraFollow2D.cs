@@ -23,16 +23,16 @@ namespace TheLastKnight.Camera
         [Tooltip("Horizontal distance the camera leads ahead of the player at standard 1x zoom.")]
         [SerializeField] private float _lookAheadDistance = 4.0f;
         [Tooltip("Smooth time in seconds when shifting forward.")]
-        [SerializeField] private float _lookAheadSmoothTime = 0.25f;
+        [SerializeField] private float _lookAheadSmoothTime = 1.2f;
         [Tooltip("Smooth time in seconds when returning to center.")]
-        [SerializeField] private float _lookAheadReturnSmoothTime = 0.45f;
+        [SerializeField] private float _lookAheadReturnSmoothTime = 2.0f;
         [Tooltip("Minimum movement speed in units/second to trigger look-ahead.")]
         [SerializeField] private float _lookAheadSpeedThreshold = 0.5f;
 
         [Header("Zoom")]
         [SerializeField] private bool _enableZoom = true;
         [SerializeField] private float _minZoomMultiplier = 0.5f;
-        [SerializeField] private float _maxZoomMultiplier = 2.5f;
+        [SerializeField] private float _maxZoomMultiplier = 2.0f;
         [SerializeField] private float _zoomStep = 0.5f;
         [SerializeField] private float _zoomSmoothTime = 0.15f;
 

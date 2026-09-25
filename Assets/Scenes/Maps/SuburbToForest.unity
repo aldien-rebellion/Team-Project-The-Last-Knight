@@ -21010,12 +21010,12 @@ MonoBehaviour:
   _targetViewportY: 0.2
   _enableLookAhead: 1
   _lookAheadDistance: 4
-  _lookAheadSmoothTime: 0.25
-  _lookAheadReturnSmoothTime: 0.45
+  _lookAheadSmoothTime: 1.2
+  _lookAheadReturnSmoothTime: 2
   _lookAheadSpeedThreshold: 0.5
   _enableZoom: 1
   _minZoomMultiplier: 0.5
-  _maxZoomMultiplier: 2.5
+  _maxZoomMultiplier: 2
   _zoomStep: 0.5
   _zoomSmoothTime: 0.15
   _deadzoneSize: {x: 1, y: 0}
@@ -21133,7 +21133,7 @@ Transform:
   m_GameObject: {fileID: 488874006}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -185, y: -0.6, z: -10}
+  m_LocalPosition: {x: -184.76042, y: -0.6, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
