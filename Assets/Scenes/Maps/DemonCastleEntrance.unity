@@ -1477,12 +1477,14 @@ MonoBehaviour:
   _useFeetFraming: 1
   _targetViewportY: 0.2
   _enableLookAhead: 1
-  _lookAheadDistance: 2.5
-  _lookAheadSmoothTime: 0.5
+  _lookAheadDistance: 4
+  _lookAheadSmoothTime: 0.25
+  _lookAheadReturnSmoothTime: 0.45
   _lookAheadSpeedThreshold: 0.5
   _enableZoom: 1
+  _minZoomMultiplier: 0.5
   _maxZoomMultiplier: 2.5
-  _zoomStep: 1
+  _zoomStep: 0.5
   _zoomSmoothTime: 0.15
   _deadzoneSize: {x: 1, y: 0}
   _useBoundaries: 1

@@ -18,19 +18,22 @@ namespace TheLastKnight.Camera
         [SerializeField] private float _targetViewportY = 0.20f;
 
         [Header("Look-Ahead / Movement Lead")]
-        [Tooltip("When enabled, camera gradually shifts in the direction the player is moving, and returns when standing still.")]
+        [Tooltip("When enabled, camera noticeably shifts forward in the direction the player is moving, and returns to center when standing still.")]
         [SerializeField] private bool _enableLookAhead = true;
-        [Tooltip("Maximum horizontal distance the camera leads ahead of the player.")]
-        [SerializeField] private float _lookAheadDistance = 2.5f;
-        [Tooltip("Smooth time in seconds for the look-ahead shift and return.")]
-        [SerializeField] private float _lookAheadSmoothTime = 0.5f;
+        [Tooltip("Horizontal distance the camera leads ahead of the player at standard 1x zoom.")]
+        [SerializeField] private float _lookAheadDistance = 4.0f;
+        [Tooltip("Smooth time in seconds when shifting forward.")]
+        [SerializeField] private float _lookAheadSmoothTime = 0.25f;
+        [Tooltip("Smooth time in seconds when returning to center.")]
+        [SerializeField] private float _lookAheadReturnSmoothTime = 0.45f;
         [Tooltip("Minimum movement speed in units/second to trigger look-ahead.")]
         [SerializeField] private float _lookAheadSpeedThreshold = 0.5f;
 
         [Header("Zoom")]
         [SerializeField] private bool _enableZoom = true;
+        [SerializeField] private float _minZoomMultiplier = 0.5f;
         [SerializeField] private float _maxZoomMultiplier = 2.5f;
-        [SerializeField] private float _zoomStep = 1.0f;
+        [SerializeField] private float _zoomStep = 0.5f;
         [SerializeField] private float _zoomSmoothTime = 0.15f;
 
         [Header("Deadzone")]
@@ -52,6 +55,7 @@ namespace TheLastKnight.Camera
         private float _targetLookAheadX;
         private float _currentLookAheadX;
         private float _lookAheadVelocity;
+        private TheLastKnight.Player.PlayerController _cachedPlayerController;
 
         public float TargetViewportY
         {
@@ -83,6 +87,12 @@ namespace TheLastKnight.Camera
             set => _lookAheadSmoothTime = value;
         }
 
+        public float LookAheadReturnSmoothTime
+        {
+            get => _lookAheadReturnSmoothTime;
+            set => _lookAheadReturnSmoothTime = value;
+        }
+
         public float LookAheadSpeedThreshold
         {
             get => _lookAheadSpeedThreshold;
@@ -96,6 +106,12 @@ namespace TheLastKnight.Camera
         {
             get => _enableZoom;
             set => _enableZoom = value;
+        }
+
+        public float MinZoomMultiplier
+        {
+            get => _minZoomMultiplier;
+            set => _minZoomMultiplier = Mathf.Clamp(value, 0.1f, 1f);
         }
 
         public float MaxZoomMultiplier
@@ -127,17 +143,12 @@ namespace TheLastKnight.Camera
                 var player = GameObject.FindGameObjectWithTag("Player");
                 if (player != null)
                 {
-                    _target = player.transform;
+                    SetTarget(player.transform);
                 }
-            }
-
-            if (_target != null)
-            {
-                _lastTargetPosition = _target.position;
             }
             else
             {
-                _lastTargetPosition = transform.position;
+                SetTarget(_target);
             }
         }
 
@@ -214,12 +225,12 @@ namespace TheLastKnight.Camera
                     _targetOrthographicSize = _baseOrthographicSize;
                 }
 
-                float minSize = _baseOrthographicSize;
+                float minSize = _baseOrthographicSize * _minZoomMultiplier;
                 float maxSize = _baseOrthographicSize * _maxZoomMultiplier;
-                float step = _zoomStep > 0f ? _zoomStep : (_baseOrthographicSize * 0.25f);
+                float step = _zoomStep > 0f ? _zoomStep : (_baseOrthographicSize * 0.1f);
 
-                // scroll < 0 is scroll backward/down -> zoom out (increase orthographic size)
-                // scroll > 0 is scroll forward/up -> zoom in (decrease orthographic size)
+                // scroll < 0 is scroll backward/down -> zoom out (increase orthographic size up to 2.5x)
+                // scroll > 0 is scroll forward/up -> zoom in (decrease orthographic size down to 0.5x)
                 if (scroll < 0f)
                 {
                     _targetOrthographicSize = Mathf.Min(_targetOrthographicSize + step, maxSize);
@@ -278,8 +289,7 @@ namespace TheLastKnight.Camera
                 var player = GameObject.FindGameObjectWithTag("Player");
                 if (player != null)
                 {
-                    _target = player.transform;
-                    _lastTargetPosition = _target.position;
+                    SetTarget(player.transform);
                 }
                 else return;
             }
@@ -287,7 +297,7 @@ namespace TheLastKnight.Camera
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
             float camHeight = _cam != null ? _cam.orthographicSize : 5f;
 
-            // Update Look-Ahead offset based on target movement
+            // Measure target movement speed
             float dt = Application.isPlaying ? Time.deltaTime : 0f;
             if (dt > 0.0001f)
             {
@@ -301,22 +311,35 @@ namespace TheLastKnight.Camera
                 _lastTargetPosition = _target.position;
             }
 
+            // Determine effective movement speed (prefer PlayerController Velocity for zero-latency response)
+            float moveX = _targetMoveSpeedX;
+            if (_cachedPlayerController != null && Mathf.Abs(_cachedPlayerController.Velocity.x) > 0.01f)
+            {
+                moveX = _cachedPlayerController.Velocity.x;
+            }
+
             if (_enableLookAhead)
             {
-                // When moving: lead ahead in direction of movement
-                // When idle: return to 0 (center back on player)
-                if (Mathf.Abs(_targetMoveSpeedX) > _lookAheadSpeedThreshold)
+                // Scale look-ahead distance proportionally with zoom level so the framing is consistently noticeable
+                float zoomScale = (_baseOrthographicSize > 0.01f) ? (camHeight / _baseOrthographicSize) : 1f;
+                float effectiveDistance = _lookAheadDistance * zoomScale;
+
+                // When moving: actively shift forward in movement direction
+                // When standing still / idle: return to 0 (center back on player)
+                bool isMoving = Mathf.Abs(moveX) > _lookAheadSpeedThreshold;
+                if (isMoving)
                 {
-                    _targetLookAheadX = Mathf.Sign(_targetMoveSpeedX) * _lookAheadDistance;
+                    _targetLookAheadX = Mathf.Sign(moveX) * effectiveDistance;
                 }
                 else
                 {
                     _targetLookAheadX = 0f;
                 }
 
+                float smoothTime = isMoving ? _lookAheadSmoothTime : _lookAheadReturnSmoothTime;
                 if (Application.isPlaying)
                 {
-                    _currentLookAheadX = Mathf.SmoothDamp(_currentLookAheadX, _targetLookAheadX, ref _lookAheadVelocity, _lookAheadSmoothTime);
+                    _currentLookAheadX = Mathf.SmoothDamp(_currentLookAheadX, _targetLookAheadX, ref _lookAheadVelocity, smoothTime);
                 }
                 else
                 {
@@ -417,6 +440,11 @@ namespace TheLastKnight.Camera
             if (_target != null)
             {
                 _lastTargetPosition = _target.position;
+                _cachedPlayerController = _target.GetComponent<TheLastKnight.Player.PlayerController>();
+            }
+            else
+            {
+                _cachedPlayerController = null;
             }
             _targetMoveSpeedX = 0f;
             _targetLookAheadX = 0f;
@@ -441,7 +469,7 @@ namespace TheLastKnight.Camera
         {
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
             if (_baseOrthographicSize <= 0.01f && _cam != null) _baseOrthographicSize = _cam.orthographicSize;
-            _targetOrthographicSize = Mathf.Clamp(_baseOrthographicSize * multiplier, _baseOrthographicSize, _baseOrthographicSize * _maxZoomMultiplier);
+            _targetOrthographicSize = Mathf.Clamp(_baseOrthographicSize * multiplier, _baseOrthographicSize * _minZoomMultiplier, _baseOrthographicSize * _maxZoomMultiplier);
         }
 
         public void ResetZoom()
@@ -498,7 +526,8 @@ namespace TheLastKnight.Camera
             _targetMoveSpeedX = speedX;
             if (_enableLookAhead)
             {
-                if (Mathf.Abs(_targetMoveSpeedX) > _lookAheadSpeedThreshold)
+                bool isMoving = Mathf.Abs(_targetMoveSpeedX) > _lookAheadSpeedThreshold;
+                if (isMoving)
                 {
                     _targetLookAheadX = Mathf.Sign(_targetMoveSpeedX) * _lookAheadDistance;
                 }
@@ -507,7 +536,8 @@ namespace TheLastKnight.Camera
                     _targetLookAheadX = 0f;
                 }
 
-                _currentLookAheadX = Mathf.SmoothDamp(_currentLookAheadX, _targetLookAheadX, ref _lookAheadVelocity, _lookAheadSmoothTime, Mathf.Infinity, deltaTime);
+                float smoothTime = isMoving ? _lookAheadSmoothTime : _lookAheadReturnSmoothTime;
+                _currentLookAheadX = Mathf.SmoothDamp(_currentLookAheadX, _targetLookAheadX, ref _lookAheadVelocity, smoothTime, Mathf.Infinity, deltaTime);
             }
         }
     }

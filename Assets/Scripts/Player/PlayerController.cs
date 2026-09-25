@@ -139,6 +139,7 @@ namespace TheLastKnight.Player
 
         // Movement variables
         private Vector2 _velocity;
+        public Vector2 Velocity => _velocity;
         public void ResetVelocity() => _velocity = Vector2.zero;
         public bool IsFacingRight { get; private set; } = true;
 

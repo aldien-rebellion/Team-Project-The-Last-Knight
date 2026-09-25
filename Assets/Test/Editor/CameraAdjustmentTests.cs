@@ -58,7 +58,7 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
-        public void CameraFollow_ZoomOut_SupportsUpTo2Point5x()
+        public void CameraFollow_Zoom_SupportsBoth0Point5xAnd2Point5x()
         {
             var camGo = new GameObject("TestCamera");
             var cam = camGo.AddComponent<UnityEngine.Camera>();
@@ -69,11 +69,18 @@ namespace TheLastKnight.Tests
             try
             {
                 SetProp(follow, "EnableZoom", true);
+                SetProp(follow, "MinZoomMultiplier", 0.5f);
                 SetProp(follow, "MaxZoomMultiplier", 2.5f);
-                Invoke(follow, "SetZoomMultiplier", 2.5f);
 
-                float targetSize = (float)GetProp(follow, "TargetOrthographicSize");
-                Assert.That(targetSize, Is.EqualTo(12.5f).Within(0.01f), "Target orthographic size should be 2.5x of base size 5");
+                // Test zoom in down to 0.5x
+                Invoke(follow, "SetZoomMultiplier", 0.5f);
+                float minTargetSize = (float)GetProp(follow, "TargetOrthographicSize");
+                Assert.That(minTargetSize, Is.EqualTo(2.5f).Within(0.01f), "Target orthographic size should be 0.5x (2.5) of base size 5");
+
+                // Test zoom out up to 2.5x
+                Invoke(follow, "SetZoomMultiplier", 2.5f);
+                float maxTargetSize = (float)GetProp(follow, "TargetOrthographicSize");
+                Assert.That(maxTargetSize, Is.EqualTo(12.5f).Within(0.01f), "Target orthographic size should be 2.5x (12.5) of base size 5");
             }
             finally
             {
@@ -82,7 +89,7 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
-        public void CameraFollow_FeetFraming_MaintainsTwentyPercentAt2Point5xZoom()
+        public void CameraFollow_FeetFraming_MaintainsTwentyPercentAcrossZoomLevels()
         {
             var camGo = new GameObject("TestCamera");
             var cam = camGo.AddComponent<UnityEngine.Camera>();
@@ -101,17 +108,31 @@ namespace TheLastKnight.Tests
                 Invoke(follow, "SetTarget", targetGo.transform);
                 SetProp(follow, "UseFeetFraming", true);
                 SetProp(follow, "TargetViewportY", 0.20f);
-
-                // Zoom to 2.5x
+                SetProp(follow, "MinZoomMultiplier", 0.5f);
                 SetProp(follow, "MaxZoomMultiplier", 2.5f);
+
+                Vector3 feetPos = new Vector3(targetGo.transform.position.x, col.bounds.min.y, targetGo.transform.position.z);
+
+                // 1. Zoom In 0.5x (size = 2.5)
+                Invoke(follow, "SetZoomMultiplier", 0.5f);
+                cam.orthographicSize = 2.5f;
+                Invoke(follow, "SnapTo", targetGo.transform.position);
+                Vector3 vpIn = cam.WorldToViewportPoint(feetPos);
+                Assert.That(vpIn.y, Is.EqualTo(0.20f).Within(0.01f), "Feet should be at 20% viewport Y at 0.5x zoom");
+
+                // 2. Normal 1.0x (size = 5.0)
+                Invoke(follow, "SetZoomMultiplier", 1.0f);
+                cam.orthographicSize = 5.0f;
+                Invoke(follow, "SnapTo", targetGo.transform.position);
+                Vector3 vpNormal = cam.WorldToViewportPoint(feetPos);
+                Assert.That(vpNormal.y, Is.EqualTo(0.20f).Within(0.01f), "Feet should be at 20% viewport Y at 1.0x zoom");
+
+                // 3. Zoom Out 2.5x (size = 12.5)
                 Invoke(follow, "SetZoomMultiplier", 2.5f);
                 cam.orthographicSize = 12.5f;
                 Invoke(follow, "SnapTo", targetGo.transform.position);
-
-                Vector3 feetPos = new Vector3(targetGo.transform.position.x, col.bounds.min.y, targetGo.transform.position.z);
-                Vector3 vp = cam.WorldToViewportPoint(feetPos);
-
-                Assert.That(vp.y, Is.EqualTo(0.20f).Within(0.01f), "Player's feet should remain at 20% viewport height even when zoomed out 2.5x");
+                Vector3 vpOut = cam.WorldToViewportPoint(feetPos);
+                Assert.That(vpOut.y, Is.EqualTo(0.20f).Within(0.01f), "Feet should be at 20% viewport Y at 2.5x zoom");
             }
             finally
             {
@@ -132,8 +153,9 @@ namespace TheLastKnight.Tests
             try
             {
                 SetProp(follow, "EnableLookAhead", true);
-                SetProp(follow, "LookAheadDistance", 2.5f);
-                SetProp(follow, "LookAheadSmoothTime", 0.3f);
+                SetProp(follow, "LookAheadDistance", 4.0f);
+                SetProp(follow, "LookAheadSmoothTime", 0.25f);
+                SetProp(follow, "LookAheadReturnSmoothTime", 0.35f);
                 SetProp(follow, "LookAheadSpeedThreshold", 0.5f);
 
                 // 1. Simulate moving right (speed = +8) over multiple updates
@@ -142,7 +164,7 @@ namespace TheLastKnight.Tests
                     Invoke(follow, "SimulateMovementForTesting", 8.0f, 0.05f);
                 }
                 float lookAheadRight = (float)GetProp(follow, "CurrentLookAheadX");
-                Assert.That(lookAheadRight, Is.GreaterThan(1.5f), "Look-ahead should lead forward to the right when moving right");
+                Assert.That(lookAheadRight, Is.GreaterThan(2.5f), "Look-ahead should noticeably shift forward to the right when moving right");
 
                 // 2. Simulate moving left (speed = -8) over multiple updates
                 for (int i = 0; i < 40; i++)
@@ -150,7 +172,7 @@ namespace TheLastKnight.Tests
                     Invoke(follow, "SimulateMovementForTesting", -8.0f, 0.05f);
                 }
                 float lookAheadLeft = (float)GetProp(follow, "CurrentLookAheadX");
-                Assert.That(lookAheadLeft, Is.LessThan(-1.5f), "Look-ahead should lead forward to the left when moving left");
+                Assert.That(lookAheadLeft, Is.LessThan(-2.5f), "Look-ahead should noticeably shift forward to the left when moving left");
 
                 // 3. Simulate standing still / idle (speed = 0) over multiple updates
                 for (int i = 0; i < 40; i++)
