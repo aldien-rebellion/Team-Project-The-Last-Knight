@@ -129,14 +129,21 @@ namespace TheLastKnight.Camera
         private void Awake()
         {
             _cam = GetComponent<UnityEngine.Camera>();
-            InitializeZoom();
             CheckDemonCastleExclusion();
+            InitializeZoom();
+        }
+
+        private void OnEnable()
+        {
+            if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
+            CheckDemonCastleExclusion();
+            InitializeZoom();
         }
 
         private void Start()
         {
-            InitializeZoom();
             CheckDemonCastleExclusion();
+            InitializeZoom();
 
             if (_target == null)
             {
@@ -159,6 +166,43 @@ namespace TheLastKnight.Camera
             {
                 _baseOrthographicSize = _cam.orthographicSize;
                 _targetOrthographicSize = _baseOrthographicSize;
+            }
+            ClampSizeToBounds();
+        }
+
+        public float GetMaxAllowedOrthographicSize()
+        {
+            if (!_useBoundaries || _boundaryBox == null || string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return (_baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f) * _maxZoomMultiplier;
+            }
+
+            Bounds bounds = _boundaryBox.bounds;
+            if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
+            float aspect = (_cam != null && _cam.aspect > 0.01f) ? _cam.aspect : (16f / 9f);
+
+            // Constrain camera size so its viewport half-width <= bounds.extents.x and half-height <= bounds.extents.y.
+            // Subtract a small sub-pixel epsilon (0.001f) to guarantee bounds containment even under float rounding.
+            float maxH = Mathf.Max(0.1f, (bounds.extents.x - 0.001f) / aspect);
+            float maxV = Mathf.Max(0.1f, bounds.extents.y - 0.001f);
+            return Mathf.Min(maxH, maxV);
+        }
+
+        public void ClampSizeToBounds()
+        {
+            if (!_useBoundaries || _boundaryBox == null || string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            float maxAllowed = GetMaxAllowedOrthographicSize();
+            if (_targetOrthographicSize > maxAllowed)
+            {
+                _targetOrthographicSize = maxAllowed;
+            }
+            if (_cam != null && _cam.orthographicSize > maxAllowed)
+            {
+                _cam.orthographicSize = maxAllowed;
             }
         }
 
@@ -225,11 +269,12 @@ namespace TheLastKnight.Camera
                     _targetOrthographicSize = _baseOrthographicSize;
                 }
 
-                float minSize = _baseOrthographicSize * _minZoomMultiplier;
-                float maxSize = _baseOrthographicSize * _maxZoomMultiplier;
+                float maxAllowed = GetMaxAllowedOrthographicSize();
+                float minSize = Mathf.Min(_baseOrthographicSize * _minZoomMultiplier, maxAllowed);
+                float maxSize = Mathf.Min(_baseOrthographicSize * _maxZoomMultiplier, maxAllowed);
                 float step = _zoomStep > 0f ? _zoomStep : (_baseOrthographicSize * 0.1f);
 
-                // scroll < 0 is scroll backward/down -> zoom out (increase orthographic size up to 2.5x)
+                // scroll < 0 is scroll backward/down -> zoom out (increase orthographic size up to 2.0x)
                 // scroll > 0 is scroll forward/up -> zoom in (decrease orthographic size down to 0.5x)
                 if (scroll < 0f)
                 {
@@ -240,6 +285,8 @@ namespace TheLastKnight.Camera
                     _targetOrthographicSize = Mathf.Max(_targetOrthographicSize - step, minSize);
                 }
             }
+
+            ClampSizeToBounds();
 
             if (!Mathf.Approximately(_cam.orthographicSize, _targetOrthographicSize))
             {
@@ -252,6 +299,8 @@ namespace TheLastKnight.Camera
                     _cam.orthographicSize = _targetOrthographicSize;
                 }
             }
+
+            ClampSizeToBounds();
         }
 
         private Vector3 GetTargetFeetPosition()
@@ -282,6 +331,14 @@ namespace TheLastKnight.Camera
 
         private void LateUpdate()
         {
+            if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
+
+            if (_useBoundaries && _boundaryBox == null)
+            {
+                CheckDemonCastleExclusion();
+            }
+
+            ClampSizeToBounds();
             HandleZoomInput();
 
             if (_target == null)
@@ -294,7 +351,7 @@ namespace TheLastKnight.Camera
                 else return;
             }
 
-            if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
+            ClampSizeToBounds();
             float camHeight = _cam != null ? _cam.orthographicSize : 5f;
 
             // Measure target movement speed
@@ -405,14 +462,15 @@ namespace TheLastKnight.Camera
             if (_useBoundaries && _boundaryBox != null && !string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase))
             {
                 Bounds bounds = _boundaryBox.bounds;
-                float camWidth = camHeight * (_cam != null ? _cam.aspect : (16f / 9f));
+                float aspect = (_cam != null && _cam.aspect > 0.01f) ? _cam.aspect : (16f / 9f);
+                float camWidth = camHeight * aspect;
 
                 float minX = bounds.min.x + camWidth;
                 float maxX = bounds.max.x - camWidth;
                 float minY = bounds.min.y + camHeight;
                 float maxY = bounds.max.y - camHeight;
 
-                if (minX > maxX)
+                if (minX >= maxX)
                 {
                     nextPos.x = bounds.center.x;
                 }
@@ -421,7 +479,7 @@ namespace TheLastKnight.Camera
                     nextPos.x = Mathf.Clamp(nextPos.x, minX, maxX);
                 }
 
-                if (minY > maxY)
+                if (minY >= maxY)
                 {
                     nextPos.y = bounds.center.y;
                 }
@@ -463,23 +521,39 @@ namespace TheLastKnight.Camera
 
             _boundaryBox = boundaryBox;
             _useBoundaries = (boundaryBox != null);
+            ClampSizeToBounds();
         }
 
         public void SetZoomMultiplier(float multiplier)
         {
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
             if (_baseOrthographicSize <= 0.01f && _cam != null) _baseOrthographicSize = _cam.orthographicSize;
-            _targetOrthographicSize = Mathf.Clamp(_baseOrthographicSize * multiplier, _baseOrthographicSize * _minZoomMultiplier, _baseOrthographicSize * _maxZoomMultiplier);
+
+            float maxAllowed = GetMaxAllowedOrthographicSize();
+            float minSize = Mathf.Min((_baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f) * _minZoomMultiplier, maxAllowed);
+            float maxSize = Mathf.Min((_baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f) * _maxZoomMultiplier, maxAllowed);
+
+            _targetOrthographicSize = Mathf.Clamp((_baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f) * multiplier, minSize, maxSize);
+            ClampSizeToBounds();
         }
 
         public void ResetZoom()
         {
-            _targetOrthographicSize = _baseOrthographicSize;
+            float maxAllowed = GetMaxAllowedOrthographicSize();
+            _targetOrthographicSize = Mathf.Min(_baseOrthographicSize, maxAllowed);
+            ClampSizeToBounds();
         }
 
         public void SnapTo(Vector3 worldPos)
         {
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
+
+            if (_useBoundaries && _boundaryBox == null)
+            {
+                CheckDemonCastleExclusion();
+            }
+            ClampSizeToBounds();
+
             float camHeight = _cam != null ? _cam.orthographicSize : 5f;
 
             _lastTargetPosition = worldPos;
@@ -503,17 +577,18 @@ namespace TheLastKnight.Camera
             if (_useBoundaries && _boundaryBox != null && !string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase))
             {
                 Bounds bounds = _boundaryBox.bounds;
-                float camWidth = camHeight * (_cam != null ? _cam.aspect : (16f / 9f));
+                float aspect = (_cam != null && _cam.aspect > 0.01f) ? _cam.aspect : (16f / 9f);
+                float camWidth = camHeight * aspect;
 
                 float minX = bounds.min.x + camWidth;
                 float maxX = bounds.max.x - camWidth;
                 float minY = bounds.min.y + camHeight;
                 float maxY = bounds.max.y - camHeight;
 
-                if (minX > maxX) targetWorldPos.x = bounds.center.x;
+                if (minX >= maxX) targetWorldPos.x = bounds.center.x;
                 else targetWorldPos.x = Mathf.Clamp(targetWorldPos.x, minX, maxX);
 
-                if (minY > maxY) targetWorldPos.y = bounds.center.y;
+                if (minY >= maxY) targetWorldPos.y = bounds.center.y;
                 else targetWorldPos.y = Mathf.Clamp(targetWorldPos.y, minY, maxY);
             }
 

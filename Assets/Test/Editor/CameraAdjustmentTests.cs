@@ -221,6 +221,104 @@ namespace TheLastKnight.Tests
             }
         }
 
+        [Test]
+        public void CameraFollow_Boundaries_ClampsOrthographicSize_WhenBoundarySmallerThanCameraView()
+        {
+            var confinerGo = new GameObject("Boundary");
+            var box = confinerGo.AddComponent<BoxCollider2D>();
+            box.isTrigger = true;
+            box.size = new Vector2(20.48f, 11.42f);
+            confinerGo.transform.position = new Vector3(0f, 2.09f, 0f);
+
+            var camGo = new GameObject("TestCamera");
+            var cam = camGo.AddComponent<UnityEngine.Camera>();
+            cam.orthographic = true;
+            cam.orthographicSize = 6f; // Greater than boundary allows (especially with aspect > 1.7)
+            var follow = camGo.AddComponent(RuntimeType("TheLastKnight.Camera.CameraFollow2D"));
+
+            try
+            {
+                Invoke(follow, "SetBoundaries", box);
+
+                float maxAllowed = (float)InvokeWithReturn(follow, "GetMaxAllowedOrthographicSize");
+                Assert.That(maxAllowed, Is.LessThan(6f), "Max allowed size should be smaller than 6 to fit boundary");
+
+                float targetSize = (float)GetProp(follow, "TargetOrthographicSize");
+                Assert.That(targetSize, Is.LessThanOrEqualTo(maxAllowed + 0.001f), "Target size must be clamped to maxAllowed");
+                Assert.That(cam.orthographicSize, Is.LessThanOrEqualTo(maxAllowed + 0.001f), "Camera orthographic size must be clamped to maxAllowed");
+
+                // Snap camera across various positions and verify viewport edges never exceed boundary
+                Vector3[] testPositions = new Vector3[]
+                {
+                    new Vector3(-50f, 0f, 0f),
+                    new Vector3(0f, 2f, 0f),
+                    new Vector3(50f, 10f, 0f)
+                };
+
+                Bounds b = box.bounds;
+                foreach (var pos in testPositions)
+                {
+                    Invoke(follow, "SnapTo", pos);
+                    float camW = cam.orthographicSize * cam.aspect;
+                    float camH = cam.orthographicSize;
+                    float left = camGo.transform.position.x - camW;
+                    float right = camGo.transform.position.x + camW;
+                    float bottom = camGo.transform.position.y - camH;
+                    float top = camGo.transform.position.y + camH;
+
+                    Assert.That(left, Is.GreaterThanOrEqualTo(b.min.x - 0.005f), $"Left edge at {pos} should not exceed boundary");
+                    Assert.That(right, Is.LessThanOrEqualTo(b.max.x + 0.005f), $"Right edge at {pos} should not exceed boundary");
+                    Assert.That(bottom, Is.GreaterThanOrEqualTo(b.min.y - 0.005f), $"Bottom edge at {pos} should not exceed boundary");
+                    Assert.That(top, Is.LessThanOrEqualTo(b.max.y + 0.005f), $"Top edge at {pos} should not exceed boundary");
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(confinerGo);
+                UnityEngine.Object.DestroyImmediate(camGo);
+            }
+        }
+
+        [Test]
+        public void CameraFollow_Boundaries_LimitsZoomOut_ToBoundaryExtents()
+        {
+            var confinerGo = new GameObject("Boundary");
+            var box = confinerGo.AddComponent<BoxCollider2D>();
+            box.isTrigger = true;
+            box.size = new Vector2(20.48f, 11.42f);
+            confinerGo.transform.position = new Vector3(0f, 2.09f, 0f);
+
+            var camGo = new GameObject("TestCamera");
+            var cam = camGo.AddComponent<UnityEngine.Camera>();
+            cam.orthographic = true;
+            cam.orthographicSize = 3.5f;
+            var follow = camGo.AddComponent(RuntimeType("TheLastKnight.Camera.CameraFollow2D"));
+
+            try
+            {
+                Invoke(follow, "SetBoundaries", box);
+                float maxAllowed = (float)InvokeWithReturn(follow, "GetMaxAllowedOrthographicSize");
+
+                // Try zooming out to 2.0x (3.5 * 2 = 7.0), which exceeds boundary
+                Invoke(follow, "SetZoomMultiplier", 2.0f);
+                float targetSize = (float)GetProp(follow, "TargetOrthographicSize");
+                Assert.That(targetSize, Is.LessThanOrEqualTo(maxAllowed + 0.001f), "Zoom out must be clamped to boundary maxAllowed");
+
+                // Try zooming in to 0.5x (3.5 * 0.5 = 1.75), which fits inside boundary
+                Invoke(follow, "SetZoomMultiplier", 0.5f);
+                float minTargetSize = (float)GetProp(follow, "TargetOrthographicSize");
+                Assert.That(minTargetSize, Is.EqualTo(1.75f).Within(0.01f), "Zoom in should still reach 0.5x when within boundary");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(confinerGo);
+                UnityEngine.Object.DestroyImmediate(camGo);
+            }
+        }
+
+        private static object InvokeWithReturn(Component target, string method, params object[] args) =>
+            target.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Invoke(target, args);
+
         [TestCase("CityCenter", true)]
         [TestCase("Church", true)]
         [TestCase("OutdoorMarket", true)]
