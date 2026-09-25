@@ -11,15 +11,25 @@ namespace TheLastKnight.Camera
         [SerializeField] private Vector3 _offset = new Vector3(0, 0, -10);
 
         [Header("Framing")]
-        [Tooltip("When enabled, player is framed relative to the viewport height (e.g. 10% above bottom).")]
+        [Tooltip("When enabled, player is framed relative to the viewport height (e.g. 20% above bottom).")]
         [SerializeField] private bool _useFeetFraming = true;
-        [Tooltip("Target viewport Y position for player's feet (0.1 = 10% above bottom edge).")]
+        [Tooltip("Target viewport Y position for player's feet (0.2 = 20% above bottom edge).")]
         [Range(0f, 1f)]
-        [SerializeField] private float _targetViewportY = 0.10f;
+        [SerializeField] private float _targetViewportY = 0.20f;
+
+        [Header("Look-Ahead / Movement Lead")]
+        [Tooltip("When enabled, camera gradually shifts in the direction the player is moving, and returns when standing still.")]
+        [SerializeField] private bool _enableLookAhead = true;
+        [Tooltip("Maximum horizontal distance the camera leads ahead of the player.")]
+        [SerializeField] private float _lookAheadDistance = 2.5f;
+        [Tooltip("Smooth time in seconds for the look-ahead shift and return.")]
+        [SerializeField] private float _lookAheadSmoothTime = 0.5f;
+        [Tooltip("Minimum movement speed in units/second to trigger look-ahead.")]
+        [SerializeField] private float _lookAheadSpeedThreshold = 0.5f;
 
         [Header("Zoom")]
         [SerializeField] private bool _enableZoom = true;
-        [SerializeField] private float _maxZoomMultiplier = 4.0f;
+        [SerializeField] private float _maxZoomMultiplier = 2.5f;
         [SerializeField] private float _zoomStep = 1.0f;
         [SerializeField] private float _zoomSmoothTime = 0.15f;
 
@@ -36,6 +46,13 @@ namespace TheLastKnight.Camera
         private float _targetOrthographicSize;
         private float _zoomVelocity;
 
+        // Look-ahead tracking
+        private Vector3 _lastTargetPosition;
+        private float _targetMoveSpeedX;
+        private float _targetLookAheadX;
+        private float _currentLookAheadX;
+        private float _lookAheadVelocity;
+
         public float TargetViewportY
         {
             get => _targetViewportY;
@@ -48,10 +65,43 @@ namespace TheLastKnight.Camera
             set => _useFeetFraming = value;
         }
 
+        public bool EnableLookAhead
+        {
+            get => _enableLookAhead;
+            set => _enableLookAhead = value;
+        }
+
+        public float LookAheadDistance
+        {
+            get => _lookAheadDistance;
+            set => _lookAheadDistance = value;
+        }
+
+        public float LookAheadSmoothTime
+        {
+            get => _lookAheadSmoothTime;
+            set => _lookAheadSmoothTime = value;
+        }
+
+        public float LookAheadSpeedThreshold
+        {
+            get => _lookAheadSpeedThreshold;
+            set => _lookAheadSpeedThreshold = value;
+        }
+
+        public float CurrentLookAheadX => _currentLookAheadX;
+        public float TargetLookAheadX => _targetLookAheadX;
+
         public bool EnableZoom
         {
             get => _enableZoom;
             set => _enableZoom = value;
+        }
+
+        public float MaxZoomMultiplier
+        {
+            get => _maxZoomMultiplier;
+            set => _maxZoomMultiplier = Mathf.Max(1f, value);
         }
 
         public float BaseOrthographicSize => _baseOrthographicSize;
@@ -79,6 +129,15 @@ namespace TheLastKnight.Camera
                 {
                     _target = player.transform;
                 }
+            }
+
+            if (_target != null)
+            {
+                _lastTargetPosition = _target.position;
+            }
+            else
+            {
+                _lastTargetPosition = transform.position;
             }
         }
 
@@ -217,18 +276,64 @@ namespace TheLastKnight.Camera
             if (_target == null)
             {
                 var player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null) _target = player.transform;
+                if (player != null)
+                {
+                    _target = player.transform;
+                    _lastTargetPosition = _target.position;
+                }
                 else return;
             }
 
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
             float camHeight = _cam != null ? _cam.orthographicSize : 5f;
 
+            // Update Look-Ahead offset based on target movement
+            float dt = Application.isPlaying ? Time.deltaTime : 0f;
+            if (dt > 0.0001f)
+            {
+                float dx = _target.position.x - _lastTargetPosition.x;
+                _targetMoveSpeedX = dx / dt;
+                _lastTargetPosition = _target.position;
+            }
+            else
+            {
+                _targetMoveSpeedX = 0f;
+                _lastTargetPosition = _target.position;
+            }
+
+            if (_enableLookAhead)
+            {
+                // When moving: lead ahead in direction of movement
+                // When idle: return to 0 (center back on player)
+                if (Mathf.Abs(_targetMoveSpeedX) > _lookAheadSpeedThreshold)
+                {
+                    _targetLookAheadX = Mathf.Sign(_targetMoveSpeedX) * _lookAheadDistance;
+                }
+                else
+                {
+                    _targetLookAheadX = 0f;
+                }
+
+                if (Application.isPlaying)
+                {
+                    _currentLookAheadX = Mathf.SmoothDamp(_currentLookAheadX, _targetLookAheadX, ref _lookAheadVelocity, _lookAheadSmoothTime);
+                }
+                else
+                {
+                    _currentLookAheadX = _targetLookAheadX;
+                }
+            }
+            else
+            {
+                _targetLookAheadX = 0f;
+                _currentLookAheadX = 0f;
+            }
+
             float targetCamY;
             if (_useFeetFraming)
             {
                 Vector3 feetPos = GetTargetFeetPosition();
-                // Target feet position at _targetViewportY (0.1 = 10% from bottom edge of camera viewport)
+                // Target feet position at _targetViewportY (0.2 = 20% from bottom edge of camera viewport)
                 targetCamY = feetPos.y + (0.5f - _targetViewportY) * (2f * camHeight) + _offset.y;
             }
             else
@@ -236,12 +341,13 @@ namespace TheLastKnight.Camera
                 targetCamY = _target.position.y + _offset.y;
             }
 
-            Vector3 targetWorldPos = new Vector3(_target.position.x + _offset.x, targetCamY, _target.position.z + _offset.z);
+            float targetCamX = _target.position.x + _offset.x + _currentLookAheadX;
+            Vector3 targetWorldPos = new Vector3(targetCamX, targetCamY, _target.position.z + _offset.z);
             Vector3 desiredPos = transform.position;
             Vector2 diff = new Vector2(targetWorldPos.x - desiredPos.x, targetWorldPos.y - desiredPos.y);
 
-            // Horizontal deadzone tracking
-            if (_deadzoneSize.x > 0f)
+            // Horizontal deadzone tracking (only applied when look-ahead is disabled)
+            if (_deadzoneSize.x > 0f && !_enableLookAhead)
             {
                 if (Mathf.Abs(diff.x) > _deadzoneSize.x)
                 {
@@ -308,6 +414,14 @@ namespace TheLastKnight.Camera
         public void SetTarget(Transform target)
         {
             _target = target;
+            if (_target != null)
+            {
+                _lastTargetPosition = _target.position;
+            }
+            _targetMoveSpeedX = 0f;
+            _targetLookAheadX = 0f;
+            _currentLookAheadX = 0f;
+            _lookAheadVelocity = 0f;
         }
 
         public void SetBoundaries(BoxCollider2D boundaryBox)
@@ -340,6 +454,12 @@ namespace TheLastKnight.Camera
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
             float camHeight = _cam != null ? _cam.orthographicSize : 5f;
 
+            _lastTargetPosition = worldPos;
+            _targetMoveSpeedX = 0f;
+            _targetLookAheadX = 0f;
+            _currentLookAheadX = 0f;
+            _lookAheadVelocity = 0f;
+
             float targetCamY;
             if (_useFeetFraming)
             {
@@ -371,6 +491,24 @@ namespace TheLastKnight.Camera
 
             transform.position = targetWorldPos;
             _currentVelocity = Vector3.zero;
+        }
+
+        public void SimulateMovementForTesting(float speedX, float deltaTime)
+        {
+            _targetMoveSpeedX = speedX;
+            if (_enableLookAhead)
+            {
+                if (Mathf.Abs(_targetMoveSpeedX) > _lookAheadSpeedThreshold)
+                {
+                    _targetLookAheadX = Mathf.Sign(_targetMoveSpeedX) * _lookAheadDistance;
+                }
+                else
+                {
+                    _targetLookAheadX = 0f;
+                }
+
+                _currentLookAheadX = Mathf.SmoothDamp(_currentLookAheadX, _targetLookAheadX, ref _lookAheadVelocity, _lookAheadSmoothTime, Mathf.Infinity, deltaTime);
+            }
         }
     }
 }

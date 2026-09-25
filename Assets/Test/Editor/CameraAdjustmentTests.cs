@@ -23,7 +23,7 @@ namespace TheLastKnight.Tests
             target.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Invoke(target, args);
 
         [Test]
-        public void CameraFollow_FeetFraming_PositionsFeetAtTenPercentAboveBottom()
+        public void CameraFollow_FeetFraming_PositionsFeetAtTwentyPercentAboveBottom()
         {
             var camGo = new GameObject("TestCamera");
             var cam = camGo.AddComponent<UnityEngine.Camera>();
@@ -41,14 +41,14 @@ namespace TheLastKnight.Tests
             {
                 Invoke(follow, "SetTarget", targetGo.transform);
                 SetProp(follow, "UseFeetFraming", true);
-                SetProp(follow, "TargetViewportY", 0.10f);
+                SetProp(follow, "TargetViewportY", 0.20f);
                 Invoke(follow, "SnapTo", targetGo.transform.position);
 
                 Vector3 feetPos = new Vector3(targetGo.transform.position.x, col.bounds.min.y, targetGo.transform.position.z);
                 Vector3 vp = cam.WorldToViewportPoint(feetPos);
 
-                Assert.That(vp.y, Is.EqualTo(0.10f).Within(0.01f), "Player's feet should be 10% above bottom edge of camera viewport");
-                Assert.That(vp.x, Is.EqualTo(0.50f).Within(0.01f), "Player should be horizontally centered");
+                Assert.That(vp.y, Is.EqualTo(0.20f).Within(0.01f), "Player's feet should be 20% above bottom edge of camera viewport");
+                Assert.That(vp.x, Is.EqualTo(0.50f).Within(0.01f), "Player should be horizontally centered when idle");
             }
             finally
             {
@@ -58,7 +58,7 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
-        public void CameraFollow_ZoomOut_SupportsUpTo4x()
+        public void CameraFollow_ZoomOut_SupportsUpTo2Point5x()
         {
             var camGo = new GameObject("TestCamera");
             var cam = camGo.AddComponent<UnityEngine.Camera>();
@@ -69,10 +69,11 @@ namespace TheLastKnight.Tests
             try
             {
                 SetProp(follow, "EnableZoom", true);
-                Invoke(follow, "SetZoomMultiplier", 4.0f);
+                SetProp(follow, "MaxZoomMultiplier", 2.5f);
+                Invoke(follow, "SetZoomMultiplier", 2.5f);
 
                 float targetSize = (float)GetProp(follow, "TargetOrthographicSize");
-                Assert.That(targetSize, Is.EqualTo(20f).Within(0.01f), "Target orthographic size should be 4x of base size 5");
+                Assert.That(targetSize, Is.EqualTo(12.5f).Within(0.01f), "Target orthographic size should be 2.5x of base size 5");
             }
             finally
             {
@@ -81,7 +82,7 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
-        public void CameraFollow_FeetFraming_MaintainsTenPercentAt4xZoom()
+        public void CameraFollow_FeetFraming_MaintainsTwentyPercentAt2Point5xZoom()
         {
             var camGo = new GameObject("TestCamera");
             var cam = camGo.AddComponent<UnityEngine.Camera>();
@@ -99,22 +100,69 @@ namespace TheLastKnight.Tests
             {
                 Invoke(follow, "SetTarget", targetGo.transform);
                 SetProp(follow, "UseFeetFraming", true);
-                SetProp(follow, "TargetViewportY", 0.10f);
+                SetProp(follow, "TargetViewportY", 0.20f);
 
-                // Zoom to 4x
-                Invoke(follow, "SetZoomMultiplier", 4.0f);
-                cam.orthographicSize = 20f;
+                // Zoom to 2.5x
+                SetProp(follow, "MaxZoomMultiplier", 2.5f);
+                Invoke(follow, "SetZoomMultiplier", 2.5f);
+                cam.orthographicSize = 12.5f;
                 Invoke(follow, "SnapTo", targetGo.transform.position);
 
                 Vector3 feetPos = new Vector3(targetGo.transform.position.x, col.bounds.min.y, targetGo.transform.position.z);
                 Vector3 vp = cam.WorldToViewportPoint(feetPos);
 
-                Assert.That(vp.y, Is.EqualTo(0.10f).Within(0.01f), "Player's feet should remain at 10% viewport height even when zoomed out 4x");
+                Assert.That(vp.y, Is.EqualTo(0.20f).Within(0.01f), "Player's feet should remain at 20% viewport height even when zoomed out 2.5x");
             }
             finally
             {
                 UnityEngine.Object.DestroyImmediate(camGo);
                 UnityEngine.Object.DestroyImmediate(targetGo);
+            }
+        }
+
+        [Test]
+        public void CameraFollow_LookAhead_ShiftsForwardWhenMoving_AndReturnsWhenIdle()
+        {
+            var camGo = new GameObject("TestCamera");
+            var cam = camGo.AddComponent<UnityEngine.Camera>();
+            cam.orthographic = true;
+            cam.orthographicSize = 5f;
+            var follow = camGo.AddComponent(RuntimeType("TheLastKnight.Camera.CameraFollow2D"));
+
+            try
+            {
+                SetProp(follow, "EnableLookAhead", true);
+                SetProp(follow, "LookAheadDistance", 2.5f);
+                SetProp(follow, "LookAheadSmoothTime", 0.3f);
+                SetProp(follow, "LookAheadSpeedThreshold", 0.5f);
+
+                // 1. Simulate moving right (speed = +8) over multiple updates
+                for (int i = 0; i < 20; i++)
+                {
+                    Invoke(follow, "SimulateMovementForTesting", 8.0f, 0.05f);
+                }
+                float lookAheadRight = (float)GetProp(follow, "CurrentLookAheadX");
+                Assert.That(lookAheadRight, Is.GreaterThan(1.5f), "Look-ahead should lead forward to the right when moving right");
+
+                // 2. Simulate moving left (speed = -8) over multiple updates
+                for (int i = 0; i < 40; i++)
+                {
+                    Invoke(follow, "SimulateMovementForTesting", -8.0f, 0.05f);
+                }
+                float lookAheadLeft = (float)GetProp(follow, "CurrentLookAheadX");
+                Assert.That(lookAheadLeft, Is.LessThan(-1.5f), "Look-ahead should lead forward to the left when moving left");
+
+                // 3. Simulate standing still / idle (speed = 0) over multiple updates
+                for (int i = 0; i < 40; i++)
+                {
+                    Invoke(follow, "SimulateMovementForTesting", 0f, 0.05f);
+                }
+                float lookAheadIdle = (float)GetProp(follow, "CurrentLookAheadX");
+                Assert.That(lookAheadIdle, Is.EqualTo(0f).Within(0.05f), "Look-ahead should smoothly return to center (0) when idle");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(camGo);
             }
         }
 
