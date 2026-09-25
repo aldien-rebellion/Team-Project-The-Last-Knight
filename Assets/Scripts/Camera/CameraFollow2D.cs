@@ -42,6 +42,8 @@ namespace TheLastKnight.Camera
         [Header("Boundaries")]
         [SerializeField] private bool _useBoundaries = false;
         [SerializeField] private BoxCollider2D _boundaryBox;
+        [Tooltip("Direct boundary constraint using a background SpriteRenderer.")]
+        [SerializeField] private SpriteRenderer _backgroundRenderer;
 
         private Vector3 _currentVelocity;
         private UnityEngine.Camera _cam;
@@ -125,6 +127,36 @@ namespace TheLastKnight.Camera
         public float CurrentZoomMultiplier => (_baseOrthographicSize > 0.01f && _cam != null) ? _cam.orthographicSize / _baseOrthographicSize : 1f;
         public bool UseBoundaries => _useBoundaries;
         public BoxCollider2D BoundaryBox => _boundaryBox;
+        public SpriteRenderer BackgroundRenderer => _backgroundRenderer;
+
+        public bool HasBoundaries => _useBoundaries && (_boundaryBox != null || _backgroundRenderer != null) && !string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase);
+
+        public Bounds GetBoundaryBounds()
+        {
+            if (_backgroundRenderer != null)
+            {
+                return _backgroundRenderer.bounds;
+            }
+            if (_boundaryBox != null)
+            {
+                return _boundaryBox.bounds;
+            }
+            return default;
+        }
+
+        public void SetBackgroundRenderer(SpriteRenderer bgRenderer)
+        {
+            if (string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase))
+            {
+                _useBoundaries = false;
+                _backgroundRenderer = null;
+                return;
+            }
+
+            _backgroundRenderer = bgRenderer;
+            _useBoundaries = (bgRenderer != null);
+            ClampSizeToBounds();
+        }
 
         private void Awake()
         {
@@ -172,12 +204,12 @@ namespace TheLastKnight.Camera
 
         public float GetMaxAllowedOrthographicSize()
         {
-            if (!_useBoundaries || _boundaryBox == null || string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase))
+            if (!HasBoundaries)
             {
                 return (_baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f) * _maxZoomMultiplier;
             }
 
-            Bounds bounds = _boundaryBox.bounds;
+            Bounds bounds = GetBoundaryBounds();
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
             float aspect = (_cam != null && _cam.aspect > 0.01f) ? _cam.aspect : (16f / 9f);
 
@@ -190,7 +222,7 @@ namespace TheLastKnight.Camera
 
         public void ClampSizeToBounds()
         {
-            if (!_useBoundaries || _boundaryBox == null || string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase))
+            if (!HasBoundaries)
             {
                 return;
             }
@@ -214,13 +246,33 @@ namespace TheLastKnight.Camera
             {
                 _useBoundaries = false;
                 _boundaryBox = null;
+                _backgroundRenderer = null;
+                return;
             }
-            else if (_useBoundaries && _boundaryBox == null)
+
+            if (_useBoundaries)
             {
-                var confiner = GameObject.Find("CameraConfiner");
-                if (confiner != null)
+                if (_boundaryBox == null && _backgroundRenderer == null)
                 {
-                    _boundaryBox = confiner.GetComponent<BoxCollider2D>();
+                    // Check for background SpriteRenderer first (e.g. Background_Closed, Background)
+                    var bgObj = GameObject.Find("Background_Closed") ?? GameObject.Find("Background");
+                    if (bgObj != null)
+                    {
+                        var sr = bgObj.GetComponent<SpriteRenderer>();
+                        if (sr != null && sr.sprite != null)
+                        {
+                            _backgroundRenderer = sr;
+                        }
+                    }
+
+                    if (_backgroundRenderer == null)
+                    {
+                        var confiner = GameObject.Find("CameraConfiner");
+                        if (confiner != null)
+                        {
+                            _boundaryBox = confiner.GetComponent<BoxCollider2D>();
+                        }
+                    }
                 }
             }
         }
@@ -333,7 +385,7 @@ namespace TheLastKnight.Camera
         {
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
 
-            if (_useBoundaries && _boundaryBox == null)
+            if (_useBoundaries && _boundaryBox == null && _backgroundRenderer == null)
             {
                 CheckDemonCastleExclusion();
             }
@@ -459,9 +511,9 @@ namespace TheLastKnight.Camera
                 : desiredPos;
 
             // Clamp to boundaries if enabled (except demoncastle)
-            if (_useBoundaries && _boundaryBox != null && !string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase))
+            if (HasBoundaries)
             {
-                Bounds bounds = _boundaryBox.bounds;
+                Bounds bounds = GetBoundaryBounds();
                 float aspect = (_cam != null && _cam.aspect > 0.01f) ? _cam.aspect : (16f / 9f);
                 float camWidth = camHeight * aspect;
 
@@ -548,7 +600,7 @@ namespace TheLastKnight.Camera
         {
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
 
-            if (_useBoundaries && _boundaryBox == null)
+            if (_useBoundaries && _boundaryBox == null && _backgroundRenderer == null)
             {
                 CheckDemonCastleExclusion();
             }
@@ -574,9 +626,9 @@ namespace TheLastKnight.Camera
 
             Vector3 targetWorldPos = new Vector3(worldPos.x + _offset.x, targetCamY, transform.position.z);
 
-            if (_useBoundaries && _boundaryBox != null && !string.Equals(gameObject.scene.name, "DemonCastle", System.StringComparison.OrdinalIgnoreCase))
+            if (HasBoundaries)
             {
-                Bounds bounds = _boundaryBox.bounds;
+                Bounds bounds = GetBoundaryBounds();
                 float aspect = (_cam != null && _cam.aspect > 0.01f) ? _cam.aspect : (16f / 9f);
                 float camWidth = camHeight * aspect;
 

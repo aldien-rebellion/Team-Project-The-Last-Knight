@@ -357,5 +357,82 @@ namespace TheLastKnight.Tests
                 // clean up
             }
         }
+
+        [Test]
+        public void CameraFollow_Boundaries_DirectBackgroundRendererSupport()
+        {
+            var bgGo = new GameObject("TestBackground");
+            var sr = bgGo.AddComponent<SpriteRenderer>();
+            var tex = new Texture2D(100, 100);
+            sr.sprite = Sprite.Create(tex, new Rect(0, 0, 100, 100), new Vector2(0.5f, 0.5f), 10f); // 10x10 units
+
+            var camGo = new GameObject("TestCamera");
+            var cam = camGo.AddComponent<UnityEngine.Camera>();
+            cam.orthographic = true;
+            cam.orthographicSize = 10f;
+            var follow = camGo.AddComponent(RuntimeType("TheLastKnight.Camera.CameraFollow2D"));
+
+            try
+            {
+                Invoke(follow, "SetBackgroundRenderer", sr);
+
+                bool hasBounds = (bool)GetProp(follow, "HasBoundaries");
+                Assert.That(hasBounds, Is.True, "HasBoundaries should be true when background renderer is assigned");
+
+                float maxAllowed = (float)InvokeWithReturn(follow, "GetMaxAllowedOrthographicSize");
+                Assert.That(maxAllowed, Is.LessThan(6f), "Max allowed size should be bounded by background sprite extents");
+                Assert.That(cam.orthographicSize, Is.LessThanOrEqualTo(maxAllowed + 0.001f), "Camera size should be clamped to background sprite bounds");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(tex);
+                UnityEngine.Object.DestroyImmediate(bgGo);
+                UnityEngine.Object.DestroyImmediate(camGo);
+            }
+        }
+
+        [Test]
+        public void DemonCastleEntrance_Boundaries_MatchBackgroundImage()
+        {
+            var scene = EditorSceneManager.OpenScene("Assets/Scenes/Maps/DemonCastleEntrance.unity", OpenSceneMode.Single);
+            try
+            {
+                var bgObj = GameObject.Find("Background_Closed");
+                Assert.That(bgObj, Is.Not.Null, "Background_Closed should exist in DemonCastleEntrance");
+                var sr = bgObj.GetComponent<SpriteRenderer>();
+                Assert.That(sr, Is.Not.Null, "Background_Closed should have SpriteRenderer");
+                Bounds bgBounds = sr.bounds;
+
+                var bLeft = GameObject.Find("Boundary_Left");
+                Assert.That(bLeft, Is.Not.Null, "Boundary_Left should exist");
+                var bLeftCol = bLeft.GetComponent<BoxCollider2D>();
+                Assert.That(bLeftCol.bounds.max.x, Is.EqualTo(bgBounds.min.x).Within(0.05f),
+                    "Boundary_Left inner edge should match background min.x");
+
+                var bRight = GameObject.Find("Boundary_Right");
+                Assert.That(bRight, Is.Not.Null, "Boundary_Right should exist");
+                var bRightCol = bRight.GetComponent<BoxCollider2D>();
+                Assert.That(bRightCol.bounds.min.x, Is.EqualTo(bgBounds.max.x).Within(0.05f),
+                    "Boundary_Right inner edge should match background max.x");
+
+                var bTop = GameObject.Find("Boundary_Top");
+                Assert.That(bTop, Is.Not.Null, "Boundary_Top should exist");
+                var bTopCol = bTop.GetComponent<BoxCollider2D>();
+                Assert.That(bTopCol.bounds.min.y, Is.EqualTo(bgBounds.max.y).Within(0.05f),
+                    "Boundary_Top inner edge should match background max.y");
+
+                var cam = UnityEngine.Camera.main;
+                var follow = cam.GetComponent(RuntimeType("TheLastKnight.Camera.CameraFollow2D"));
+                bool hasBounds = (bool)GetProp(follow, "HasBoundaries");
+                Assert.That(hasBounds, Is.True, "Camera in DemonCastleEntrance should have boundaries active");
+
+                var bgRenderer = GetProp(follow, "BackgroundRenderer");
+                Assert.That(bgRenderer, Is.Not.Null, "CameraFollow2D in DemonCastleEntrance should have BackgroundRenderer assigned");
+            }
+            finally
+            {
+                // clean up
+            }
+        }
     }
 }
