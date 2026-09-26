@@ -13,7 +13,7 @@ namespace TheLastKnight.Stats
         [Header("Current Runtime Progression")]
         [SerializeField] private int _currentLevel = 1;
         [SerializeField] private int _currentEXP = 0;
-        [SerializeField] private int _availableStatPoints = 0;
+        [SerializeField] private int _availableStatPoints = 5;
 
         [Header("Current Attribute Allocations")]
         [SerializeField] private int _strength;
@@ -53,6 +53,7 @@ namespace TheLastKnight.Stats
             Heal(50f);
             return true;
         }
+        public void AddStatPoints(int amount) => _availableStatPoints += Mathf.Max(0, amount);
         public bool AddStatPotion(string stat)
         {
             if (stat != "STR" && stat != "VIT" && stat != "DEX" && stat != "AGI") return false;

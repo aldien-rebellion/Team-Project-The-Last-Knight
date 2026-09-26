@@ -92,6 +92,7 @@ namespace TheLastKnight.UI
             {
                 DontDestroyOnLoad(gameObject);
             }
+            EnsureEventSystem();
             BuildUI();
             SetWindowVisible(false);
         }
@@ -103,6 +104,7 @@ namespace TheLastKnight.UI
 
         private void Start()
         {
+            EnsureEventSystem();
             if (_canvasObject == null)
             {
                 BuildUI();
@@ -143,6 +145,7 @@ namespace TheLastKnight.UI
 
         public void Open()
         {
+            EnsureEventSystem();
             if (_canvasObject == null) BuildUI();
 
             var player = GetPlayer();
@@ -200,11 +203,66 @@ namespace TheLastKnight.UI
             return _cachedStats;
         }
 
+        private void EnsureEventSystem()
+        {
+            var all = FindObjectsByType<UnityEngine.EventSystems.EventSystem>(FindObjectsInactive.Include);
+            UnityEngine.EventSystems.EventSystem activeEs = null;
+
+            if (all != null && all.Length > 0)
+            {
+                activeEs = all[0];
+                for (int i = 1; i < all.Length; i++)
+                {
+                    if (all[i] != null && all[i].gameObject != null)
+                    {
+                        all[i].enabled = false;
+                        all[i].gameObject.SetActive(false);
+                        if (Application.isPlaying) Destroy(all[i].gameObject);
+                        else DestroyImmediate(all[i].gameObject);
+                    }
+                }
+            }
+            else
+            {
+                var go = new GameObject("EventSystem");
+                activeEs = go.AddComponent<UnityEngine.EventSystems.EventSystem>();
+            }
+
+            if (activeEs != null)
+            {
+                activeEs.enabled = true;
+                activeEs.gameObject.SetActive(true);
+
+                var legacy = activeEs.GetComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+                if (legacy != null)
+                {
+                    legacy.enabled = false;
+                    if (Application.isPlaying) Destroy(legacy);
+                    else DestroyImmediate(legacy);
+                }
+
+                var module = activeEs.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+                if (module == null)
+                {
+                    module = activeEs.gameObject.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+                }
+                module.enabled = true;
+
+                if (UnityEngine.InputSystem.InputSystem.actions != null)
+                {
+                    module.actionsAsset = UnityEngine.InputSystem.InputSystem.actions;
+                }
+                else
+                {
+                    module.AssignDefaultActions();
+                }
+            }
+        }
+
         private Vector2 ToUI(float px, float py)
         {
-            float x = (px / 805.0f - 0.5f) * 885.0f;
-            float y = (py / 466.0f - 0.5f) * 512.0f;
-            return new Vector2(x, y);
+            // Exact 1:1 pixel mapping on 805x466 native resolution
+            return new Vector2(px - 402.5f, py - 233.0f);
         }
 
         #region UI Construction
@@ -212,24 +270,13 @@ namespace TheLastKnight.UI
         {
             if (_canvasObject != null) return;
 
-            // Ensure EventSystem with InputSystemUIInputModule exists
-            var es = FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>();
-            if (es == null)
-            {
-                new GameObject("EventSystem", typeof(UnityEngine.EventSystems.EventSystem), typeof(UnityEngine.InputSystem.UI.InputSystemUIInputModule));
-            }
-            else if (es.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>() == null)
-            {
-                var standalone = es.GetComponent<UnityEngine.EventSystems.StandaloneInputModule>();
-                if (standalone != null) Destroy(standalone);
-                es.gameObject.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
-            }
+            EnsureEventSystem();
 
             // Root Canvas
             _canvasObject = new GameObject("CharacterStatusCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             _canvas = _canvasObject.GetComponent<Canvas>();
             _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            _canvas.sortingOrder = 280;
+            _canvas.sortingOrder = 500;
 
             _scaler = _canvasObject.GetComponent<CanvasScaler>();
             _scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -252,14 +299,14 @@ namespace TheLastKnight.UI
             var backdropBtn = backdropGo.GetComponent<Button>();
             backdropBtn.onClick.AddListener(Close);
 
-            // Main Window Container (Reference resolution 885x512)
+            // Main Window Container (Native 805x466 resolution)
             var winGo = new GameObject("Window", typeof(RectTransform), typeof(Image));
             winGo.transform.SetParent(_canvasObject.transform, false);
             _windowRect = winGo.GetComponent<RectTransform>();
             _windowRect.anchorMin = new Vector2(0.5f, 0.5f);
             _windowRect.anchorMax = new Vector2(0.5f, 0.5f);
             _windowRect.pivot = new Vector2(0.5f, 0.5f);
-            _windowRect.sizeDelta = new Vector2(885, 512);
+            _windowRect.sizeDelta = new Vector2(805, 466);
 
             var winImg = winGo.GetComponent<Image>();
             var winSprite = Resources.Load<Sprite>("CharacterStatus/Window_Mockup");
@@ -273,14 +320,14 @@ namespace TheLastKnight.UI
                 winImg.color = new Color(0.18f, 0.12f, 0.08f, 0.98f);
             }
 
-            // Close Button [X] at Top-Right
-            BuildCloseButton(_windowRect);
-
             // Center Panel Overlays (Level, Bars, Gold, Skills, Quick Items)
             BuildCenterOverlays(_windowRect);
 
             // Right Panel Overlays (Status Points, STR/AGI/VIT/DEX, Inventory Grid)
             BuildRightOverlays(_windowRect);
+
+            // Close Button [X] at Top-Right (built after overlays to stay topmost)
+            BuildCloseButton(_windowRect);
 
             // Tooltip Box (Floating overlay at bottom center)
             BuildTooltipBox(_windowRect);
@@ -290,12 +337,14 @@ namespace TheLastKnight.UI
         {
             var btnGo = new GameObject("Btn_Close", typeof(RectTransform), typeof(Image), typeof(Button));
             btnGo.transform.SetParent(parent, false);
+            btnGo.transform.SetAsLastSibling();
             var rt = btnGo.GetComponent<RectTransform>();
-            rt.anchoredPosition = ToUI(790, 447);
-            rt.sizeDelta = new Vector2(26, 26);
+            rt.anchoredPosition = ToUI(786, 448);
+            rt.sizeDelta = new Vector2(36, 36);
 
             var img = btnGo.GetComponent<Image>();
-            img.color = new Color(1f, 1f, 1f, 0.01f); // Transparent over baked [X]
+            img.color = new Color(1f, 1f, 1f, 0.01f);
+            img.raycastTarget = true;
 
             var btn = btnGo.GetComponent<Button>();
             btn.targetGraphic = img;
@@ -352,7 +401,7 @@ namespace TheLastKnight.UI
                 "Enter a berserk focus, boosting attack power and movement speed for 10 seconds. Hotkey [R].",
                 "Channel the full radiance of the holy blade, unleashing a piercing holy beam across the battlefield. Hotkey [T]."
             };
-            float[] skillXs = { 345f, 432f, 518f };
+            float[] skillXs = { 325f, 415f, 505f };
 
             for (int i = 0; i < 3; i++)
             {
@@ -360,8 +409,8 @@ namespace TheLastKnight.UI
                 var slotGo = new GameObject($"SkillSlot_{i + 1}", typeof(RectTransform), typeof(Image), typeof(Button));
                 slotGo.transform.SetParent(parent, false);
                 var rt = slotGo.GetComponent<RectTransform>();
-                rt.anchoredPosition = ToUI(skillXs[i], 172);
-                rt.sizeDelta = new Vector2(56, 56);
+                rt.anchoredPosition = ToUI(skillXs[i], 158);
+                rt.sizeDelta = new Vector2(54, 54);
 
                 var img = slotGo.GetComponent<Image>();
                 img.color = new Color(1f, 1f, 1f, 0.01f); // Transparent over baked skill icon
@@ -390,7 +439,7 @@ namespace TheLastKnight.UI
                 "An alchemical defense tonic that hardens skin against demon strikes.",
                 "A rare commemorative gold coin from the royal treasury of Moa."
             };
-            float[] quickXs = { 345f, 401f, 457f, 513f, 569f };
+            float[] quickXs = { 315f, 365f, 415f, 465f, 515f };
 
             for (int i = 0; i < 5; i++)
             {
@@ -398,7 +447,7 @@ namespace TheLastKnight.UI
                 var qGo = new GameObject($"QuickSlot_{i + 1}", typeof(RectTransform), typeof(Image), typeof(Button));
                 qGo.transform.SetParent(parent, false);
                 var rt = qGo.GetComponent<RectTransform>();
-                rt.anchoredPosition = ToUI(quickXs[i], 82);
+                rt.anchoredPosition = ToUI(quickXs[i], 61);
                 rt.sizeDelta = new Vector2(44, 44);
 
                 var img = qGo.GetComponent<Image>();
@@ -527,10 +576,12 @@ namespace TheLastKnight.UI
             plusGo.transform.SetParent(parent, false);
             var plusRt = plusGo.GetComponent<RectTransform>();
             plusRt.anchoredPosition = ToUI(708, py);
-            plusRt.sizeDelta = new Vector2(24, 20);
+            plusRt.sizeDelta = new Vector2(28, 24);
             var plusImg = plusGo.GetComponent<Image>();
             plusImg.color = new Color(1f, 1f, 1f, 0.01f);
+            plusImg.raycastTarget = true;
             btnPlus = plusGo.GetComponent<Button>();
+            btnPlus.targetGraphic = plusImg;
             btnPlus.onClick.AddListener(onPlus);
             AddHoverHighlight(plusGo, plusImg);
 
@@ -539,18 +590,20 @@ namespace TheLastKnight.UI
             maxGo.transform.SetParent(parent, false);
             var maxRt = maxGo.GetComponent<RectTransform>();
             maxRt.anchoredPosition = ToUI(752, py);
-            maxRt.sizeDelta = new Vector2(44, 20);
+            maxRt.sizeDelta = new Vector2(46, 24);
             var maxImg = maxGo.GetComponent<Image>();
             maxImg.color = new Color(1f, 1f, 1f, 0.01f);
+            maxImg.raycastTarget = true;
             btnMax = maxGo.GetComponent<Button>();
+            btnMax.targetGraphic = maxImg;
             btnMax.onClick.AddListener(onMax);
             AddHoverHighlight(maxGo, maxImg);
         }
 
         private void BuildInventoryGrid(Transform parent)
         {
-            float[] colXs = { 582f, 634f, 686f, 738f };
-            float[] rowYs = { 230f, 192f, 154f, 116f, 78f, 40f };
+            float[] colXs = { 602f, 645f, 688f, 731f };
+            float[] rowYs = { 262f, 220f, 178f, 136f, 94f, 52f };
 
             var items = GetInitialInventoryData();
 
@@ -563,7 +616,7 @@ namespace TheLastKnight.UI
                     slotGo.transform.SetParent(parent, false);
                     var rt = slotGo.GetComponent<RectTransform>();
                     rt.anchoredPosition = ToUI(colXs[c], rowYs[r]);
-                    rt.sizeDelta = new Vector2(46, 36);
+                    rt.sizeDelta = new Vector2(38, 38);
 
                     var img = slotGo.GetComponent<Image>();
                     img.color = new Color(1f, 1f, 1f, 0.01f); // Transparent over baked slot frame
@@ -693,33 +746,49 @@ namespace TheLastKnight.UI
         public void UpgradeStat(string statName)
         {
             var player = GetPlayer();
-            if (player == null || player.StatPoints <= 0) return;
+            if (player == null) return;
+
+            if (player.StatPoints <= 0)
+            {
+                ShowTooltip("No Status Points", "Notice", "You need available Status Points (SP) to upgrade attributes. Level up or consume Golden Seeds to gain points.");
+                AudioManager.Instance?.PlaySfx("click");
+                return;
+            }
 
             if (player.UpgradeStat(statName))
             {
                 AudioManager.Instance?.PlaySfx("click");
                 GameManager.Instance?.Capture();
                 Refresh(true);
+                ShowTooltip($"{statName} Upgraded", "Attribute Increased", $"+1 to {statName}! Remaining SP: {player.StatPoints}");
             }
         }
 
         public void UpgradeStatMax(string statName)
         {
             var player = GetPlayer();
-            if (player == null || player.StatPoints <= 0) return;
+            if (player == null) return;
 
-            bool any = false;
+            if (player.StatPoints <= 0)
+            {
+                ShowTooltip("No Status Points", "Notice", "You need available Status Points (SP) to upgrade attributes. Level up or consume Golden Seeds to gain points.");
+                AudioManager.Instance?.PlaySfx("click");
+                return;
+            }
+
+            int count = 0;
             while (player.StatPoints > 0)
             {
-                if (player.UpgradeStat(statName)) any = true;
+                if (player.UpgradeStat(statName)) count++;
                 else break;
             }
 
-            if (any)
+            if (count > 0)
             {
                 AudioManager.Instance?.PlaySfx("click");
                 GameManager.Instance?.Capture();
                 Refresh(true);
+                ShowTooltip($"{statName} Maximized", "Attributes Allocated", $"Allocated +{count} points to {statName}! Remaining SP: {player.StatPoints}");
             }
         }
 
@@ -826,16 +895,15 @@ namespace TheLastKnight.UI
             if (_txtVitValue != null) _txtVitValue.text = vit.ToString();
             if (_txtDexValue != null) _txtDexValue.text = dex.ToString();
 
-            // Enable / Disable upgrade buttons based on StatPoints
-            bool hasPoints = statPoints > 0;
-            if (_btnStrPlus != null) _btnStrPlus.interactable = hasPoints;
-            if (_btnStrMax != null) _btnStrMax.interactable = hasPoints;
-            if (_btnAgiPlus != null) _btnAgiPlus.interactable = hasPoints;
-            if (_btnAgiMax != null) _btnAgiMax.interactable = hasPoints;
-            if (_btnVitPlus != null) _btnVitPlus.interactable = hasPoints;
-            if (_btnVitMax != null) _btnVitMax.interactable = hasPoints;
-            if (_btnDexPlus != null) _btnDexPlus.interactable = hasPoints;
-            if (_btnDexMax != null) _btnDexMax.interactable = hasPoints;
+            // Keep upgrade buttons always interactable for responsive hover & click feedback
+            if (_btnStrPlus != null) _btnStrPlus.interactable = true;
+            if (_btnStrMax != null) _btnStrMax.interactable = true;
+            if (_btnAgiPlus != null) _btnAgiPlus.interactable = true;
+            if (_btnAgiMax != null) _btnAgiMax.interactable = true;
+            if (_btnVitPlus != null) _btnVitPlus.interactable = true;
+            if (_btnVitMax != null) _btnVitMax.interactable = true;
+            if (_btnDexPlus != null) _btnDexPlus.interactable = true;
+            if (_btnDexMax != null) _btnDexMax.interactable = true;
 
             // Sync Quick items
             if (_quickSlots.Count > 0 && _quickSlots[0].countText != null)
@@ -923,9 +991,15 @@ namespace TheLastKnight.UI
             {
                 id = "golden_seed",
                 name = "Golden Seed of Moa",
-                typeName = "Material",
-                description = "A glowing sacred seed gathered from the ancient forest boughs.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_GoldenSeed")
+                typeName = "Consumable",
+                description = "A glowing sacred seed gathered from the ancient forest boughs. [Click to consume for +5 Stat Points]",
+                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_GoldenSeed"),
+                isConsumable = true,
+                onUse = (p) =>
+                {
+                    p.AddStatPoints(5);
+                    ShowTooltip("Golden Seed Consumed", "Stat Points Granted", "Granted +5 Status Points! Total available: " + p.StatPoints);
+                }
             });
 
             // 8. Coin Pouch
