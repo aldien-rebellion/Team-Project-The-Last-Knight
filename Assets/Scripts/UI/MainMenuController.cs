@@ -8,64 +8,177 @@ namespace TheLastKnight.UI
     public class MainMenuController : MonoBehaviour
     {
         private GameObject _panel;
-        private void Start() { ShowMain(); }
+
+        private void OnEnable()
+        {
+            LocalizationManager.OnLanguageChanged += OnLanguageChanged;
+        }
+
+        private void OnDisable()
+        {
+            LocalizationManager.OnLanguageChanged -= OnLanguageChanged;
+        }
+
+        private void OnLanguageChanged(GameLanguage lang)
+        {
+            if (_panel != null && (PauseMenuUI.Instance == null || !PauseMenuUI.Instance.IsOpen))
+            {
+                ShowMain();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_panel != null)
+            {
+                if (Application.isPlaying) Destroy(_panel);
+                else DestroyImmediate(_panel);
+                _panel = null;
+            }
+        }
+
+        private void Start()
+        {
+            ShowMain();
+        }
+
         private Transform Replace(string title)
         {
-            if (_panel != null) Destroy(_panel);
+            if (_panel != null)
+            {
+                if (Application.isPlaying) Destroy(_panel);
+                else DestroyImmediate(_panel);
+                _panel = null;
+            }
             _panel = RuntimeUI.Panel(title, out var content);
             return content;
         }
+
         public void ShowMain()
         {
             Time.timeScale = 1f;
-            var content = Replace("THE LAST KNIGHT");
-            RuntimeUI.Label(content, "A fallen kingdom. Four seals. One last oath.", 22);
-            RuntimeUI.Button(content, "Play", ShowDifficulty);
-            RuntimeUI.Button(content, "Continue", () =>
+            var content = Replace(LocalizationManager.Get("MAIN_TITLE"));
+            RuntimeUI.Label(content, LocalizationManager.Get("MAIN_SUBTITLE"), 22);
+            RuntimeUI.Button(content, LocalizationManager.Get("MAIN_PLAY"), ShowNewWorld);
+            RuntimeUI.Button(content, LocalizationManager.Get("MAIN_CONTINUE"), ShowWorldSelection)
+                .interactable = SaveSystem.HasAnySave;
+            RuntimeUI.Button(content, LocalizationManager.Get("MAIN_SETTINGS"), OpenSettings);
+            RuntimeUI.Button(content, LocalizationManager.Get("MAIN_EXIT"), Application.Quit);
+            RuntimeUI.Label(content, LocalizationManager.Get("MAIN_CONTROLS_HINT"), 17);
+        }
+
+        private void ShowNewWorld()
+        {
+            var content = Replace(LocalizationManager.Get("WORLD_NEW_TITLE"));
+            RuntimeUI.Label(content, LocalizationManager.Get("WORLD_NEW_SUBTITLE"), 18);
+
+            int nextIndex = SaveSystem.GetAllSaves().Count + 1;
+            string defaultName = $"{LocalizationManager.Get("WORLD_DEFAULT_NAME")} {nextIndex}";
+
+            RuntimeUI.Label(content, LocalizationManager.Get("WORLD_NAME_LABEL"), 16, new Color(0.9f, 0.85f, 0.7f));
+            var input = RuntimeUI.InputField(content, LocalizationManager.Get("WORLD_NAME_PLACEHOLDER"), defaultName);
+
+            RuntimeUI.Button(content, LocalizationManager.Get("DIFF_EASY"), () => StartNewGame(input.text, defaultName, GameDifficulty.Easy));
+            RuntimeUI.Button(content, LocalizationManager.Get("DIFF_NORMAL"), () => StartNewGame(input.text, defaultName, GameDifficulty.Normal));
+            RuntimeUI.Button(content, LocalizationManager.Get("DIFF_HARD"), () => StartNewGame(input.text, defaultName, GameDifficulty.Hard));
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_BACK"), ShowMain);
+        }
+
+        private void StartNewGame(string inputName, string defaultName, GameDifficulty difficulty)
+        {
+            string finalName = string.IsNullOrWhiteSpace(inputName) ? defaultName : inputName.Trim();
+            GameManager.Instance.NewGame(difficulty, finalName);
+        }
+
+        private void ShowWorldSelection()
+        {
+            var content = Replace(LocalizationManager.Get("WORLD_SELECT_TITLE"));
+            RuntimeUI.Label(content, LocalizationManager.Get("WORLD_SELECT_SUBTITLE"), 18);
+
+            var saves = SaveSystem.GetAllSaves();
+            if (saves.Count == 0)
             {
-                if (!GameManager.Instance.ContinueGame()) ShowMain();
-            }).interactable = SaveSystem.HasSave;
-            RuntimeUI.Button(content, "Settings", ShowSettings);
-            RuntimeUI.Button(content, "Exit", Application.Quit);
-            RuntimeUI.Label(content, "A/D Move   Space Jump   Shift / Right-click Dash\nLeft-click Attack / Parry   Q Potion   F Interact\nE Carnage Burst   R Buff   T Excalibur   B Status", 17);
+                RuntimeUI.Label(content, LocalizationManager.Get("WORLD_NO_SAVES"), 20, new Color(0.7f, 0.7f, 0.8f));
+            }
+            else
+            {
+                RuntimeUI.ScrollView(content, out var scrollContent, 340);
+                foreach (var save in saves)
+                {
+                    var targetSave = save;
+                    RuntimeUI.WorldCard(scrollContent, targetSave,
+                        onPlay: () => GameManager.Instance.LoadWorld(targetSave.worldId),
+                        onRename: () => ShowRenameWorld(targetSave),
+                        onDelete: () => ShowDeleteConfirm(targetSave)
+                    );
+                }
+            }
+
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_BACK"), ShowMain);
         }
-        private void ShowDifficulty()
+
+        private void ShowRenameWorld(PlayerSaveData save)
         {
-            var content = Replace("CHOOSE YOUR JOURNEY");
-            RuntimeUI.Label(content, "A new game replaces your current journey when you next save.", 19);
-            RuntimeUI.Button(content, "Easy — full damage and combat guides", () => GameManager.Instance.NewGame(GameDifficulty.Easy));
-            RuntimeUI.Button(content, "Normal — stronger enemies, reduced damage", () => GameManager.Instance.NewGame(GameDifficulty.Normal));
-            RuntimeUI.Button(content, "Hard — slow recovery, hidden enemy guides", () => GameManager.Instance.NewGame(GameDifficulty.Hard));
-            RuntimeUI.Button(content, "Back", ShowMain);
+            var content = Replace(LocalizationManager.Get("RENAME_TITLE"));
+            RuntimeUI.Label(content, LocalizationManager.Get("RENAME_SUBTITLE"), 18);
+
+            RuntimeUI.Label(content, LocalizationManager.Get("WORLD_NAME_LABEL"), 16, new Color(0.9f, 0.85f, 0.7f));
+            var input = RuntimeUI.InputField(content, LocalizationManager.Get("WORLD_NAME_PLACEHOLDER"), save.saveName);
+
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_SAVE_NAME"), () =>
+            {
+                string newName = input.text;
+                if (!string.IsNullOrWhiteSpace(newName))
+                {
+                    SaveSystem.RenameWorld(save.worldId, newName, out _);
+                }
+                ShowWorldSelection();
+            });
+
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_CANCEL"), ShowWorldSelection);
         }
-        private void ShowSettings()
+
+        private void ShowDeleteConfirm(PlayerSaveData save)
         {
-            var content = Replace("SETTINGS");
-            var audio = AudioManager.Instance;
-            AddSlider(content, "Master", audio.Master, value => audio.SetVolumes(value, audio.Music, audio.Effects));
-            AddSlider(content, "Music", audio.Music, value => audio.SetVolumes(audio.Master, value, audio.Effects));
-            AddSlider(content, "Sound effects", audio.Effects, value => audio.SetVolumes(audio.Master, audio.Music, value));
-            RuntimeUI.Button(content, "Back", () => { PlayerPrefs.Save(); ShowMain(); });
+            var content = Replace(LocalizationManager.Get("DELETE_CONFIRM_TITLE"));
+            string msg = string.Format(LocalizationManager.Get("DELETE_CONFIRM_MSG"), save.saveName);
+            RuntimeUI.Label(content, msg, 19, new Color(1f, 0.45f, 0.45f));
+
+            var btnDel = RuntimeUI.Button(content, LocalizationManager.Get("BTN_CONFIRM_DELETE"), () =>
+            {
+                SaveSystem.DeleteWorld(save.worldId, out _);
+                ShowWorldSelection();
+            });
+
+            var delColors = btnDel.colors;
+            delColors.normalColor = new Color(0.55f, 0.15f, 0.18f, 1f);
+            delColors.highlightedColor = new Color(0.75f, 0.20f, 0.25f, 1f);
+            btnDel.colors = delColors;
+
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_CANCEL"), ShowWorldSelection);
         }
-        private static void AddSlider(Transform parent, string name, float value, UnityEngine.Events.UnityAction<float> changed)
+
+        private void OpenSettings()
         {
-            var label = RuntimeUI.Label(parent, $"{name}  {Mathf.RoundToInt(value * 100)}%", 20);
-            var go = new GameObject(name, typeof(RectTransform), typeof(Slider), typeof(LayoutElement));
-            go.transform.SetParent(parent, false);
-            go.GetComponent<LayoutElement>().preferredHeight = 28;
-            var track = new GameObject("Track", typeof(RectTransform), typeof(Image));
-            track.transform.SetParent(go.transform, false);
-            var rect = track.GetComponent<RectTransform>();
-            rect.anchorMin = new Vector2(0, 0.35f); rect.anchorMax = new Vector2(1, 0.65f); rect.offsetMin = rect.offsetMax = Vector2.zero;
-            track.GetComponent<Image>().color = new Color(0.2f, 0.25f, 0.35f);
-            var handle = new GameObject("Handle", typeof(RectTransform), typeof(Image));
-            handle.transform.SetParent(go.transform, false);
-            handle.GetComponent<RectTransform>().sizeDelta = new Vector2(20, 28);
-            handle.GetComponent<Image>().color = new Color(0.9f, 0.77f, 0.48f);
-            var slider = go.GetComponent<Slider>();
-            slider.handleRect = handle.GetComponent<RectTransform>(); slider.targetGraphic = handle.GetComponent<Image>();
-            slider.minValue = 0; slider.maxValue = 1; slider.value = value;
-            slider.onValueChanged.AddListener(v => { label.text = $"{name}  {Mathf.RoundToInt(v * 100)}%"; changed(v); });
+            if (_panel != null)
+            {
+                Destroy(_panel);
+                _panel = null;
+            }
+
+            var pauseMenu = PauseMenuUI.Instance;
+            if (pauseMenu == null)
+            {
+                pauseMenu = FindAnyObjectByType<PauseMenuUI>();
+            }
+            if (pauseMenu == null)
+            {
+                var go = new GameObject("PauseMenuUI_Manager");
+                pauseMenu = go.AddComponent<PauseMenuUI>();
+            }
+
+            pauseMenu.OpenSettingsFromExternal(ShowMain);
         }
     }
 }
+

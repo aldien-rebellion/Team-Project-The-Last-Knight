@@ -7,6 +7,10 @@ namespace TheLastKnight.Core
     public class PlayerSaveData
     {
         public int version = 1;
+        public string worldId;
+        public string saveName;
+        public string lastSavedDate;
+        public string createdDate;
         public bool initialized;
         public string scene = "CityCenter";
         public Vector3 position;

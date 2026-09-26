@@ -1,62 +1,60 @@
 .hud-root {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 30%;
-    max-width: 350px;
-}
-
-.hud-container {
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.6);
-    border-width: 2px;
-    border-color: rgba(255, 255, 255, 0.4);
-    border-radius: 5px;
-}
-
-.stat-row {
-    flex-direction: column;
-    margin-bottom: 8px;
-}
-
-.stat-label {
-    color: white;
-    font-size: 14px;
-    -unity-font-style: bold;
-    margin-bottom: 4px;
-}
-
-.bar-container {
-    height: 15px;
-    background-color: rgba(0, 0, 0, 0.8);
-    border-width: 1px;
-    border-color: rgba(255, 255, 255, 0.2);
-    overflow: hidden;
-}
-
-.bar-fill {
-    height: 100%;
-    width: 100%;
-    transform-origin: left;
-}
-
-.health-fill {
-    background-color: rgb(200, 40, 40);
-}
-
-.exp-fill {
-    background-color: rgb(40, 150, 200);
+    top: 4px;
+    left: 4px;
+    width: 216px;
 }
 
 .level-container {
     flex-direction: row;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 2px;
+    margin-left: 10px;
 }
 
 .level-text {
-    color: rgb(255, 215, 0); /* Gold */
-    font-size: 18px;
+    color: rgb(255, 230, 0); /* Crisp Yellow */
+    font-size: 13px;
+    -unity-font-style: bold;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.85);
+}
+
+.bar-container {
+    height: 14px;
+    background-color: rgba(25, 25, 25, 0.9);
+    border-width: 1px;
+    border-color: rgba(220, 220, 220, 0.7);
+    border-radius: 2px;
+    margin-bottom: 3px;
+    overflow: hidden;
+    position: relative;
+    justify-content: center;
+}
+
+.bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.health-fill {
+    background-color: rgb(215, 38, 38);
+}
+
+.stamina-fill {
+    background-color: rgb(56, 175, 74);
+}
+
+.bar-tag {
+    position: absolute;
+    left: 4px;
+    top: 0;
+    bottom: 0;
+    -unity-text-align: middle-left;
+    color: rgb(15, 15, 15);
+    font-size: 10px;
     -unity-font-style: bold;
 }
 
@@ -64,8 +62,60 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    top: 0;
+    bottom: 0;
     -unity-text-align: middle-center;
     color: white;
     font-size: 10px;
     -unity-font-style: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.85);
+}
+
+/* Bottom-Right Quick Item HUD */
+.quick-item-root {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+}
+
+.quick-item-slot {
+    width: 62px;
+    height: 62px;
+    background-color: rgba(12, 16, 26, 0.88);
+    border-width: 2px;
+    border-color: rgba(220, 185, 115, 0.7);
+    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.quick-item-icon {
+    width: 36px;
+    height: 36px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.quick-item-key-badge {
+    position: absolute;
+    top: -7px;
+    left: -5px;
+    background-color: rgba(20, 26, 38, 0.95);
+    border-width: 1.5px;
+    border-color: rgba(255, 215, 0, 0.85);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: rgb(255, 225, 120);
+    font-size: 11px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.quick-item-count {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    color: white;
+    font-size: 11px;
+    -unity-font-style: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
 }
