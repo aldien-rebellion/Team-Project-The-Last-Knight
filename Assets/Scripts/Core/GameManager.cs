@@ -36,6 +36,7 @@ namespace TheLastKnight.Core
             gameObject.AddComponent<TheLastKnight.Audio.AudioManager>();
             gameObject.AddComponent<StoryDialogueUI>();
             gameObject.AddComponent<CharacterStatusUI>();
+            gameObject.AddComponent<PauseMenuUI>();
         }
 
         private void OnDestroy()

@@ -9,6 +9,7 @@ namespace TheLastKnight.UI
     public class ShopUI : MonoBehaviour
     {
         private GameObject _panel;
+        public bool IsOpen => _panel != null;
         private Text _balance, _message;
         private Button _rune, _potion;
         public void Open()
