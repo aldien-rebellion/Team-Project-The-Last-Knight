@@ -496,16 +496,8 @@ namespace TheLastKnight.UI
                 _skillSlots.Add(new SkillSlotUI { button = btn, icon = img, name = skillNames[i], description = skillDescs[i] });
             }
 
-            // 5. Quick Items Section (5 Slots)
-            string[] quickTitles = { "Healing Potion [Q]", "Ancient Scroll of Moa", "Stamina Elixir", "Iron Bark Elixir", "Token of Moa" };
-            string[] quickDescs = {
-                "Restores 50 HP immediately. Hotkey [Q]. [Click to drink]",
-                "An ancient enchanted parchment recounting the legends of the kingdom of Moa.",
-                "A refreshing herbal brew that instantly restores 50 Stamina. [Click to drink]",
-                "An alchemical defense tonic that hardens skin against demon strikes.",
-                "A rare commemorative gold coin from the royal treasury of Moa."
-            };
-            float[] quickXs = { 315f, 365f, 415f, 465f, 515f };
+            // 5. Quick Items Section (5 Slots) - Priority Queue 1 to 5
+            float[] quickXs = { 316.5f, 366.5f, 416.5f, 466.5f, 516.5f };
 
             for (int i = 0; i < 5; i++)
             {
@@ -513,39 +505,65 @@ namespace TheLastKnight.UI
                 var qGo = new GameObject($"QuickSlot_{i + 1}", typeof(RectTransform), typeof(Image), typeof(Button));
                 qGo.transform.SetParent(parent, false);
                 var rt = qGo.GetComponent<RectTransform>();
-                rt.anchoredPosition = ToUI(quickXs[i], 61);
-                rt.sizeDelta = new Vector2(44, 44);
+                rt.anchoredPosition = ToUI(quickXs[i], 68);
+                rt.sizeDelta = new Vector2(38, 38);
 
-                var img = qGo.GetComponent<Image>();
-                img.color = new Color(1f, 1f, 1f, 0.01f);
+                var bgImg = qGo.GetComponent<Image>();
+                bgImg.color = new Color(1f, 1f, 1f, 0.005f);
 
-                // Slot 1 has potion count badge
-                TextMeshProUGUI countTxt = null;
-                if (i == 0)
-                {
-                    countTxt = CreateText(qGo.transform, "Count", "3/5", 10, TextAlignmentOptions.TopRight,
-                        new Color(1f, 0.9f, 0.4f), FontStyles.Bold);
-                    var ctRt = countTxt.rectTransform;
-                    ctRt.anchorMin = Vector2.zero; ctRt.anchorMax = Vector2.one;
-                    ctRt.offsetMin = new Vector2(0, 0); ctRt.offsetMax = new Vector2(-2, -2);
-                }
+                // Highlight overlay on hover
+                var hlGo = new GameObject("Highlight", typeof(RectTransform), typeof(Image));
+                hlGo.transform.SetParent(qGo.transform, false);
+                var hlRt = hlGo.GetComponent<RectTransform>();
+                hlRt.anchorMin = Vector2.zero; hlRt.anchorMax = Vector2.one;
+                hlRt.offsetMin = hlRt.offsetMax = Vector2.zero;
+                var hlImg = hlGo.GetComponent<Image>();
+                hlImg.color = new Color(1f, 0.88f, 0.4f, 0f);
+                hlImg.raycastTarget = false;
+
+                // Priority number badge (1-5) at bottom-right
+                var numTxt = CreateText(qGo.transform, "PriorityNumber", (i + 1).ToString(), 11, TextAlignmentOptions.BottomRight,
+                    new Color(0.85f, 0.75f, 0.55f, 0.85f), FontStyles.Bold);
+                var numRt = numTxt.rectTransform;
+                numRt.anchorMin = Vector2.zero; numRt.anchorMax = Vector2.one;
+                numRt.offsetMin = Vector2.zero;
+                numRt.offsetMax = new Vector2(-2, 2);
+
+                // Item icon (dynamic)
+                var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+                iconGo.transform.SetParent(qGo.transform, false);
+                var iconRt = iconGo.GetComponent<RectTransform>();
+                iconRt.anchorMin = Vector2.zero; iconRt.anchorMax = Vector2.one;
+                iconRt.offsetMin = new Vector2(3, 3); iconRt.offsetMax = new Vector2(-3, -3);
+                var iconImg = iconGo.GetComponent<Image>();
+                iconImg.raycastTarget = false;
+                iconImg.preserveAspect = true;
+                iconImg.color = new Color(1f, 1f, 1f, 0f);
+
+                // Count text (e.g. 3/5)
+                var countTxt = CreateText(qGo.transform, "Count", "", 10, TextAlignmentOptions.TopRight,
+                    new Color(1f, 0.92f, 0.5f), FontStyles.Bold);
+                var ctRt = countTxt.rectTransform;
+                ctRt.anchorMin = Vector2.zero; ctRt.anchorMax = Vector2.one;
+                ctRt.offsetMin = Vector2.zero;
+                ctRt.offsetMax = new Vector2(-2, -2);
 
                 var btn = qGo.GetComponent<Button>();
+                btn.targetGraphic = bgImg;
                 btn.onClick.AddListener(() => OnQuickItemClicked(index));
 
-                AddHoverHighlight(qGo, img);
+                AddHoverHighlight(qGo, hlImg, 0f, 0.25f);
                 AddHoverTrigger(qGo,
-                    () => ShowTooltip(quickTitles[index], "Quick Item Slot " + (index + 1), quickDescs[index]),
+                    () => ShowQuickSlotTooltip(index),
                     HideTooltip);
 
                 _quickSlots.Add(new QuickSlotUI
                 {
                     slotIndex = i + 1,
                     button = btn,
-                    icon = img,
+                    icon = iconImg,
                     countText = countTxt,
-                    title = quickTitles[i],
-                    description = quickDescs[i]
+                    numberText = numTxt
                 });
             }
         }
@@ -892,12 +910,41 @@ namespace TheLastKnight.UI
             }
         }
 
+        private void ShowQuickSlotTooltip(int index)
+        {
+            var qm = TheLastKnight.Core.QuickItemManager.Instance;
+            var item = qm != null ? qm.GetSlot(index) : null;
+
+            if (item != null && item.count > 0)
+            {
+                string subtitle = index == 0 ? $"{item.typeName} [Ready for Q]" : $"{item.typeName} [Priority {index + 1}]";
+                ShowTooltip(item.name, subtitle, item.description);
+            }
+            else
+            {
+                ShowTooltip($"Quick Slot {index + 1} (Empty)", $"Priority {index + 1}",
+                    index == 0
+                        ? "Currently active quick slot [Q]. No item ready. When items are acquired, they will be placed here."
+                        : "Empty queue slot. When items in earlier slots are exhausted, items in later slots advance forward automatically.");
+            }
+        }
+
         private void OnQuickItemClicked(int index)
         {
             var player = GetPlayer();
             if (player == null) return;
 
-            if (index == 0) // Slot 1: Healing potion
+            var qm = TheLastKnight.Core.QuickItemManager.Instance;
+            var item = qm != null ? qm.GetSlot(index) : null;
+
+            if (item == null || item.count <= 0)
+            {
+                ShowTooltip($"Quick Slot {index + 1} Empty", $"Priority {index + 1}", "This slot is currently empty.");
+                AudioManager.Instance?.PlaySfx("click");
+                return;
+            }
+
+            if (item.id == "potion_heal")
             {
                 if (player.HealingPotions > 0 && player.CurrentHP < player.MaxHP)
                 {
@@ -916,15 +963,12 @@ namespace TheLastKnight.UI
                     ShowTooltip("Full Health", "Notice", "Arthur is already at maximum health.");
                 }
             }
-            else if (index == 2) // Slot 3: Stamina Elixir
+            else
             {
-                if (player.CurrentStamina < player.MaxStamina)
-                {
-                    player.Rest();
-                    AudioManager.Instance?.PlaySfx("click");
-                    ShowTooltip("Stamina Restored", "Recovery", "Arthur feels revitalized!");
-                    Refresh(true);
-                }
+                qm.UseSlot(index, player);
+                AudioManager.Instance?.PlaySfx("click");
+                GameManager.Instance?.Capture();
+                Refresh(true);
             }
         }
 
@@ -933,6 +977,42 @@ namespace TheLastKnight.UI
             if (slot.item == null) return;
             var player = GetPlayer();
             if (player == null) return;
+
+            if (slot.item.isConsumable)
+            {
+                var qm = TheLastKnight.Core.QuickItemManager.Instance;
+                if (qm != null)
+                {
+                    int emptyIdx = -1;
+                    for (int i = 0; i < TheLastKnight.Core.QuickItemManager.MaxSlots; i++)
+                    {
+                        if (qm.GetSlot(i) == null) { emptyIdx = i; break; }
+                    }
+
+                    if (emptyIdx != -1)
+                    {
+                        qm.SetSlot(emptyIdx, new TheLastKnight.Core.QuickItemSlotData
+                        {
+                            id = slot.item.id,
+                            name = slot.item.name,
+                            typeName = slot.item.typeName,
+                            description = slot.item.description,
+                            icon = slot.item.icon,
+                            count = slot.item.count,
+                            maxCount = 99,
+                            onUse = slot.item.onUse
+                        });
+                        string itemName = slot.item.name;
+                        slot.item = null;
+                        slot.icon.sprite = null;
+                        slot.icon.color = new Color(1f, 1f, 1f, 0f);
+                        AudioManager.Instance?.PlaySfx("click");
+                        Refresh(true);
+                        ShowTooltip("Assigned to Quick Slot", $"Priority {emptyIdx + 1}", $"{itemName} placed in Quick Slot {emptyIdx + 1}.");
+                        return;
+                    }
+                }
+            }
 
             if (slot.item.onUse != null)
             {
@@ -1005,10 +1085,42 @@ namespace TheLastKnight.UI
             if (_btnDexPlus != null) _btnDexPlus.interactable = true;
             if (_btnDexMax != null) _btnDexMax.interactable = true;
 
-            // Sync Quick items
-            if (_quickSlots.Count > 0 && _quickSlots[0].countText != null)
+            // Sync Quick items (1-5 Priority Queue)
+            var qm = TheLastKnight.Core.QuickItemManager.Instance;
+            if (qm != null && player != null)
             {
-                _quickSlots[0].countText.text = $"{potions}/5";
+                qm.SyncItemCount("potion_heal", player.HealingPotions);
+            }
+
+            for (int i = 0; i < _quickSlots.Count; i++)
+            {
+                var slotUI = _quickSlots[i];
+                var item = qm != null ? qm.GetSlot(i) : null;
+
+                if (item != null && item.count > 0)
+                {
+                    if (slotUI.icon != null)
+                    {
+                        slotUI.icon.sprite = item.icon;
+                        slotUI.icon.color = Color.white;
+                    }
+                    if (slotUI.countText != null)
+                    {
+                        slotUI.countText.text = item.maxCount > 1 ? $"{item.count}/{item.maxCount}" : $"{item.count}";
+                    }
+                }
+                else
+                {
+                    if (slotUI.icon != null)
+                    {
+                        slotUI.icon.sprite = null;
+                        slotUI.icon.color = new Color(1f, 1f, 1f, 0f);
+                    }
+                    if (slotUI.countText != null)
+                    {
+                        slotUI.countText.text = "";
+                    }
+                }
             }
         }
 
@@ -1078,6 +1190,7 @@ namespace TheLastKnight.UI
             public Button button;
             public Image icon;
             public TextMeshProUGUI countText;
+            public TextMeshProUGUI numberText;
             public string title;
             public string description;
         }

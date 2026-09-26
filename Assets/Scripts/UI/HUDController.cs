@@ -80,21 +80,54 @@ namespace TheLastKnight.UI
             if (_healthFill != null) _healthFill.style.width = Length.Percent(_playerStats.HealthPercentage * 100f);
             if (_staminaFill != null) _staminaFill.style.width = Length.Percent(_playerStats.StaminaPercentage * 100f);
 
-            // 2. Bottom-Right: Usable Q Item (Potion)
-            if (_potionValue != null)
+            // 2. Bottom-Right: Usable Q Item (Slot 1 of QuickItemManager)
+            var qm = TheLastKnight.Core.QuickItemManager.Instance;
+            var activeItem = qm != null ? qm.GetActiveItem() : null;
+
+            if (activeItem != null && activeItem.count > 0)
             {
-                _potionValue.text = $"{_playerStats.HealingPotions}/5";
+                if (_potionIcon != null)
+                {
+                    _potionIcon.style.opacity = 1f;
+                    if (_potionIcon is Image uiImg && activeItem.icon != null)
+                    {
+                        if (uiImg.sprite != activeItem.icon)
+                        {
+                            uiImg.sprite = activeItem.icon;
+                        }
+                    }
+                }
+
+                if (_potionValue != null)
+                {
+                    _potionValue.text = activeItem.maxCount > 1 ? $"{activeItem.count}/{activeItem.maxCount}" : $"{activeItem.count}";
+                }
+
+                if (_quickItemSlot != null)
+                {
+                    _quickItemSlot.style.opacity = 1f;
+                }
+            }
+            else
+            {
+                if (_potionIcon != null)
+                {
+                    _potionIcon.style.opacity = 0.2f;
+                }
+                if (_potionValue != null)
+                {
+                    _potionValue.text = "0";
+                }
+                if (_quickItemSlot != null)
+                {
+                    _quickItemSlot.style.opacity = 0.5f;
+                }
             }
 
             if (_quickItemKey != null)
             {
                 string key = KeyRebindManager.GetCurrentBindingDisplay("UseDrink", 0);
                 _quickItemKey.text = (!string.IsNullOrEmpty(key) && key != "Unknown" && key != "N/A") ? key : "Q";
-            }
-
-            if (_potionIcon != null)
-            {
-                _potionIcon.style.opacity = _playerStats.HealingPotions > 0 ? 1f : 0.4f;
             }
         }
     }
