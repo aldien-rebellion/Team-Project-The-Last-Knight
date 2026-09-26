@@ -8,12 +8,23 @@ namespace TheLastKnight.Editor
     public static class PlayModeStartSceneHelper
     {
         private const string MenuPath = "Tools/Play Mode/Always Start From Main Menu";
+        private const string ResetZoomMenuPath = "Tools/Play Mode/Reset Game View Zoom (1x)";
         private const string PrefKey = "TheLastKnight_PlayMode_AlwaysStartFromMainMenu";
         private const string DefaultMainMenuPath = "Assets/Scenes/MainMenu.unity";
 
         static PlayModeStartSceneHelper()
         {
             EditorApplication.delayCall += ApplySetting;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (state == PlayModeStateChange.EnteredPlayMode)
+            {
+                // Auto-reset Game View zoom to 1x to prevent accidental camera/UI magnification
+                EditorApplication.delayCall += ResetGameViewZoom;
+            }
         }
 
         [MenuItem(MenuPath, false, 100)]
@@ -30,6 +41,36 @@ namespace TheLastKnight.Editor
         {
             Menu.SetChecked(MenuPath, EditorPrefs.GetBool(PrefKey, true));
             return true;
+        }
+
+        [MenuItem(ResetZoomMenuPath, false, 110)]
+        public static void ResetGameViewZoom()
+        {
+            try
+            {
+                var gameViewType = typeof(UnityEditor.EditorWindow).Assembly.GetType("UnityEditor.GameView");
+                if (gameViewType == null) return;
+
+                var gameView = UnityEditor.EditorWindow.GetWindow(gameViewType, false, null, false);
+                if (gameView == null) return;
+
+                var snapZoom = gameViewType.GetMethod(
+                    "SnapZoom",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                    null,
+                    new System.Type[] { typeof(float) },
+                    null);
+
+                if (snapZoom != null)
+                {
+                    snapZoom.Invoke(gameView, new object[] { 1f });
+                    gameView.Repaint();
+                }
+            }
+            catch
+            {
+                // Ignore if GameView window is not accessible
+            }
         }
 
         public static void ApplySetting()
