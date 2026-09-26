@@ -55,6 +55,22 @@ namespace TheLastKnight.Core
             { "DIFF_NORMAL", "Normal — stronger enemies, reduced damage" },
             { "DIFF_HARD", "Hard — slow recovery, hidden enemy guides" },
 
+            // Worlds / Save System
+            { "WORLD_NEW_TITLE", "CREATE NEW WORLD" },
+            { "WORLD_NEW_SUBTITLE", "Enter save name and choose your difficulty" },
+            { "WORLD_NAME_LABEL", "World Name:" },
+            { "WORLD_NAME_PLACEHOLDER", "Enter world name..." },
+            { "WORLD_DEFAULT_NAME", "World" },
+            { "WORLD_SELECT_TITLE", "SELECT WORLD" },
+            { "WORLD_SELECT_SUBTITLE", "Choose a world to continue your journey" },
+            { "WORLD_NO_SAVES", "No saved worlds found." },
+            { "BTN_LOAD_WORLD", "Play" },
+            { "BTN_DELETE_WORLD", "Delete" },
+            { "DELETE_CONFIRM_TITLE", "DELETE WORLD" },
+            { "DELETE_CONFIRM_MSG", "Are you sure you want to delete '{0}'?\nThis world will be lost forever!" },
+            { "BTN_CONFIRM_DELETE", "Delete World" },
+            { "BTN_CANCEL", "Cancel" },
+
             // Main Pause
             { "PAUSE_TITLE", "PAUSED" },
             { "PAUSE_SUBTITLE", "Game is paused" },
@@ -110,6 +126,22 @@ namespace TheLastKnight.Core
             { "DIFF_EASY", "ง่าย — ความเสียหายเต็มที่ พร้อมคำแนะนำการต่อสู้" },
             { "DIFF_NORMAL", "ปกติ — ศัตรูแข็งแกร่งขึ้น ความเสียหายลดลง" },
             { "DIFF_HARD", "ยาก — ฟื้นฟูช้า ซ่อนคำแนะนำศัตรู" },
+
+            // Worlds / Save System
+            { "WORLD_NEW_TITLE", "สร้างเซฟใหม่" },
+            { "WORLD_NEW_SUBTITLE", "ตั้งชื่อเซฟและเลือกระดับความยาก" },
+            { "WORLD_NAME_LABEL", "ชื่อเซฟ (โลก):" },
+            { "WORLD_NAME_PLACEHOLDER", "พิมพ์ชื่อเซฟที่นี่..." },
+            { "WORLD_DEFAULT_NAME", "โลก" },
+            { "WORLD_SELECT_TITLE", "เลือกเซฟ (โลก)" },
+            { "WORLD_SELECT_SUBTITLE", "เลือกเซฟเพื่อออกเดินทางต่อ" },
+            { "WORLD_NO_SAVES", "ยังไม่มีข้อมูลเซฟ" },
+            { "BTN_LOAD_WORLD", "เข้าเล่น" },
+            { "BTN_DELETE_WORLD", "ลบ" },
+            { "DELETE_CONFIRM_TITLE", "ยืนยันการลบเซฟ" },
+            { "DELETE_CONFIRM_MSG", "คุณแน่ใจหรือไม่ว่าต้องการลบเซฟ '{0}'?\nโลกนี้จะถูกลบถาวรและไม่สามารถกู้คืนได้!" },
+            { "BTN_CONFIRM_DELETE", "ยืนยันลบเซฟ" },
+            { "BTN_CANCEL", "ยกเลิก" },
 
             // Main Pause
             { "PAUSE_TITLE", "หยุดเกม" },

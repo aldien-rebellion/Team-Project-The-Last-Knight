@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -65,7 +66,14 @@ namespace TheLastKnight.Core
                 if (State.initialized) Player.Restore(State);
                 if (_restorePosition) Player.transform.position = State.position;
                 Player.GetComponent<PlayerController>().ResetVelocity();
-                if (!State.initialized) Capture();
+                if (!State.initialized)
+                {
+                    Capture();
+                    if (!string.IsNullOrEmpty(State.worldId))
+                    {
+                        SaveSystem.Save(State, out _);
+                    }
+                }
                 if (_checkpoint == null) { Capture(); _checkpoint = State.Copy(); }
             }
             _restorePosition = false;
@@ -104,7 +112,28 @@ namespace TheLastKnight.Core
 
         public void NewGame(GameDifficulty difficulty)
         {
-            State = new PlayerSaveData { difficulty = difficulty };
+            NewGame(difficulty, null);
+        }
+
+        public void NewGame(GameDifficulty difficulty, string saveName)
+        {
+            string worldId = Guid.NewGuid().ToString("N");
+            if (string.IsNullOrWhiteSpace(saveName))
+            {
+                int count = SaveSystem.GetAllSaves().Count + 1;
+                saveName = $"{LocalizationManager.Get("WORLD_DEFAULT_NAME")} {count}";
+            }
+
+            State = new PlayerSaveData
+            {
+                difficulty = difficulty,
+                worldId = worldId,
+                saveName = saveName.Trim(),
+                createdDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
+                lastSavedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+            };
+
+            SaveSystem.ActiveWorldId = worldId;
             GameDifficultyManager.Current = difficulty;
             _checkpoint = null;
             ClearPortalArrival();
@@ -114,6 +143,13 @@ namespace TheLastKnight.Core
         public bool ContinueGame()
         {
             if (!SaveSystem.TryLoad(out var saved)) return false;
+            RestoreCheckpoint(saved);
+            return true;
+        }
+
+        public bool LoadWorld(string worldId)
+        {
+            if (!SaveSystem.TryLoadWorld(worldId, out var saved)) return false;
             RestoreCheckpoint(saved);
             return true;
         }
@@ -168,7 +204,8 @@ namespace TheLastKnight.Core
             RuntimeUI.Button(content, "Respawn", () =>
             {
                 if (_checkpoint != null) RestoreCheckpoint(_checkpoint);
-                else NewGame(GameDifficultyManager.Current);
+                else if (SaveSystem.TryLoad(out var saved)) RestoreCheckpoint(saved);
+                else NewGame(GameDifficultyManager.Current, State?.saveName);
             });
             RuntimeUI.Button(content, "Exit to Main Menu", () => Load("MainMenu", false));
         }

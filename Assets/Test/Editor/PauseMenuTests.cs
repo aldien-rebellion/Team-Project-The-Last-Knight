@@ -170,5 +170,28 @@ namespace TheLastKnight.Tests
 
             UnityEngine.Object.DestroyImmediate(go);
         }
+
+        [Test]
+        public void MainMenuController_ShowNewWorld_ContainsNameInputAndDifficultyButtons()
+        {
+            var menuType = RuntimeType("TheLastKnight.UI.MainMenuController");
+            var go = new GameObject("Test_MainMenu_NewWorld");
+            var menu = go.AddComponent(menuType);
+
+            var showNewWorld = menuType.GetMethod("ShowNewWorld", BindingFlags.NonPublic | BindingFlags.Instance);
+            showNewWorld.Invoke(menu, null);
+
+            var input = UnityEngine.Object.FindAnyObjectByType<InputField>();
+            Assert.That(input, Is.Not.Null, "Name InputField must exist");
+            Assert.That(input.text, Does.StartWith("World").Or.StartWith("โลก"));
+
+            var buttons = UnityEngine.Object.FindObjectsByType<Button>(FindObjectsSortMode.None);
+            var buttonNames = System.Array.ConvertAll(buttons, b => b.name);
+            Assert.That(buttonNames.Any(n => n.Contains("Easy") || n.Contains("ง่าย")), Is.True);
+            Assert.That(buttonNames.Any(n => n.Contains("Normal") || n.Contains("ปกติ")), Is.True);
+            Assert.That(buttonNames.Any(n => n.Contains("Hard") || n.Contains("ยาก")), Is.True);
+
+            UnityEngine.Object.DestroyImmediate(go);
+        }
     }
 }

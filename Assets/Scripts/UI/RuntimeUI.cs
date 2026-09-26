@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using TheLastKnight.Core;
 
 namespace TheLastKnight.UI
 {
@@ -205,6 +206,177 @@ namespace TheLastKnight.UI
             btnLe.flexibleWidth = 0f;
 
             return btn;
+        }
+
+        public static UnityEngine.UI.InputField InputField(Transform parent, string placeholderText, string defaultText, UnityAction<string> onValueChanged = null)
+        {
+            var go = new GameObject("InputField", typeof(RectTransform), typeof(Image), typeof(UnityEngine.UI.InputField), typeof(LayoutElement));
+            go.transform.SetParent(parent, false);
+
+            var le = go.GetComponent<LayoutElement>();
+            le.preferredHeight = 44;
+            le.minHeight = 40;
+
+            var bg = go.GetComponent<Image>();
+            bg.color = new Color(0.10f, 0.14f, 0.20f, 0.95f);
+            bg.raycastTarget = true;
+
+            // Placeholder Text
+            var phGo = new GameObject("Placeholder", typeof(RectTransform), typeof(Text));
+            phGo.transform.SetParent(go.transform, false);
+            var phRect = phGo.GetComponent<RectTransform>();
+            phRect.anchorMin = Vector2.zero; phRect.anchorMax = Vector2.one;
+            phRect.offsetMin = new Vector2(14, 2); phRect.offsetMax = new Vector2(-14, -2);
+            var phText = phGo.GetComponent<Text>();
+            phText.font = Font;
+            phText.fontSize = 20;
+            phText.fontStyle = FontStyle.Italic;
+            phText.color = new Color(0.6f, 0.65f, 0.75f, 0.6f);
+            phText.alignment = TextAnchor.MiddleLeft;
+            phText.text = placeholderText;
+
+            // Input Text
+            var textGo = new GameObject("Text", typeof(RectTransform), typeof(Text));
+            textGo.transform.SetParent(go.transform, false);
+            var textRect = textGo.GetComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero; textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(14, 2); textRect.offsetMax = new Vector2(-14, -2);
+            var inputText = textGo.GetComponent<Text>();
+            inputText.font = Font;
+            inputText.fontSize = 20;
+            inputText.color = new Color(0.95f, 0.90f, 0.75f, 1f);
+            inputText.alignment = TextAnchor.MiddleLeft;
+            inputText.supportRichText = false;
+
+            var input = go.GetComponent<UnityEngine.UI.InputField>();
+            input.textComponent = inputText;
+            input.placeholder = phText;
+            input.lineType = UnityEngine.UI.InputField.LineType.SingleLine;
+            input.characterLimit = 32;
+            input.text = defaultText;
+
+            if (onValueChanged != null)
+            {
+                input.onValueChanged.AddListener(onValueChanged);
+            }
+
+            return input;
+        }
+
+        public static ScrollRect ScrollView(Transform parent, out Transform scrollContent, float preferredHeight = 320)
+        {
+            var scrollRoot = new GameObject("ScrollView", typeof(RectTransform), typeof(Image), typeof(Mask), typeof(ScrollRect), typeof(LayoutElement));
+            scrollRoot.transform.SetParent(parent, false);
+
+            var le = scrollRoot.GetComponent<LayoutElement>();
+            le.preferredHeight = preferredHeight;
+            le.flexibleHeight = 1f;
+
+            var bgImg = scrollRoot.GetComponent<Image>();
+            bgImg.color = new Color(0.04f, 0.06f, 0.10f, 0.6f);
+
+            var mask = scrollRoot.GetComponent<Mask>();
+            mask.showMaskGraphic = true;
+
+            var contentGo = new GameObject("ScrollContent", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
+            contentGo.transform.SetParent(scrollRoot.transform, false);
+
+            var contentRect = contentGo.GetComponent<RectTransform>();
+            contentRect.anchorMin = new Vector2(0, 1);
+            contentRect.anchorMax = new Vector2(1, 1);
+            contentRect.pivot = new Vector2(0.5f, 1);
+            contentRect.offsetMin = Vector2.zero;
+            contentRect.offsetMax = Vector2.zero;
+
+            var layout = contentGo.GetComponent<VerticalLayoutGroup>();
+            layout.spacing = 8;
+            layout.padding = new RectOffset(8, 8, 8, 8);
+            layout.childControlWidth = true;
+            layout.childForceExpandWidth = true;
+            layout.childControlHeight = true;
+            layout.childForceExpandHeight = false;
+
+            var fitter = contentGo.GetComponent<ContentSizeFitter>();
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            var scroll = scrollRoot.GetComponent<ScrollRect>();
+            scroll.content = contentRect;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+            scroll.scrollSensitivity = 25f;
+
+            scrollContent = contentGo.transform;
+            return scroll;
+        }
+
+        public static GameObject WorldCard(Transform parent, PlayerSaveData save, UnityAction onPlay, UnityAction onDelete)
+        {
+            var card = new GameObject("Card_" + save.worldId, typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
+            card.transform.SetParent(parent, false);
+
+            var le = card.GetComponent<LayoutElement>();
+            le.preferredHeight = 64;
+            le.minHeight = 58;
+
+            var img = card.GetComponent<Image>();
+            img.color = new Color(0.12f, 0.16f, 0.24f, 0.85f);
+
+            var hLayout = card.GetComponent<HorizontalLayoutGroup>();
+            hLayout.spacing = 12;
+            hLayout.padding = new RectOffset(14, 14, 6, 6);
+            hLayout.childAlignment = TextAnchor.MiddleCenter;
+            hLayout.childControlWidth = true;
+            hLayout.childForceExpandWidth = false;
+            hLayout.childControlHeight = true;
+            hLayout.childForceExpandHeight = true;
+
+            // Info column (left)
+            var infoGo = new GameObject("Info", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(LayoutElement));
+            infoGo.transform.SetParent(card.transform, false);
+            var infoLe = infoGo.GetComponent<LayoutElement>();
+            infoLe.flexibleWidth = 1f;
+
+            var vLayout = infoGo.GetComponent<VerticalLayoutGroup>();
+            vLayout.spacing = 2;
+            vLayout.childAlignment = TextAnchor.MiddleLeft;
+            vLayout.childControlWidth = true;
+            vLayout.childForceExpandWidth = true;
+            vLayout.childControlHeight = true;
+            vLayout.childForceExpandHeight = false;
+
+            string difficultyName = save.difficulty.ToString();
+            string titleText = $"{save.saveName}   [{difficultyName}]";
+            var titleLbl = Label(infoGo.transform, titleText, 18, new Color(0.95f, 0.85f, 0.45f));
+            titleLbl.alignment = TextAnchor.MiddleLeft;
+            titleLbl.GetComponent<LayoutElement>().preferredHeight = 24;
+
+            string dateStr = !string.IsNullOrEmpty(save.lastSavedDate) ? save.lastSavedDate : "—";
+            string subText = $"Lv.{save.level}  •  {save.scene}  •  {dateStr}";
+            var subLbl = Label(infoGo.transform, subText, 14, new Color(0.70f, 0.75f, 0.85f));
+            subLbl.alignment = TextAnchor.MiddleLeft;
+            subLbl.GetComponent<LayoutElement>().preferredHeight = 20;
+
+            // Buttons (right)
+            var btnPlay = Button(card.transform, LocalizationManager.Get("BTN_LOAD_WORLD"), onPlay);
+            var btnPlayLe = btnPlay.GetComponent<LayoutElement>();
+            btnPlayLe.preferredWidth = 110;
+            btnPlayLe.preferredHeight = 42;
+            btnPlayLe.flexibleWidth = 0f;
+
+            var btnDel = Button(card.transform, LocalizationManager.Get("BTN_DELETE_WORLD"), onDelete);
+            var btnDelLe = btnDel.GetComponent<LayoutElement>();
+            btnDelLe.preferredWidth = 80;
+            btnDelLe.preferredHeight = 42;
+            btnDelLe.flexibleWidth = 0f;
+
+            var delColors = btnDel.colors;
+            delColors.normalColor = new Color(0.40f, 0.15f, 0.18f, 1f);
+            delColors.highlightedColor = new Color(0.60f, 0.20f, 0.25f, 1f);
+            delColors.pressedColor = new Color(0.30f, 0.10f, 0.12f, 1f);
+            btnDel.colors = delColors;
+
+            return card;
         }
     }
 }
