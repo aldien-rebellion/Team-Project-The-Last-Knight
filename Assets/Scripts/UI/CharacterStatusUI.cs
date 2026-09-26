@@ -620,8 +620,9 @@ namespace TheLastKnight.UI
 
         private void BuildInventoryGrid(Transform parent)
         {
-            float[] colXs = { 602f, 645f, 688f, 731f };
-            float[] rowYs = { 262f, 220f, 178f, 136f, 94f, 52f };
+            float[] colXs = { 600f, 645f, 690f, 735f };
+            float[] rowYs = { 262.5f, 219.5f, 176.5f, 133.5f, 90.5f, 47.5f };
+            Vector2 slotSize = new Vector2(38f, 39f);
 
             var items = GetInitialInventoryData();
 
@@ -634,23 +635,58 @@ namespace TheLastKnight.UI
                     slotGo.transform.SetParent(parent, false);
                     var rt = slotGo.GetComponent<RectTransform>();
                     rt.anchoredPosition = ToUI(colXs[c], rowYs[r]);
-                    rt.sizeDelta = new Vector2(38, 38);
+                    rt.sizeDelta = slotSize;
 
-                    var img = slotGo.GetComponent<Image>();
-                    img.color = new Color(1f, 1f, 1f, 0.01f); // Transparent over baked slot frame
+                    // Invisible click/raycast target
+                    var bgImg = slotGo.GetComponent<Image>();
+                    bgImg.color = new Color(1f, 1f, 1f, 0.005f);
+
+                    // Child: Highlight image (golden highlight perfectly aligned to slot borders)
+                    var hlGo = new GameObject("Highlight", typeof(RectTransform), typeof(Image));
+                    hlGo.transform.SetParent(slotGo.transform, false);
+                    var hlRt = hlGo.GetComponent<RectTransform>();
+                    hlRt.anchorMin = Vector2.zero; hlRt.anchorMax = Vector2.one;
+                    hlRt.offsetMin = Vector2.zero; hlRt.offsetMax = Vector2.zero;
+                    var hlImg = hlGo.GetComponent<Image>();
+                    hlImg.color = new Color(1f, 0.88f, 0.4f, 0f);
+                    hlImg.raycastTarget = false;
+
+                    // Child: Item Icon (shown only when item is present)
+                    var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+                    iconGo.transform.SetParent(slotGo.transform, false);
+                    var iconRt = iconGo.GetComponent<RectTransform>();
+                    iconRt.anchorMin = Vector2.zero; iconRt.anchorMax = Vector2.one;
+                    iconRt.offsetMin = new Vector2(3, 3); iconRt.offsetMax = new Vector2(-3, -3);
+                    var iconImg = iconGo.GetComponent<Image>();
+                    iconImg.raycastTarget = false;
+                    iconImg.preserveAspect = true;
+
+                    var item = (index < items.Count) ? items[index] : null;
+                    if (item != null && item.icon != null)
+                    {
+                        iconImg.sprite = item.icon;
+                        iconImg.color = Color.white;
+                    }
+                    else
+                    {
+                        iconImg.sprite = null;
+                        iconImg.color = new Color(1f, 1f, 1f, 0f);
+                    }
 
                     var btn = slotGo.GetComponent<Button>();
+                    btn.targetGraphic = bgImg;
+
                     var slotData = new InventorySlotUI
                     {
                         index = index,
                         button = btn,
-                        icon = img,
-                        item = (index < items.Count) ? items[index] : null
+                        icon = iconImg,
+                        item = item
                     };
 
                     btn.onClick.AddListener(() => OnInventorySlotClicked(slotData));
 
-                    AddHoverHighlight(slotGo, img);
+                    AddHoverHighlight(slotGo, hlImg, 0f, 0.25f);
                     AddHoverTrigger(slotGo,
                         () =>
                         {
@@ -714,16 +750,16 @@ namespace TheLastKnight.UI
             return tmp;
         }
 
-        private void AddHoverHighlight(GameObject target, Image img)
+        private void AddHoverHighlight(GameObject target, Image img, float normalAlpha = 0.01f, float hoverAlpha = 0.25f)
         {
             var trigger = target.GetComponent<UnityEngine.EventSystems.EventTrigger>() ?? target.AddComponent<UnityEngine.EventSystems.EventTrigger>();
 
             var enter = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerEnter };
-            enter.callback.AddListener((d) => { img.color = new Color(1f, 0.85f, 0.4f, 0.25f); });
+            enter.callback.AddListener((d) => { img.color = new Color(1f, 0.85f, 0.4f, hoverAlpha); });
             trigger.triggers.Add(enter);
 
             var exit = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerExit };
-            exit.callback.AddListener((d) => { img.color = new Color(1f, 1f, 1f, 0.01f); });
+            exit.callback.AddListener((d) => { img.color = new Color(1f, 1f, 1f, normalAlpha); });
             trigger.triggers.Add(exit);
         }
 
@@ -932,300 +968,40 @@ namespace TheLastKnight.UI
 
         private List<InventoryItemData> GetInitialInventoryData()
         {
-            var list = new List<InventoryItemData>();
+            // Arthur starts with an empty inventory.
+            // Items can be added dynamically via AddInventoryItem().
+            return new List<InventoryItemData>();
+        }
 
-            // 1. Arthur's Greatsword
-            list.Add(new InventoryItemData
+        public void AddInventoryItem(InventoryItemData newItem)
+        {
+            if (newItem == null) return;
+            for (int i = 0; i < _inventorySlots.Count; i++)
             {
-                id = "sword_arthur",
-                name = "Knight's Greatsword",
-                typeName = "Equipment (Weapon)",
-                description = "The stalwart blade forged for Arthur of Moa. Increases physical attack power.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_Sword")
-            });
-
-            // 2. Healing Potion
-            list.Add(new InventoryItemData
-            {
-                id = "heal_potion",
-                name = "Medium Healing Potion",
-                typeName = "Consumable",
-                description = "A distilled alchemical draught. Restores 50 HP on drink. [Click to use]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_RedPotion"),
-                isConsumable = true,
-                onUse = (p) =>
+                if (_inventorySlots[i].item == null)
                 {
-                    if (p.HealingPotions > 0 && p.CurrentHP < p.MaxHP) p.CompletePotionDrink();
+                    _inventorySlots[i].item = newItem;
+                    if (_inventorySlots[i].icon != null)
+                    {
+                        _inventorySlots[i].icon.sprite = newItem.icon;
+                        _inventorySlots[i].icon.color = Color.white;
+                    }
+                    break;
                 }
-            });
+            }
+        }
 
-            // 3. Knight Armor
-            list.Add(new InventoryItemData
+        public void ClearInventory()
+        {
+            for (int i = 0; i < _inventorySlots.Count; i++)
             {
-                id = "armor_knight",
-                name = "Knight's Plate Armor",
-                typeName = "Equipment (Chest)",
-                description = "Tempered steel breastplate inscribed with protective runes of the royal realm.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_DarkArmor")
-            });
-
-            // 4. Knight Greaves
-            list.Add(new InventoryItemData
-            {
-                id = "boots_knight",
-                name = "Knight's Greaves",
-                typeName = "Equipment (Boots)",
-                description = "Reinforced greaves granting stability and swift dash recovery.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_Boots")
-            });
-
-            // 5. Silver Breastplate
-            list.Add(new InventoryItemData
-            {
-                id = "armor_silver",
-                name = "Silver Guard Armor",
-                typeName = "Equipment (Chest)",
-                description = "Polished parade armor worn by high ranking knights.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_SilverArmor")
-            });
-
-            // 6. Stamina Elixir
-            list.Add(new InventoryItemData
-            {
-                id = "stamina_potion",
-                name = "Stamina Elixir",
-                typeName = "Consumable",
-                description = "Herbal extract that instantly restores stamina. [Click to drink]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_GreenPotion"),
-                isConsumable = true,
-                onUse = (p) =>
+                _inventorySlots[i].item = null;
+                if (_inventorySlots[i].icon != null)
                 {
-                    p.Rest();
+                    _inventorySlots[i].icon.sprite = null;
+                    _inventorySlots[i].icon.color = new Color(1f, 1f, 1f, 0f);
                 }
-            });
-
-            // 7. Golden Seed of Moa
-            list.Add(new InventoryItemData
-            {
-                id = "golden_seed",
-                name = "Golden Seed of Moa",
-                typeName = "Consumable",
-                description = "A glowing sacred seed gathered from the ancient forest boughs. [Click to consume for +5 Stat Points]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_GoldenSeed"),
-                isConsumable = true,
-                onUse = (p) =>
-                {
-                    p.AddStatPoints(5);
-                    ShowTooltip("Golden Seed Consumed", "Stat Points Granted", "Granted +5 Status Points! Total available: " + p.StatPoints);
-                }
-            });
-
-            // 8. Coin Pouch
-            list.Add(new InventoryItemData
-            {
-                id = "coin_pouch",
-                name = "Royal Coin Pouch",
-                typeName = "Valuable",
-                description = "A heavy pouch filled with gold coins recovered from fallen foes. [Click to open]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_GoldCoin"),
-                isConsumable = true,
-                onUse = (p) =>
-                {
-                    p.AddGold(100);
-                }
-            });
-
-            // 9. Bronze Broadsword
-            list.Add(new InventoryItemData
-            {
-                id = "sword_bronze",
-                name = "Bronze Broadsword",
-                typeName = "Equipment (Weapon)",
-                description = "A heavy backup blade kept sharp in case of battle.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_BronzeSword")
-            });
-
-            // 10. Secondary Healing Potion
-            list.Add(new InventoryItemData
-            {
-                id = "heal_potion_2",
-                name = "Red Healing Potion",
-                typeName = "Consumable",
-                description = "Restores 50 HP. [Click to use]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_RedPotion2"),
-                isConsumable = true,
-                onUse = (p) =>
-                {
-                    if (p.CurrentHP < p.MaxHP) p.Heal(50f);
-                }
-            });
-
-            // 11. Leather Tunic
-            list.Add(new InventoryItemData
-            {
-                id = "armor_leather",
-                name = "Scout's Leather Armor",
-                typeName = "Equipment (Armor)",
-                description = "Lightweight boiled leather offering superior maneuverability.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_LeatherArmor")
-            });
-
-            // 12. Steel Greaves
-            list.Add(new InventoryItemData
-            {
-                id = "boots_heavy",
-                name = "Heavy Marching Greaves",
-                typeName = "Equipment (Boots)",
-                description = "Heavy greaves worn during long sieges.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_HeavyBoots")
-            });
-
-            // 13. Silver Dart
-            list.Add(new InventoryItemData
-            {
-                id = "dart_silver",
-                name = "Silver Throwing Dart",
-                typeName = "Consumable",
-                description = "A blessed throwing dart deadly to unholy monstrosities.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_Dart")
-            });
-
-            // 14. Demon Plate
-            list.Add(new InventoryItemData
-            {
-                id = "armor_demon",
-                name = "Dark Demon Armor",
-                typeName = "Equipment (Armor)",
-                description = "Forged from abyss ore, radiating cold demonic energy.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_DemonArmor")
-            });
-
-            // 15. Demon Rune of Trident (Slot 15)
-            list.Add(new InventoryItemData
-            {
-                id = "rune_3",
-                name = "Rune of the Trident",
-                typeName = "Demon Rune (Quest)",
-                description = "One of four ancient runes required to breach the Demon Castle Gates.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_PurpleShard")
-            });
-
-            // 16. Supply Pouch
-            list.Add(new InventoryItemData
-            {
-                id = "supply_pouch",
-                name = "Soldier's Rucksack",
-                typeName = "Quest Item",
-                description = "Contains traveler supplies and parchment map fragments.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_Pouch")
-            });
-
-            // 17. Reinforced Plate
-            list.Add(new InventoryItemData
-            {
-                id = "armor_reinforced",
-                name = "Reinforced Vanguard Plate",
-                typeName = "Equipment (Armor)",
-                description = "Extra-thick breastplate capable of deflecting boss strikes.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_SilverArmor2")
-            });
-
-            // 18. Vitality Potion (+1 VIT)
-            list.Add(new InventoryItemData
-            {
-                id = "potion_vit",
-                name = "Vitality Potion (+1 VIT)",
-                typeName = "Consumable",
-                description = "A rare elixir that permanently increases Vitality by +1! [Click to drink]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_PotionFlask"),
-                isConsumable = true,
-                onUse = (p) =>
-                {
-                    p.AddStatPotion("VIT");
-                }
-            });
-
-            // 19. Healing Herb
-            list.Add(new InventoryItemData
-            {
-                id = "herb_heal",
-                name = "Sunlit Blossom Herb",
-                typeName = "Consumable",
-                description = "Medicinal herb that restores 25 HP. [Click to use]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_Herb"),
-                isConsumable = true,
-                onUse = (p) =>
-                {
-                    p.Heal(25f);
-                }
-            });
-
-            // 20. Gold Coins
-            list.Add(new InventoryItemData
-            {
-                id = "gold_coins",
-                name = "Ancient Moa Gold Coin",
-                typeName = "Currency",
-                description = "Standard currency accepted by the Shadow Market traders.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_GoldCoin2")
-            });
-
-            // 21. Dexterity Potion (+1 DEX)
-            list.Add(new InventoryItemData
-            {
-                id = "potion_dex",
-                name = "Dexterity Potion (+1 DEX)",
-                typeName = "Consumable",
-                description = "A glowing yellow concoction that permanently increases Dexterity by +1! [Click to drink]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_YellowPotion"),
-                isConsumable = true,
-                onUse = (p) =>
-                {
-                    p.AddStatPotion("DEX");
-                }
-            });
-
-            // 22. Smoke Bomb
-            list.Add(new InventoryItemData
-            {
-                id = "smoke_bomb",
-                name = "Shadow Smoke Flask",
-                typeName = "Consumable",
-                description = "Creates a dense obscuring smoke screen to elude pursuit.",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_Bomb")
-            });
-
-            // 23. Strength Potion (+1 STR)
-            list.Add(new InventoryItemData
-            {
-                id = "potion_str",
-                name = "Strength Potion (+1 STR)",
-                typeName = "Consumable",
-                description = "A vibrant violet elixir that permanently increases Strength by +1! [Click to drink]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_VioletPotion"),
-                isConsumable = true,
-                onUse = (p) =>
-                {
-                    p.AddStatPotion("STR");
-                }
-            });
-
-            // 24. Fresh Bread
-            list.Add(new InventoryItemData
-            {
-                id = "bread",
-                name = "Hearty Country Bread",
-                typeName = "Consumable",
-                description = "Freshly baked bread from the village. Restores 30 HP and 20 Stamina. [Click to eat]",
-                icon = Resources.Load<Sprite>("CharacterStatus/Items/Item_Bread"),
-                isConsumable = true,
-                onUse = (p) =>
-                {
-                    p.Heal(30f);
-                }
-            });
-
-            return list;
+            }
         }
         #endregion
 
