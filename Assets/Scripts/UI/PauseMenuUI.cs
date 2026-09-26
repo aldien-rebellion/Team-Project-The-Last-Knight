@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -8,19 +9,29 @@ using UnityEngine.InputSystem;
 #endif
 using TheLastKnight.Core;
 using TheLastKnight.Audio;
+using TheLastKnight.Input;
 
 namespace TheLastKnight.UI
 {
+    public enum PauseMenuState
+    {
+        Closed,
+        Main,
+        Settings,
+        Controls
+    }
+
     [DefaultExecutionOrder(-400)]
     public class PauseMenuUI : MonoBehaviour
     {
         public static PauseMenuUI Instance { get; private set; }
 
         private GameObject _panel;
-        private bool _isOpen;
-        private bool _inSettings;
+        private PauseMenuState _state = PauseMenuState.Closed;
+        private string _activeRebindActionName = null;
 
-        public bool IsOpen => _isOpen;
+        public bool IsOpen => _state != PauseMenuState.Closed;
+        public PauseMenuState State => _state;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoInitialize()
@@ -58,7 +69,7 @@ namespace TheLastKnight.UI
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (_isOpen)
+            if (IsOpen)
             {
                 Close(false);
             }
@@ -66,6 +77,12 @@ namespace TheLastKnight.UI
 
         private void Update()
         {
+            // If actively listening for a key rebind, let the rebind operation consume inputs
+            if (!string.IsNullOrEmpty(_activeRebindActionName))
+            {
+                return;
+            }
+
             bool escPressed = false;
 #if ENABLE_INPUT_SYSTEM
             if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
@@ -83,12 +100,16 @@ namespace TheLastKnight.UI
                 catch { }
             }
 
-            // 1. If pause menu is already open, handle navigation and shortcuts
-            if (_isOpen)
+            // 1. Navigation when Pause Menu is open
+            if (IsOpen)
             {
                 if (escPressed)
                 {
-                    if (_inSettings)
+                    if (_state == PauseMenuState.Controls)
+                    {
+                        ShowSettings();
+                    }
+                    else if (_state == PauseMenuState.Settings)
                     {
                         PlayerPrefs.Save();
                         ShowMainPauseMenu();
@@ -100,15 +121,14 @@ namespace TheLastKnight.UI
                     return;
                 }
 
-                // Keyboard Number Shortcuts
                 int num = GetNumberKeyPressed();
-                if (!_inSettings)
+                if (_state == PauseMenuState.Main)
                 {
                     if (num == 1) ResumeGame();
                     else if (num == 2) ShowSettings();
                     else if (num == 3) ExitToMainMenu();
                 }
-                else
+                else if (_state == PauseMenuState.Settings)
                 {
                     if (num == 1 || IsBackKeyPressed())
                     {
@@ -116,25 +136,32 @@ namespace TheLastKnight.UI
                         ShowMainPauseMenu();
                     }
                 }
+                else if (_state == PauseMenuState.Controls)
+                {
+                    if (num == 1 || IsBackKeyPressed())
+                    {
+                        ShowSettings();
+                    }
+                }
                 return;
             }
 
             if (!escPressed) return;
 
-            // 2. Do not open during MainMenu scene
+            // 2. Prevent opening in MainMenu scene
             string currentScene = SceneManager.GetActiveScene().name;
             if (string.Equals(currentScene, "MainMenu", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
-            // 3. Do not open if player is dead (Death screen handles respawn/quit)
+            // 3. Prevent opening if player is dead
             if (GameManager.Instance != null && GameManager.Instance.Player != null && GameManager.Instance.Player.IsDead)
             {
                 return;
             }
 
-            // 4. Do not open if other menus/popups are consuming Escape
+            // 4. Check other open UIs
             if (CharacterStatusUI.Instance != null && CharacterStatusUI.Instance.IsOpen)
             {
                 return;
@@ -191,10 +218,10 @@ namespace TheLastKnight.UI
 
         public void OpenPauseMenu()
         {
-            if (_isOpen) return;
+            if (IsOpen) return;
 
-            _isOpen = true;
-            _inSettings = false;
+            _state = PauseMenuState.Main;
+            _activeRebindActionName = null;
 
             if (Application.isPlaying)
             {
@@ -202,7 +229,6 @@ namespace TheLastKnight.UI
                 GameManager.Instance?.SetInputBlocked(true);
             }
 
-            // Enable UI Action Map and disable Player Action Map so UI raycasts and mouse clicks work flawlessly
 #if ENABLE_INPUT_SYSTEM
             if (InputSystem.actions != null)
             {
@@ -223,18 +249,18 @@ namespace TheLastKnight.UI
 
         private void ShowMainPauseMenu()
         {
-            _inSettings = false;
+            _state = PauseMenuState.Main;
+            _activeRebindActionName = null;
             DestroyPanel();
 
-            _panel = RuntimeUI.Panel("PAUSED / หยุดเกม", out var content, 600);
+            _panel = RuntimeUI.Panel(LocalizationManager.Get("PAUSE_TITLE"), out var content, 600);
 
-            RuntimeUI.Label(content, "Game is paused • เกมถูกหยุดชั่วคราว", 19, new Color(0.85f, 0.88f, 0.95f));
+            RuntimeUI.Label(content, LocalizationManager.Get("PAUSE_SUBTITLE"), 20, new Color(0.85f, 0.88f, 0.95f));
 
-            var btnResume = RuntimeUI.Button(content, "[1]  Resume • เล่นต่อ", ResumeGame);
-            RuntimeUI.Button(content, "[2]  Settings • ตั้งค่า", ShowSettings);
-            RuntimeUI.Button(content, "[3]  Exit to Main Menu • กลับสู่เมนูหลัก", ExitToMainMenu);
+            var btnResume = RuntimeUI.Button(content, LocalizationManager.Get("BTN_RESUME"), ResumeGame);
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_SETTINGS"), ShowSettings);
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_MAIN_MENU"), ExitToMainMenu);
 
-            // Auto-focus the first button for keyboard/gamepad navigation
             if (EventSystem.current != null && btnResume != null)
             {
                 EventSystem.current.SetSelectedGameObject(btnResume.gameObject);
@@ -243,35 +269,63 @@ namespace TheLastKnight.UI
 
         private void ShowSettings()
         {
-            _inSettings = true;
+            _state = PauseMenuState.Settings;
+            _activeRebindActionName = null;
             DestroyPanel();
 
-            _panel = RuntimeUI.Panel("SETTINGS / ตั้งค่า", out var content, 600);
+            _panel = RuntimeUI.Panel(LocalizationManager.Get("SETTINGS_TITLE"), out var content, 600);
 
-            RuntimeUI.Label(content, "Audio Settings • ปรับระดับเสียง", 19, new Color(0.85f, 0.88f, 0.95f));
+            RuntimeUI.Label(content, LocalizationManager.Get("SETTINGS_SUBTITLE"), 18, new Color(0.85f, 0.88f, 0.95f));
 
+            // Audio Sliders
             var audio = AudioManager.Instance;
             float master = audio != null ? audio.Master : PlayerPrefs.GetFloat("MasterVolume", 1f);
             float music = audio != null ? audio.Music : PlayerPrefs.GetFloat("MusicVolume", 0.7f);
             float effects = audio != null ? audio.Effects : PlayerPrefs.GetFloat("EffectsVolume", 1f);
 
-            RuntimeUI.Slider(content, "Master Volume • เสียงหลัก", master, v =>
+            RuntimeUI.Slider(content, LocalizationManager.Get("AUDIO_MASTER"), master, v =>
             {
                 if (AudioManager.Instance != null) AudioManager.Instance.SetVolumes(v, AudioManager.Instance.Music, AudioManager.Instance.Effects);
                 else PlayerPrefs.SetFloat("MasterVolume", v);
             });
-            RuntimeUI.Slider(content, "Music Volume • เสียงดนตรี", music, v =>
+            RuntimeUI.Slider(content, LocalizationManager.Get("AUDIO_MUSIC"), music, v =>
             {
                 if (AudioManager.Instance != null) AudioManager.Instance.SetVolumes(AudioManager.Instance.Master, v, AudioManager.Instance.Effects);
                 else PlayerPrefs.SetFloat("MusicVolume", v);
             });
-            RuntimeUI.Slider(content, "Sound Effects • เสียงเอฟเฟกต์", effects, v =>
+            RuntimeUI.Slider(content, LocalizationManager.Get("AUDIO_SFX"), effects, v =>
             {
                 if (AudioManager.Instance != null) AudioManager.Instance.SetVolumes(AudioManager.Instance.Master, AudioManager.Instance.Music, v);
                 else PlayerPrefs.SetFloat("EffectsVolume", v);
             });
 
-            var btnBack = RuntimeUI.Button(content, "[1]  Back • ย้อนกลับ", () =>
+            // Brightness Slider
+            float brightness = GameBrightnessManager.Instance != null ? GameBrightnessManager.Instance.Brightness : PlayerPrefs.GetFloat("TheLastKnight_BrightnessMultiplier", 1.0f);
+            RuntimeUI.Slider(content, LocalizationManager.Get("BRIGHTNESS"), brightness, v =>
+            {
+                if (GameBrightnessManager.Instance != null)
+                {
+                    GameBrightnessManager.Instance.SetBrightness(v);
+                }
+                else
+                {
+                    PlayerPrefs.SetFloat("TheLastKnight_BrightnessMultiplier", v);
+                }
+            });
+
+            // Language Switcher Button
+            string langButtonText = $"{LocalizationManager.Get("LANGUAGE_LABEL")}: {LocalizationManager.Get("LANGUAGE_CURRENT")}  ({LocalizationManager.Get("LANGUAGE_CHANGE_PROMPT")})";
+            RuntimeUI.Button(content, langButtonText, () =>
+            {
+                LocalizationManager.ToggleLanguage();
+                ShowSettings();
+            });
+
+            // Controls Rebinding Button
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_CONTROLS"), ShowControlsMenu);
+
+            // Back Button
+            var btnBack = RuntimeUI.Button(content, LocalizationManager.Get("BTN_BACK"), () =>
             {
                 PlayerPrefs.Save();
                 ShowMainPauseMenu();
@@ -283,6 +337,68 @@ namespace TheLastKnight.UI
             }
         }
 
+        private void ShowControlsMenu()
+        {
+            _state = PauseMenuState.Controls;
+            DestroyPanel();
+
+            _panel = RuntimeUI.Panel(LocalizationManager.Get("CONTROLS_TITLE"), out var content, 600);
+
+            string subtitle = !string.IsNullOrEmpty(_activeRebindActionName)
+                ? LocalizationManager.Get("REBIND_WAITING")
+                : LocalizationManager.Get("CONTROLS_SUBTITLE");
+
+            RuntimeUI.Label(content, subtitle, 17, new Color(0.9f, 0.85f, 0.55f));
+
+            var actions = KeyRebindManager.GetRebindableActions();
+            foreach (var action in actions)
+            {
+                string actionLabel = LocalizationManager.Get(action.LocalizationKey);
+                string keyDisplay = (_activeRebindActionName == action.ActionName + action.BindingIndex)
+                    ? LocalizationManager.Get("REBIND_WAITING")
+                    : $"[ {KeyRebindManager.GetCurrentBindingDisplay(action.ActionName, action.BindingIndex)} ]";
+
+                var targetAction = action;
+                RuntimeUI.ActionRow(content, actionLabel, keyDisplay, () =>
+                {
+                    StartRebindAction(targetAction);
+                });
+            }
+
+            // Reset Controls to Default
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_RESET_CONTROLS"), () =>
+            {
+                KeyRebindManager.ResetAllToDefaults();
+                ShowControlsMenu();
+            });
+
+            // Back to Settings
+            var btnBack = RuntimeUI.Button(content, LocalizationManager.Get("BTN_BACK"), ShowSettings);
+
+            if (EventSystem.current != null && btnBack != null)
+            {
+                EventSystem.current.SetSelectedGameObject(btnBack.gameObject);
+            }
+        }
+
+        private void StartRebindAction(RebindableActionInfo action)
+        {
+            _activeRebindActionName = action.ActionName + action.BindingIndex;
+            ShowControlsMenu();
+
+            KeyRebindManager.StartRebind(action,
+                onComplete: () =>
+                {
+                    _activeRebindActionName = null;
+                    ShowControlsMenu();
+                },
+                onCancel: () =>
+                {
+                    _activeRebindActionName = null;
+                    ShowControlsMenu();
+                });
+        }
+
         public void ResumeGame()
         {
             Close(true);
@@ -290,8 +406,8 @@ namespace TheLastKnight.UI
 
         public void ExitToMainMenu()
         {
-            _isOpen = false;
-            _inSettings = false;
+            _state = PauseMenuState.Closed;
+            _activeRebindActionName = null;
 
             DestroyPanel();
             PlayerPrefs.Save();
@@ -301,7 +417,6 @@ namespace TheLastKnight.UI
                 Time.timeScale = 1f;
                 GameManager.Instance?.SetInputBlocked(false);
 
-                // Preserve game progress if player is alive
                 if (GameManager.Instance != null && GameManager.Instance.Player != null && !GameManager.Instance.Player.IsDead)
                 {
                     GameManager.Instance.Capture();
@@ -313,9 +428,10 @@ namespace TheLastKnight.UI
 
         private void Close(bool restoreControls)
         {
-            _isOpen = false;
-            _inSettings = false;
+            _state = PauseMenuState.Closed;
+            _activeRebindActionName = null;
 
+            KeyRebindManager.CancelOngoingRebind();
             DestroyPanel();
 
             if (restoreControls && Application.isPlaying)

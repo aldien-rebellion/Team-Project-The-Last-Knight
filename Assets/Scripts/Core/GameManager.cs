@@ -37,6 +37,7 @@ namespace TheLastKnight.Core
             gameObject.AddComponent<StoryDialogueUI>();
             gameObject.AddComponent<CharacterStatusUI>();
             gameObject.AddComponent<PauseMenuUI>();
+            gameObject.AddComponent<GameBrightnessManager>();
         }
 
         private void OnDestroy()

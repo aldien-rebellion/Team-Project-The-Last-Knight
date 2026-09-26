@@ -176,5 +176,35 @@ namespace TheLastKnight.UI
             slider.onValueChanged.AddListener(v => { label.text = $"{name}  {Mathf.RoundToInt(v * 100)}%"; changed(v); });
             return slider;
         }
+
+        public static Button ActionRow(Transform parent, string labelText, string buttonText, UnityAction onButtonClick)
+        {
+            var rowGo = new GameObject("Row_" + labelText, typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
+            rowGo.transform.SetParent(parent, false);
+            var le = rowGo.GetComponent<LayoutElement>();
+            le.preferredHeight = 36;
+            le.minHeight = 32;
+
+            var layout = rowGo.GetComponent<HorizontalLayoutGroup>();
+            layout.spacing = 16;
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = true;
+            layout.childForceExpandWidth = true;
+            layout.childControlHeight = true;
+            layout.childForceExpandHeight = false;
+
+            var lbl = Label(rowGo.transform, labelText, 17, Color.white);
+            lbl.alignment = TextAnchor.MiddleLeft;
+            var lblLe = lbl.GetComponent<LayoutElement>();
+            lblLe.flexibleWidth = 1f;
+
+            var btn = Button(rowGo.transform, buttonText, onButtonClick);
+            var btnLe = btn.GetComponent<LayoutElement>();
+            btnLe.preferredWidth = 180;
+            btnLe.preferredHeight = 34;
+            btnLe.flexibleWidth = 0f;
+
+            return btn;
+        }
     }
 }
