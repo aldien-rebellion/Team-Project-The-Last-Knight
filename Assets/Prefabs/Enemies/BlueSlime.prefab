@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 6449396136475945068}
   - component: {fileID: 4347883734464979851}
   - component: {fileID: 3636799132960694305}
+  - component: {fileID: 114000000000009901}
   m_Layer: 0
   m_Name: BlueSlime
   m_TagString: Untagged
@@ -107,7 +108,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4129879831467129840}
@@ -257,8 +258,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.3}
-  m_Size: {x: 0.4, y: 0.6}
+  m_Offset: {x: 0.0045923293, y: 0.16244283}
+  m_Size: {x: 0.6583349, y: 0.6583349}
   m_Direction: 0
 --- !u!114 &4347883734464979851
 MonoBehaviour:
@@ -307,8 +308,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 6
-  _meleeRange: 1.2
-  _meleeCooldown: 1.5
+  _meleeRange: 0.05
+  _meleeCooldown: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -319,6 +320,7 @@ MonoBehaviour:
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
   _basicParryCooldown: 4
+  _cycleNonParryableSkills: 1
   _skills:
   - skillName: HeavySlam
     animationName: Attack_3
@@ -326,7 +328,7 @@ MonoBehaviour:
     damageMultiplier: 1.6
     cooldown: 6
     minRange: 0
-    maxRange: 2
+    maxRange: 0.05
     isParryable: 1
     projectilePrefab: {fileID: 0}
     groundSpellPrefab: {fileID: 0}
@@ -334,9 +336,9 @@ MonoBehaviour:
     animationName: Attack_2
     actionIndex: -1
     damageMultiplier: 1.3
-    cooldown: 3.5
+    cooldown: 0
     minRange: 0
-    maxRange: 1.8
+    maxRange: 0.05
     isParryable: 0
     projectilePrefab: {fileID: 0}
     groundSpellPrefab: {fileID: 0}
@@ -344,9 +346,9 @@ MonoBehaviour:
     animationName: Run+Attack
     actionIndex: -1
     damageMultiplier: 1.2
-    cooldown: 5
-    minRange: 2.5
-    maxRange: 5.5
+    cooldown: 0
+    minRange: 0
+    maxRange: 0.05
     isParryable: 0
     projectilePrefab: {fileID: 0}
     groundSpellPrefab: {fileID: 0}
@@ -380,8 +382,8 @@ Transform:
   m_GameObject: {fileID: 7420846902549818332}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.315, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.004, y: 0.021, z: 0}
+  m_LocalScale: {x: 1.0061189, y: 1.0061189, z: 1.0061189}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9155440583318091275}
@@ -420,7 +422,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.008258939, y: 0.038401455}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -430,7 +432,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.44000003, y: 0.63}
+  m_Size: {x: 0.67705417, y: 0.44862437}
   m_EdgeRadius: 0
 --- !u!114 &499836555035379811
 MonoBehaviour:
@@ -552,7 +554,7 @@ RectTransform:
   m_GameObject: {fileID: 9009214534192397170}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.006, y: 0.006, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 709298496497818995}
@@ -561,8 +563,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.95000005}
-  m_SizeDelta: {x: 100, y: 14}
+  m_AnchoredPosition: {x: 0.005, y: 0.547}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1991022998478449075
 Canvas:
@@ -605,3 +607,18 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 8116085088925562320}
+  _headGap: 0.08
+--- !u!114 &114000000000009901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6921010378139430298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 8116085088925562320}

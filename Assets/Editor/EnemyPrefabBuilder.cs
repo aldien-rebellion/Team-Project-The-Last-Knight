@@ -244,7 +244,7 @@ namespace TheLastKnight.EditorTools
             {
                 // Bosses & Elites
                 new MonsterConfig("ArchDemon", 500f, 35f, 5f, 1.8f, 3.8f, 8f, 2.2f),
-                new MonsterConfig("BlueSlime", 35f, 10f, 0f, 1.8f, 3.2f, 6f, 1.2f),
+                new MonsterConfig("BlueSlime", 35f, 10f, 0f, 1.8f, 3.2f, 6f, 0.05f, scale: 4f),
                 new MonsterConfig("BringerOfDeath", 600f, 40f, 8f, 1.6f, 3.5f, 9f, 2.5f, false, true, null, "BringerOfDeath_Spell"),
                 new MonsterConfig("Demon", 70f, 15f, 2f, 2.0f, 4.0f, 7f, 1.6f),
                 new MonsterConfig("DemonBoss", 800f, 50f, 10f, 1.5f, 3.6f, 10f, 3.2f),
@@ -289,6 +289,7 @@ namespace TheLastKnight.EditorTools
             var controller = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(controllerPath);
 
             GameObject root = new GameObject(cfg.Name);
+            root.transform.localScale = new Vector3(cfg.Scale, cfg.Scale, cfg.Scale);
 
             // SpriteRenderer
             var sr = root.AddComponent<SpriteRenderer>();
@@ -338,6 +339,8 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_chaseSpeed").floatValue = cfg.ChaseSpeed;
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
             serializedAI.FindProperty("_meleeRange").floatValue = cfg.MeleeRange;
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "BlueSlime" ? 0f : 1.5f;
+            serializedAI.FindProperty("_cycleNonParryableSkills").boolValue = cfg.Name == "BlueSlime";
             serializedAI.FindProperty("_isFlying").boolValue = cfg.IsFlying;
             serializedAI.FindProperty("_hasRangedAttack").boolValue = cfg.HasRanged;
             if (projPrefab != null) serializedAI.FindProperty("_projectilePrefab").objectReferenceValue = projPrefab;
@@ -347,6 +350,18 @@ namespace TheLastKnight.EditorTools
 
             // Setup Floating Health Bar Canvas
             CreateHealthBarCanvas(root, stats, colHeight);
+            if (cfg.Name == "BlueSlime")
+            {
+                root.GetComponentInChildren<FloatingHealthBar>().transform.localScale = new Vector3(0.006f, 0.006f, 1f);
+                var bar = new SerializedObject(root.GetComponentInChildren<FloatingHealthBar>());
+                bar.FindProperty("_followSprite").objectReferenceValue = sr;
+                bar.ApplyModifiedPropertiesWithoutUndo();
+                var receiver = root.GetComponent<ParryReceiver>();
+                if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
+                var parry = new SerializedObject(receiver);
+                parry.FindProperty("_centerSprite").objectReferenceValue = sr;
+                parry.ApplyModifiedPropertiesWithoutUndo();
+            }
 
             // Setup Hitbox for damage dealing
             CreateContactHitbox(root, cfg.Attack, colWidth * 1.1f, colHeight * 1.05f);
@@ -374,7 +389,7 @@ namespace TheLastKnight.EditorTools
             canvas.sortingOrder = 20;
 
             var rt = canvasGo.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(100f, 14f);
+            rt.sizeDelta = new Vector2(50f, 14f);
 
             // Background
             GameObject bgGo = new GameObject("Background");
@@ -622,9 +637,9 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("HeavySlam", "Attack_3", -1, 1.6f, 6.0f, 0f, 2.0f, true),
-                        new SkillData("DoubleHop", "Attack_2", -1, 1.3f, 3.5f, 0f, 1.8f, false),
-                        new SkillData("SlideTackle", "Run+Attack", -1, 1.2f, 5.0f, 2.5f, 5.5f, false)
+                        new SkillData("HeavySlam", "Attack_3", -1, 1.6f, 6.0f, 0f, 0.05f, true),
+                        new SkillData("DoubleHop", "Attack_2", -1, 1.3f, 0f, 0f, 0.05f, false),
+                        new SkillData("SlideTackle", "Run+Attack", -1, 1.2f, 0f, 0f, 0.05f, false)
                     });
                     break;
 

@@ -56,6 +56,8 @@ namespace TheLastKnight.AI
         [Tooltip("Special attacks and skills configured from the monster's Animation Controller.")]
         [SerializeField] private TheLastKnight.Combat.EnemySkill[] _skills = new TheLastKnight.Combat.EnemySkill[0];
         public TheLastKnight.Combat.EnemySkill[] Skills => _skills;
+        [SerializeField] private bool _cycleNonParryableSkills;
+        private int _nextCyclicSkill;
 
         [Header("Death & Respawn Settings")]
         [SerializeField] private float _deathDestroyDelay = 1.5f;
@@ -163,6 +165,11 @@ namespace TheLastKnight.AI
             }
         }
 
+        private void OnDisable()
+        {
+            StopAttack();
+        }
+
         private void FindPlayer()
         {
             var p = GameObject.FindWithTag("Player");
@@ -238,14 +245,16 @@ namespace TheLastKnight.AI
             }
 
             float distToPlayer = Vector2.Distance(transform.position, _player.transform.position);
+            float attackDistance = _cycleNonParryableSkills ? GetAttackDistance() : distToPlayer;
 
-            TheLastKnight.Combat.EnemySkill readySkill = GetReadySkill(distToPlayer);
+            TheLastKnight.Combat.EnemySkill readySkill = distToPlayer <= _detectionRange
+                ? GetReadySkill(attackDistance) : null;
             if (readySkill != null)
             {
                 FaceTarget(_player.transform.position);
                 PerformSkill(readySkill);
             }
-            else if (distToPlayer <= _meleeRange && Time.time >= _nextMeleeTime)
+            else if (attackDistance <= _meleeRange && distToPlayer <= _detectionRange && Time.time >= _nextMeleeTime)
             {
                 FaceTarget(_player.transform.position);
                 PerformMeleeAttack();
@@ -272,6 +281,25 @@ namespace TheLastKnight.AI
                     Patrol();
                 }
             }
+        }
+
+        private float GetAttackDistance()
+        {
+            float distance = Vector2.Distance(transform.position, _player.transform.position);
+            // Large sprites have offset pivots: use the solid bodies, not their origins.
+            var targets = _player.GetComponentsInChildren<Collider2D>();
+            foreach (var body in _colliders)
+            {
+                if (body == null || !body.enabled || body.isTrigger) continue;
+                foreach (var target in targets)
+                {
+                    if (!target.enabled || target.isTrigger) continue;
+                    var separation = body.Distance(target);
+                    if (separation.isValid)
+                        distance = Mathf.Min(distance, Mathf.Max(0f, separation.distance));
+                }
+            }
+            return distance;
         }
 
         private void Patrol()
@@ -417,6 +445,8 @@ namespace TheLastKnight.AI
         {
             _isActionLocked = true;
             _projectileSpawned = false;
+            _damageUntil = 0f;
+            _parry?.FinishWindup();
 
             if (canParry && _parry != null)
             {
@@ -444,6 +474,7 @@ namespace TheLastKnight.AI
             _damageUntil = Time.time + 0.35f;
             if (ranged) SpawnProjectile();
             yield return new WaitForSeconds(0.35f);
+            _damageUntil = 0f;
             _isActionLocked = false;
         }
 
@@ -455,6 +486,8 @@ namespace TheLastKnight.AI
             SetAnimBool("IsChasing", false);
 
             skill.nextReadyTime = Time.time + skill.cooldown;
+            if (_cycleNonParryableSkills && !skill.isParryable)
+                _nextCyclicSkill = (System.Array.IndexOf(_skills, skill) + 1) % _skills.Length;
             _currentAttackMultiplier = skill.damageMultiplier;
 
             StartCoroutine(ExecuteSkillRoutine(skill));
@@ -464,6 +497,8 @@ namespace TheLastKnight.AI
         {
             _isActionLocked = true;
             _projectileSpawned = false;
+            _damageUntil = 0f;
+            _parry?.FinishWindup();
 
             // ท่าที่สามารถ Parry ได้ จะแสดงวงกลม Timing Ring
             if (skill.isParryable && _parry != null)
@@ -487,7 +522,12 @@ namespace TheLastKnight.AI
                 }
             }
 
-            PlayAnimationAction(skill.animationName, skill.actionIndex);
+            bool waitForAnimation = _cycleNonParryableSkills && _animator != null
+                && _animator.HasState(0, Animator.StringToHash(skill.animationName));
+            if (waitForAnimation)
+                _animator.Play(skill.animationName, 0, 0f);
+            else
+                PlayAnimationAction(skill.animationName, skill.actionIndex);
             _damageUntil = Time.time + 0.4f;
 
             if (skill.groundSpellPrefab != null && _player != null)
@@ -506,6 +546,10 @@ namespace TheLastKnight.AI
             }
 
             yield return new WaitForSeconds(0.4f);
+            _damageUntil = 0f;
+            while (waitForAnimation && _animator.GetCurrentAnimatorStateInfo(0).IsName(skill.animationName)
+                && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+                yield return null;
             _currentAttackMultiplier = _basicAttackMultiplier;
             _isActionLocked = false;
         }
@@ -544,6 +588,21 @@ namespace TheLastKnight.AI
         {
             if (_skills == null || _skills.Length == 0) return null;
 
+            if (_cycleNonParryableSkills)
+            {
+                foreach (var prioritySkill in _skills)
+                    if (prioritySkill != null && prioritySkill.isParryable && prioritySkill.IsReady(distToPlayer, Time.time))
+                        return prioritySkill;
+
+                for (int offset = 0; offset < _skills.Length; offset++)
+                {
+                    var candidate = _skills[(_nextCyclicSkill + offset) % _skills.Length];
+                    if (candidate != null && !candidate.isParryable && candidate.IsReady(distToPlayer, Time.time))
+                        return candidate;
+                }
+                return null;
+            }
+
             for (int i = 0; i < _skills.Length; i++)
             {
                 var skill = _skills[i];
@@ -568,6 +627,7 @@ namespace TheLastKnight.AI
         public void SetSkills(TheLastKnight.Combat.EnemySkill[] skills)
         {
             _skills = skills;
+            _nextCyclicSkill = 0;
         }
 
         public void SetBasicAttackConfiguration(string animState, float multiplier, bool canParry, float parryCooldown)
@@ -585,12 +645,19 @@ namespace TheLastKnight.AI
 
         public void CancelAttack()
         {
-            StopAllCoroutines();
-            _damageUntil = 0f;
-            _currentAttackMultiplier = _basicAttackMultiplier;
-            _isActionLocked = false;
+            StopAttack();
             _currentState = EnemyAIState.Hurt;
             SetAnimTrigger("Hurt");
+        }
+
+        private void StopAttack()
+        {
+            StopAllCoroutines();
+            _parry?.FinishWindup();
+            _damageUntil = 0f;
+            _projectileSpawned = true;
+            _currentAttackMultiplier = _basicAttackMultiplier;
+            _isActionLocked = false;
         }
 
         private IEnumerator DelayedProjectileRoutine(float delay)
@@ -703,6 +770,7 @@ namespace TheLastKnight.AI
 
         private void HandleDeath()
         {
+            StopAttack();
             _currentState = EnemyAIState.Dead;
             SetAnimBool("IsDead", true);
             _rb.linearVelocity = Vector2.zero;

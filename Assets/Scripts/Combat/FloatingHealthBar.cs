@@ -13,9 +13,12 @@ namespace TheLastKnight.Combat
         [Header("Settings")]
         [SerializeField] private bool _autoHideOnDeath = true;
         [SerializeField] private bool _maintainWorldScale = true;
+        [SerializeField] private SpriteRenderer _followSprite;
+        [SerializeField] private float _headGap = 0.08f;
 
         private Vector3 _originalScale;
         private Text _levelText;
+        private Text _healthPercentText;
 
         private void Awake()
         {
@@ -44,6 +47,20 @@ namespace TheLastKnight.Combat
                 rect.anchorMax = new Vector2(1, 1);
                 rect.sizeDelta = new Vector2(0, 24);
                 rect.anchoredPosition = new Vector2(0, 14);
+
+                var percentObj = new GameObject("Health Percent", typeof(RectTransform), typeof(Text));
+                percentObj.transform.SetParent(_canvas.transform, false);
+                _healthPercentText = percentObj.GetComponent<Text>();
+                _healthPercentText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                _healthPercentText.fontSize = 12;
+                _healthPercentText.alignment = TextAnchor.MiddleCenter;
+                _healthPercentText.color = Color.white;
+                _healthPercentText.raycastTarget = false;
+                var rectP = _healthPercentText.rectTransform;
+                rectP.anchorMin = Vector2.zero;
+                rectP.anchorMax = Vector2.one;
+                rectP.sizeDelta = Vector2.zero;
+                rectP.anchoredPosition = Vector2.zero;
             }
         }
 
@@ -67,6 +84,12 @@ namespace TheLastKnight.Combat
 
         private void LateUpdate()
         {
+            if (_followSprite != null && transform is RectTransform barRect)
+            {
+                Bounds bounds = _followSprite.bounds;
+                float halfHeight = barRect.rect.height * Mathf.Abs(transform.lossyScale.y) * 0.5f;
+                transform.position = new Vector3(bounds.center.x, bounds.max.y + _headGap + halfHeight, transform.position.z);
+            }
             if (_canvas != null) _canvas.enabled = TheLastKnight.Core.GameDifficultyManager.ShowHelpers;
             if (_levelText != null)
             {
@@ -101,9 +124,24 @@ namespace TheLastKnight.Combat
 
         private void HandleHealthChanged(float current, float max)
         {
-            if (_healthBarFill != null && max > 0f)
+            if (max > 0f)
             {
-                _healthBarFill.fillAmount = Mathf.Clamp01(current / max);
+                float pct = Mathf.Clamp01(current / max);
+                if (_healthBarFill != null)
+                {
+                    _healthBarFill.fillAmount = pct;
+                    var fillRt = _healthBarFill.rectTransform;
+                    if (fillRt != null)
+                    {
+                        Vector2 maxAnchor = fillRt.anchorMax;
+                        maxAnchor.x = pct;
+                        fillRt.anchorMax = maxAnchor;
+                    }
+                }
+                if (_healthPercentText != null)
+                {
+                    _healthPercentText.text = Mathf.RoundToInt(pct * 100f) + "%";
+                }
             }
         }
 

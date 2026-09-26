@@ -155,6 +155,8 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 0}
+  _headGap: 0.08
 --- !u!1 &2923911752621517954
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,9 +188,9 @@ Transform:
   m_GameObject: {fileID: 2923911752621517954}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: -0.074, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8203954258666828514}
   - {fileID: 6686275706734948598}
@@ -420,6 +422,7 @@ MonoBehaviour:
     isParryable: 0
     projectilePrefab: {fileID: 0}
     groundSpellPrefab: {fileID: 0}
+  _cycleNonParryableSkills: 0
   _deathDestroyDelay: 1.5
   _canRespawn: 0
   _respawnTime: 30

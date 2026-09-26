@@ -14,6 +14,7 @@ namespace TheLastKnight.Combat
         private bool _windingUp;
         private LineRenderer _ring;
         private LineRenderer _target;
+        [SerializeField] private SpriteRenderer _centerSprite;
         public bool IsStaggered => Time.time < _staggerUntil;
         public bool IsWindingUp => _windingUp;
         public float Progress => Mathf.Clamp01((Time.time - _start) / WindupDuration);
@@ -35,6 +36,7 @@ namespace TheLastKnight.Combat
             _staggerUntil = Time.time + 1.5f;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("parry");
             GetComponent<EnemyController>()?.CancelAttack();
+            GetComponent<SlimeController>()?.CancelAttack();
             GetComponent<EnemyStats>().ApplyStatus(StatusEffect.Stunned, 1.5f);
             FloatingCombatText.Show(transform.position, "PARRY", Color.yellow);
             return true;
@@ -72,10 +74,11 @@ namespace TheLastKnight.Combat
 
         private void DrawRing(LineRenderer ring, float radius)
         {
+            Vector3 center = _centerSprite != null ? _centerSprite.bounds.center : transform.position + Vector3.up * 1.5f;
             for (int i = 0; i < ring.positionCount; i++)
             {
                 float angle = i * Mathf.PI * 2f / ring.positionCount;
-                ring.SetPosition(i, transform.position + Vector3.up * 1.5f + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * radius);
+                ring.SetPosition(i, center + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * radius);
             }
         }
 
