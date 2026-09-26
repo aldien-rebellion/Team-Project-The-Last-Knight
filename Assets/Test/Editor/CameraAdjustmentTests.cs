@@ -434,5 +434,102 @@ namespace TheLastKnight.Tests
                 // clean up
             }
         }
+
+        [Test]
+        public void CameraFollow_BaseOrthographicSize_PreservedUnderRepeatedZoomAndReinitialization()
+        {
+            var camGo = new GameObject("TestCamera");
+            var cam = camGo.AddComponent<UnityEngine.Camera>();
+            cam.orthographic = true;
+            cam.orthographicSize = 6.5f;
+            var follow = camGo.AddComponent(RuntimeType("TheLastKnight.Camera.CameraFollow2D"));
+
+            try
+            {
+                SetProp(follow, "BaseOrthographicSize", 6.5f);
+                SetProp(follow, "MinZoomMultiplier", 0.5f);
+                SetProp(follow, "MaxZoomMultiplier", 2.0f);
+
+                // Zoom in to 0.5x
+                Invoke(follow, "SetZoomMultiplier", 0.5f);
+                float currentSize = cam.orthographicSize;
+                Assert.That(currentSize, Is.EqualTo(3.25f).Within(0.01f), "Camera should zoom in to 3.25f (0.5x of 6.5)");
+
+                // Re-initialize zoom (simulating domain reload or scene reload)
+                Invoke(follow, "InitializeZoom");
+
+                // BaseOrthographicSize must NOT have degraded to 3.25f
+                float baseSize = (float)GetProp(follow, "BaseOrthographicSize");
+                Assert.That(baseSize, Is.EqualTo(6.5f).Within(0.01f), "Base size must remain 6.5f and not degrade to zoomed size");
+
+                // Zoom out to 2.0x
+                Invoke(follow, "SetZoomMultiplier", 2.0f);
+                float maxTarget = (float)GetProp(follow, "TargetOrthographicSize");
+                Assert.That(maxTarget, Is.EqualTo(13.0f).Within(0.01f), "Max zoom should be 2.0x of base 6.5f (13.0f)");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(camGo);
+            }
+        }
+
+        [Test]
+        public void CameraFollow_BoundaryClamping_DoesNotCollapseOnEmptyBounds()
+        {
+            var confinerGo = new GameObject("EmptyBoundary");
+            var box = confinerGo.AddComponent<BoxCollider2D>();
+            box.size = Vector2.zero; // Uninitialized / empty bounds
+
+            var camGo = new GameObject("TestCamera");
+            var cam = camGo.AddComponent<UnityEngine.Camera>();
+            cam.orthographic = true;
+            cam.orthographicSize = 5f;
+            var follow = camGo.AddComponent(RuntimeType("TheLastKnight.Camera.CameraFollow2D"));
+
+            try
+            {
+                SetProp(follow, "BaseOrthographicSize", 5f);
+                Invoke(follow, "SetBoundaries", box);
+
+                // ClampSizeToBounds should NOT collapse camera to 0.1
+                Invoke(follow, "ClampSizeToBounds");
+                Assert.That(cam.orthographicSize, Is.GreaterThanOrEqualTo(2.5f),
+                    "Camera orthographic size must never be collapsed to 0.1 by empty bounds");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(confinerGo);
+                UnityEngine.Object.DestroyImmediate(camGo);
+            }
+        }
+
+        [TestCase("SuburbToForest", 6.5f)]
+        [TestCase("Church", 5.0f)]
+        [TestCase("CityCenter", 5.0f)]
+        [TestCase("OutdoorMarket", 5.0f)]
+        [TestCase("DemonCastle", 6.5f)]
+        public void SceneMaps_OrthographicSize_MatchesConfiguredBaseSize(string sceneName, float expectedBaseSize)
+        {
+            string path = "Assets/Scenes/Maps/" + sceneName + ".unity";
+            var scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
+            try
+            {
+                var cam = UnityEngine.Camera.main;
+                Assert.That(cam, Is.Not.Null, $"Camera should exist in scene {sceneName}");
+                var follow = cam.GetComponent(RuntimeType("TheLastKnight.Camera.CameraFollow2D"));
+                Assert.That(follow, Is.Not.Null, $"CameraFollow2D should exist in scene {sceneName}");
+
+                float baseSize = (float)GetProp(follow, "BaseOrthographicSize");
+                Assert.That(baseSize, Is.EqualTo(expectedBaseSize).Within(0.01f),
+                    $"Scene {sceneName} BaseOrthographicSize should be {expectedBaseSize}");
+
+                Assert.That(cam.orthographicSize, Is.EqualTo(expectedBaseSize).Within(0.01f),
+                    $"Scene {sceneName} Camera.orthographicSize should start at base size {expectedBaseSize}");
+            }
+            finally
+            {
+                // clean up
+            }
+        }
     }
 }

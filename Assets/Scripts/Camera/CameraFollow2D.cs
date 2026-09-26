@@ -31,6 +31,7 @@ namespace TheLastKnight.Camera
 
         [Header("Zoom")]
         [SerializeField] private bool _enableZoom = true;
+        [SerializeField] private float _baseOrthographicSize = 5f;
         [SerializeField] private float _minZoomMultiplier = 0.5f;
         [SerializeField] private float _maxZoomMultiplier = 2.0f;
         [SerializeField] private float _zoomStep = 0.5f;
@@ -47,7 +48,6 @@ namespace TheLastKnight.Camera
 
         private Vector3 _currentVelocity;
         private UnityEngine.Camera _cam;
-        private float _baseOrthographicSize;
         private float _targetOrthographicSize;
         private float _zoomVelocity;
 
@@ -122,7 +122,18 @@ namespace TheLastKnight.Camera
             set => _maxZoomMultiplier = Mathf.Max(1f, value);
         }
 
-        public float BaseOrthographicSize => _baseOrthographicSize;
+        public float BaseOrthographicSize
+        {
+            get => _baseOrthographicSize;
+            set
+            {
+                _baseOrthographicSize = Mathf.Max(0.5f, value);
+                if (_targetOrthographicSize <= 0.01f)
+                {
+                    _targetOrthographicSize = _baseOrthographicSize;
+                }
+            }
+        }
         public float TargetOrthographicSize => _targetOrthographicSize;
         public float CurrentZoomMultiplier => (_baseOrthographicSize > 0.01f && _cam != null) ? _cam.orthographicSize / _baseOrthographicSize : 1f;
         public bool UseBoundaries => _useBoundaries;
@@ -194,35 +205,72 @@ namespace TheLastKnight.Camera
         private void InitializeZoom()
         {
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
-            if (_cam != null && _baseOrthographicSize <= 0.01f)
+
+            // If base orthographic size has not been established yet, use current camera size or fallback to 5
+            if (_baseOrthographicSize <= 0.01f)
             {
-                _baseOrthographicSize = _cam.orthographicSize;
+                _baseOrthographicSize = (_cam != null && _cam.orthographicSize > 1f) ? _cam.orthographicSize : 5f;
+            }
+
+            // In Play Mode or on fresh startup, target size starts at the intended base size
+            if (_targetOrthographicSize <= 0.01f || Application.isPlaying)
+            {
                 _targetOrthographicSize = _baseOrthographicSize;
             }
+
+            if (_cam != null)
+            {
+                if (Application.isPlaying)
+                {
+                    _cam.orthographicSize = _targetOrthographicSize;
+                }
+                else if (_cam.orthographicSize <= 0.01f || _cam.orthographicSize < _baseOrthographicSize * 0.4f)
+                {
+                    // Repair corrupted edit mode size
+                    _cam.orthographicSize = _baseOrthographicSize;
+                }
+            }
+
             ClampSizeToBounds();
         }
 
         public float GetMaxAllowedOrthographicSize()
         {
+            float baseSize = _baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f;
+            float maxZoomSize = baseSize * _maxZoomMultiplier;
+
             if (!HasBoundaries)
             {
-                return (_baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f) * _maxZoomMultiplier;
+                return maxZoomSize;
             }
 
             Bounds bounds = GetBoundaryBounds();
+            // Guard against empty or uninitialized bounds during scene loading or edit mode
+            if (bounds.size.x <= 0.5f || bounds.size.y <= 0.5f)
+            {
+                return maxZoomSize;
+            }
+
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
             float aspect = (_cam != null && _cam.aspect > 0.01f) ? _cam.aspect : (16f / 9f);
 
             // Constrain camera size so its viewport half-width <= bounds.extents.x and half-height <= bounds.extents.y.
             // Subtract a small sub-pixel epsilon (0.001f) to guarantee bounds containment even under float rounding.
-            float maxH = Mathf.Max(0.1f, (bounds.extents.x - 0.001f) / aspect);
-            float maxV = Mathf.Max(0.1f, bounds.extents.y - 0.001f);
-            return Mathf.Min(maxH, maxV);
+            float maxH = Mathf.Max(0.5f, (bounds.extents.x - 0.001f) / aspect);
+            float maxV = Mathf.Max(0.5f, bounds.extents.y - 0.001f);
+            float boundLimit = Mathf.Min(maxH, maxV);
+            return Mathf.Min(maxZoomSize, boundLimit);
         }
 
         public void ClampSizeToBounds()
         {
             if (!HasBoundaries)
+            {
+                return;
+            }
+
+            Bounds bounds = GetBoundaryBounds();
+            if (bounds.size.x <= 0.5f || bounds.size.y <= 0.5f)
             {
                 return;
             }
@@ -234,7 +282,14 @@ namespace TheLastKnight.Camera
             }
             if (_cam != null && _cam.orthographicSize > maxAllowed)
             {
-                _cam.orthographicSize = maxAllowed;
+                if (Application.isPlaying)
+                {
+                    _cam.orthographicSize = Mathf.Min(_cam.orthographicSize, maxAllowed);
+                }
+                else
+                {
+                    _cam.orthographicSize = maxAllowed;
+                }
             }
         }
 
@@ -279,7 +334,7 @@ namespace TheLastKnight.Camera
 
         private void HandleZoomInput()
         {
-            if (!_enableZoom || _cam == null) return;
+            if (!_enableZoom || _cam == null || !Application.isPlaying) return;
 
             bool isCtrlHeld = false;
             float scroll = 0f;
@@ -315,16 +370,13 @@ namespace TheLastKnight.Camera
 
             if (isCtrlHeld && Mathf.Abs(scroll) > 0.001f)
             {
-                if (_baseOrthographicSize <= 0.01f)
-                {
-                    _baseOrthographicSize = _cam.orthographicSize;
-                    _targetOrthographicSize = _baseOrthographicSize;
-                }
-
+                float baseSize = _baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f;
                 float maxAllowed = GetMaxAllowedOrthographicSize();
-                float minSize = Mathf.Min(_baseOrthographicSize * _minZoomMultiplier, maxAllowed);
-                float maxSize = Mathf.Min(_baseOrthographicSize * _maxZoomMultiplier, maxAllowed);
-                float step = _zoomStep > 0f ? _zoomStep : (_baseOrthographicSize * 0.1f);
+                float minSize = Mathf.Min(baseSize * _minZoomMultiplier, maxAllowed);
+                float maxSize = Mathf.Min(baseSize * _maxZoomMultiplier, maxAllowed);
+                if (minSize > maxSize) minSize = maxSize;
+
+                float step = _zoomStep > 0f ? _zoomStep : (baseSize * 0.1f);
 
                 // scroll < 0 is scroll backward/down -> zoom out (increase orthographic size up to 2.0x)
                 // scroll > 0 is scroll forward/up -> zoom in (decrease orthographic size down to 0.5x)
@@ -342,14 +394,7 @@ namespace TheLastKnight.Camera
 
             if (!Mathf.Approximately(_cam.orthographicSize, _targetOrthographicSize))
             {
-                if (Application.isPlaying)
-                {
-                    _cam.orthographicSize = Mathf.SmoothDamp(_cam.orthographicSize, _targetOrthographicSize, ref _zoomVelocity, _zoomSmoothTime);
-                }
-                else
-                {
-                    _cam.orthographicSize = _targetOrthographicSize;
-                }
+                _cam.orthographicSize = Mathf.SmoothDamp(_cam.orthographicSize, _targetOrthographicSize, ref _zoomVelocity, _zoomSmoothTime);
             }
 
             ClampSizeToBounds();
@@ -581,12 +626,18 @@ namespace TheLastKnight.Camera
             if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
             if (_baseOrthographicSize <= 0.01f && _cam != null) _baseOrthographicSize = _cam.orthographicSize;
 
+            float baseSize = _baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f;
             float maxAllowed = GetMaxAllowedOrthographicSize();
-            float minSize = Mathf.Min((_baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f) * _minZoomMultiplier, maxAllowed);
-            float maxSize = Mathf.Min((_baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f) * _maxZoomMultiplier, maxAllowed);
+            float minSize = Mathf.Min(baseSize * _minZoomMultiplier, maxAllowed);
+            float maxSize = Mathf.Min(baseSize * _maxZoomMultiplier, maxAllowed);
+            if (minSize > maxSize) minSize = maxSize;
 
-            _targetOrthographicSize = Mathf.Clamp((_baseOrthographicSize > 0.01f ? _baseOrthographicSize : 5f) * multiplier, minSize, maxSize);
+            _targetOrthographicSize = Mathf.Clamp(baseSize * multiplier, minSize, maxSize);
             ClampSizeToBounds();
+            if (!Application.isPlaying && _cam != null)
+            {
+                _cam.orthographicSize = _targetOrthographicSize;
+            }
         }
 
         public void ResetZoom()
@@ -594,6 +645,10 @@ namespace TheLastKnight.Camera
             float maxAllowed = GetMaxAllowedOrthographicSize();
             _targetOrthographicSize = Mathf.Min(_baseOrthographicSize, maxAllowed);
             ClampSizeToBounds();
+            if (!Application.isPlaying && _cam != null)
+            {
+                _cam.orthographicSize = _targetOrthographicSize;
+            }
         }
 
         public void SnapTo(Vector3 worldPos)
@@ -667,5 +722,28 @@ namespace TheLastKnight.Camera
                 _currentLookAheadX = Mathf.SmoothDamp(_currentLookAheadX, _targetLookAheadX, ref _lookAheadVelocity, smoothTime, Mathf.Infinity, deltaTime);
             }
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_minZoomMultiplier < 0.1f) _minZoomMultiplier = 0.1f;
+            if (_maxZoomMultiplier < 1.0f) _maxZoomMultiplier = 1.0f;
+            if (_targetViewportY < 0f) _targetViewportY = 0f;
+            if (_targetViewportY > 1f) _targetViewportY = 1f;
+
+            if (_cam == null) _cam = GetComponent<UnityEngine.Camera>();
+            if (_baseOrthographicSize <= 0.01f)
+            {
+                if (_cam != null && _cam.orthographicSize > 1f)
+                {
+                    _baseOrthographicSize = _cam.orthographicSize;
+                }
+                else
+                {
+                    _baseOrthographicSize = 5f;
+                }
+            }
+        }
+#endif
     }
 }

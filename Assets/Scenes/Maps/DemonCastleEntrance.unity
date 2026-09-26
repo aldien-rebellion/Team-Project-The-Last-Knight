@@ -1371,6 +1371,7 @@ MonoBehaviour:
   _lookAheadReturnSmoothTime: 2
   _lookAheadSpeedThreshold: 0.5
   _enableZoom: 1
+  _baseOrthographicSize: 4.2
   _minZoomMultiplier: 0.5
   _maxZoomMultiplier: 2
   _zoomStep: 0.5

@@ -21014,6 +21014,7 @@ MonoBehaviour:
   _lookAheadReturnSmoothTime: 2
   _lookAheadSpeedThreshold: 0.5
   _enableZoom: 1
+  _baseOrthographicSize: 6.5
   _minZoomMultiplier: 0.5
   _maxZoomMultiplier: 2
   _zoomStep: 0.5
@@ -21021,6 +21022,7 @@ MonoBehaviour:
   _deadzoneSize: {x: 1, y: 0}
   _useBoundaries: 1
   _boundaryBox: {fileID: 691752566}
+  _backgroundRenderer: {fileID: 0}
 --- !u!114 &488874008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36083,7 +36085,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 310, y: 23}
+  m_Size: {x: 309.5, y: 23}
   m_EdgeRadius: 0
 --- !u!4 &691752567
 Transform:
