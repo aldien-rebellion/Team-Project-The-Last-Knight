@@ -99,6 +99,7 @@ namespace TheLastKnight.UI
 
         private void OnDestroy()
         {
+            SetHUDVisible(true);
             if (Instance == this) Instance = null;
         }
 
@@ -158,6 +159,7 @@ namespace TheLastKnight.UI
                 Time.timeScale = 0f;
             }
 
+            SetHUDVisible(false);
             AudioManager.Instance?.PlaySfx("click");
             SetWindowVisible(true);
             Refresh(true);
@@ -170,6 +172,7 @@ namespace TheLastKnight.UI
             _isOpen = false;
             SetWindowVisible(false);
             HideTooltip();
+            SetHUDVisible(true);
 
             if (Application.isPlaying)
             {
@@ -177,6 +180,26 @@ namespace TheLastKnight.UI
                 GameManager.Instance?.SetInputBlocked(false);
             }
             AudioManager.Instance?.PlaySfx("click");
+        }
+
+        private HUDController _cachedHUD;
+
+        private void SetHUDVisible(bool visible)
+        {
+            if (_cachedHUD == null)
+            {
+                _cachedHUD = FindAnyObjectByType<HUDController>(FindObjectsInactive.Include);
+            }
+
+            if (_cachedHUD != null)
+            {
+                var doc = _cachedHUD.GetComponent<UnityEngine.UIElements.UIDocument>();
+                if (doc != null && doc.rootVisualElement != null)
+                {
+                    doc.rootVisualElement.style.display = visible ? UnityEngine.UIElements.DisplayStyle.Flex : UnityEngine.UIElements.DisplayStyle.None;
+                }
+                _cachedHUD.gameObject.SetActive(visible);
+            }
         }
 
         private void SetWindowVisible(bool visible)
@@ -356,13 +379,11 @@ namespace TheLastKnight.UI
         private void BuildCenterOverlays(RectTransform parent)
         {
             // 1. Dynamic Level Text ("LV.1")
-            var lvlGo = new GameObject("Txt_Level", typeof(RectTransform), typeof(Image));
+            var lvlGo = new GameObject("Txt_Level", typeof(RectTransform));
             lvlGo.transform.SetParent(parent, false);
             var lvlRt = lvlGo.GetComponent<RectTransform>();
-            lvlRt.anchoredPosition = ToUI(332, 360);
+            lvlRt.anchoredPosition = ToUI(295, 362);
             lvlRt.sizeDelta = new Vector2(86, 24);
-            var lvlBg = lvlGo.GetComponent<Image>();
-            lvlBg.color = new Color(0.35f, 0.25f, 0.18f, 1f);
 
             _txtLevel = CreateText(lvlGo.transform, "Label", "LV.1", 19, TextAlignmentOptions.MidlineLeft,
                 new Color(0.96f, 0.94f, 0.90f), FontStyles.Bold);
@@ -371,24 +392,23 @@ namespace TheLastKnight.UI
             ltRt.offsetMin = ltRt.offsetMax = Vector2.zero;
 
             // 2. Bars: XP, HP, STM
-            CreateStatBar(parent, "XP_Bar", ToUI(406, 330), new Vector2(236, 18),
-                new Color(0.25f, 0.32f, 0.42f), out _imgXpFill, out _txtXp, "XP: 0/100");
+            CreateStatBar(parent, "XP_Bar", ToUI(408, 335), new Vector2(230, 14),
+                new Color(0.25f, 0.45f, 0.85f), out _imgXpFill, out _txtXp, "XP: 0/100");
 
-            CreateStatBar(parent, "HP_Bar", ToUI(406, 307), new Vector2(236, 18),
-                new Color(0.72f, 0.15f, 0.12f), out _imgHpFill, out _txtHp, "HP: 100/150");
+            CreateStatBar(parent, "HP_Bar", ToUI(408, 308), new Vector2(230, 14),
+                new Color(0.85f, 0.18f, 0.15f), out _imgHpFill, out _txtHp, "HP: 100/150");
 
-            CreateStatBar(parent, "STM_Bar", ToUI(406, 280), new Vector2(236, 18),
-                new Color(0.76f, 0.48f, 0.12f), out _imgStmFill, out _txtStm, "STM: 30/100");
+            CreateStatBar(parent, "STM_Bar", ToUI(408, 281), new Vector2(230, 14),
+                new Color(0.85f, 0.55f, 0.15f), out _imgStmFill, out _txtStm, "STM: 30/100");
 
             // 3. Dynamic Gold Display
-            var goldGo = new GameObject("Txt_Gold", typeof(RectTransform), typeof(Image));
+            var goldGo = new GameObject("Txt_Gold", typeof(RectTransform));
             goldGo.transform.SetParent(parent, false);
             var goldRt = goldGo.GetComponent<RectTransform>();
-            goldRt.anchoredPosition = ToUI(423, 248);
-            goldRt.sizeDelta = new Vector2(225, 22);
-            goldGo.GetComponent<Image>().color = new Color(0.12f, 0.08f, 0.06f, 1f);
+            goldRt.anchoredPosition = ToUI(435, 244);
+            goldRt.sizeDelta = new Vector2(160, 20);
 
-            _txtGold = CreateText(goldGo.transform, "Label", "GOLD: 0", 15, TextAlignmentOptions.MidlineLeft,
+            _txtGold = CreateText(goldGo.transform, "Label", "0", 15, TextAlignmentOptions.MidlineLeft,
                 Color.white, FontStyles.Bold);
             var gtRt = _txtGold.rectTransform;
             gtRt.anchorMin = Vector2.zero; gtRt.anchorMax = Vector2.one;
@@ -520,13 +540,12 @@ namespace TheLastKnight.UI
 
         private void BuildRightOverlays(RectTransform parent)
         {
-            // 1. Status Points Number overlay
-            var spGo = new GameObject("Txt_SP", typeof(RectTransform), typeof(Image));
+            // 1. Status Points Number overlay (Clean text directly on wood)
+            var spGo = new GameObject("Txt_SP", typeof(RectTransform));
             spGo.transform.SetParent(parent, false);
             var spRt = spGo.GetComponent<RectTransform>();
-            spRt.anchoredPosition = ToUI(735, 417);
-            spRt.sizeDelta = new Vector2(28, 20);
-            spGo.GetComponent<Image>().color = new Color(0.18f, 0.12f, 0.08f, 0.98f);
+            spRt.anchoredPosition = ToUI(745, 420);
+            spRt.sizeDelta = new Vector2(32, 20);
 
             _txtStatusPoints = CreateText(spGo.transform, "Label", "0", 17, TextAlignmentOptions.Center,
                 Color.white, FontStyles.Bold);
@@ -557,13 +576,12 @@ namespace TheLastKnight.UI
             out TextMeshProUGUI valueTxt, out Button btnPlus, out Button btnMax,
             UnityEngine.Events.UnityAction onPlus, UnityEngine.Events.UnityAction onMax)
         {
-            // Value Box
-            var valGo = new GameObject($"Val_{name}", typeof(RectTransform), typeof(Image));
+            // Value Box (Clean text directly on wood)
+            var valGo = new GameObject($"Val_{name}", typeof(RectTransform));
             valGo.transform.SetParent(parent, false);
             var valRt = valGo.GetComponent<RectTransform>();
             valRt.anchoredPosition = ToUI(660, py);
-            valRt.sizeDelta = new Vector2(28, 20);
-            valGo.GetComponent<Image>().color = new Color(0.18f, 0.12f, 0.08f, 0.98f);
+            valRt.sizeDelta = new Vector2(32, 20);
 
             valueTxt = CreateText(valGo.transform, "Label", "10", 16, TextAlignmentOptions.Center,
                 Color.white, FontStyles.Bold);
@@ -884,7 +902,7 @@ namespace TheLastKnight.UI
             if (_txtStm != null) _txtStm.text = $"STM: {curStm}/{maxStm}";
 
             // Gold
-            if (_txtGold != null) _txtGold.text = $"GOLD: {gold:N0}";
+            if (_txtGold != null) _txtGold.text = $"{gold:N0}";
 
             // Status Points
             if (_txtStatusPoints != null) _txtStatusPoints.text = statPoints.ToString();
