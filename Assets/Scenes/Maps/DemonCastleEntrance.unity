@@ -1371,7 +1371,7 @@ MonoBehaviour:
   _lookAheadReturnSmoothTime: 2
   _lookAheadSpeedThreshold: 0.5
   _enableZoom: 1
-  _baseOrthographicSize: 4.2
+  _baseOrthographicSize: 5
   _minZoomMultiplier: 0.5
   _maxZoomMultiplier: 2
   _zoomStep: 0.5
@@ -1467,7 +1467,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.888005
+  orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1492,7 +1492,7 @@ Transform:
   m_GameObject: {fileID: 964647403}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0010004044, y: 0.53280306, z: -10}
+  m_LocalPosition: {x: -0.0010004044, y: 1.38, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
