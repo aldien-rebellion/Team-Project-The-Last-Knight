@@ -356,7 +356,7 @@ namespace TheLastKnight.UI
                 {
                     PlayerPrefs.SetFloat("TheLastKnight_BrightnessMultiplier", v);
                 }
-            }, 0.3f, 2.0f);
+            }, 0.1f, 2.0f);
 
             // Language Switcher Button
             string langButtonText = $"{LocalizationManager.Get("LANGUAGE_LABEL")}: {LocalizationManager.Get("LANGUAGE_CURRENT")}  ({LocalizationManager.Get("LANGUAGE_CHANGE_PROMPT")})";

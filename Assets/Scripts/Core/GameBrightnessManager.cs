@@ -153,7 +153,7 @@ namespace TheLastKnight.Core
 
         public void SetBrightness(float value)
         {
-            _brightness = Mathf.Clamp(value, 0.3f, 2.0f);
+            _brightness = Mathf.Clamp(value, 0.1f, 2.0f);
             PlayerPrefs.SetFloat(PrefKey, _brightness);
             PlayerPrefs.Save();
             ApplyBrightness();

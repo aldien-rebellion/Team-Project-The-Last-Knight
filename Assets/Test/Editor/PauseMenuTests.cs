@@ -124,9 +124,15 @@ namespace TheLastKnight.Tests
             var go = new GameObject("Test_BM");
             var bm = go.AddComponent(bmType);
 
-            bmType.GetMethod("SetBrightness").Invoke(bm, new object[] { 1.5f });
-            float val = (float)bmType.GetProperty("Brightness").GetValue(bm);
-            Assert.That(val, Is.EqualTo(1.5f).Within(0.01f));
+            // Test high clamping
+            bmType.GetMethod("SetBrightness").Invoke(bm, new object[] { 2.5f });
+            float valHigh = (float)bmType.GetProperty("Brightness").GetValue(bm);
+            Assert.That(valHigh, Is.EqualTo(2.0f).Within(0.01f));
+
+            // Test low clamping (minimum is 10% / 0.1f)
+            bmType.GetMethod("SetBrightness").Invoke(bm, new object[] { 0.02f });
+            float valLow = (float)bmType.GetProperty("Brightness").GetValue(bm);
+            Assert.That(valLow, Is.EqualTo(0.1f).Within(0.01f));
 
             UnityEngine.Object.DestroyImmediate(go);
         }
@@ -138,8 +144,8 @@ namespace TheLastKnight.Tests
             var go = new GameObject("Test_BM_Overlay");
             var bm = go.AddComponent(bmType);
 
-            // Test dimming (e.g. 0.4f)
-            bmType.GetMethod("SetBrightness").Invoke(bm, new object[] { 0.4f });
+            // Test dimming to minimum 10% (0.1f)
+            bmType.GetMethod("SetBrightness").Invoke(bm, new object[] { 0.1f });
 
             var canvas = (Canvas)bmType.GetProperty("OverlayCanvas").GetValue(bm);
             Assert.That(canvas, Is.Not.Null, "Overlay canvas must exist");
@@ -153,7 +159,7 @@ namespace TheLastKnight.Tests
             Assert.That(dimImg, Is.Not.Null);
             Assert.That(dimImg.raycastTarget, Is.False, "Dim image must not block raycasts");
             Assert.That(dimImg.gameObject.activeSelf, Is.True);
-            Assert.That(dimImg.color.a, Is.EqualTo(0.6f).Within(0.02f), "Alpha must equal (1.0 - brightness)");
+            Assert.That(dimImg.color.a, Is.EqualTo(0.9f).Within(0.02f), "Alpha must equal (1.0 - 0.1) = 0.9 for 10% brightness");
 
             // Test neutral (1.0f)
             bmType.GetMethod("SetBrightness").Invoke(bm, new object[] { 1.0f });
