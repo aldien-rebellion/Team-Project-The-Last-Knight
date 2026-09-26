@@ -27,6 +27,16 @@ namespace TheLastKnight.UI
             }
         }
 
+        private void OnDestroy()
+        {
+            if (_panel != null)
+            {
+                if (Application.isPlaying) Destroy(_panel);
+                else DestroyImmediate(_panel);
+                _panel = null;
+            }
+        }
+
         private void Start()
         {
             ShowMain();
@@ -34,7 +44,12 @@ namespace TheLastKnight.UI
 
         private Transform Replace(string title)
         {
-            if (_panel != null) Destroy(_panel);
+            if (_panel != null)
+            {
+                if (Application.isPlaying) Destroy(_panel);
+                else DestroyImmediate(_panel);
+                _panel = null;
+            }
             _panel = RuntimeUI.Panel(title, out var content);
             return content;
         }

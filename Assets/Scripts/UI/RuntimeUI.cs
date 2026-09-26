@@ -148,7 +148,7 @@ namespace TheLastKnight.UI
             return button;
         }
 
-        public static Slider Slider(Transform parent, string name, float value, UnityAction<float> changed)
+        public static Slider Slider(Transform parent, string name, float value, UnityAction<float> changed, float min = 0f, float max = 1f)
         {
             var label = Label(parent, $"{name}  {Mathf.RoundToInt(value * 100)}%", 20);
             var go = new GameObject(name, typeof(RectTransform), typeof(Slider), typeof(LayoutElement));
@@ -173,7 +173,7 @@ namespace TheLastKnight.UI
             var slider = go.GetComponent<Slider>();
             slider.handleRect = handle.GetComponent<RectTransform>();
             slider.targetGraphic = handleImg;
-            slider.minValue = 0; slider.maxValue = 1; slider.value = value;
+            slider.minValue = min; slider.maxValue = max; slider.value = Mathf.Clamp(value, min, max);
             slider.onValueChanged.AddListener(v => { label.text = $"{name}  {Mathf.RoundToInt(v * 100)}%"; changed(v); });
             return slider;
         }

@@ -132,6 +132,45 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
+        public void GameBrightnessManager_Overlay_DimsUIAndNeverBlocksRaycasts()
+        {
+            var bmType = RuntimeType("TheLastKnight.Core.GameBrightnessManager");
+            var go = new GameObject("Test_BM_Overlay");
+            var bm = go.AddComponent(bmType);
+
+            // Test dimming (e.g. 0.4f)
+            bmType.GetMethod("SetBrightness").Invoke(bm, new object[] { 0.4f });
+
+            var canvas = (Canvas)bmType.GetProperty("OverlayCanvas").GetValue(bm);
+            Assert.That(canvas, Is.Not.Null, "Overlay canvas must exist");
+            Assert.That(canvas.sortingOrder, Is.EqualTo(32767), "Overlay must render above all other UI");
+
+            var cg = canvas.GetComponent<CanvasGroup>();
+            Assert.That(cg, Is.Not.Null);
+            Assert.That(cg.blocksRaycasts, Is.False, "Overlay must never block UI raycasts");
+
+            var dimImg = (Image)bmType.GetProperty("DimImage").GetValue(bm);
+            Assert.That(dimImg, Is.Not.Null);
+            Assert.That(dimImg.raycastTarget, Is.False, "Dim image must not block raycasts");
+            Assert.That(dimImg.gameObject.activeSelf, Is.True);
+            Assert.That(dimImg.color.a, Is.EqualTo(0.6f).Within(0.02f), "Alpha must equal (1.0 - brightness)");
+
+            // Test neutral (1.0f)
+            bmType.GetMethod("SetBrightness").Invoke(bm, new object[] { 1.0f });
+            Assert.That(dimImg.gameObject.activeSelf, Is.False);
+
+            // Test brightening (1.5f)
+            bmType.GetMethod("SetBrightness").Invoke(bm, new object[] { 1.5f });
+            var addImg = (Image)bmType.GetProperty("AddImage").GetValue(bm);
+            Assert.That(addImg, Is.Not.Null);
+            Assert.That(addImg.gameObject.activeSelf, Is.True);
+            Assert.That(addImg.color.a, Is.GreaterThan(0f));
+            Assert.That(addImg.raycastTarget, Is.False);
+
+            UnityEngine.Object.DestroyImmediate(go);
+        }
+
+        [Test]
         public void KeyRebindManager_FormatPathToEnglish_FormatsInEnglishOnly()
         {
             var rebindType = RuntimeType("TheLastKnight.Input.KeyRebindManager");
@@ -231,7 +270,11 @@ namespace TheLastKnight.Tests
             var showRenameWorld = menuType.GetMethod("ShowRenameWorld", BindingFlags.NonPublic | BindingFlags.Instance);
             showRenameWorld.Invoke(menu, new[] { mockSave });
 
-            var input = UnityEngine.Object.FindAnyObjectByType<InputField>();
+            var panelField = menuType.GetField("_panel", BindingFlags.NonPublic | BindingFlags.Instance);
+            var panelGo = (GameObject)panelField.GetValue(menu);
+            Assert.That(panelGo, Is.Not.Null, "Panel must be created");
+
+            var input = panelGo.GetComponentInChildren<InputField>();
             Assert.That(input, Is.Not.Null, "Rename InputField must exist");
             Assert.That(input.text, Is.EqualTo("Custom Realm"));
 
