@@ -27,7 +27,7 @@ namespace TheLastKnight.UI
             }).interactable = SaveSystem.HasSave;
             RuntimeUI.Button(content, "Settings", ShowSettings);
             RuntimeUI.Button(content, "Exit", Application.Quit);
-            RuntimeUI.Label(content, "A/D Move   Space Jump   Shift / Right-click Dash\nLeft-click Attack / Parry   Q Potion   F Interact\nE Carnage Burst   R Buff   T Excalibur", 17);
+            RuntimeUI.Label(content, "A/D Move   Space Jump   Shift / Right-click Dash\nLeft-click Attack / Parry   Q Potion   F Interact\nE Carnage Burst   R Buff   T Excalibur   B Status", 17);
         }
         private void ShowDifficulty()
         {
