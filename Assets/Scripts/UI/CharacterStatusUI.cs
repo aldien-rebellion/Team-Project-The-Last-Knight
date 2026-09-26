@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using TMPro;
 using TheLastKnight.Stats;
 using TheLastKnight.Core;
@@ -92,6 +94,7 @@ namespace TheLastKnight.UI
             {
                 DontDestroyOnLoad(gameObject);
             }
+            SceneManager.sceneLoaded += OnSceneLoaded;
             EnsureEventSystem();
             BuildUI();
             SetWindowVisible(false);
@@ -99,8 +102,17 @@ namespace TheLastKnight.UI
 
         private void OnDestroy()
         {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
             SetHUDVisible(true);
             if (Instance == this) Instance = null;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (_isOpen)
+            {
+                Close();
+            }
         }
 
         private void Start()
@@ -117,6 +129,37 @@ namespace TheLastKnight.UI
         {
             var keyboard = Keyboard.current;
             if (keyboard == null) return;
+
+            // 1. Never toggle or remain open in MainMenu scene
+            string sceneName = SceneManager.GetActiveScene().name;
+            if (string.Equals(sceneName, "MainMenu", StringComparison.OrdinalIgnoreCase))
+            {
+                if (_isOpen) Close();
+                return;
+            }
+
+            // 2. Never toggle when typing in any InputField
+            if (EventSystem.current != null)
+            {
+                var selected = EventSystem.current.currentSelectedGameObject;
+                if (selected != null)
+                {
+                    if (selected.GetComponent<InputField>() != null ||
+                        selected.GetComponent<TMP_InputField>() != null)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            // 3. Do not open if Pause Menu is open or input is blocked
+            if (!_isOpen)
+            {
+                if (PauseMenuUI.Instance != null && PauseMenuUI.Instance.IsOpen) return;
+                if (GameManager.Instance != null && GameManager.Instance.InputBlocked) return;
+                var player = GetPlayer();
+                if (player == null || (Application.isPlaying && player.IsDead)) return;
+            }
 
             // Toggle with 'B' key
             if (keyboard.bKey.wasPressedThisFrame)
@@ -146,11 +189,14 @@ namespace TheLastKnight.UI
 
         public void Open()
         {
+            string sceneName = SceneManager.GetActiveScene().name;
+            if (string.Equals(sceneName, "MainMenu", StringComparison.OrdinalIgnoreCase)) return;
+
             EnsureEventSystem();
             if (_canvasObject == null) BuildUI();
 
             var player = GetPlayer();
-            if (Application.isPlaying && player != null && player.IsDead) return;
+            if (player == null || (Application.isPlaying && player.IsDead)) return;
 
             _isOpen = true;
             if (Application.isPlaying)

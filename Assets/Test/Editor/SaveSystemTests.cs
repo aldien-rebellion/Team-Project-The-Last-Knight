@@ -27,7 +27,7 @@ namespace TheLastKnight.Tests
         {
             foreach (string suffix in new[] { "", ".bak", ".tmp" })
                 if (File.Exists(_path + suffix)) File.Delete(_path + suffix);
-            Directory.Delete(_directory);
+            if (Directory.Exists(_directory)) Directory.Delete(_directory, true);
         }
 
         private object State(int gold = 120) => JsonUtility.FromJson(
@@ -82,6 +82,80 @@ namespace TheLastKnight.Tests
             File.WriteAllText(_path, "{broken");
             Assert.That(Load(out var loaded), Is.False);
             Assert.That(loaded, Is.Null);
+        }
+
+        [Test]
+        public void MultiWorld_CanSaveAndListMultipleWorlds()
+        {
+            var propEditor = _system.GetProperty("EditorTestSavePath");
+            propEditor.SetValue(null, _path);
+
+            try
+            {
+                var s1 = State(100);
+                _dataType.GetField("worldId").SetValue(s1, "world_alpha");
+                _dataType.GetField("saveName").SetValue(s1, "Alpha World");
+
+                var s2 = State(250);
+                _dataType.GetField("worldId").SetValue(s2, "world_beta");
+                _dataType.GetField("saveName").SetValue(s2, "Beta World");
+
+                var saveMethod = _system.GetMethod("Save", new[] { _dataType, typeof(string).MakeByRefType(), typeof(string) });
+                object[] args1 = { s1, null, null };
+                Assert.That((bool)saveMethod.Invoke(null, args1), Is.True);
+
+                object[] args2 = { s2, null, null };
+                Assert.That((bool)saveMethod.Invoke(null, args2), Is.True);
+
+                var getAllMethod = _system.GetMethod("GetAllSaves");
+                var list = (System.Collections.IList)getAllMethod.Invoke(null, null);
+                Assert.That(list.Count, Is.GreaterThanOrEqualTo(2));
+
+                // Verify Delete
+                var deleteMethod = _system.GetMethod("DeleteWorld");
+                object[] delArgs = { "world_alpha", null };
+                Assert.That((bool)deleteMethod.Invoke(null, delArgs), Is.True);
+
+                var listAfter = (System.Collections.IList)getAllMethod.Invoke(null, null);
+                Assert.That(listAfter.Cast<object>().Any(x => (string)_dataType.GetField("worldId").GetValue(x) == "world_alpha"), Is.False);
+            }
+            finally
+            {
+                propEditor.SetValue(null, null);
+            }
+        }
+
+        [Test]
+        public void MultiWorld_RenameWorld_UpdatesSaveNameOnDisk()
+        {
+            var propEditor = _system.GetProperty("EditorTestSavePath");
+            propEditor.SetValue(null, _path);
+
+            try
+            {
+                var s = State(500);
+                _dataType.GetField("worldId").SetValue(s, "world_gamma");
+                _dataType.GetField("saveName").SetValue(s, "Old Name");
+
+                var saveMethod = _system.GetMethod("Save", new[] { _dataType, typeof(string).MakeByRefType(), typeof(string) });
+                object[] args = { s, null, null };
+                Assert.That((bool)saveMethod.Invoke(null, args), Is.True);
+
+                var renameMethod = _system.GetMethod("RenameWorld");
+                object[] renArgs = { "world_gamma", "Brand New World", null };
+                Assert.That((bool)renameMethod.Invoke(null, renArgs), Is.True);
+
+                var tryLoadMethod = _system.GetMethod("TryLoadWorld");
+                object[] loadArgs = { "world_gamma", null };
+                Assert.That((bool)tryLoadMethod.Invoke(null, loadArgs), Is.True);
+
+                var reloaded = loadArgs[1];
+                Assert.That((string)_dataType.GetField("saveName").GetValue(reloaded), Is.EqualTo("Brand New World"));
+            }
+            finally
+            {
+                propEditor.SetValue(null, null);
+            }
         }
     }
 }
