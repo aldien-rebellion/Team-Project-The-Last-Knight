@@ -678,7 +678,19 @@ namespace TheLastKnight.Player
         private void StartDrink()
         {
             var stats = GetComponent<PlayerStats>();
-            if (stats.HealingPotions <= 0 || stats.CurrentHP >= stats.MaxHP) return;
+            var qm = TheLastKnight.Core.QuickItemManager.Instance;
+            var activeItem = qm != null ? qm.GetActiveItem() : null;
+
+            if (activeItem != null)
+            {
+                if (activeItem.id == "potion_heal" && (stats.HealingPotions <= 0 || stats.CurrentHP >= stats.MaxHP))
+                    return;
+            }
+            else
+            {
+                if (stats.HealingPotions <= 0 || stats.CurrentHP >= stats.MaxHP) return;
+            }
+
             CurrentState = PlayerState.Drinking;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("drink");
             _drinkTimer = _drinkDuration;
@@ -719,7 +731,18 @@ namespace TheLastKnight.Player
 
         private void EndDrink()
         {
-            GetComponent<PlayerStats>().CompletePotionDrink();
+            var stats = GetComponent<PlayerStats>();
+            var qm = TheLastKnight.Core.QuickItemManager.Instance;
+            var activeItem = qm != null ? qm.GetActiveItem() : null;
+
+            if (activeItem != null && activeItem.id != "potion_heal")
+            {
+                qm.UseSlot(0, stats);
+            }
+            else
+            {
+                stats.CompletePotionDrink();
+            }
             if (_kinematicController.IsGrounded)
             {
                 float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;

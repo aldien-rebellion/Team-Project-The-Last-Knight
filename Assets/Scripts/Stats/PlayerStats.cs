@@ -44,6 +44,7 @@ namespace TheLastKnight.Stats
         {
             if (_healingPotions >= MaxHealingPotions) return false;
             _healingPotions++;
+            TheLastKnight.Core.QuickItemManager.Instance?.SyncItemCount("potion_heal", _healingPotions);
             return true;
         }
         public bool CompletePotionDrink()
@@ -51,6 +52,7 @@ namespace TheLastKnight.Stats
             if (_healingPotions <= 0 || IsDead) return false;
             _healingPotions--;
             Heal(50f);
+            TheLastKnight.Core.QuickItemManager.Instance?.SyncItemCount("potion_heal", _healingPotions);
             return true;
         }
         public void AddStatPoints(int amount) => _availableStatPoints += Mathf.Max(0, amount);
@@ -335,6 +337,7 @@ namespace TheLastKnight.Stats
             _currentHP = Mathf.Clamp(state.hp, 0, MaxHP);
             _currentStamina = Mathf.Clamp(state.stamina, 0, MaxStamina);
             _lastDamageTime = -100f;
+            TheLastKnight.Core.QuickItemManager.Instance?.SyncItemCount("potion_heal", _healingPotions);
         }
     }
 }
