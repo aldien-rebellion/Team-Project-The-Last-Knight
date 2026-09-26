@@ -193,5 +193,27 @@ namespace TheLastKnight.Tests
 
             UnityEngine.Object.DestroyImmediate(go);
         }
+
+        [Test]
+        public void CharacterStatusUI_DoesNotOpenInMainMenu()
+        {
+            var statusType = RuntimeType("TheLastKnight.UI.CharacterStatusUI");
+            Assert.That(statusType, Is.Not.Null);
+
+            var go = new GameObject("Test_StatusUI");
+            var statusUI = go.AddComponent(statusType);
+
+            var openMethod = statusType.GetMethod("Open");
+            var isOpenProp = statusType.GetProperty("IsOpen");
+
+            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            if (string.Equals(currentScene, "MainMenu", StringComparison.OrdinalIgnoreCase))
+            {
+                openMethod.Invoke(statusUI, null);
+                Assert.That((bool)isOpenProp.GetValue(statusUI), Is.False, "CharacterStatusUI must never open in MainMenu scene");
+            }
+
+            UnityEngine.Object.DestroyImmediate(go);
+        }
     }
 }
