@@ -310,7 +310,7 @@ namespace TheLastKnight.UI
             return scroll;
         }
 
-        public static GameObject WorldCard(Transform parent, PlayerSaveData save, UnityAction onPlay, UnityAction onDelete)
+        public static GameObject WorldCard(Transform parent, PlayerSaveData save, UnityAction onPlay, UnityAction onRename, UnityAction onDelete)
         {
             var card = new GameObject("Card_" + save.worldId, typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
             card.transform.SetParent(parent, false);
@@ -323,7 +323,7 @@ namespace TheLastKnight.UI
             img.color = new Color(0.12f, 0.16f, 0.24f, 0.85f);
 
             var hLayout = card.GetComponent<HorizontalLayoutGroup>();
-            hLayout.spacing = 12;
+            hLayout.spacing = 10;
             hLayout.padding = new RectOffset(14, 14, 6, 6);
             hLayout.childAlignment = TextAnchor.MiddleCenter;
             hLayout.childControlWidth = true;
@@ -360,13 +360,24 @@ namespace TheLastKnight.UI
             // Buttons (right)
             var btnPlay = Button(card.transform, LocalizationManager.Get("BTN_LOAD_WORLD"), onPlay);
             var btnPlayLe = btnPlay.GetComponent<LayoutElement>();
-            btnPlayLe.preferredWidth = 110;
+            btnPlayLe.preferredWidth = 90;
             btnPlayLe.preferredHeight = 42;
             btnPlayLe.flexibleWidth = 0f;
 
+            var btnRename = Button(card.transform, LocalizationManager.Get("BTN_RENAME_WORLD"), onRename);
+            var btnRenameLe = btnRename.GetComponent<LayoutElement>();
+            btnRenameLe.preferredWidth = 95;
+            btnRenameLe.preferredHeight = 42;
+            btnRenameLe.flexibleWidth = 0f;
+            var renColors = btnRename.colors;
+            renColors.normalColor = new Color(0.20f, 0.28f, 0.38f, 1f);
+            renColors.highlightedColor = new Color(0.30f, 0.42f, 0.58f, 1f);
+            renColors.pressedColor = new Color(0.14f, 0.18f, 0.26f, 1f);
+            btnRename.colors = renColors;
+
             var btnDel = Button(card.transform, LocalizationManager.Get("BTN_DELETE_WORLD"), onDelete);
             var btnDelLe = btnDel.GetComponent<LayoutElement>();
-            btnDelLe.preferredWidth = 80;
+            btnDelLe.preferredWidth = 65;
             btnDelLe.preferredHeight = 42;
             btnDelLe.flexibleWidth = 0f;
 

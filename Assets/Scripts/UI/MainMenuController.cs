@@ -93,12 +93,34 @@ namespace TheLastKnight.UI
                     var targetSave = save;
                     RuntimeUI.WorldCard(scrollContent, targetSave,
                         onPlay: () => GameManager.Instance.LoadWorld(targetSave.worldId),
+                        onRename: () => ShowRenameWorld(targetSave),
                         onDelete: () => ShowDeleteConfirm(targetSave)
                     );
                 }
             }
 
             RuntimeUI.Button(content, LocalizationManager.Get("BTN_BACK"), ShowMain);
+        }
+
+        private void ShowRenameWorld(PlayerSaveData save)
+        {
+            var content = Replace(LocalizationManager.Get("RENAME_TITLE"));
+            RuntimeUI.Label(content, LocalizationManager.Get("RENAME_SUBTITLE"), 18);
+
+            RuntimeUI.Label(content, LocalizationManager.Get("WORLD_NAME_LABEL"), 16, new Color(0.9f, 0.85f, 0.7f));
+            var input = RuntimeUI.InputField(content, LocalizationManager.Get("WORLD_NAME_PLACEHOLDER"), save.saveName);
+
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_SAVE_NAME"), () =>
+            {
+                string newName = input.text;
+                if (!string.IsNullOrWhiteSpace(newName))
+                {
+                    SaveSystem.RenameWorld(save.worldId, newName, out _);
+                }
+                ShowWorldSelection();
+            });
+
+            RuntimeUI.Button(content, LocalizationManager.Get("BTN_CANCEL"), ShowWorldSelection);
         }
 
         private void ShowDeleteConfirm(PlayerSaveData save)

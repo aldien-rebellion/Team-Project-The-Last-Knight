@@ -215,5 +215,32 @@ namespace TheLastKnight.Tests
 
             UnityEngine.Object.DestroyImmediate(go);
         }
+
+        [Test]
+        public void MainMenuController_ShowRenameWorld_DisplaysInputFieldAndSaveButton()
+        {
+            var menuType = RuntimeType("TheLastKnight.UI.MainMenuController");
+            var go = new GameObject("Test_MainMenu_Rename");
+            var menu = go.AddComponent(menuType);
+
+            var saveDataType = RuntimeType("TheLastKnight.Core.PlayerSaveData");
+            var mockSave = Activator.CreateInstance(saveDataType);
+            saveDataType.GetField("worldId").SetValue(mockSave, "test_rename_world");
+            saveDataType.GetField("saveName").SetValue(mockSave, "Custom Realm");
+
+            var showRenameWorld = menuType.GetMethod("ShowRenameWorld", BindingFlags.NonPublic | BindingFlags.Instance);
+            showRenameWorld.Invoke(menu, new[] { mockSave });
+
+            var input = UnityEngine.Object.FindAnyObjectByType<InputField>();
+            Assert.That(input, Is.Not.Null, "Rename InputField must exist");
+            Assert.That(input.text, Is.EqualTo("Custom Realm"));
+
+            var buttons = UnityEngine.Object.FindObjectsByType<Button>(FindObjectsSortMode.None);
+            var buttonNames = System.Array.ConvertAll(buttons, b => b.name);
+            Assert.That(buttonNames.Any(n => n.Contains("Save") || n.Contains("บันทึก")), Is.True);
+            Assert.That(buttonNames.Any(n => n.Contains("Cancel") || n.Contains("ยกเลิก")), Is.True);
+
+            UnityEngine.Object.DestroyImmediate(go);
+        }
     }
 }

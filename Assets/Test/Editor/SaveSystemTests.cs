@@ -124,5 +124,38 @@ namespace TheLastKnight.Tests
                 propEditor.SetValue(null, null);
             }
         }
+
+        [Test]
+        public void MultiWorld_RenameWorld_UpdatesSaveNameOnDisk()
+        {
+            var propEditor = _system.GetProperty("EditorTestSavePath");
+            propEditor.SetValue(null, _path);
+
+            try
+            {
+                var s = State(500);
+                _dataType.GetField("worldId").SetValue(s, "world_gamma");
+                _dataType.GetField("saveName").SetValue(s, "Old Name");
+
+                var saveMethod = _system.GetMethod("Save", new[] { _dataType, typeof(string).MakeByRefType(), typeof(string) });
+                object[] args = { s, null, null };
+                Assert.That((bool)saveMethod.Invoke(null, args), Is.True);
+
+                var renameMethod = _system.GetMethod("RenameWorld");
+                object[] renArgs = { "world_gamma", "Brand New World", null };
+                Assert.That((bool)renameMethod.Invoke(null, renArgs), Is.True);
+
+                var tryLoadMethod = _system.GetMethod("TryLoadWorld");
+                object[] loadArgs = { "world_gamma", null };
+                Assert.That((bool)tryLoadMethod.Invoke(null, loadArgs), Is.True);
+
+                var reloaded = loadArgs[1];
+                Assert.That((string)_dataType.GetField("saveName").GetValue(reloaded), Is.EqualTo("Brand New World"));
+            }
+            finally
+            {
+                propEditor.SetValue(null, null);
+            }
+        }
     }
 }

@@ -197,6 +197,36 @@ namespace TheLastKnight.Core
             }
         }
 
+        public static bool RenameWorld(string worldId, string newName, out string error)
+        {
+            error = null;
+            if (string.IsNullOrEmpty(worldId))
+            {
+                error = "World ID is empty.";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                error = "New name cannot be empty.";
+                return false;
+            }
+
+            if (!TryLoadWorld(worldId, out var state))
+            {
+                error = "Could not find world to rename.";
+                return false;
+            }
+
+            state.saveName = newName.Trim();
+            bool saved = Save(state, out error);
+            if (saved && GameManager.Instance != null && GameManager.Instance.State != null && GameManager.Instance.State.worldId == worldId)
+            {
+                GameManager.Instance.State.saveName = state.saveName;
+            }
+            return saved;
+        }
+
         public static bool Save(PlayerSaveData state, out string error, string path = null)
         {
             if (!IsValid(state)) { error = "Could not save: player state is invalid."; return false; }
