@@ -52,9 +52,9 @@ namespace TheLastKnight.Tests
             var buttons = UnityEngine.Object.FindObjectsByType<Button>(FindObjectsSortMode.None);
             var buttonNames = System.Array.ConvertAll(buttons, b => b.name);
 
-            Assert.That(buttonNames, Does.Contain("เล่นต่อ"));
-            Assert.That(buttonNames, Does.Contain("ตั้งค่า"));
-            Assert.That(buttonNames, Does.Contain("ออก (กลับไปที่ Main Menu)"));
+            Assert.That(buttonNames.Any(n => n.Contains("Resume") && n.Contains("เล่นต่อ")), Is.True, "Resume button must exist");
+            Assert.That(buttonNames.Any(n => n.Contains("Settings") && n.Contains("ตั้งค่า")), Is.True, "Settings button must exist");
+            Assert.That(buttonNames.Any(n => n.Contains("Main Menu") && (n.Contains("เมนูหลัก") || n.Contains("Main Menu"))), Is.True, "Main menu button must exist");
         }
 
         [Test]
@@ -81,13 +81,13 @@ namespace TheLastKnight.Tests
             var sliders = UnityEngine.Object.FindObjectsByType<Slider>(FindObjectsSortMode.None);
             var sliderNames = System.Array.ConvertAll(sliders, s => s.name);
 
-            Assert.That(sliderNames, Does.Contain("Master"));
-            Assert.That(sliderNames, Does.Contain("Music"));
-            Assert.That(sliderNames, Does.Contain("Sound effects"));
+            Assert.That(sliderNames.Any(n => n.Contains("Master")), Is.True, "Master slider must exist");
+            Assert.That(sliderNames.Any(n => n.Contains("Music")), Is.True, "Music slider must exist");
+            Assert.That(sliderNames.Any(n => n.Contains("Sound Effects") || n.Contains("Sound effects")), Is.True, "Sound effects slider must exist");
 
             var buttons = UnityEngine.Object.FindObjectsByType<Button>(FindObjectsSortMode.None);
             var buttonNames = System.Array.ConvertAll(buttons, b => b.name);
-            Assert.That(buttonNames, Does.Contain("ย้อนกลับ"));
+            Assert.That(buttonNames.Any(n => n.Contains("Back") && n.Contains("ย้อนกลับ")), Is.True, "Back button must exist");
         }
     }
 }

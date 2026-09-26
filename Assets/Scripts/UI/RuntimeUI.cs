@@ -27,7 +27,9 @@ namespace TheLastKnight.UI
             veil.transform.SetParent(root.transform, false);
             var vr = veil.GetComponent<RectTransform>();
             vr.anchorMin = Vector2.zero; vr.anchorMax = Vector2.one; vr.offsetMin = vr.offsetMax = Vector2.zero;
-            veil.GetComponent<Image>().color = new Color(0.025f, 0.035f, 0.065f, 0.94f);
+            var veilImg = veil.GetComponent<Image>();
+            veilImg.color = new Color(0.025f, 0.035f, 0.065f, 0.94f);
+            veilImg.raycastTarget = true;
 
             var body = new GameObject("Content", typeof(RectTransform), typeof(VerticalLayoutGroup));
             body.transform.SetParent(veil.transform, false);
@@ -36,37 +38,72 @@ namespace TheLastKnight.UI
             rect.offsetMin = rect.offsetMax = Vector2.zero;
 
             var layout = body.GetComponent<VerticalLayoutGroup>();
-            layout.spacing = 10; layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.spacing = 12; layout.childAlignment = TextAnchor.MiddleCenter;
             layout.childControlHeight = true; layout.childForceExpandHeight = false;
+            layout.childControlWidth = true; layout.childForceExpandWidth = true;
 
             content = body.transform;
-            Label(content, title, 42, new Color(0.9f, 0.77f, 0.48f));
+            Label(content, title, 38, new Color(0.9f, 0.77f, 0.48f));
             return root;
         }
 
         public static void EnsureEventSystem()
         {
-            var es = Object.FindAnyObjectByType<EventSystem>();
-            if (es == null)
+            var all = Object.FindObjectsByType<EventSystem>(FindObjectsInactive.Include);
+            EventSystem activeEs = null;
+            if (all != null && all.Length > 0)
             {
-                var go = new GameObject("EventSystem");
-                es = go.AddComponent<EventSystem>();
-            }
-
-            var module = es.GetComponent<InputSystemUIInputModule>();
-            if (module == null)
-            {
-                module = es.gameObject.AddComponent<InputSystemUIInputModule>();
-            }
-
-            module.enabled = true;
-            if (UnityEngine.InputSystem.InputSystem.actions != null)
-            {
-                module.actionsAsset = UnityEngine.InputSystem.InputSystem.actions;
+                activeEs = all[0];
+                for (int i = 1; i < all.Length; i++)
+                {
+                    if (all[i] != null && all[i].gameObject != null)
+                    {
+                        all[i].enabled = false;
+                        all[i].gameObject.SetActive(false);
+                        if (Application.isPlaying) Object.Destroy(all[i].gameObject);
+                        else Object.DestroyImmediate(all[i].gameObject);
+                    }
+                }
             }
             else
             {
-                module.AssignDefaultActions();
+                var go = new GameObject("EventSystem");
+                activeEs = go.AddComponent<EventSystem>();
+            }
+
+            if (activeEs != null)
+            {
+                activeEs.enabled = true;
+                activeEs.gameObject.SetActive(true);
+
+                var legacy = activeEs.GetComponent<StandaloneInputModule>();
+                if (legacy != null)
+                {
+                    legacy.enabled = false;
+                    if (Application.isPlaying) Object.Destroy(legacy);
+                    else Object.DestroyImmediate(legacy);
+                }
+
+                var module = activeEs.GetComponent<InputSystemUIInputModule>();
+                if (module == null)
+                {
+                    module = activeEs.gameObject.AddComponent<InputSystemUIInputModule>();
+                }
+                module.enabled = true;
+
+                if (UnityEngine.InputSystem.InputSystem.actions != null)
+                {
+                    module.actionsAsset = UnityEngine.InputSystem.InputSystem.actions;
+                    var uiMap = UnityEngine.InputSystem.InputSystem.actions.FindActionMap("UI");
+                    if (uiMap != null && !uiMap.enabled)
+                    {
+                        uiMap.Enable();
+                    }
+                }
+                else
+                {
+                    module.AssignDefaultActions();
+                }
             }
         }
 
@@ -85,10 +122,24 @@ namespace TheLastKnight.UI
         {
             var go = new GameObject(text, typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
             go.transform.SetParent(parent, false);
-            go.GetComponent<LayoutElement>().preferredHeight = 46;
-            go.GetComponent<Image>().color = new Color(0.16f, 0.2f, 0.28f);
+            var le = go.GetComponent<LayoutElement>();
+            le.preferredHeight = 48;
+            le.minHeight = 44;
+
+            var img = go.GetComponent<Image>();
+            img.color = Color.white;
+            img.raycastTarget = true;
+
             var button = go.GetComponent<Button>();
-            button.targetGraphic = go.GetComponent<Image>();
+            button.targetGraphic = img;
+
+            var colors = button.colors;
+            colors.normalColor = new Color(0.16f, 0.20f, 0.28f, 1f);
+            colors.highlightedColor = new Color(0.26f, 0.36f, 0.52f, 1f);
+            colors.pressedColor = new Color(0.10f, 0.12f, 0.18f, 1f);
+            colors.selectedColor = new Color(0.24f, 0.34f, 0.48f, 1f);
+            button.colors = colors;
+
             var label = Label(go.transform, text);
             var rect = label.rectTransform;
             rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.offsetMin = rect.offsetMax = Vector2.zero;
@@ -101,22 +152,26 @@ namespace TheLastKnight.UI
             var label = Label(parent, $"{name}  {Mathf.RoundToInt(value * 100)}%", 20);
             var go = new GameObject(name, typeof(RectTransform), typeof(Slider), typeof(LayoutElement));
             go.transform.SetParent(parent, false);
-            go.GetComponent<LayoutElement>().preferredHeight = 28;
+            go.GetComponent<LayoutElement>().preferredHeight = 32;
 
             var track = new GameObject("Track", typeof(RectTransform), typeof(Image));
             track.transform.SetParent(go.transform, false);
             var rect = track.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0, 0.35f); rect.anchorMax = new Vector2(1, 0.65f); rect.offsetMin = rect.offsetMax = Vector2.zero;
-            track.GetComponent<Image>().color = new Color(0.2f, 0.25f, 0.35f);
+            var trackImg = track.GetComponent<Image>();
+            trackImg.color = new Color(0.2f, 0.25f, 0.35f);
+            trackImg.raycastTarget = true;
 
             var handle = new GameObject("Handle", typeof(RectTransform), typeof(Image));
             handle.transform.SetParent(go.transform, false);
-            handle.GetComponent<RectTransform>().sizeDelta = new Vector2(20, 28);
-            handle.GetComponent<Image>().color = new Color(0.9f, 0.77f, 0.48f);
+            handle.GetComponent<RectTransform>().sizeDelta = new Vector2(24, 30);
+            var handleImg = handle.GetComponent<Image>();
+            handleImg.color = new Color(0.9f, 0.77f, 0.48f);
+            handleImg.raycastTarget = true;
 
             var slider = go.GetComponent<Slider>();
             slider.handleRect = handle.GetComponent<RectTransform>();
-            slider.targetGraphic = handle.GetComponent<Image>();
+            slider.targetGraphic = handleImg;
             slider.minValue = 0; slider.maxValue = 1; slider.value = value;
             slider.onValueChanged.AddListener(v => { label.text = $"{name}  {Mathf.RoundToInt(v * 100)}%"; changed(v); });
             return slider;
