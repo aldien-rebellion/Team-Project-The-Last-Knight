@@ -35,6 +35,11 @@ namespace TheLastKnight.Combat
         [Tooltip("If true, this skill displays the Parry timing ring and can be parried by the player.")]
         public bool isParryable = true;
 
+        [Tooltip("Delay before the first use after spawn, in seconds.")]
+        public float initialDelay;
+        [Tooltip("Hold this non-damaging pose for this many seconds (zero = normal attack).")]
+        public float guardDuration;
+
         [Tooltip("Optional projectile prefab for ranged skills (e.g. Goblin_Bomb, FlyingEye_Projectile).")]
         public GameObject projectilePrefab;
 

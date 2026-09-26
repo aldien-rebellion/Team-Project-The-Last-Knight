@@ -23,6 +23,8 @@ namespace TheLastKnight.Combat
         public float Damage { get => _damage; set => _damage = value; }
         public bool IsActive { get => _isActive; set => SetActive(value); }
 
+        public void BeginAttack() => _lastHitTimes.Clear();
+
         private void Awake()
         {
             _collider = GetComponent<Collider2D>();

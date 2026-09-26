@@ -65446,6 +65446,26 @@ PrefabInstance:
       propertyPath: _groundLayer.m_Bits
       value: 193
       objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _defense
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _expReward
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _maxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _goldReward
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _useLevelScaling
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6921010378139430298, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: m_Name
       value: BlueSlime
@@ -91516,6 +91536,7 @@ MonoBehaviour:
   _deadzoneSize: {x: 1, y: 0}
   _useBoundaries: 1
   _boundaryBox: {fileID: 2012203832}
+  _backgroundRenderer: {fileID: 0}
 --- !u!114 &1963803808
 MonoBehaviour:
   m_ObjectHideFlags: 0

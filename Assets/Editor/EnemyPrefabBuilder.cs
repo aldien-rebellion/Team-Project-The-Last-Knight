@@ -88,6 +88,20 @@ namespace TheLastKnight.EditorTools
                 anim.runtimeAnimatorController = controller;
                 AssignFirstSpriteFromController(sr, controller);
             }
+            else if (name == "Skeleton_Sword")
+            {
+                const string swordSpriteSheet = "Assets/sprites/Monsters/Monsters_Creatures_Fantasy/Monster_Creatures_Fantasy(Projectile_Attack)/Skeleton/Sword_sprite.png";
+                Sprite swordSprite = null;
+                foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(swordSpriteSheet))
+                {
+                    if (asset is Sprite sprite && sprite.name == "Sword_sprite_0000")
+                    {
+                        swordSprite = sprite;
+                        break;
+                    }
+                }
+                sr.sprite = swordSprite;
+            }
 
             var rb = go.AddComponent<Rigidbody2D>();
             rb.bodyType = RigidbodyType2D.Kinematic;
@@ -268,7 +282,7 @@ namespace TheLastKnight.EditorTools
                 new MonsterConfig("Reaper", 280f, 30f, 5f, 2.2f, 4.5f, 8f, 2.2f),
                 new MonsterConfig("Satyr", 110f, 20f, 3f, 2.2f, 4.2f, 7f, 1.6f),
                 new MonsterConfig("ShadowDemonDragon", 900f, 55f, 12f, 1.8f, 3.8f, 10f, 3.5f),
-                new MonsterConfig("Skeleton", 45f, 12f, 1f, 1.8f, 3.5f, 7f, 1.4f, false, true, "Skeleton_Sword"),
+                new MonsterConfig("Skeleton", 45f, 12f, 1f, 1.8f, 3.5f, 7f, 0.05f, scale: 5f),
                 new MonsterConfig("SkeletonKnight", 220f, 28f, 5f, 2.0f, 4.2f, 7f, 1.8f),
                 new MonsterConfig("Skullwolf", 65f, 18f, 1f, 3.2f, 5.8f, 8f, 1.4f),
                 new MonsterConfig("Small_dragon", 80f, 16f, 2f, 2.2f, 4.2f, 7f, 1.5f, false, true, "SmallDragon_FireBall"),
@@ -320,6 +334,11 @@ namespace TheLastKnight.EditorTools
             float colWidth = Mathf.Max(0.4f, bounds.size.x * 0.45f);
             col.size = new Vector2(colWidth, colHeight);
             col.offset = new Vector2(0f, colHeight * 0.5f);
+            if (cfg.Name == "Skeleton")
+            {
+                col.size = new Vector2(0.23f, 0.51f);
+                col.offset = new Vector2(0.05f, 0.255f);
+            }
 
             // EnemyStats
             var stats = root.AddComponent<EnemyStats>();
@@ -339,8 +358,11 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_chaseSpeed").floatValue = cfg.ChaseSpeed;
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
             serializedAI.FindProperty("_meleeRange").floatValue = cfg.MeleeRange;
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "BlueSlime" ? 0f : 1.5f;
-            serializedAI.FindProperty("_cycleNonParryableSkills").boolValue = cfg.Name == "BlueSlime";
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" ? 0f : 1.5f;
+            serializedAI.FindProperty("_cycleNonParryableSkills").boolValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton";
+            serializedAI.FindProperty("_continuousActions").boolValue = cfg.Name == "Skeleton";
+            if (cfg.Name == "Skeleton")
+                serializedAI.FindProperty("_projectileSpawnOffset").vector2Value = new Vector2(0.6f, 1.4f);
             serializedAI.FindProperty("_isFlying").boolValue = cfg.IsFlying;
             serializedAI.FindProperty("_hasRangedAttack").boolValue = cfg.HasRanged;
             if (projPrefab != null) serializedAI.FindProperty("_projectilePrefab").objectReferenceValue = projPrefab;
@@ -350,21 +372,40 @@ namespace TheLastKnight.EditorTools
 
             // Setup Floating Health Bar Canvas
             CreateHealthBarCanvas(root, stats, colHeight);
-            if (cfg.Name == "BlueSlime")
+            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton")
             {
-                root.GetComponentInChildren<FloatingHealthBar>().transform.localScale = new Vector3(0.006f, 0.006f, 1f);
+                // Match BlueSlime's world-space UI scale (root 4x, canvas 0.006).
+                float barScale = cfg.Name == "Skeleton" ? 0.0048f : 0.006f;
+                var healthBar = root.GetComponentInChildren<FloatingHealthBar>();
+                healthBar.transform.localScale = new Vector3(barScale, barScale, 1f);
+                if (cfg.Name == "Skeleton")
+                    healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
                 var bar = new SerializedObject(root.GetComponentInChildren<FloatingHealthBar>());
                 bar.FindProperty("_followSprite").objectReferenceValue = sr;
+                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton";
                 bar.ApplyModifiedPropertiesWithoutUndo();
                 var receiver = root.GetComponent<ParryReceiver>();
                 if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
                 var parry = new SerializedObject(receiver);
                 parry.FindProperty("_centerSprite").objectReferenceValue = sr;
+                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton";
                 parry.ApplyModifiedPropertiesWithoutUndo();
+                if (cfg.Name == "Skeleton")
+                {
+                    var healthRect = root.GetComponentInChildren<FloatingHealthBar>().GetComponent<RectTransform>();
+                    var visible = SpriteVisualBounds.GetWorldBounds(sr);
+                    healthRect.position = new Vector3(visible.center.x, visible.max.y + 0.08f + healthRect.rect.height * healthRect.lossyScale.y * 0.5f, 0);
+                }
             }
 
             // Setup Hitbox for damage dealing
             CreateContactHitbox(root, cfg.Attack, colWidth * 1.1f, colHeight * 1.05f);
+            if (cfg.Name == "Skeleton")
+            {
+                var hitbox = root.GetComponentInChildren<EnemyHitbox2D>();
+                hitbox.GetComponent<BoxCollider2D>().size = new Vector2(0.36f, 0.51f);
+                hitbox.transform.localPosition = new Vector3(0.16f, 0.255f, 0);
+            }
 
             // Special handling for ShadowDemonDragon: Audio Controller
             if (cfg.Name == "ShadowDemonDragon")
@@ -584,9 +625,13 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("SwordThrow", "Attack3", -1, 1.4f, 4.5f, 2.5f, 6.5f, true, "Skeleton_Sword"),
-                        new SkillData("ShieldGuard", "Shield", -1, 0.5f, 8.0f, 0f, 2.0f, false)
+                        new SkillData("AttackFirst", "Attack", -1, 1f, 0f, 0f, 0.05f, false),
+                        new SkillData("AttackSecond", "Attack", -1, 1f, 0f, 0f, 0.05f, false),
+                        new SkillData("ShieldGuard", "Shield", -1, 0.5f, 0f, 0f, 0.05f, false),
+                        new SkillData("SwordThrow", "Attack3", -1, 1.4f, 5f, 0f, 0.05f, true, "Skeleton_Sword")
                     });
+                    skills[2].guardDuration = 1f;
+                    skills[3].initialDelay = 5f;
                     break;
 
                 case "FlyingEye":
@@ -756,7 +801,7 @@ namespace TheLastKnight.EditorTools
             }
 
             ai.SetSkills(skills);
-            ai.SetBasicAttackConfiguration(basicAnim, 1.0f, true, 4.0f);
+            ai.SetBasicAttackConfiguration(basicAnim, 1.0f, name != "Skeleton", 4.0f);
             ai.SetBoss(isBoss);
             EditorUtility.SetDirty(ai);
         }

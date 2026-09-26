@@ -14,6 +14,7 @@ namespace TheLastKnight.Combat
         [SerializeField] private bool _autoHideOnDeath = true;
         [SerializeField] private bool _maintainWorldScale = true;
         [SerializeField] private SpriteRenderer _followSprite;
+        [SerializeField] private bool _useVisibleSpriteBounds;
         [SerializeField] private float _headGap = 0.08f;
 
         private Vector3 _originalScale;
@@ -86,7 +87,7 @@ namespace TheLastKnight.Combat
         {
             if (_followSprite != null && transform is RectTransform barRect)
             {
-                Bounds bounds = _followSprite.bounds;
+                Bounds bounds = _useVisibleSpriteBounds ? SpriteVisualBounds.GetWorldBounds(_followSprite) : _followSprite.bounds;
                 float halfHeight = barRect.rect.height * Mathf.Abs(transform.lossyScale.y) * 0.5f;
                 transform.position = new Vector3(bounds.center.x, bounds.max.y + _headGap + halfHeight, transform.position.z);
             }

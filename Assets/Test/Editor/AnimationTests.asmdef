@@ -1,7 +1,7 @@
 {
     "name": "AnimationTests",
     "rootNamespace": "",
-    "references": [],
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner"],
     "includePlatforms": [
         "Editor"
     ],

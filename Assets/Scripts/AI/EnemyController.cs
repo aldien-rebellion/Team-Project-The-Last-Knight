@@ -57,6 +57,8 @@ namespace TheLastKnight.AI
         [SerializeField] private TheLastKnight.Combat.EnemySkill[] _skills = new TheLastKnight.Combat.EnemySkill[0];
         public TheLastKnight.Combat.EnemySkill[] Skills => _skills;
         [SerializeField] private bool _cycleNonParryableSkills;
+        [Tooltip("Run the configured cycle without anticipation gaps and finish actions before reacting to damage.")]
+        [SerializeField] private bool _continuousActions;
         private int _nextCyclicSkill;
 
         [Header("Death & Respawn Settings")]
@@ -92,6 +94,7 @@ namespace TheLastKnight.AI
         private ParryReceiver _parry;
         private float _damageUntil;
         private bool _projectileSpawned;
+        private GameObject _activeSkillProjectile;
         public bool CanDealMeleeDamage => !_stats.IsDead && !_parry.IsStaggered && Time.time < _damageUntil;
         public float CurrentAttackDamage => _stats != null ? _stats.AttackPower * _currentAttackMultiplier : 10f;
         public float CurrentAttackMultiplier => _currentAttackMultiplier;
@@ -114,6 +117,8 @@ namespace TheLastKnight.AI
             _startX = transform.position.x;
             _spawnPosition = transform.position;
             _spawnRotation = transform.rotation;
+            foreach (var skill in _skills)
+                if (skill != null) skill.nextReadyTime = Time.time + skill.initialDelay;
 
             if (_animator != null)
             {
@@ -285,7 +290,7 @@ namespace TheLastKnight.AI
 
         private float GetAttackDistance()
         {
-            float distance = Vector2.Distance(transform.position, _player.transform.position);
+            float distance = float.PositiveInfinity;
             // Large sprites have offset pivots: use the solid bodies, not their origins.
             var targets = _player.GetComponentsInChildren<Collider2D>();
             foreach (var body in _colliders)
@@ -299,7 +304,8 @@ namespace TheLastKnight.AI
                         distance = Mathf.Min(distance, Mathf.Max(0f, separation.distance));
                 }
             }
-            return distance;
+            return float.IsPositiveInfinity(distance)
+                ? Vector2.Distance(transform.position, _player.transform.position) : distance;
         }
 
         private void Patrol()
@@ -512,7 +518,7 @@ namespace TheLastKnight.AI
                     yield break;
                 }
             }
-            else
+            else if (!_continuousActions)
             {
                 yield return new WaitForSeconds(0.15f);
                 if (_stats.IsDead || _parry.IsStaggered)
@@ -528,7 +534,20 @@ namespace TheLastKnight.AI
                 _animator.Play(skill.animationName, 0, 0f);
             else
                 PlayAnimationAction(skill.animationName, skill.actionIndex);
-            _damageUntil = Time.time + 0.4f;
+
+            if (skill.guardDuration > 0f)
+            {
+                yield return new WaitForSeconds(skill.guardDuration);
+                if (waitForAnimation) _animator.Play("Idle", 0, 0f);
+                _currentAttackMultiplier = _basicAttackMultiplier;
+                _isActionLocked = false;
+                yield break;
+            }
+
+            if (_continuousActions)
+                foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>()) hitbox.BeginAttack();
+            // A thrown weapon delivers its own damage; do not also hit with the body.
+            _damageUntil = _continuousActions && skill.projectilePrefab != null ? 0f : Time.time + 0.4f;
 
             if (skill.groundSpellPrefab != null && _player != null)
             {
@@ -550,6 +569,7 @@ namespace TheLastKnight.AI
             while (waitForAnimation && _animator.GetCurrentAnimatorStateInfo(0).IsName(skill.animationName)
                 && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
                 yield return null;
+            if (_continuousActions && waitForAnimation) _animator.Play("Idle", 0, 0f);
             _currentAttackMultiplier = _basicAttackMultiplier;
             _isActionLocked = false;
         }
@@ -647,7 +667,13 @@ namespace TheLastKnight.AI
         {
             StopAttack();
             _currentState = EnemyAIState.Hurt;
-            SetAnimTrigger("Hurt");
+            if (_continuousActions && _animator != null && _animator.HasState(0, Animator.StringToHash("TakeHit")))
+            {
+                _animator.ResetTrigger("Attack");
+                _animator.ResetTrigger("Hurt");
+                _animator.Play("TakeHit", 0, 0f);
+            }
+            else SetAnimTrigger("Hurt");
         }
 
         private void StopAttack()
@@ -658,6 +684,12 @@ namespace TheLastKnight.AI
             _projectileSpawned = true;
             _currentAttackMultiplier = _basicAttackMultiplier;
             _isActionLocked = false;
+            if (_activeSkillProjectile != null)
+            {
+                _activeSkillProjectile.SetActive(false);
+                Destroy(_activeSkillProjectile);
+                _activeSkillProjectile = null;
+            }
         }
 
         private IEnumerator DelayedProjectileRoutine(float delay)
@@ -723,6 +755,7 @@ namespace TheLastKnight.AI
             Vector3 spawnPos = transform.position + new Vector3(_projectileSpawnOffset.x * dirX, _projectileSpawnOffset.y, 0f);
 
             GameObject proj = Instantiate(prefab, spawnPos, Quaternion.identity);
+            if (_continuousActions) _activeSkillProjectile = proj;
             Vector3 scale = proj.transform.localScale;
             scale.x = Mathf.Abs(scale.x) * dirX;
             proj.transform.localScale = scale;
@@ -757,6 +790,9 @@ namespace TheLastKnight.AI
         private void HandleDamaged(DamageData data)
         {
             if (_stats.IsDead) return;
+
+            // A cyclic action finishes before the next action or hurt pose can start.
+            if (_continuousActions && _isActionLocked) return;
 
             _currentState = EnemyAIState.Hurt;
             SetAnimTrigger("Hurt");
@@ -866,6 +902,9 @@ namespace TheLastKnight.AI
 
             _damageUntil = 0f;
             _isActionLocked = false;
+            _nextCyclicSkill = 0;
+            foreach (var skill in _skills)
+                if (skill != null) skill.nextReadyTime = Time.time + skill.initialDelay;
             _currentState = EnemyAIState.Idle;
         }
 

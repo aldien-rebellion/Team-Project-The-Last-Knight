@@ -15,6 +15,7 @@ namespace TheLastKnight.Combat
         private LineRenderer _ring;
         private LineRenderer _target;
         [SerializeField] private SpriteRenderer _centerSprite;
+        [SerializeField] private bool _useVisibleSpriteBounds;
         public bool IsStaggered => Time.time < _staggerUntil;
         public bool IsWindingUp => _windingUp;
         public float Progress => Mathf.Clamp01((Time.time - _start) / WindupDuration);
@@ -75,6 +76,8 @@ namespace TheLastKnight.Combat
         private void DrawRing(LineRenderer ring, float radius)
         {
             Vector3 center = _centerSprite != null ? _centerSprite.bounds.center : transform.position + Vector3.up * 1.5f;
+            if (_centerSprite != null && _useVisibleSpriteBounds)
+                center = SpriteVisualBounds.GetWorldBounds(_centerSprite).center;
             for (int i = 0; i < ring.positionCount; i++)
             {
                 float angle = i * Mathf.PI * 2f / ring.positionCount;

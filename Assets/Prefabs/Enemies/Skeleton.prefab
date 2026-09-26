@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.75}
@@ -102,7 +102,7 @@ RectTransform:
   m_GameObject: {fileID: 1501480264098685240}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.0048, y: 0.0048, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6484625505281338808}
@@ -111,8 +111,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1.5500001}
-  m_SizeDelta: {x: 100, y: 14}
+  m_AnchoredPosition: {x: 0.075, y: 0.5712}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &3148371842764632749
 Canvas:
@@ -148,14 +148,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 731b67cd6340d6b4c936763f3fac4db7, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.FloatingHealthBar
   _targetStats: {fileID: 4167955264493237057}
   _healthBarFill: {fileID: 3706835912004215114}
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
-  _followSprite: {fileID: 0}
+  _followSprite: {fileID: 511139046164102749}
+  _useVisibleSpriteBounds: 1
   _headGap: 0.08
 --- !u!1 &2923911752621517954
 GameObject:
@@ -172,6 +173,7 @@ GameObject:
   - component: {fileID: 7887072951325740334}
   - component: {fileID: 4167955264493237057}
   - component: {fileID: 4211774737546589458}
+  - component: {fileID: 9010000000000000001}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -273,7 +275,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -339,8 +341,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.6}
-  m_Size: {x: 0.67499995, y: 1.2}
+  m_Offset: {x: 0.05, y: 0.255}
+  m_Size: {x: 0.23, y: 0.51}
   m_Direction: 0
 --- !u!114 &4167955264493237057
 MonoBehaviour:
@@ -352,7 +354,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 1
   _useLevelScaling: 0
@@ -372,7 +374,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a223c0ce5d98f3a4c88422488ea4ea4a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
   _patrolSpeed: 1.8
   _chaseSpeed: 3.5
@@ -389,40 +391,69 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 7
-  _meleeRange: 1.4
-  _meleeCooldown: 1.5
-  _hasRangedAttack: 1
+  _meleeRange: 0.05
+  _meleeCooldown: 0
+  _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 6221158093530012524, guid: b0d77f59fae2efd4abc2a47e4f74d355, type: 3}
-  _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _projectileSpawnOffset: {x: 0.6, y: 1.4}
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack
   _basicAttackMultiplier: 1
-  _basicAttackCanParry: 1
+  _basicAttackCanParry: 0
   _basicParryCooldown: 4
   _skills:
-  - skillName: SwordThrow
-    animationName: Attack3
+  - skillName: AttackFirst
+    animationName: Attack
     actionIndex: -1
-    damageMultiplier: 1.4
-    cooldown: 4.5
-    minRange: 2.5
-    maxRange: 6.5
-    isParryable: 1
-    projectilePrefab: {fileID: 6221158093530012524, guid: b0d77f59fae2efd4abc2a47e4f74d355, type: 3}
+    damageMultiplier: 1
+    cooldown: 0
+    minRange: 0
+    maxRange: 0.05
+    isParryable: 0
+    initialDelay: 0
+    guardDuration: 0
+    projectilePrefab: {fileID: 0}
+    groundSpellPrefab: {fileID: 0}
+  - skillName: AttackSecond
+    animationName: Attack
+    actionIndex: -1
+    damageMultiplier: 1
+    cooldown: 0
+    minRange: 0
+    maxRange: 0.05
+    isParryable: 0
+    initialDelay: 0
+    guardDuration: 0
+    projectilePrefab: {fileID: 0}
     groundSpellPrefab: {fileID: 0}
   - skillName: ShieldGuard
     animationName: Shield
     actionIndex: -1
     damageMultiplier: 0.5
-    cooldown: 8
+    cooldown: 0
     minRange: 0
-    maxRange: 2
+    maxRange: 0.05
     isParryable: 0
+    initialDelay: 0
+    guardDuration: 1
     projectilePrefab: {fileID: 0}
     groundSpellPrefab: {fileID: 0}
-  _cycleNonParryableSkills: 0
+  - skillName: SwordThrow
+    animationName: Attack3
+    actionIndex: -1
+    damageMultiplier: 1.4
+    cooldown: 5
+    minRange: 0
+    maxRange: 0.05
+    isParryable: 1
+    initialDelay: 5
+    guardDuration: 0
+    projectilePrefab: {fileID: 6221158093530012524, guid: b0d77f59fae2efd4abc2a47e4f74d355, type: 3}
+    groundSpellPrefab: {fileID: 0}
+  _cycleNonParryableSkills: 1
+  _continuousActions: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
   _respawnTime: 30
@@ -481,7 +512,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.9, g: 0.15, b: 0.15, a: 1}
@@ -528,7 +559,7 @@ Transform:
   m_GameObject: {fileID: 4403252191412762323}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.63, z: 0}
+  m_LocalPosition: {x: 0.16, y: 0.255, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -578,7 +609,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.74249995, y: 1.26}
+  m_Size: {x: 0.36, y: 0.51}
   m_EdgeRadius: 0
 --- !u!114 &1103530769737991039
 MonoBehaviour:
@@ -590,7 +621,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b524f0b391f3dc54c8511d3f68d030c2, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyHitbox2D
   _damage: 12
   _damageType: 0
@@ -598,3 +629,18 @@ MonoBehaviour:
   _hitCooldown: 0.8
   _activeOnlyDuringAttack: 0
   _isActive: 1
+
+--- !u!114 &9010000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2923911752621517954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 511139046164102749}
+  _useVisibleSpriteBounds: 1
