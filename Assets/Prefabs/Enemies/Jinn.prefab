@@ -60,8 +60,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -1538184041
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!114 &1440468449698018110
 MonoBehaviour:
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 260495227355925043}
   - component: {fileID: 2710398824459416063}
   - component: {fileID: 3731022036105865503}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 5904520661760787958}
   - component: {fileID: 4357699531093230360}
   - component: {fileID: 8433192401779087340}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Jinn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,9 +239,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1342596427
-  m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 54324a58a94618b4db952d19bac57bda, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -352,9 +352,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
+  _level: 1
+  _useLevelScaling: 0
   _maxHealth: 300
   _defense: 4
   _attackPower: 30
+  _goldReward: 8
+  _expReward: 15
   _currentStatus: 0
 --- !u!114 &8433192401779087340
 MonoBehaviour:
@@ -370,10 +374,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
   _patrolSpeed: 2
   _chaseSpeed: 4
-  _patrolDistance: 5
+  _patrolDistance: 3
   _isFlying: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _isBoss: 0
+  _leashRangeMultiplier: 2
   _groundLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -389,7 +395,24 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
   _groundSpellPrefab: {fileID: 4162853233849823958, guid: c8c0a12a25cc5514a8d5a96b9d42df5d, type: 3}
+  _basicAttackAnimState: Attack
+  _basicAttackMultiplier: 1
+  _basicAttackCanParry: 1
+  _basicParryCooldown: 4
+  _skills:
+  - skillName: MagicCast
+    animationName: Attack
+    actionIndex: -1
+    damageMultiplier: 1.8
+    cooldown: 6
+    minRange: 1.5
+    maxRange: 7
+    isParryable: 0
+    projectilePrefab: {fileID: 0}
+    groundSpellPrefab: {fileID: 4162853233849823958, guid: c8c0a12a25cc5514a8d5a96b9d42df5d, type: 3}
   _deathDestroyDelay: 1.5
+  _canRespawn: 0
+  _respawnTime: 30
 --- !u!1 &3797916828909620249
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +424,7 @@ GameObject:
   - component: {fileID: 3365115481975369176}
   - component: {fileID: 3504352170585892274}
   - component: {fileID: 4861107102733425532}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -476,7 +499,7 @@ GameObject:
   - component: {fileID: 7710659278140729836}
   - component: {fileID: 7225594577683994063}
   - component: {fileID: 2931016957372233236}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

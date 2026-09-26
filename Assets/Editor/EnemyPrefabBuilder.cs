@@ -343,6 +343,7 @@ namespace TheLastKnight.EditorTools
             if (projPrefab != null) serializedAI.FindProperty("_projectilePrefab").objectReferenceValue = projPrefab;
             if (spellPrefab != null) serializedAI.FindProperty("_groundSpellPrefab").objectReferenceValue = spellPrefab;
             serializedAI.ApplyModifiedProperties();
+            ConfigureMonsterSkillsAndParry(ai, cfg.Name);
 
             // Setup Floating Health Bar Canvas
             CreateHealthBarCanvas(root, stats, colHeight);
@@ -476,6 +477,273 @@ namespace TheLastKnight.EditorTools
                     }
                 }
             }
+        }
+
+        private struct SkillData
+        {
+            public string Name;
+            public string AnimName;
+            public int ActionIndex;
+            public float Multiplier;
+            public float Cooldown;
+            public float MinRange;
+            public float MaxRange;
+            public bool IsParryable;
+            public string ProjName;
+            public string SpellName;
+
+            public SkillData(string name, string animName, int actionIndex, float mult, float cd, float minR, float maxR, bool parry, string proj = null, string spell = null)
+            {
+                Name = name;
+                AnimName = animName;
+                ActionIndex = actionIndex;
+                Multiplier = mult;
+                Cooldown = cd;
+                MinRange = minR;
+                MaxRange = maxR;
+                IsParryable = parry;
+                ProjName = proj;
+                SpellName = spell;
+            }
+        }
+
+        private static TheLastKnight.Combat.EnemySkill CreateSkill(SkillData d)
+        {
+            var s = new TheLastKnight.Combat.EnemySkill
+            {
+                skillName = d.Name,
+                animationName = d.AnimName,
+                actionIndex = d.ActionIndex,
+                damageMultiplier = d.Multiplier,
+                cooldown = d.Cooldown,
+                minRange = d.MinRange,
+                maxRange = d.MaxRange,
+                isParryable = d.IsParryable
+            };
+            if (!string.IsNullOrEmpty(d.ProjName))
+            {
+                s.projectilePrefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{ProjectilesOutputDir}/{d.ProjName}.prefab");
+            }
+            if (!string.IsNullOrEmpty(d.SpellName))
+            {
+                s.groundSpellPrefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{ProjectilesOutputDir}/{d.SpellName}.prefab");
+            }
+            return s;
+        }
+
+        private static TheLastKnight.Combat.EnemySkill[] BuildSkillArray(SkillData[] list)
+        {
+            var arr = new TheLastKnight.Combat.EnemySkill[list.Length];
+            for (int i = 0; i < list.Length; i++)
+            {
+                arr[i] = CreateSkill(list[i]);
+            }
+            return arr;
+        }
+
+        private static void ConfigureMonsterSkillsAndParry(EnemyController ai, string name)
+        {
+            string basicAnim = "Attack";
+            bool isBoss = (name == "DemonBoss" || name == "ShadowDemonDragon");
+            TheLastKnight.Combat.EnemySkill[] skills = new TheLastKnight.Combat.EnemySkill[0];
+
+            switch (name)
+            {
+                case "ForestMushroom":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("AttackWithStun", "AttackWithStun", 1, 1.5f, 6.0f, 0f, 1.6f, true)
+                    });
+                    break;
+
+                case "Goblin":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("GoblinBomb", "Attack3", -1, 1.6f, 5.0f, 2.5f, 7.0f, true, "Goblin_Bomb")
+                    });
+                    break;
+
+                case "Skeleton":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("SwordThrow", "Attack3", -1, 1.4f, 4.5f, 2.5f, 6.5f, true, "Skeleton_Sword"),
+                        new SkillData("ShieldGuard", "Shield", -1, 0.5f, 8.0f, 0f, 2.0f, false)
+                    });
+                    break;
+
+                case "FlyingEye":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("EyeBeam", "Attack3", -1, 1.5f, 5.0f, 2.5f, 7.5f, true, "FlyingEye_Projectile")
+                    });
+                    break;
+
+                case "FantasyMushroom":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("SporeShot", "Attack3", -1, 1.4f, 5.0f, 2.5f, 7.0f, true, "FantasyMushroom_Projectile")
+                    });
+                    break;
+
+                case "UndeadExecutioner":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("SpinningCleave", "Skill1", 3, 2.0f, 7.0f, 0f, 2.5f, true),
+                        new SkillData("DarkSummon", "Summon", 4, 1.5f, 15.0f, 0f, 4.0f, false)
+                    });
+                    break;
+
+                case "MoonstoneKeeper":
+                    basicAnim = "Attack1";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("GroundSlam", "Attack2", -1, 1.8f, 6.0f, 0f, 2.2f, true),
+                        new SkillData("DashThrust", "Dash", -1, 1.3f, 5.0f, 3.0f, 6.5f, false)
+                    });
+                    break;
+
+                case "MechaStoneGolem":
+                    basicAnim = "Melee";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("RocketPunch", "Shoot", -1, 1.5f, 5.0f, 2.5f, 8.0f, true, "Golem_ArmProjectile"),
+                        new SkillData("LaserBeam", "LaserCast", -1, 2.5f, 10.0f, 2.5f, 9.0f, false, "Golem_Laser"),
+                        new SkillData("StoneShield", "ShieldCast", -1, 0.5f, 12.0f, 0f, 3.0f, false)
+                    });
+                    break;
+
+                case "BlueSlime":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("HeavySlam", "Attack_3", -1, 1.6f, 6.0f, 0f, 2.0f, true),
+                        new SkillData("DoubleHop", "Attack_2", -1, 1.3f, 3.5f, 0f, 1.8f, false),
+                        new SkillData("SlideTackle", "Run+Attack", -1, 1.2f, 5.0f, 2.5f, 5.5f, false)
+                    });
+                    break;
+
+                case "Satyr":
+                    basicAnim = "Attack1";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("Dropkick", "Skill1", -1, 1.8f, 7.0f, 0f, 2.2f, true),
+                        new SkillData("Slash2", "Attack2", -1, 1.4f, 4.0f, 0f, 1.8f, false),
+                        new SkillData("NatureCast", "Cast", -1, 2.0f, 9.0f, 2.5f, 7.0f, false)
+                    });
+                    break;
+
+                case "Necromancer":
+                    basicAnim = "Attack1";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("SoulBlast", "Attack3", -1, 2.2f, 9.0f, 1.5f, 7.0f, true),
+                        new SkillData("DarkWave", "Attack2", -1, 1.6f, 5.0f, 2.0f, 7.5f, false)
+                    });
+                    break;
+
+                case "SkeletonKnight":
+                    basicAnim = "FwdSwing";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("DownSwing", "DownSwing", -1, 1.6f, 5.0f, 0f, 2.0f, true),
+                        new SkillData("SideSwing", "SideSwing", -1, 1.3f, 4.0f, 0f, 1.8f, false),
+                        new SkillData("FullCombo", "FullCombo", -1, 2.2f, 9.0f, 0f, 2.2f, false)
+                    });
+                    break;
+
+                case "DemonBoss":
+                    basicAnim = "Attack_01";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("DualClawCleave", "Attack_02", -1, 1.8f, 5.5f, 0f, 3.2f, true),
+                        new SkillData("EarthquakeJump", "Jump", -1, 1.6f, 8.0f, 3.5f, 8.0f, false),
+                        new SkillData("TerrifyingRoar", "Shout", -1, 0.8f, 12.0f, 0f, 5.0f, false)
+                    });
+                    break;
+
+                case "BringerOfDeath":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("HellfirePillar", "Cast", -1, 2.0f, 8.0f, 1.5f, 8.0f, true, null, "BringerOfDeath_Spell")
+                    });
+                    break;
+
+                case "Fox":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("WarpAmbush", "Disappear", -1, 1.5f, 6.0f, 2.5f, 6.5f, true)
+                    });
+                    break;
+
+                case "ArchDemon":
+                    basicAnim = "BasicAtk";
+                    break;
+
+                case "Demon":
+                    basicAnim = "Attack";
+                    break;
+
+                case "DemonKin":
+                    basicAnim = "BasicAtk";
+                    break;
+
+                case "Dragon":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("FireBall", "Attack", -1, 1.5f, 4.5f, 2.5f, 8.0f, false, "Dragon_FireBall")
+                    });
+                    break;
+
+                case "FireWorm":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("FireBall", "Attack", -1, 1.4f, 4.0f, 2.5f, 7.0f, false, "FireWorm_FireBall")
+                    });
+                    break;
+
+                case "Jinn":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("MagicCast", "Attack", -1, 1.8f, 6.0f, 1.5f, 7.0f, false, null, "Jinn_Magic")
+                    });
+                    break;
+
+                case "Reaper":
+                    basicAnim = "HostileAttack";
+                    break;
+
+                case "ShadowDemonDragon":
+                    basicAnim = "Attack_Left";
+                    break;
+
+                case "Small_dragon":
+                    basicAnim = "Attack";
+                    skills = BuildSkillArray(new SkillData[]
+                    {
+                        new SkillData("SmallFireBall", "Attack", -1, 1.3f, 4.0f, 2.5f, 7.0f, false, "SmallDragon_FireBall")
+                    });
+                    break;
+
+                default:
+                    basicAnim = "Attack";
+                    break;
+            }
+
+            ai.SetSkills(skills);
+            ai.SetBasicAttackConfiguration(basicAnim, 1.0f, true, 4.0f);
+            ai.SetBoss(isBoss);
+            EditorUtility.SetDirty(ai);
         }
     }
 }

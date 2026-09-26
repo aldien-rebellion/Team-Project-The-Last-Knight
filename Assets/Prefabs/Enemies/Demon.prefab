@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3575456063877493038}
   - component: {fileID: 2161911473836219496}
   - component: {fileID: 4327991514022722996}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Demon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,9 +84,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1342596427
-  m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: a2b186f40f880c3488635fdebeac9519, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -197,9 +197,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
+  _level: 1
+  _useLevelScaling: 0
   _maxHealth: 70
   _defense: 2
   _attackPower: 15
+  _goldReward: 8
+  _expReward: 15
   _currentStatus: 0
 --- !u!114 &4327991514022722996
 MonoBehaviour:
@@ -215,10 +219,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
   _patrolSpeed: 2
   _chaseSpeed: 4
-  _patrolDistance: 5
+  _patrolDistance: 3
   _isFlying: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _isBoss: 0
+  _leashRangeMultiplier: 2
   _groundLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -234,7 +240,14 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
   _groundSpellPrefab: {fileID: 0}
+  _basicAttackAnimState: Attack
+  _basicAttackMultiplier: 1
+  _basicAttackCanParry: 1
+  _basicParryCooldown: 4
+  _skills: []
   _deathDestroyDelay: 1.5
+  _canRespawn: 0
+  _respawnTime: 30
 --- !u!1 &1680139444604268747
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +259,7 @@ GameObject:
   - component: {fileID: 4547711489690547198}
   - component: {fileID: 6077300940226010984}
   - component: {fileID: 5560699504219762852}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -321,7 +334,7 @@ GameObject:
   - component: {fileID: 5095454876657480939}
   - component: {fileID: 5075899669253697422}
   - component: {fileID: 7975754087495120647}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -418,7 +431,7 @@ GameObject:
   - component: {fileID: 5969207111051139155}
   - component: {fileID: 6801421936902836657}
   - component: {fileID: 3532605595032134305}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -542,8 +555,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -1538184041
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!114 &8056953127363910656
 MonoBehaviour:

@@ -19,6 +19,11 @@ namespace TheLastKnight.Combat.Projectiles
         private bool _canDealDamage = false;
         private readonly HashSet<GameObject> _hitEntities = new HashSet<GameObject>();
 
+        public void Initialize(float damage, GameObject owner = null)
+        {
+            _damage = damage;
+        }
+
         private void Awake()
         {
             _hitCollider = GetComponent<Collider2D>();

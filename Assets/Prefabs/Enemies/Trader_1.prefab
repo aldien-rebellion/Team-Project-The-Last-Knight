@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8287851914517355754}
   - component: {fileID: 6500412735079556778}
   - component: {fileID: 5650099237910500409}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 757593233480610813}
   - component: {fileID: 4316692617383775677}
   - component: {fileID: 1854150992352713297}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,8 +232,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -1538184041
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!114 &4420291885339478105
 MonoBehaviour:
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 3313761843655686308}
   - component: {fileID: 587791313955762582}
   - component: {fileID: 4437732165639696618}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Trader_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -336,9 +336,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1342596427
-  m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5012434068729627006, guid: eb25191818f6ba842ac5b82228b2de50, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -449,9 +449,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
+  _level: 1
+  _useLevelScaling: 0
   _maxHealth: 100
   _defense: 0
   _attackPower: 0
+  _goldReward: 8
+  _expReward: 15
   _currentStatus: 0
 --- !u!114 &4437732165639696618
 MonoBehaviour:
@@ -467,10 +471,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
   _patrolSpeed: 0
   _chaseSpeed: 0
-  _patrolDistance: 5
+  _patrolDistance: 3
   _isFlying: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _isBoss: 0
+  _leashRangeMultiplier: 2
   _groundLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -486,7 +492,14 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
   _groundSpellPrefab: {fileID: 0}
+  _basicAttackAnimState: Attack
+  _basicAttackMultiplier: 1
+  _basicAttackCanParry: 1
+  _basicParryCooldown: 4
+  _skills: []
   _deathDestroyDelay: 1.5
+  _canRespawn: 0
+  _respawnTime: 30
 --- !u!1 &8436917304271936643
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,7 +511,7 @@ GameObject:
   - component: {fileID: 1521339161837883986}
   - component: {fileID: 2192989136717486794}
   - component: {fileID: 5239849971082812111}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

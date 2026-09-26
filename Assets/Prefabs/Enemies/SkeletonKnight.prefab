@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3786965586773083670}
   - component: {fileID: 6589299378552616157}
   - component: {fileID: 5591003214953748959}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 6616486443221967164}
   - component: {fileID: 3436741107080655852}
   - component: {fileID: 4631645671950882567}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: SkeletonKnight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,9 +159,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1342596427
-  m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 815424164945274260, guid: 7db3c0b4941054b48b7691be19ada459, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -272,9 +272,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
+  _level: 1
+  _useLevelScaling: 0
   _maxHealth: 220
   _defense: 5
   _attackPower: 28
+  _goldReward: 8
+  _expReward: 15
   _currentStatus: 0
 --- !u!114 &4631645671950882567
 MonoBehaviour:
@@ -290,10 +294,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
   _patrolSpeed: 2
   _chaseSpeed: 4.2
-  _patrolDistance: 5
+  _patrolDistance: 3
   _isFlying: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _isBoss: 0
+  _leashRangeMultiplier: 2
   _groundLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -309,7 +315,44 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
   _groundSpellPrefab: {fileID: 0}
+  _basicAttackAnimState: FwdSwing
+  _basicAttackMultiplier: 1
+  _basicAttackCanParry: 1
+  _basicParryCooldown: 4
+  _skills:
+  - skillName: DownSwing
+    animationName: DownSwing
+    actionIndex: -1
+    damageMultiplier: 1.6
+    cooldown: 5
+    minRange: 0
+    maxRange: 2
+    isParryable: 1
+    projectilePrefab: {fileID: 0}
+    groundSpellPrefab: {fileID: 0}
+  - skillName: SideSwing
+    animationName: SideSwing
+    actionIndex: -1
+    damageMultiplier: 1.3
+    cooldown: 4
+    minRange: 0
+    maxRange: 1.8
+    isParryable: 0
+    projectilePrefab: {fileID: 0}
+    groundSpellPrefab: {fileID: 0}
+  - skillName: FullCombo
+    animationName: FullCombo
+    actionIndex: -1
+    damageMultiplier: 2.2
+    cooldown: 9
+    minRange: 0
+    maxRange: 2.2
+    isParryable: 0
+    projectilePrefab: {fileID: 0}
+    groundSpellPrefab: {fileID: 0}
   _deathDestroyDelay: 1.5
+  _canRespawn: 0
+  _respawnTime: 30
 --- !u!1 &6384791484603017950
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +364,7 @@ GameObject:
   - component: {fileID: 8758800573500529007}
   - component: {fileID: 3158660718872062926}
   - component: {fileID: 6292866819894938988}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,8 +510,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -1538184041
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!114 &8396938359999956530
 MonoBehaviour:
@@ -498,7 +541,7 @@ GameObject:
   - component: {fileID: 4143985881550663610}
   - component: {fileID: 8621081968653476648}
   - component: {fileID: 7754307930535216460}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

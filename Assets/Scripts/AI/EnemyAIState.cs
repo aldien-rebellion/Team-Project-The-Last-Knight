@@ -8,6 +8,8 @@ namespace TheLastKnight.AI
         MeleeAttack,
         RangedAttack,
         Hurt,
-        Dead
+        Dead,
+        ReturningToSpawn,
+        Skill
     }
 }

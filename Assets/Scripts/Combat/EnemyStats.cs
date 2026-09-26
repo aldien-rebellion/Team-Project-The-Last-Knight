@@ -144,6 +144,14 @@ namespace TheLastKnight.Combat
             OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
         }
 
+        public void Revive()
+        {
+            IsDead = false;
+            CurrentHealth = _maxHealth;
+            ClearStatus();
+            OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
+        }
+
         public void ApplyStatus(StatusEffect effect, float duration)
         {
             if (IsDead) return;

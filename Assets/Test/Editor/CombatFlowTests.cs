@@ -55,5 +55,64 @@ namespace TheLastKnight.Tests
                     UnityEngine.Object.DestroyImmediate(((Component)popup).gameObject);
             }
         }
+
+        [Test]
+        public void EnemySkill_IsReady_EvaluatesDistanceAndCooldown()
+        {
+            var skillType = RuntimeType("TheLastKnight.Combat.EnemySkill");
+            var skill = Activator.CreateInstance(skillType);
+            skillType.GetField("skillName").SetValue(skill, "Heavy Smash");
+            skillType.GetField("minRange").SetValue(skill, 0f);
+            skillType.GetField("maxRange").SetValue(skill, 2f);
+            skillType.GetField("cooldown").SetValue(skill, 5f);
+            skillType.GetField("nextReadyTime").SetValue(skill, 10f);
+
+            var isReadyMethod = skillType.GetMethod("IsReady");
+            bool notReadyEarly = (bool)isReadyMethod.Invoke(skill, new object[] { 1.5f, 8f });
+            bool notReadyFar = (bool)isReadyMethod.Invoke(skill, new object[] { 3.0f, 12f });
+            bool ready = (bool)isReadyMethod.Invoke(skill, new object[] { 1.5f, 12f });
+
+            Assert.IsFalse(notReadyEarly, "Skill should not be ready before cooldown expires");
+            Assert.IsFalse(notReadyFar, "Skill should not be ready if target is out of max range");
+            Assert.IsTrue(ready, "Skill should be ready when within range and cooldown passed");
+        }
+
+        [Test]
+        public void EnemyController_ParryMechanics_DistinguishSkillsAndBasicAttack()
+        {
+            var go = new GameObject("TestEnemyController");
+            try
+            {
+                go.AddComponent<Rigidbody2D>();
+                go.AddComponent<Animator>();
+                go.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+                var ctrl = go.AddComponent(RuntimeType("TheLastKnight.AI.EnemyController"));
+
+                var hasParryableSkillMethod = ctrl.GetType().GetMethod("HasParryableSkill");
+                Assert.IsFalse((bool)hasParryableSkillMethod.Invoke(ctrl, null));
+
+                var skillType = RuntimeType("TheLastKnight.Combat.EnemySkill");
+                var skillArray = Array.CreateInstance(skillType, 2);
+                var s1 = Activator.CreateInstance(skillType);
+                skillType.GetField("skillName").SetValue(s1, "Spin");
+                skillType.GetField("isParryable").SetValue(s1, false);
+
+                var s2 = Activator.CreateInstance(skillType);
+                skillType.GetField("skillName").SetValue(s2, "BigSmash");
+                skillType.GetField("isParryable").SetValue(s2, true);
+                skillType.GetField("damageMultiplier").SetValue(s2, 2.0f);
+
+                skillArray.SetValue(s1, 0);
+                skillArray.SetValue(s2, 1);
+
+                ctrl.GetType().GetMethod("SetSkills").Invoke(ctrl, new object[] { skillArray });
+
+                Assert.IsTrue((bool)hasParryableSkillMethod.Invoke(ctrl, null));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+            }
+        }
     }
 }

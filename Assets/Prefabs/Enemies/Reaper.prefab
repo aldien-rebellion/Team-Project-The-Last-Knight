@@ -60,8 +60,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -1538184041
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!114 &5314960726990158225
 MonoBehaviour:
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 9133839050510931759}
   - component: {fileID: 3622548920129109940}
   - component: {fileID: 5522708467596627523}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Reaper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,9 +164,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1342596427
-  m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -6664099403047800814, guid: c7dad2d5e1400534dbb47ae962f44793, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -277,9 +277,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
+  _level: 1
+  _useLevelScaling: 0
   _maxHealth: 280
   _defense: 5
   _attackPower: 30
+  _goldReward: 8
+  _expReward: 15
   _currentStatus: 0
 --- !u!114 &5522708467596627523
 MonoBehaviour:
@@ -295,10 +299,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
   _patrolSpeed: 2.2
   _chaseSpeed: 4.5
-  _patrolDistance: 5
+  _patrolDistance: 3
   _isFlying: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _isBoss: 0
+  _leashRangeMultiplier: 2
   _groundLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -314,7 +320,14 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
   _groundSpellPrefab: {fileID: 0}
+  _basicAttackAnimState: HostileAttack
+  _basicAttackMultiplier: 1
+  _basicAttackCanParry: 1
+  _basicParryCooldown: 4
+  _skills: []
   _deathDestroyDelay: 1.5
+  _canRespawn: 0
+  _respawnTime: 30
 --- !u!1 &6765031090875817698
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,7 +339,7 @@ GameObject:
   - component: {fileID: 1747568590389953621}
   - component: {fileID: 8557896677756520155}
   - component: {fileID: 5913957647011155806}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -423,7 +436,7 @@ GameObject:
   - component: {fileID: 765120271178275558}
   - component: {fileID: 392367965672630085}
   - component: {fileID: 524819566390508984}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -498,7 +511,7 @@ GameObject:
   - component: {fileID: 16659952559816993}
   - component: {fileID: 8443823479272142710}
   - component: {fileID: 5583891784832857081}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

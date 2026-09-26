@@ -78,16 +78,23 @@ namespace TheLastKnight.Combat
                 }
             }
 
+            // Calculate effective damage
+            float effectiveDamage = _damage;
+            if (owner != null && owner.CurrentAttackDamage > 0f)
+            {
+                effectiveDamage = owner.CurrentAttackDamage;
+            }
+
             // Calculate directional knockback
             Vector2 direction = (victim.transform.position - transform.position).normalized;
             Vector2 appliedKnockback = new Vector2(Mathf.Sign(direction.x) * _knockback.x, _knockback.y);
 
-            DamageData damageData = new DamageData(_damage, transform.root.gameObject, _damageType, appliedKnockback, victim.transform.position);
+            DamageData damageData = new DamageData(effectiveDamage, transform.root.gameObject, _damageType, appliedKnockback, victim.transform.position);
 
             // Apply damage to Player
             if (playerStats != null)
             {
-                playerStats.TakeDamage(_damage);
+                playerStats.TakeDamage(effectiveDamage);
             }
             else
             {

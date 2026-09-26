@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5899830651727604593}
   - component: {fileID: 1958324888215232931}
   - component: {fileID: 7356394897853624703}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: DemonBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,9 +84,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1342596427
-  m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4723107735738678597, guid: 92d7ae2a477d9514eadd65130cff5182, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -197,9 +197,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
+  _level: 1
+  _useLevelScaling: 0
   _maxHealth: 800
   _defense: 10
   _attackPower: 50
+  _goldReward: 8
+  _expReward: 15
   _currentStatus: 0
 --- !u!114 &7356394897853624703
 MonoBehaviour:
@@ -215,10 +219,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
   _patrolSpeed: 1.5
   _chaseSpeed: 3.6
-  _patrolDistance: 5
+  _patrolDistance: 3
   _isFlying: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _isBoss: 1
+  _leashRangeMultiplier: 2
   _groundLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -234,7 +240,44 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
   _groundSpellPrefab: {fileID: 0}
+  _basicAttackAnimState: Attack_01
+  _basicAttackMultiplier: 1
+  _basicAttackCanParry: 1
+  _basicParryCooldown: 4
+  _skills:
+  - skillName: DualClawCleave
+    animationName: Attack_02
+    actionIndex: -1
+    damageMultiplier: 1.8
+    cooldown: 5.5
+    minRange: 0
+    maxRange: 3.2
+    isParryable: 1
+    projectilePrefab: {fileID: 0}
+    groundSpellPrefab: {fileID: 0}
+  - skillName: EarthquakeJump
+    animationName: Jump
+    actionIndex: -1
+    damageMultiplier: 1.6
+    cooldown: 8
+    minRange: 3.5
+    maxRange: 8
+    isParryable: 0
+    projectilePrefab: {fileID: 0}
+    groundSpellPrefab: {fileID: 0}
+  - skillName: TerrifyingRoar
+    animationName: Shout
+    actionIndex: -1
+    damageMultiplier: 0.8
+    cooldown: 12
+    minRange: 0
+    maxRange: 5
+    isParryable: 0
+    projectilePrefab: {fileID: 0}
+    groundSpellPrefab: {fileID: 0}
   _deathDestroyDelay: 1.5
+  _canRespawn: 0
+  _respawnTime: 30
 --- !u!1 &2397213924959086363
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +289,7 @@ GameObject:
   - component: {fileID: 5384510708568902407}
   - component: {fileID: 874420837321070910}
   - component: {fileID: 7419888125698773595}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -321,7 +364,7 @@ GameObject:
   - component: {fileID: 4085805585436411663}
   - component: {fileID: 3958997998935510501}
   - component: {fileID: 8397615432478340575}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +439,7 @@ GameObject:
   - component: {fileID: 4705631247399259147}
   - component: {fileID: 7353775386974968496}
   - component: {fileID: 959359176723093475}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -542,8 +585,8 @@ Canvas:
   m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -1538184041
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!114 &1452465090837610136
 MonoBehaviour:
