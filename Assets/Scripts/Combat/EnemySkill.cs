@@ -39,6 +39,22 @@ namespace TheLastKnight.Combat
         public float initialDelay;
         [Tooltip("Hold this non-damaging pose for this many seconds (zero = normal attack).")]
         public float guardDuration;
+        [Tooltip("Seconds after the animation starts when this skill begins dealing damage.")]
+        [Min(0f)]
+        public float damageStartDelay = 0.4f;
+
+        [Tooltip("How long this skill can deal damage after its damage window begins.")]
+        [Min(0f)]
+        public float damageDuration = 0.4f;
+
+        [Tooltip("Apply one hit at the damage start time instead of using the continuous melee hitbox window.")]
+        public bool dealDamageAsSingleHit = false;
+
+        [Tooltip("Optional second single-hit time in seconds after the animation starts. Use -1 to disable.")]
+        public float secondDamageHitTime = -1f;
+
+        [Tooltip("Require the player's collider to overlap the current sprite bounds before a single hit is applied.")]
+        public bool requireSpriteBoundsOverlap = false;
 
         [Tooltip("Optional projectile prefab for ranged skills (e.g. Goblin_Bomb, FlyingEye_Projectile).")]
         public GameObject projectilePrefab;
