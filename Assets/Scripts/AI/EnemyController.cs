@@ -34,6 +34,8 @@ namespace TheLastKnight.AI
         [SerializeField] private float _detectionRange = 7f;
         [SerializeField] private float _meleeRange = 1.4f;
         [SerializeField] private float _meleeCooldown = 1.5f;
+        [Tooltip("When enabled, this enemy waits for configured skills instead of using the basic melee attack.")]
+        [SerializeField] private bool _disableBasicAttack;
 
         [Header("Ranged Combat")]
         [SerializeField] private bool _hasRangedAttack = false;
@@ -71,6 +73,7 @@ namespace TheLastKnight.AI
         private Animator _animator;
         private EnemyStats _stats;
         private Collider2D[] _colliders;
+        private Collider2D _attackHitbox;
         private GameObject _player;
 
         // Spawn / Respawn Tracking
@@ -107,6 +110,8 @@ namespace TheLastKnight.AI
             _parry = GetComponent<ParryReceiver>();
             if (_parry == null) _parry = gameObject.AddComponent<ParryReceiver>();
             _colliders = GetComponentsInChildren<Collider2D>();
+            var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
+            _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
 
             _isFacingRight = _initialFacingRight;
             _startX = transform.position.x;
@@ -242,13 +247,29 @@ namespace TheLastKnight.AI
             TheLastKnight.Combat.EnemySkill readySkill = GetReadySkill(distToPlayer);
             if (readySkill != null)
             {
-                FaceTarget(_player.transform.position);
-                PerformSkill(readySkill);
+                if (!_disableBasicAttack || CanReachPlayerWithSkill(readySkill))
+                {
+                    FaceTarget(_player.transform.position);
+                    PerformSkill(readySkill);
+                }
+                else
+                {
+                    // Keep closing the gap until the actual attack collider can touch
+                    // the player; configured max range alone can make a skill whiff.
+                    ChasePlayer();
+                }
             }
-            else if (distToPlayer <= _meleeRange && Time.time >= _nextMeleeTime)
+            else if (!_disableBasicAttack && distToPlayer <= _meleeRange && Time.time >= _nextMeleeTime)
             {
                 FaceTarget(_player.transform.position);
                 PerformMeleeAttack();
+            }
+            else if (_disableBasicAttack && distToPlayer <= _meleeRange)
+            {
+                _currentState = EnemyAIState.Idle;
+                _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
+                SetAnimBool("IsMoving", false);
+                SetAnimBool("IsChasing", false);
             }
             else if (_hasRangedAttack && distToPlayer <= _rangedRange && distToPlayer > _meleeRange && Time.time >= _nextRangedTime)
             {
@@ -444,6 +465,11 @@ namespace TheLastKnight.AI
             _damageUntil = Time.time + 0.35f;
             if (ranged) SpawnProjectile();
             yield return new WaitForSeconds(0.35f);
+            float remainingAnimationTime = GetAnimationDuration(_basicAttackAnimState, 0.35f) - 0.35f;
+            if (remainingAnimationTime > 0f)
+            {
+                yield return new WaitForSeconds(remainingAnimationTime);
+            }
             _isActionLocked = false;
         }
 
@@ -488,7 +514,49 @@ namespace TheLastKnight.AI
             }
 
             PlayAnimationAction(skill.animationName, skill.actionIndex);
-            _damageUntil = Time.time + 0.4f;
+            _damageUntil = 0f;
+
+            float damageStartDelay = Mathf.Max(0f, skill.damageStartDelay);
+            float elapsedAnimationTime = damageStartDelay;
+            if (damageStartDelay > 0f)
+            {
+                yield return new WaitForSeconds(damageStartDelay);
+                // Let the Animator apply the sprite for this frame before testing
+                // its bounds; resuming exactly on a keyframe boundary can read
+                // the previous sprite for one update.
+                yield return null;
+            }
+            if (_stats.IsDead || _parry.IsStaggered)
+            {
+                _isActionLocked = false;
+                yield break;
+            }
+
+            if (skill.dealDamageAsSingleHit)
+            {
+                _damageUntil = 0f;
+                ApplySingleSkillHit(skill.requireSpriteBoundsOverlap);
+
+                if (skill.secondDamageHitTime >= damageStartDelay)
+                {
+                    float delayToSecondHit = skill.secondDamageHitTime - elapsedAnimationTime;
+                    if (delayToSecondHit > 0f)
+                    {
+                        yield return new WaitForSeconds(delayToSecondHit);
+                        yield return null;
+                        elapsedAnimationTime += delayToSecondHit;
+                    }
+
+                    if (!_stats.IsDead && !_parry.IsStaggered)
+                    {
+                        ApplySingleSkillHit(skill.requireSpriteBoundsOverlap);
+                    }
+                }
+            }
+            else
+            {
+                _damageUntil = Time.time + Mathf.Max(0f, skill.damageDuration);
+            }
 
             if (skill.groundSpellPrefab != null && _player != null)
             {
@@ -505,9 +573,67 @@ namespace TheLastKnight.AI
                 SpawnCustomProjectile(skill.projectilePrefab, skill.damageMultiplier);
             }
 
-            yield return new WaitForSeconds(0.4f);
+            float remainingAnimationTime = GetAnimationDuration(skill.animationName, elapsedAnimationTime) - elapsedAnimationTime;
+            if (remainingAnimationTime > 0f)
+            {
+                yield return new WaitForSeconds(remainingAnimationTime);
+            }
             _currentAttackMultiplier = _basicAttackMultiplier;
             _isActionLocked = false;
+        }
+
+        private void ApplySingleSkillHit(bool requireSpriteBoundsOverlap)
+        {
+            if (_player == null || _stats == null) return;
+
+            var playerStats = _player.GetComponent<TheLastKnight.Stats.PlayerStats>();
+            if (playerStats == null)
+            {
+                playerStats = _player.GetComponentInChildren<TheLastKnight.Stats.PlayerStats>();
+            }
+            if (playerStats == null) return;
+
+            if (requireSpriteBoundsOverlap)
+            {
+                var spriteRenderer = GetComponent<SpriteRenderer>();
+                if (spriteRenderer == null || spriteRenderer.sprite == null) return;
+
+                Bounds visibleFrameBounds = spriteRenderer.bounds;
+                var playerColliders = _player.GetComponentsInChildren<Collider2D>();
+                bool overlapsFrame = false;
+                for (int i = 0; i < playerColliders.Length; i++)
+                {
+                    var playerCollider = playerColliders[i];
+                    if (playerCollider == null || !playerCollider.enabled || playerCollider.isTrigger) continue;
+                    if (visibleFrameBounds.Intersects(playerCollider.bounds))
+                    {
+                        overlapsFrame = true;
+                        break;
+                    }
+                }
+
+                if (!overlapsFrame) return;
+            }
+
+            playerStats.TakeDamage(CurrentAttackDamage);
+        }
+
+        private float GetAnimationDuration(string animationName, float fallbackDuration)
+        {
+            if (_animator == null || _animator.runtimeAnimatorController == null)
+            {
+                return fallbackDuration;
+            }
+
+            foreach (var clip in _animator.runtimeAnimatorController.animationClips)
+            {
+                if (clip != null && clip.name == animationName)
+                {
+                    return clip.length / Mathf.Max(0.01f, _animator.speed);
+                }
+            }
+
+            return fallbackDuration;
         }
 
         private void PlayAnimationAction(string animName, int actionIndex = -1)
@@ -553,6 +679,23 @@ namespace TheLastKnight.AI
                 }
             }
             return null;
+        }
+
+        private bool CanReachPlayerWithSkill(TheLastKnight.Combat.EnemySkill skill)
+        {
+            if (skill == null || _player == null) return false;
+            if (skill.projectilePrefab != null || skill.groundSpellPrefab != null) return true;
+            if (_attackHitbox == null) return false;
+
+            var playerColliders = _player.GetComponentsInChildren<Collider2D>();
+            for (int i = 0; i < playerColliders.Length; i++)
+            {
+                var playerCollider = playerColliders[i];
+                if (playerCollider == null || !playerCollider.enabled || playerCollider.isTrigger) continue;
+                if (_attackHitbox.bounds.Intersects(playerCollider.bounds)) return true;
+            }
+
+            return false;
         }
 
         public bool HasParryableSkill()
