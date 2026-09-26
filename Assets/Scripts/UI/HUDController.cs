@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using TheLastKnight.Stats;
+using TheLastKnight.Input;
 
 namespace TheLastKnight.UI
 {
@@ -11,8 +12,13 @@ namespace TheLastKnight.UI
         
         private UIDocument _uiDocument;
         private VisualElement _healthFill;
-        private VisualElement _expFill;
         private VisualElement _staminaFill;
+        private Label _healthText;
+        private Label _levelValue;
+        private Label _potionValue;
+        private Label _quickItemKey;
+        private VisualElement _potionIcon;
+        private VisualElement _quickItemSlot;
         
         private void Awake()
         {
@@ -30,12 +36,36 @@ namespace TheLastKnight.UI
             if (_uiDocument == null) return;
             var root = _uiDocument.rootVisualElement;
             
-            // Find fill elements
+            // Find fill elements (Top-Left)
             _healthFill = root.Q<VisualElement>("HealthFill");
-            _expFill = root.Q<VisualElement>("ExpFill");
             _staminaFill = root.Q<VisualElement>("StaminaFill");
-            
-            // Set data source for automatic binding (Labels with binding-path)
+            _healthText = root.Q<Label>("HealthText");
+            _levelValue = root.Q<Label>("LevelValue");
+
+            // Find quick item elements (Bottom-Right)
+            _potionValue = root.Q<Label>("PotionValue");
+            _quickItemKey = root.Q<Label>("QuickItemKey");
+            _potionIcon = root.Q<VisualElement>("PotionIcon");
+            _quickItemSlot = root.Q<VisualElement>("QuickItemHUD");
+
+            if (_potionIcon != null)
+            {
+                var sprite = Resources.Load<Sprite>("CharacterStatus/Item_RedPotion_Clean");
+                if (sprite != null)
+                {
+                    if (_potionIcon is Image uiImg)
+                    {
+                        uiImg.sprite = sprite;
+                        uiImg.scaleMode = ScaleMode.ScaleToFit;
+                    }
+                    else
+                    {
+                        _potionIcon.style.backgroundImage = new StyleBackground(sprite);
+                    }
+                }
+            }
+
+            // Set data source for automatic binding
             root.dataSource = _playerStats;
         }
 
@@ -43,29 +73,28 @@ namespace TheLastKnight.UI
         {
             if (_playerStats == null) _playerStats = FindAnyObjectByType<PlayerStats>();
             if (_playerStats == null) return;
-            var root = _uiDocument != null ? _uiDocument.rootVisualElement : null;
-            if (root != null)
-            {
-                var gold = root.Q<Label>("GoldValue");
-                var potions = root.Q<Label>("PotionValue");
-                var hp = root.Q<Label>("HealthText");
-                var level = root.Q<Label>("LevelValue");
-                if (gold != null) gold.text = $"GOLD  {_playerStats.Gold}";
-                if (potions != null) potions.text = $"Q  POTIONS  {_playerStats.HealingPotions}/5";
-                if (hp != null) hp.text = _playerStats.HPText;
-                if (level != null) level.text = _playerStats.Level.ToString();
-            }
+
+            // 1. Top-Left: Health & Stamina & Level
+            if (_healthText != null) _healthText.text = _playerStats.HPText;
+            if (_levelValue != null) _levelValue.text = _playerStats.Level.ToString();
+            if (_healthFill != null) _healthFill.style.width = Length.Percent(_playerStats.HealthPercentage * 100f);
             if (_staminaFill != null) _staminaFill.style.width = Length.Percent(_playerStats.StaminaPercentage * 100f);
-            
-            // Manually update bar widths/scales as UIToolkit binding for styles is version-dependent
-            if (_healthFill != null)
+
+            // 2. Bottom-Right: Usable Q Item (Potion)
+            if (_potionValue != null)
             {
-                _healthFill.style.width = Length.Percent(_playerStats.HealthPercentage * 100f);
+                _potionValue.text = $"{_playerStats.HealingPotions}/5";
             }
-            
-            if (_expFill != null)
+
+            if (_quickItemKey != null)
             {
-                _expFill.style.width = Length.Percent(_playerStats.EXPPercentage * 100f);
+                string key = KeyRebindManager.GetCurrentBindingDisplay("UseDrink", 0);
+                _quickItemKey.text = (!string.IsNullOrEmpty(key) && key != "Unknown" && key != "N/A") ? key : "Q";
+            }
+
+            if (_potionIcon != null)
+            {
+                _potionIcon.style.opacity = _playerStats.HealingPotions > 0 ? 1f : 0.4f;
             }
         }
     }

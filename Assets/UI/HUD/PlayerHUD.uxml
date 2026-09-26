@@ -1,34 +1,37 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project:/Assets/UI/HUD/PlayerHUD.uss" />
-    <ui:VisualElement name="HUD" class="hud-root">
-        <ui:VisualElement class="hud-container">
-            <ui:Label name="GoldValue" text="GOLD  0" style="color: rgb(230, 200, 120);" />
-            <ui:Label name="PotionValue" text="Q  POTIONS  3/5" style="color: white;" />
-            <ui:VisualElement class="level-container">
+
+    <!-- Top-Left: Only Level, Health, Stamina -->
+    <ui:VisualElement name="HUD" class="hud-root" picking-mode="Ignore">
+        <ui:VisualElement class="hud-container" picking-mode="Ignore">
+            <ui:VisualElement class="level-container" picking-mode="Ignore">
                 <ui:Label text="LVL " class="level-text" />
                 <ui:Label name="LevelValue" text="1" class="level-text" binding-path="Level" />
             </ui:VisualElement>
             
-            <ui:VisualElement class="stat-row">
+            <ui:VisualElement class="stat-row" picking-mode="Ignore">
                 <ui:Label text="HEALTH" class="stat-label" />
-                <ui:VisualElement name="HealthBar" class="bar-container">
-                    <ui:VisualElement name="HealthFill" class="bar-fill health-fill" />
+                <ui:VisualElement name="HealthBar" class="bar-container" picking-mode="Ignore">
+                    <ui:VisualElement name="HealthFill" class="bar-fill health-fill" picking-mode="Ignore" />
                     <ui:Label name="HealthText" text="100 / 100" class="hp-value-text" binding-path="HPText" />
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement class="stat-row">
+            <ui:VisualElement class="stat-row" picking-mode="Ignore">
                 <ui:Label text="STAMINA" class="stat-label" />
-                <ui:VisualElement name="StaminaBar" class="bar-container">
-                    <ui:VisualElement name="StaminaFill" class="bar-fill" style="background-color: rgb(60, 185, 90);" />
+                <ui:VisualElement name="StaminaBar" class="bar-container" picking-mode="Ignore">
+                    <ui:VisualElement name="StaminaFill" class="bar-fill stamina-fill" picking-mode="Ignore" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement class="stat-row">
-                <ui:Label text="EXP" class="stat-label" />
-                <ui:VisualElement name="ExpBar" class="bar-container">
-                    <ui:VisualElement name="ExpFill" class="bar-fill exp-fill" />
-                </ui:VisualElement>
-            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- Bottom-Right: Usable Item (Key Q) -->
+    <ui:VisualElement name="QuickItemHUD" class="quick-item-root" picking-mode="Ignore">
+        <ui:VisualElement class="quick-item-slot" picking-mode="Ignore">
+            <ui:Image name="PotionIcon" class="quick-item-icon" picking-mode="Ignore" />
+            <ui:Label name="QuickItemKey" text="Q" class="quick-item-key-badge" picking-mode="Ignore" />
+            <ui:Label name="PotionValue" text="3/5" class="quick-item-count" picking-mode="Ignore" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

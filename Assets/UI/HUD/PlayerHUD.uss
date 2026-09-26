@@ -2,35 +2,48 @@
     position: absolute;
     top: 20px;
     left: 20px;
-    width: 30%;
-    max-width: 350px;
+    width: 250px;
 }
 
 .hud-container {
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px 14px;
+    background-color: rgba(10, 14, 22, 0.75);
     border-width: 2px;
-    border-color: rgba(255, 255, 255, 0.4);
-    border-radius: 5px;
+    border-color: rgba(215, 185, 120, 0.55);
+    border-radius: 6px;
+}
+
+.level-container {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.level-text {
+    color: rgb(255, 215, 0); /* Gold */
+    font-size: 18px;
+    -unity-font-style: bold;
 }
 
 .stat-row {
     flex-direction: column;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .stat-label {
-    color: white;
-    font-size: 14px;
+    color: rgb(225, 228, 235);
+    font-size: 11px;
     -unity-font-style: bold;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
+    letter-spacing: 1px;
 }
 
 .bar-container {
-    height: 15px;
-    background-color: rgba(0, 0, 0, 0.8);
+    height: 14px;
+    background-color: rgba(0, 0, 0, 0.85);
     border-width: 1px;
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.25);
+    border-radius: 3px;
     overflow: hidden;
 }
 
@@ -41,23 +54,11 @@
 }
 
 .health-fill {
-    background-color: rgb(200, 40, 40);
+    background-color: rgb(215, 45, 45);
 }
 
-.exp-fill {
-    background-color: rgb(40, 150, 200);
-}
-
-.level-container {
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.level-text {
-    color: rgb(255, 215, 0); /* Gold */
-    font-size: 18px;
-    -unity-font-style: bold;
+.stamina-fill {
+    background-color: rgb(60, 185, 90);
 }
 
 .hp-value-text {
@@ -68,4 +69,53 @@
     color: white;
     font-size: 10px;
     -unity-font-style: bold;
+}
+
+/* Bottom-Right Quick Item HUD */
+.quick-item-root {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+}
+
+.quick-item-slot {
+    width: 62px;
+    height: 62px;
+    background-color: rgba(12, 16, 26, 0.88);
+    border-width: 2px;
+    border-color: rgba(220, 185, 115, 0.7);
+    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.quick-item-icon {
+    width: 36px;
+    height: 36px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.quick-item-key-badge {
+    position: absolute;
+    top: -7px;
+    left: -5px;
+    background-color: rgba(20, 26, 38, 0.95);
+    border-width: 1.5px;
+    border-color: rgba(255, 215, 0, 0.85);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: rgb(255, 225, 120);
+    font-size: 11px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.quick-item-count {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    color: white;
+    font-size: 11px;
+    -unity-font-style: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
 }
