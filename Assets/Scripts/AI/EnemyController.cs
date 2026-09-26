@@ -53,6 +53,8 @@ namespace TheLastKnight.AI
         [SerializeField] private bool _basicAttackCanParry = true;
         [Tooltip("Minimum cooldown in seconds between Parry rings on basic attack (minimum 4.0s).")]
         [SerializeField] private float _basicParryCooldown = 4.0f;
+        [Tooltip("When greater than zero, show the basic attack parry ring once every N attacks, without a time cooldown.")]
+        [SerializeField, Min(0)] private int _basicParryEveryNAttacks;
 
         [Header("Skills Configuration")]
         [Tooltip("Special attacks and skills configured from the monster's Animation Controller.")]
@@ -92,6 +94,7 @@ namespace TheLastKnight.AI
         private float _nextMeleeTime = 0f;
         private float _nextRangedTime = 0f;
         private float _nextBasicParryTime = 0f;
+        private int _basicAttackCount;
         private float _currentAttackMultiplier = 1.0f;
         private bool _isActionLocked = false;
         private ParryReceiver _parry;
@@ -256,6 +259,7 @@ namespace TheLastKnight.AI
 
             float distToPlayer = Vector2.Distance(transform.position, _player.transform.position);
             float attackDistance = _cycleNonParryableSkills ? GetAttackDistance() : distToPlayer;
+            float meleeDistance = _basicParryEveryNAttacks > 0 ? GetAttackDistance() : attackDistance;
 
             TheLastKnight.Combat.EnemySkill readySkill = distToPlayer <= _detectionRange
                 ? GetReadySkill(attackDistance) : null;
@@ -273,7 +277,7 @@ namespace TheLastKnight.AI
                     ChasePlayer();
                 }
             }
-            else if (!_disableBasicAttack && attackDistance <= _meleeRange && distToPlayer <= _detectionRange && Time.time >= _nextMeleeTime)
+            else if (!_disableBasicAttack && meleeDistance <= _meleeRange && distToPlayer <= _detectionRange && Time.time >= _nextMeleeTime)
             {
                 FaceTarget(_player.transform.position);
                 PerformMeleeAttack();
@@ -432,11 +436,16 @@ namespace TheLastKnight.AI
             _nextMeleeTime = Time.time + _meleeCooldown;
             _currentAttackMultiplier = _basicAttackMultiplier;
 
-            // มอนสเตอร์ที่ไม่มีสกิล วง parry จะเกิดขึ้นกับการโจมตีปกติ (Basic Attack) แต่มีคูลดาวน์อย่างน้อย 4 วินาที
+            // Optional attack-count cadence takes precedence over the legacy timed parry cooldown.
             bool canParryThisTime = false;
             if (!HasParryableSkill() && _basicAttackCanParry)
             {
-                if (Time.time >= _nextBasicParryTime)
+                _basicAttackCount++;
+                if (_basicParryEveryNAttacks > 0)
+                {
+                    canParryThisTime = _basicAttackCount % _basicParryEveryNAttacks == 0;
+                }
+                else if (Time.time >= _nextBasicParryTime)
                 {
                     canParryThisTime = true;
                     _nextBasicParryTime = Time.time + Mathf.Max(4.0f, _basicParryCooldown);
