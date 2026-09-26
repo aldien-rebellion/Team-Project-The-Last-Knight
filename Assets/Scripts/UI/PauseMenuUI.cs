@@ -29,6 +29,7 @@ namespace TheLastKnight.UI
         private GameObject _panel;
         private PauseMenuState _state = PauseMenuState.Closed;
         private string _activeRebindActionName = null;
+        private Action _externalBackCallback = null;
 
         public bool IsOpen => _state != PauseMenuState.Closed;
         public PauseMenuState State => _state;
@@ -100,7 +101,7 @@ namespace TheLastKnight.UI
                 catch { }
             }
 
-            // 1. Navigation when Pause Menu is open
+            // 1. Navigation when Pause Menu or Settings is open
             if (IsOpen)
             {
                 if (escPressed)
@@ -112,7 +113,17 @@ namespace TheLastKnight.UI
                     else if (_state == PauseMenuState.Settings)
                     {
                         PlayerPrefs.Save();
-                        ShowMainPauseMenu();
+                        if (_externalBackCallback != null)
+                        {
+                            var cb = _externalBackCallback;
+                            _externalBackCallback = null;
+                            Close(false);
+                            cb.Invoke();
+                        }
+                        else
+                        {
+                            ShowMainPauseMenu();
+                        }
                     }
                     else
                     {
@@ -133,7 +144,17 @@ namespace TheLastKnight.UI
                     if (num == 1 || IsBackKeyPressed())
                     {
                         PlayerPrefs.Save();
-                        ShowMainPauseMenu();
+                        if (_externalBackCallback != null)
+                        {
+                            var cb = _externalBackCallback;
+                            _externalBackCallback = null;
+                            Close(false);
+                            cb.Invoke();
+                        }
+                        else
+                        {
+                            ShowMainPauseMenu();
+                        }
                     }
                 }
                 else if (_state == PauseMenuState.Controls)
@@ -148,7 +169,7 @@ namespace TheLastKnight.UI
 
             if (!escPressed) return;
 
-            // 2. Prevent opening in MainMenu scene
+            // 2. Prevent opening Pause Menu with Esc in MainMenu scene
             string currentScene = SceneManager.GetActiveScene().name;
             if (string.Equals(currentScene, "MainMenu", StringComparison.OrdinalIgnoreCase))
             {
@@ -222,6 +243,7 @@ namespace TheLastKnight.UI
 
             _state = PauseMenuState.Main;
             _activeRebindActionName = null;
+            _externalBackCallback = null;
 
             if (Application.isPlaying)
             {
@@ -245,6 +267,29 @@ namespace TheLastKnight.UI
             Cursor.lockState = CursorLockMode.None;
 
             ShowMainPauseMenu();
+        }
+
+        public void OpenSettingsFromExternal(Action onBack)
+        {
+            _state = PauseMenuState.Settings;
+            _externalBackCallback = onBack;
+            _activeRebindActionName = null;
+
+#if ENABLE_INPUT_SYSTEM
+            if (InputSystem.actions != null)
+            {
+                var uiMap = InputSystem.actions.FindActionMap("UI");
+                if (uiMap != null && !uiMap.enabled)
+                {
+                    uiMap.Enable();
+                }
+            }
+#endif
+
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
+            ShowSettings();
         }
 
         private void ShowMainPauseMenu()
@@ -328,7 +373,17 @@ namespace TheLastKnight.UI
             var btnBack = RuntimeUI.Button(content, LocalizationManager.Get("BTN_BACK"), () =>
             {
                 PlayerPrefs.Save();
-                ShowMainPauseMenu();
+                if (_externalBackCallback != null)
+                {
+                    var cb = _externalBackCallback;
+                    _externalBackCallback = null;
+                    Close(false);
+                    cb.Invoke();
+                }
+                else
+                {
+                    ShowMainPauseMenu();
+                }
             });
 
             if (EventSystem.current != null && btnBack != null)
@@ -408,6 +463,7 @@ namespace TheLastKnight.UI
         {
             _state = PauseMenuState.Closed;
             _activeRebindActionName = null;
+            _externalBackCallback = null;
 
             DestroyPanel();
             PlayerPrefs.Save();
@@ -430,6 +486,7 @@ namespace TheLastKnight.UI
         {
             _state = PauseMenuState.Closed;
             _activeRebindActionName = null;
+            _externalBackCallback = null;
 
             KeyRebindManager.CancelOngoingRebind();
             DestroyPanel();

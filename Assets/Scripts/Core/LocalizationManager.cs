@@ -39,6 +39,22 @@ namespace TheLastKnight.Core
 
         private static readonly Dictionary<string, string> EnTexts = new Dictionary<string, string>
         {
+            // Main Menu
+            { "MAIN_TITLE", "THE LAST KNIGHT" },
+            { "MAIN_SUBTITLE", "A fallen kingdom. Four seals. One last oath." },
+            { "MAIN_PLAY", "Play" },
+            { "MAIN_CONTINUE", "Continue" },
+            { "MAIN_SETTINGS", "Settings" },
+            { "MAIN_EXIT", "Exit" },
+            { "MAIN_CONTROLS_HINT", "A/D Move   Space Jump   Shift / RMB Dash\nLMB Attack / Parry   Q Potion   F Interact\nE Carnage Burst   R Buff   T Excalibur   B Status" },
+
+            // Difficulty Selection
+            { "DIFF_TITLE", "CHOOSE YOUR JOURNEY" },
+            { "DIFF_SUBTITLE", "A new game replaces your current journey when you next save." },
+            { "DIFF_EASY", "Easy — full damage and combat guides" },
+            { "DIFF_NORMAL", "Normal — stronger enemies, reduced damage" },
+            { "DIFF_HARD", "Hard — slow recovery, hidden enemy guides" },
+
             // Main Pause
             { "PAUSE_TITLE", "PAUSED" },
             { "PAUSE_SUBTITLE", "Game is paused" },
@@ -79,6 +95,22 @@ namespace TheLastKnight.Core
 
         private static readonly Dictionary<string, string> ThTexts = new Dictionary<string, string>
         {
+            // Main Menu
+            { "MAIN_TITLE", "THE LAST KNIGHT" },
+            { "MAIN_SUBTITLE", "อาณาจักรที่ล่มสลาย สี่ผนึก หนึ่งคำสาบานสุดท้าย" },
+            { "MAIN_PLAY", "เริ่มเกม" },
+            { "MAIN_CONTINUE", "เล่นต่อ" },
+            { "MAIN_SETTINGS", "ตั้งค่า" },
+            { "MAIN_EXIT", "ออกจากเกม" },
+            { "MAIN_CONTROLS_HINT", "A/D เดิน   Space กระโดด   Shift / คลิกขวา พุ่งตัว\nคลิกซ้าย โจมตี / ปัดป้อง   Q ดื่มยา   F โต้ตอบ\nE สกิลหมุนดาบ   R บัฟ   T ดาบศักดิ์สิทธิ์   B สเตตัส" },
+
+            // Difficulty Selection
+            { "DIFF_TITLE", "เลือกระดับความยาก" },
+            { "DIFF_SUBTITLE", "การเริ่มเกมใหม่จะบันทึกทับการเดินทางปัจจุบันเมื่อบันทึกครั้งถัดไป" },
+            { "DIFF_EASY", "ง่าย — ความเสียหายเต็มที่ พร้อมคำแนะนำการต่อสู้" },
+            { "DIFF_NORMAL", "ปกติ — ศัตรูแข็งแกร่งขึ้น ความเสียหายลดลง" },
+            { "DIFF_HARD", "ยาก — ฟื้นฟูช้า ซ่อนคำแนะนำศัตรู" },
+
             // Main Pause
             { "PAUSE_TITLE", "หยุดเกม" },
             { "PAUSE_SUBTITLE", "เกมถูกหยุดชั่วคราว" },

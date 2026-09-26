@@ -130,5 +130,45 @@ namespace TheLastKnight.Tests
 
             UnityEngine.Object.DestroyImmediate(go);
         }
+
+        [Test]
+        public void KeyRebindManager_FormatPathToEnglish_FormatsInEnglishOnly()
+        {
+            var rebindType = RuntimeType("TheLastKnight.Input.KeyRebindManager");
+            var formatMethod = rebindType.GetMethod("FormatPathToEnglish", BindingFlags.Public | BindingFlags.Static);
+
+            Assert.That(formatMethod.Invoke(null, new object[] { "<Keyboard>/a" }), Is.EqualTo("A"));
+            Assert.That(formatMethod.Invoke(null, new object[] { "<Keyboard>/d" }), Is.EqualTo("D"));
+            Assert.That(formatMethod.Invoke(null, new object[] { "<Keyboard>/space" }), Is.EqualTo("Space"));
+            Assert.That(formatMethod.Invoke(null, new object[] { "<Keyboard>/leftShift" }), Is.EqualTo("Shift"));
+            Assert.That(formatMethod.Invoke(null, new object[] { "<Mouse>/leftButton" }), Is.EqualTo("LMB"));
+            Assert.That(formatMethod.Invoke(null, new object[] { "<Mouse>/rightButton" }), Is.EqualTo("RMB"));
+            Assert.That(formatMethod.Invoke(null, new object[] { "<Keyboard>/q" }), Is.EqualTo("Q"));
+            Assert.That(formatMethod.Invoke(null, new object[] { "<Keyboard>/e" }), Is.EqualTo("E"));
+            Assert.That(formatMethod.Invoke(null, new object[] { "<Keyboard>/comma" }), Is.EqualTo(","));
+        }
+
+        [Test]
+        public void MainMenuController_OpenSettings_OpensUnifiedSettings()
+        {
+            var menuType = RuntimeType("TheLastKnight.UI.MainMenuController");
+            var go = new GameObject("Test_MainMenu");
+            var menu = go.AddComponent(menuType);
+
+            var openSettingsMethod = menuType.GetMethod("OpenSettings", BindingFlags.NonPublic | BindingFlags.Instance);
+            openSettingsMethod.Invoke(menu, null);
+
+            var isOpen = (bool)_pauseMenu.GetType().GetProperty("IsOpen").GetValue(_pauseMenu);
+            var state = _pauseMenu.GetType().GetProperty("State").GetValue(_pauseMenu).ToString();
+
+            Assert.That(isOpen, Is.True);
+            Assert.That(state, Is.EqualTo("Settings"));
+
+            var sliders = UnityEngine.Object.FindObjectsByType<Slider>(FindObjectsSortMode.None);
+            var sliderNames = System.Array.ConvertAll(sliders, s => s.name);
+            Assert.That(sliderNames.Any(n => n.Contains("ความสว่าง") || n.Contains("Brightness")), Is.True);
+
+            UnityEngine.Object.DestroyImmediate(go);
+        }
     }
 }

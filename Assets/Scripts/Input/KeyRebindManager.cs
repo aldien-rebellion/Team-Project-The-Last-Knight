@@ -54,8 +54,86 @@ namespace TheLastKnight.Input
             var action = InputSystem.actions.FindAction(actionName);
             if (action == null || bindingIndex < 0 || bindingIndex >= action.bindings.Count) return "N/A";
 
-            string display = InputActionRebindingExtensions.GetBindingDisplayString(action, bindingIndex);
-            return string.IsNullOrEmpty(display) ? "None" : display;
+            var binding = action.bindings[bindingIndex];
+            string path = string.IsNullOrEmpty(binding.overridePath) ? binding.path : binding.overridePath;
+            return FormatPathToEnglish(path);
+        }
+
+        public static string FormatPathToEnglish(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return "None";
+
+            // Mouse buttons
+            if (path.Equals("<Mouse>/leftButton", StringComparison.OrdinalIgnoreCase)) return "LMB";
+            if (path.Equals("<Mouse>/rightButton", StringComparison.OrdinalIgnoreCase)) return "RMB";
+            if (path.Equals("<Mouse>/middleButton", StringComparison.OrdinalIgnoreCase)) return "MMB";
+            if (path.StartsWith("<Mouse>/", StringComparison.OrdinalIgnoreCase))
+            {
+                string mName = path.Substring("<Mouse>/".Length);
+                return mName.ToUpperInvariant();
+            }
+
+            // Keyboard keys
+            if (path.StartsWith("<Keyboard>/", StringComparison.OrdinalIgnoreCase))
+            {
+                string key = path.Substring("<Keyboard>/".Length);
+                if (key.Length == 1) return key.ToUpperInvariant();
+                switch (key.ToLowerInvariant())
+                {
+                    case "space": return "Space";
+                    case "leftshift": return "Shift";
+                    case "rightshift": return "Right Shift";
+                    case "leftctrl": return "Ctrl";
+                    case "rightctrl": return "Right Ctrl";
+                    case "leftalt": return "Alt";
+                    case "rightalt": return "Right Alt";
+                    case "enter": return "Enter";
+                    case "escape": return "Esc";
+                    case "tab": return "Tab";
+                    case "backspace": return "Backspace";
+                    case "capslock": return "Caps Lock";
+                    case "uparrow": return "Up Arrow";
+                    case "downarrow": return "Down Arrow";
+                    case "leftarrow": return "Left Arrow";
+                    case "rightarrow": return "Right Arrow";
+                    case "comma": return ",";
+                    case "period": return ".";
+                    case "slash": return "/";
+                    case "semicolon": return ";";
+                    case "quote": return "'";
+                    case "backslash": return "\\";
+                    case "leftbracket": return "[";
+                    case "rightbracket": return "]";
+                    case "minus": return "-";
+                    case "equals": return "=";
+                    case "backquote": return "`";
+                    default:
+                        if (key.StartsWith("numpad", StringComparison.OrdinalIgnoreCase))
+                            return "Num " + key.Substring(6).ToUpperInvariant();
+                        return char.ToUpperInvariant(key[0]) + key.Substring(1);
+                }
+            }
+
+            // Gamepad
+            if (path.StartsWith("<Gamepad>/", StringComparison.OrdinalIgnoreCase))
+            {
+                string btn = path.Substring("<Gamepad>/".Length);
+                switch (btn.ToLowerInvariant())
+                {
+                    case "buttonsouth": return "A / Cross";
+                    case "buttonwest": return "X / Square";
+                    case "buttonnorth": return "Y / Triangle";
+                    case "buttoneast": return "B / Circle";
+                    case "leftshoulder": return "LB";
+                    case "rightshoulder": return "RB";
+                    case "lefttrigger": return "LT";
+                    case "righttrigger": return "RT";
+                    default:
+                        return "GP: " + btn;
+                }
+            }
+
+            return path;
         }
 
         public static void StartRebind(RebindableActionInfo item, Action onComplete, Action onCancel = null)
