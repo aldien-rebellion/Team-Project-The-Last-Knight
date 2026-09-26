@@ -83,13 +83,12 @@ namespace TheLastKnight.UI
         {
             if (Instance != null && Instance != this)
             {
-                if (Application.isPlaying) Destroy(gameObject);
-                else DestroyImmediate(gameObject);
+                Destroy(this);
                 return;
             }
 
             Instance = this;
-            if (Application.isPlaying)
+            if (transform.parent == null)
             {
                 DontDestroyOnLoad(gameObject);
             }
@@ -113,12 +112,11 @@ namespace TheLastKnight.UI
 
         private void Update()
         {
-            // Toggle with 'B' key
-            bool bPressed = false;
-            if (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame) bPressed = true;
-            if (UnityEngine.Input.GetKeyDown(KeyCode.B)) bPressed = true;
+            var keyboard = Keyboard.current;
+            if (keyboard == null) return;
 
-            if (bPressed)
+            // Toggle with 'B' key
+            if (keyboard.bKey.wasPressedThisFrame)
             {
                 Toggle();
                 return;
@@ -127,11 +125,7 @@ namespace TheLastKnight.UI
             // Close with Escape if open
             if (_isOpen)
             {
-                bool escPressed = false;
-                if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) escPressed = true;
-                if (UnityEngine.Input.GetKeyDown(KeyCode.Escape)) escPressed = true;
-
-                if (escPressed)
+                if (keyboard.escapeKey.wasPressedThisFrame)
                 {
                     Close();
                     return;
@@ -217,6 +211,19 @@ namespace TheLastKnight.UI
         private void BuildUI()
         {
             if (_canvasObject != null) return;
+
+            // Ensure EventSystem with InputSystemUIInputModule exists
+            var es = FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>();
+            if (es == null)
+            {
+                new GameObject("EventSystem", typeof(UnityEngine.EventSystems.EventSystem), typeof(UnityEngine.InputSystem.UI.InputSystemUIInputModule));
+            }
+            else if (es.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>() == null)
+            {
+                var standalone = es.GetComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+                if (standalone != null) Destroy(standalone);
+                es.gameObject.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+            }
 
             // Root Canvas
             _canvasObject = new GameObject("CharacterStatusCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
