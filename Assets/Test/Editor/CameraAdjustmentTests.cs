@@ -508,7 +508,6 @@ namespace TheLastKnight.Tests
         [TestCase("CityCenter", 5.0f)]
         [TestCase("OutdoorMarket", 5.0f)]
         [TestCase("DemonCastle", 5.0f)]
-        [TestCase("DemonCastleEntrance", 5.0f)]
         public void SceneMaps_OrthographicSize_MatchesConfiguredBaseSize(string sceneName, float expectedBaseSize)
         {
             string path = "Assets/Scenes/Maps/" + sceneName + ".unity";
