@@ -226,7 +226,7 @@ MonoBehaviour:
   _drinkCooldown: 1
   _hurtFrame1Duration: 0.25
   _hurtFrame2Duration: 0.17
-  _baseMoveSpeed: 8
+  _baseMoveSpeed: 6
   _baseSprintSpeed: 13
   _acceleration: 50
   _deceleration: 50

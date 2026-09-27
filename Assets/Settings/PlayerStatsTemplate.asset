@@ -12,14 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 026f3c5f6962e1249bfb63d6e879eaf1, type: 3}
   m_Name: PlayerStatsTemplate
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Stats.CharacterStatsSO
+  baseAttack: 0
+  attackPerSTR: 1.5
+  baseDEF: 0
+  defPerLevel: 1
+  hpPerVIT: 10
+  baseStamina: 100
+  staminaPerVIT: 1
+  dexLimitTarget: 250
+  targetCritAtCap: 99
+  critChancePerDEX: 0.5
+  baseAttackSpeed: 1
+  attackSpeedPerAGI: 0.01
+  speedPerAGI: 0.02
+  dashSpeedPerAGI: 0.1
+  doubleJumpAgiThreshold: 250
   baseSTR: 10
   baseVIT: 10
   baseDEX: 10
   baseAGI: 10
-  hpPerVIT: 10
-  attackPerSTR: 1.5
-  critChancePerDEX: 0.5
-  speedPerAGI: 0.12
-  dashSpeedPerAGI: 0.15
   baseExpNeeded: 100
   expGrowthMultiplier: 1.25

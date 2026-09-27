@@ -24,9 +24,10 @@ namespace TheLastKnight.Stats
         [Header("Runtime Status")]
         [SerializeField] private float _currentHP;
         [SerializeField] private float _currentStamina = 100f;
-        public float MaxStamina => 100f;
+        [CreateProperty]
+        public float MaxStamina { get; private set; } = 100f;
         public float CurrentStamina => _currentStamina;
-        public float StaminaPercentage => _currentStamina / MaxStamina;
+        public float StaminaPercentage => MaxStamina > 0f ? _currentStamina / MaxStamina : 0f;
         public bool IsDead => _currentHP <= 0;
         [SerializeField] private int _gold;
         [SerializeField] private int _healingPotions = 3;
@@ -61,6 +62,16 @@ namespace TheLastKnight.Stats
             if (stat != "STR" && stat != "VIT" && stat != "DEX" && stat != "AGI") return false;
             _availableStatPoints++;
             return UpgradeStat(stat);
+        }
+        public void AddAGI(int amount)
+        {
+            _agility += Mathf.Max(0, amount);
+            RecalculateStats();
+        }
+        public void SetAGI(int value)
+        {
+            _agility = Mathf.Max(0, value);
+            RecalculateStats();
         }
         private readonly System.Collections.Generic.HashSet<Object> _regenAuras = new System.Collections.Generic.HashSet<Object>();
         private float _lastDamageTime = -100f;
@@ -135,6 +146,13 @@ namespace TheLastKnight.Stats
         [CreateProperty]
         public float CriticalChance { get; private set; }
         [CreateProperty]
+        public float Defense { get; private set; }
+        [CreateProperty]
+        public float AttackSpeedMultiplier { get; private set; } = 1.0f;
+        [CreateProperty]
+        public bool CanDoubleJump => _agility >= (_statsTemplate != null ? _statsTemplate.doubleJumpAgiThreshold : DoubleJumpAgiThreshold);
+        public const int DoubleJumpAgiThreshold = 250;
+        [CreateProperty]
         public float CurrentHP => _currentHP;
         [CreateProperty]
         public float HealthPercentage => MaxHP > 0 ? _currentHP / MaxHP : 0;
@@ -171,38 +189,85 @@ namespace TheLastKnight.Stats
         /// </summary>
         public void RecalculateStats(bool refillHealth = false)
         {
-            if (_statsTemplate == null) return;
-
             // Calculate derived parameters
             float previousMaxHP = MaxHP;
-            MaxHP = _vitality * _statsTemplate.hpPerVIT;
-            AttackPower = _strength * _statsTemplate.attackPerSTR;
-            CriticalChance = _dexterity * _statsTemplate.critChancePerDEX;
+            float previousMaxStamina = MaxStamina;
 
-            // Adjust health when Max HP grows
+            float hpPerVit = _statsTemplate != null ? _statsTemplate.hpPerVIT : 10f;
+            float baseStam = _statsTemplate != null ? _statsTemplate.baseStamina : 100f;
+            float stamPerVit = _statsTemplate != null ? _statsTemplate.staminaPerVIT : 1f;
+            int baseVit = _statsTemplate != null ? _statsTemplate.baseVIT : 10;
+            float baseAtk = _statsTemplate != null ? _statsTemplate.baseAttack : 0f;
+            float atkPerStr = _statsTemplate != null ? _statsTemplate.attackPerSTR : 1.5f;
+            float baseAtkSpd = _statsTemplate != null ? _statsTemplate.baseAttackSpeed : 1.0f;
+            float atkSpdPerAgi = _statsTemplate != null ? _statsTemplate.attackSpeedPerAGI : 0.004f;
+            int baseAgi = _statsTemplate != null ? _statsTemplate.baseAGI : 10;
+            float spdPerAgi = _statsTemplate != null ? _statsTemplate.speedPerAGI : 0.12f;
+            float dashSpdPerAgi = _statsTemplate != null ? _statsTemplate.dashSpeedPerAGI : 0.15f;
+
+            // STR -> ATK
+            AttackPower = baseAtk + _strength * atkPerStr;
+
+            // VIT -> Max HP and Max Stamina
+            MaxHP = _vitality * hpPerVit;
+            MaxStamina = baseStam + Mathf.Max(0, _vitality - baseVit) * stamPerVit;
+
+            // DEX -> Asymptotic Critical Chance approaching 100% (99% at 250 DEX)
+            if (_statsTemplate != null)
+            {
+                CriticalChance = _statsTemplate.CalculateCritChance(_dexterity);
+            }
+            else
+            {
+                float remainingRatio = 0.01f;
+                float crit = 100f * (1f - Mathf.Pow(remainingRatio, (float)_dexterity / 250f));
+                CriticalChance = Mathf.Clamp(crit, 0f, 100f);
+            }
+
+            // AGI -> Attack Speed, Movement Speed, Double Jump
+            AttackSpeedMultiplier = baseAtkSpd + Mathf.Max(0, _agility - baseAgi) * atkSpdPerAgi;
+
+            // DEF -> Level-based Defense (DEF = baseDEF + Level * defPerLevel)
+            float baseDef = _statsTemplate != null ? _statsTemplate.baseDEF : 0f;
+            float defPLv = _statsTemplate != null ? _statsTemplate.defPerLevel : 1f;
+            Defense = baseDef + _currentLevel * defPLv;
+
+            // Adjust health and stamina when caps grow
             if (refillHealth)
             {
                 _currentHP = MaxHP;
+                _currentStamina = MaxStamina;
             }
             else
             {
                 float hpDifference = MaxHP - previousMaxHP;
                 if (hpDifference > 0)
                 {
-                    _currentHP += hpDifference; // increase current health proportionally
+                    _currentHP += hpDifference;
                 }
                 _currentHP = Mathf.Clamp(_currentHP, 0, MaxHP);
+
+                float staminaDifference = MaxStamina - previousMaxStamina;
+                if (staminaDifference > 0)
+                {
+                    _currentStamina += staminaDifference;
+                }
+                _currentStamina = Mathf.Clamp(_currentStamina, 0, MaxStamina);
             }
 
-            // Sync stats to Arthur's PlayerController movement logic
+            // Sync stats to Arthur's PlayerController movement & combat logic
             if (_playerController != null)
             {
-                // Dynamic scaling of speed based on AGI
-                _playerController.MoveSpeed = _playerController.BaseMoveSpeed + (_agility - _statsTemplate.baseAGI) * _statsTemplate.speedPerAGI;
-                _playerController.DashSpeed = _playerController.BaseDashSpeed + (_agility - _statsTemplate.baseAGI) * _statsTemplate.dashSpeedPerAGI;
+                // Dynamic scaling of speed based on AGI (unified: single speedPerAGI value controls both walk & sprint)
+                _playerController.MoveSpeed = _playerController.BaseMoveSpeed + (_agility - baseAgi) * spdPerAgi;
+                float sprintRatio = _playerController.BaseMoveSpeed > 0f ? (_playerController.BaseSprintSpeed / _playerController.BaseMoveSpeed) : 1.625f;
+                _playerController.SprintSpeed = _playerController.MoveSpeed * sprintRatio;
+                _playerController.DashSpeed = _playerController.BaseDashSpeed + (_agility - baseAgi) * dashSpdPerAgi;
+                _playerController.AttackSpeedMultiplier = AttackSpeedMultiplier;
+                _playerController.CanDoubleJump = CanDoubleJump;
             }
 
-            Debug.Log($"[PlayerStats] Recalculated Derived Parameters. MaxHP: {MaxHP}, AttackPower: {AttackPower}, Speed: {_playerController.MoveSpeed}");
+            Debug.Log($"[PlayerStats] Recalculated Derived Parameters. MaxHP: {MaxHP}, MaxStamina: {MaxStamina}, ATK: {AttackPower}, DEF: {Defense}, Crit: {CriticalChance:F2}%, AtkSpd: {AttackSpeedMultiplier:F2}x, Speed: {(_playerController != null ? _playerController.MoveSpeed : 0)}, DoubleJump: {CanDoubleJump}");
         }
 
         /// <summary>
@@ -295,6 +360,11 @@ namespace TheLastKnight.Stats
 
             if (IsDead) return;
             damage = Mathf.Max(0f, damage) * TheLastKnight.Core.GameDifficultyManager.EnemyDamage;
+            // Apply Defense: reduce damage by DEF, minimum 1 damage
+            if (damage > 0f)
+            {
+                damage = Mathf.Max(1f, damage - Defense);
+            }
             if (damage > 0f)
             {
                 _lastDamageTime = Time.time;

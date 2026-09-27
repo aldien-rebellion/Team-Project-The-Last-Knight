@@ -138,6 +138,10 @@ namespace TheLastKnight.Player
         public float JumpForce { get; set; }
         public float DashSpeed { get; set; }
         public float DashDuration { get; set; }
+        public float AttackSpeedMultiplier { get; set; } = 1.0f;
+        public bool CanDoubleJump { get; set; } = false;
+        private bool _hasDoubleJumped = false;
+        public bool HasDoubleJumped => _hasDoubleJumped;
 
         public float BaseMoveSpeed => _baseMoveSpeed;
         public float BaseSprintSpeed => _baseSprintSpeed;
@@ -245,6 +249,7 @@ namespace TheLastKnight.Player
             JumpForce = _baseJumpForce;
             DashSpeed = _baseDashSpeed;
             DashDuration = _baseDashDuration;
+            AttackSpeedMultiplier = 1.0f;
         }
 
         private void Update()
@@ -305,6 +310,7 @@ namespace TheLastKnight.Player
             {
                 _coyoteTimeCounter = _coyoteTime;
                 _hasDashedInAir = false; // Reset air dash
+                _hasDoubleJumped = false; // Reset double jump
             }
             else
             {
@@ -488,8 +494,9 @@ namespace TheLastKnight.Player
             CurrentState = PlayerState.Attacking;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("slash");
             _isAttacking = true;
-            _attackTimer = _attackDuration;
-            _attackCooldownTimer = _attackDuration + _attackCooldown;
+            float atkSpd = AttackSpeedMultiplier > 0.1f ? AttackSpeedMultiplier : 1.0f;
+            _attackTimer = _attackDuration / atkSpd;
+            _attackCooldownTimer = (_attackDuration + _attackCooldown) / atkSpd;
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
@@ -1036,17 +1043,33 @@ namespace TheLastKnight.Player
                 _velocity.y = Mathf.Max(_velocity.y, -_maxFallSpeed);
             }
 
-            // Jump mechanics (Coyote Time + Jump Buffering)
+            // Jump mechanics (Coyote Time + Jump Buffering + Double Jump)
             bool jumpRequested = _jumpBufferCounter > 0f;
             bool canJump = _coyoteTimeCounter > 0f;
 
-            if (jumpRequested && canJump)
+            if (jumpRequested)
             {
-                TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
-                _velocity.y = JumpForce;
-                _jumpBufferCounter = -1f;
-                _coyoteTimeCounter = -1f;
-                CurrentState = PlayerState.Jumping;
+                if (canJump)
+                {
+                    TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
+                    _velocity.y = JumpForce;
+                    _jumpBufferCounter = -1f;
+                    _coyoteTimeCounter = -1f;
+                    _hasDoubleJumped = false;
+                    CurrentState = PlayerState.Jumping;
+                }
+                else if (CanDoubleJump && !_hasDoubleJumped)
+                {
+                    TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
+                    _velocity.y = JumpForce;
+                    _jumpBufferCounter = -1f;
+                    _hasDoubleJumped = true;
+                    CurrentState = PlayerState.Jumping;
+                    if (_animator != null && _animator.runtimeAnimatorController != null)
+                    {
+                        _animator.Play("Jump", 0, 0f);
+                    }
+                }
             }
 
             // Ceiling collision check - instantly stop vertical rising momentum
@@ -1128,7 +1151,15 @@ namespace TheLastKnight.Player
                 }
             }
 
-            _animator.speed = 1.0f;
+            if (isAttacking)
+            {
+                float atkSpd = AttackSpeedMultiplier > 0.1f ? AttackSpeedMultiplier : 1.0f;
+                _animator.speed = atkSpd;
+            }
+            else
+            {
+                _animator.speed = 1.0f;
+            }
 
             // Visual feedback for dash i-frames
             if (_spriteRenderer != null)
