@@ -15,9 +15,9 @@ namespace TheLastKnight.Tests
             .GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Invoke(target, null);
         private static float Read(Component target, string property) => (float)target.GetType().GetProperty(property).GetValue(target);
 
-        [TestCase(0, 10f, 1f)]
-        [TestCase(1, 13f, 0.7f)]
-        [TestCase(2, 16f, 0.4f)]
+        [TestCase(0, 9f, 1f)]
+        [TestCase(1, 12f, 0.7f)]
+        [TestCase(2, 15f, 0.4f)]
         public void ActualDamageFlow_UsesSelectedDifficulty(int mode, float incoming, float outgoingMultiplier)
         {
             var difficulty = RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("Current");
