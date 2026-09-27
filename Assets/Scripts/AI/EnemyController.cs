@@ -267,10 +267,11 @@ namespace TheLastKnight.AI
             }
 
             float distToPlayer = Vector2.Distance(transform.position, _player.transform.position);
-            float attackDistance = _useColliderEdgeAttackDistance || _cycleNonParryableSkills
-                ? GetAttackDistance() : distToPlayer;
-            float meleeDistance = _useColliderEdgeAttackDistance || _basicParryEveryNAttacks > 0
-                ? attackDistance : distToPlayer;
+            // Attack ranges are measured between solid collider edges. Using
+            // Transform-to-Transform distance makes large sprites stop chasing
+            // while touching, yet still report "out of melee range".
+            float attackDistance = GetAttackDistance();
+            float meleeDistance = attackDistance;
 
             TheLastKnight.Combat.EnemySkill readySkill = distToPlayer <= _detectionRange
                 ? GetReadySkill(attackDistance) : null;
@@ -521,7 +522,15 @@ namespace TheLastKnight.AI
             }
 
             PlayAnimationAction(_basicAttackAnimState);
+            foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
+            {
+                hitbox.BeginAttack();
+            }
             _damageUntil = Time.time + 0.35f;
+            foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
+            {
+                hitbox.DealDamageToOverlaps();
+            }
             if (ranged) SpawnProjectile();
             yield return new WaitForSeconds(0.35f);
             _damageUntil = 0f;
@@ -617,8 +626,10 @@ namespace TheLastKnight.AI
                 yield break;
             }
 
-            if (_continuousActions && !skill.dealDamageAsSingleHit)
-                foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>()) hitbox.BeginAttack();
+            // Every attack window gets a fresh per-attack hit gate. Otherwise
+            // the hitbox's 0.8s victim cooldown can suppress the next skill.
+            foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
+                hitbox.BeginAttack();
             // A thrown weapon delivers its own damage; do not also hit with the body.
             if (skill.dealDamageAsSingleHit)
             {
@@ -646,6 +657,10 @@ namespace TheLastKnight.AI
                 _damageUntil = _continuousActions && skill.projectilePrefab != null
                     ? 0f
                     : Time.time + Mathf.Max(0f, skill.damageDuration);
+                foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
+                {
+                    hitbox.DealDamageToOverlaps();
+                }
             }
 
             if (skill.groundSpellPrefab != null && _player != null)

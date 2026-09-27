@@ -63,27 +63,43 @@ namespace TheLastKnight.Combat
                 label.transform.SetParent(_canvas.transform, false);
                 _levelText = label.GetComponent<Text>();
                 _levelText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                _levelText.fontSize = 18;
+                // Keep the level label readable on small enemy bars without
+                // allowing it to overflow when the label has more digits.
+                _levelText.fontSize = 14;
+                _levelText.resizeTextForBestFit = true;
+                _levelText.resizeTextMinSize = 8;
+                _levelText.resizeTextMaxSize = 14;
+                _levelText.horizontalOverflow = HorizontalWrapMode.Overflow;
+                _levelText.verticalOverflow = VerticalWrapMode.Overflow;
                 _levelText.alignment = TextAnchor.MiddleCenter;
                 _levelText.raycastTarget = false;
                 var rect = _levelText.rectTransform;
                 rect.anchorMin = new Vector2(0, 1);
                 rect.anchorMax = new Vector2(1, 1);
-                rect.sizeDelta = new Vector2(0, 24);
-                rect.anchoredPosition = new Vector2(0, 14);
+                rect.offsetMin = new Vector2(2, 0);
+                rect.offsetMax = new Vector2(-2, 20);
+                rect.anchoredPosition = new Vector2(0, 8);
 
                 var percentObj = new GameObject("Health Percent", typeof(RectTransform), typeof(Text));
                 percentObj.transform.SetParent(_canvas.transform, false);
                 _healthPercentText = percentObj.GetComponent<Text>();
                 _healthPercentText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                _healthPercentText.fontSize = 12;
+                // The percentage is rendered inside the bar. Best-fit plus a
+                // small inset keeps values such as 100% inside narrow bars.
+                _healthPercentText.fontSize = 10;
+                _healthPercentText.resizeTextForBestFit = true;
+                _healthPercentText.resizeTextMinSize = 6;
+                _healthPercentText.resizeTextMaxSize = 10;
+                _healthPercentText.horizontalOverflow = HorizontalWrapMode.Overflow;
+                _healthPercentText.verticalOverflow = VerticalWrapMode.Overflow;
                 _healthPercentText.alignment = TextAnchor.MiddleCenter;
                 _healthPercentText.color = Color.white;
                 _healthPercentText.raycastTarget = false;
                 var rectP = _healthPercentText.rectTransform;
                 rectP.anchorMin = Vector2.zero;
                 rectP.anchorMax = Vector2.one;
-                rectP.sizeDelta = Vector2.zero;
+                rectP.offsetMin = new Vector2(2, 0);
+                rectP.offsetMax = new Vector2(-2, 0);
                 rectP.anchoredPosition = Vector2.zero;
             }
         }
