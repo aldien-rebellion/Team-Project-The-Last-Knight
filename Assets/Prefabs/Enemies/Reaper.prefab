@@ -27,7 +27,7 @@ RectTransform:
   m_GameObject: {fileID: 2662548676842354271}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.0042857143, y: 0.0042857143, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 765120271178275558}
@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0.95000005}
-  m_SizeDelta: {x: 100, y: 14}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4888003072493045710
 Canvas:
@@ -73,13 +73,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 731b67cd6340d6b4c936763f3fac4db7, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.FloatingHealthBar
   _targetStats: {fileID: 3622548920129109940}
   _healthBarFill: {fileID: 5583891784832857081}
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 4426489115621437184}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _followSpriteBounds: 0
+  _headOffset: 0.12
 --- !u!1 &6306785311533167210
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,6 +100,7 @@ GameObject:
   - component: {fileID: 9133839050510931759}
   - component: {fileID: 3622548920129109940}
   - component: {fileID: 5522708467596627523}
+  - component: {fileID: 9010000000000000002}
   m_Layer: 0
   m_Name: Reaper
   m_TagString: Untagged
@@ -112,8 +118,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6360110036420094652}
   - {fileID: 1747568590389953621}
@@ -262,8 +268,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.3}
-  m_Size: {x: 0.4, y: 0.6}
+  m_Offset: {x: 0, y: 0.30866683}
+  m_Size: {x: 0.40000004, y: 0.58266693}
   m_Direction: 0
 --- !u!114 &3622548920129109940
 MonoBehaviour:
@@ -301,6 +307,8 @@ MonoBehaviour:
   _chaseSpeed: 4.5
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
   _isBoss: 0
@@ -312,8 +320,13 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 8
-  _meleeRange: 2.2
-  _meleeCooldown: 1.5
+  _meleeRange: 0.05
+  _meleeCooldown: 0
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 0
+  _playAttackStatesDirectly: 1
+  _useColliderEdgeAttackRanges: 0
+  _disableBasicAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -323,11 +336,29 @@ MonoBehaviour:
   _basicAttackAnimState: HostileAttack
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 3
   _skills: []
+  _cycleNonParryableSkills: 0
+  _continuousActions: 0
   _deathDestroyDelay: 1.5
   _canRespawn: 0
   _respawnTime: 30
+--- !u!114 &9010000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6306785311533167210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 4426489115621437184}
+  _useVisibleSpriteBounds: 1
 --- !u!1 &6765031090875817698
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +436,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.44000003, y: 0.63}
+  m_Size: {x: 0.52, y: 0.63}
   m_EdgeRadius: 0
 --- !u!114 &5913957647011155806
 MonoBehaviour:
