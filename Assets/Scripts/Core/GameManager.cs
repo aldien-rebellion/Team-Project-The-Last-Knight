@@ -63,11 +63,16 @@ namespace TheLastKnight.Core
             Player = FindAnyObjectByType<PlayerStats>();
             if (Player != null)
             {
-                if (State.initialized) Player.Restore(State);
+                if (State.initialized)
+                {
+                    Player.Restore(State);
+                    TheLastKnight.Inventory.InventoryManager.Instance?.LoadFrom(State, Player);
+                }
                 if (_restorePosition) Player.transform.position = State.position;
                 Player.GetComponent<PlayerController>().ResetVelocity();
                 if (!State.initialized)
                 {
+                    TheLastKnight.Inventory.InventoryManager.Instance?.InitializeDefaultInventory(Player);
                     Capture();
                     if (!string.IsNullOrEmpty(State.worldId))
                     {
@@ -97,6 +102,7 @@ namespace TheLastKnight.Core
             State.scene = SceneManager.GetActiveScene().name;
             State.position = Player.transform.position;
             State.difficulty = GameDifficultyManager.Current;
+            TheLastKnight.Inventory.InventoryManager.Instance?.SaveTo(State);
         }
 
         public void SetInputBlocked(bool blocked)

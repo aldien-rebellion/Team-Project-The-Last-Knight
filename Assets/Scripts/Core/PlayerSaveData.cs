@@ -1,8 +1,17 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TheLastKnight.Core
 {
+    [Serializable]
+    public class SavedItemData
+    {
+        public int slotIndex;
+        public string itemId;
+        public int count;
+    }
+
     [Serializable]
     public class PlayerSaveData
     {
@@ -20,6 +29,9 @@ namespace TheLastKnight.Core
         public bool[] runes = new bool[4];
         public bool churchKey, introSeen, victory;
         public GameDifficulty difficulty;
+        public bool inventoryInitialized;
+        public SavedItemData cursorItem;
+        public List<SavedItemData> inventory = new List<SavedItemData>();
         public PlayerSaveData Copy() => JsonUtility.FromJson<PlayerSaveData>(JsonUtility.ToJson(this));
     }
 }

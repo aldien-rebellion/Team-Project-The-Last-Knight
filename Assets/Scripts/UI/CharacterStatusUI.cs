@@ -10,6 +10,7 @@ using TheLastKnight.Stats;
 using TheLastKnight.Core;
 using TheLastKnight.Environment;
 using TheLastKnight.Audio;
+using TheLastKnight.Inventory;
 
 namespace TheLastKnight.UI
 {
@@ -62,13 +63,20 @@ namespace TheLastKnight.UI
         private TextMeshProUGUI _txtTooltipTitle;
         private TextMeshProUGUI _txtTooltipSubtitle;
         private TextMeshProUGUI _txtTooltipDesc;
+        private TextMeshProUGUI _txtTooltipHint;
 
         // Slots
-        private readonly List<InventorySlotUI> _inventorySlots = new List<InventorySlotUI>();
-        private readonly List<QuickSlotUI> _quickSlots = new List<QuickSlotUI>();
+        private readonly List<TheLastKnight.Inventory.InventorySlotUI> _gridSlotUIs = new List<TheLastKnight.Inventory.InventorySlotUI>();
+        private readonly List<TheLastKnight.Inventory.InventorySlotUI> _quickSlotUIs = new List<TheLastKnight.Inventory.InventorySlotUI>();
         private readonly List<SkillSlotUI> _skillSlots = new List<SkillSlotUI>();
 
+        // Floating Cursor Follower
+        private GameObject _cursorFollower;
+        private Image _cursorIcon;
+        private TextMeshProUGUI _cursorCount;
+
         private PlayerStats _cachedStats;
+        private InventoryManager _boundInventory;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoInitialize()
@@ -95,6 +103,8 @@ namespace TheLastKnight.UI
                 DontDestroyOnLoad(gameObject);
             }
             SceneManager.sceneLoaded += OnSceneLoaded;
+            _boundInventory = InventoryManager.Instance;
+            if (_boundInventory != null) _boundInventory.OnInventoryChanged += OnInventoryDataChanged;
             EnsureEventSystem();
             BuildUI();
             SetWindowVisible(false);
@@ -103,8 +113,17 @@ namespace TheLastKnight.UI
         private void OnDestroy()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            if (_boundInventory != null) _boundInventory.OnInventoryChanged -= OnInventoryDataChanged;
             SetHUDVisible(true);
             if (Instance == this) Instance = null;
+        }
+
+        private void OnInventoryDataChanged()
+        {
+            if (_isOpen)
+            {
+                Refresh(false);
+            }
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -171,6 +190,23 @@ namespace TheLastKnight.UI
             // Close with Escape if open
             if (_isOpen)
             {
+                UpdateCursorFollower();
+                UpdateTooltipPosition();
+
+                // Press Q while holding an item to drop it into the world (Ctrl+Q drops whole stack, Q drops 1)
+                if (keyboard.qKey.wasPressedThisFrame)
+                {
+                    var inv = InventoryManager.Instance;
+                    if (inv != null && inv.CursorHeldItem != null)
+                    {
+                        var p = GetPlayer();
+                        Vector3 dropPos = p != null ? p.transform.position : Vector3.zero;
+                        bool ctrlPressed = keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed;
+                        inv.DropCursorItemToWorld(!ctrlPressed, dropPos);
+                        AudioManager.Instance?.PlaySfx("click");
+                    }
+                }
+
                 if (keyboard.escapeKey.wasPressedThisFrame)
                 {
                     Close();
@@ -215,6 +251,8 @@ namespace TheLastKnight.UI
         {
             if (!_isOpen) return;
 
+            InventoryManager.Instance?.Close();
+
             _isOpen = false;
             SetWindowVisible(false);
             HideTooltip();
@@ -254,9 +292,13 @@ namespace TheLastKnight.UI
             {
                 _canvasObject.SetActive(visible);
             }
+            if (!visible)
+            {
+                HideTooltip();
+            }
         }
 
-        private PlayerStats GetPlayer()
+        public PlayerStats GetPlayer()
         {
             if (_cachedStats == null || !_cachedStats.gameObject.activeInHierarchy)
             {
@@ -325,9 +367,19 @@ namespace TheLastKnight.UI
                 {
                     module.AssignDefaultActions();
                 }
+
+                // Remapping the actions asset can leave pointer actions disabled
+                // while the module stays enabled. Keep UI input alive when paused.
+                module.point?.action?.Enable();
+                module.leftClick?.action?.Enable();
+                module.rightClick?.action?.Enable();
+                module.middleClick?.action?.Enable();
+                module.scrollWheel?.action?.Enable();
+                module.move?.action?.Enable();
+                module.submit?.action?.Enable();
+                module.cancel?.action?.Enable();
             }
         }
-
         private Vector2 ToUI(float px, float py)
         {
             // Exact 1:1 pixel mapping on 805x466 native resolution
@@ -355,8 +407,8 @@ namespace TheLastKnight.UI
             _raycaster = _canvasObject.GetComponent<GraphicRaycaster>();
             _canvasObject.transform.SetParent(transform, false);
 
-            // Semi-transparent Backdrop
-            var backdropGo = new GameObject("Backdrop", typeof(RectTransform), typeof(Image), typeof(Button));
+            // Semi-transparent Backdrop with Minecraft-style drop handler
+            var backdropGo = new GameObject("Backdrop", typeof(RectTransform), typeof(Image), typeof(TheLastKnight.Inventory.BackdropClickHandler));
             backdropGo.transform.SetParent(_canvasObject.transform, false);
             var backdropRect = backdropGo.GetComponent<RectTransform>();
             backdropRect.anchorMin = Vector2.zero;
@@ -365,8 +417,6 @@ namespace TheLastKnight.UI
 
             var backdropImg = backdropGo.GetComponent<Image>();
             backdropImg.color = new Color(0.015f, 0.02f, 0.035f, 0.78f);
-            var backdropBtn = backdropGo.GetComponent<Button>();
-            backdropBtn.onClick.AddListener(Close);
 
             // Main Window Container (Native 805x466 resolution)
             var winGo = new GameObject("Window", typeof(RectTransform), typeof(Image));
@@ -398,8 +448,82 @@ namespace TheLastKnight.UI
             // Close Button [X] at Top-Right (built after overlays to stay topmost)
             BuildCloseButton(_windowRect);
 
-            // Tooltip Box (Floating overlay at bottom center)
-            BuildTooltipBox(_windowRect);
+            // Floating Tooltip Box (follows cursor on Canvas)
+            BuildTooltipBox(_canvasObject.transform);
+
+            // Floating Cursor Item Follower (topmost on Canvas)
+            BuildCursorFollower(_canvasObject.transform);
+        }
+
+        private void BuildCursorFollower(Transform parent)
+        {
+            _cursorFollower = new GameObject("CursorFollower", typeof(RectTransform), typeof(CanvasGroup));
+            _cursorFollower.transform.SetParent(parent, false);
+            _cursorFollower.transform.SetAsLastSibling();
+
+            var cg = _cursorFollower.GetComponent<CanvasGroup>();
+            cg.blocksRaycasts = false;
+            cg.interactable = false;
+
+            var rt = _cursorFollower.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(38, 38);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+
+            var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+            iconGo.transform.SetParent(_cursorFollower.transform, false);
+            var iconRt = iconGo.GetComponent<RectTransform>();
+            iconRt.anchorMin = Vector2.zero; iconRt.anchorMax = Vector2.one;
+            iconRt.offsetMin = iconRt.offsetMax = Vector2.zero;
+            _cursorIcon = iconGo.GetComponent<Image>();
+            _cursorIcon.raycastTarget = false;
+            _cursorIcon.preserveAspect = true;
+
+            _cursorCount = CreateText(_cursorFollower.transform, "Count", "", 11, TextAlignmentOptions.BottomRight,
+                new Color(1f, 0.95f, 0.5f), FontStyles.Bold);
+            var cRt = _cursorCount.rectTransform;
+            cRt.anchorMin = Vector2.zero; cRt.anchorMax = Vector2.one;
+            cRt.offsetMin = Vector2.zero;
+            cRt.offsetMax = new Vector2(-2, 2);
+
+            _cursorFollower.SetActive(false);
+        }
+
+        private void UpdateCursorFollower()
+        {
+            var inv = TheLastKnight.Inventory.InventoryManager.Instance;
+            if (inv != null && inv.CursorHeldItem != null && inv.CursorHeldItem.count > 0)
+            {
+                if (_cursorFollower != null)
+                {
+                    if (!_cursorFollower.activeSelf) _cursorFollower.SetActive(true);
+                    if (_cursorIcon != null && _cursorIcon.sprite != inv.CursorHeldItem.Icon)
+                    {
+                        _cursorIcon.sprite = inv.CursorHeldItem.Icon;
+                        _cursorIcon.color = Color.white;
+                    }
+                    if (_cursorCount != null)
+                    {
+                        _cursorCount.text = inv.CursorHeldItem.count > 1 ? inv.CursorHeldItem.count.ToString() : "";
+                    }
+
+                    Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)UnityEngine.Input.mousePosition;
+                    if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                        _canvasObject.GetComponent<RectTransform>(),
+                        mousePos,
+                        null,
+                        out Vector2 localPoint))
+                    {
+                        _cursorFollower.GetComponent<RectTransform>().anchoredPosition = localPoint;
+                    }
+                }
+            }
+            else
+            {
+                if (_cursorFollower != null && _cursorFollower.activeSelf)
+                {
+                    _cursorFollower.SetActive(false);
+                }
+            }
         }
 
         private void BuildCloseButton(RectTransform parent)
@@ -502,7 +626,7 @@ namespace TheLastKnight.UI
             for (int i = 0; i < 5; i++)
             {
                 int index = i;
-                var qGo = new GameObject($"QuickSlot_{i + 1}", typeof(RectTransform), typeof(Image), typeof(Button));
+                var qGo = new GameObject($"QuickSlot_{i + 1}", typeof(RectTransform), typeof(Image));
                 qGo.transform.SetParent(parent, false);
                 var rt = qGo.GetComponent<RectTransform>();
                 rt.anchoredPosition = ToUI(quickXs[i], 68);
@@ -510,16 +634,22 @@ namespace TheLastKnight.UI
 
                 var bgImg = qGo.GetComponent<Image>();
                 bgImg.color = new Color(1f, 1f, 1f, 0.005f);
+                bgImg.raycastTarget = true;
 
-                // Highlight overlay on hover
-                var hlGo = new GameObject("Highlight", typeof(RectTransform), typeof(Image));
+                // Highlight overlay on hover (topmost, golden border + white sheen)
+                var hlGo = new GameObject("Highlight", typeof(RectTransform), typeof(Image), typeof(Outline));
                 hlGo.transform.SetParent(qGo.transform, false);
                 var hlRt = hlGo.GetComponent<RectTransform>();
                 hlRt.anchorMin = Vector2.zero; hlRt.anchorMax = Vector2.one;
-                hlRt.offsetMin = hlRt.offsetMax = Vector2.zero;
+                hlRt.offsetMin = Vector2.zero; hlRt.offsetMax = Vector2.zero;
                 var hlImg = hlGo.GetComponent<Image>();
-                hlImg.color = new Color(1f, 0.88f, 0.4f, 0f);
+                hlImg.color = new Color(1f, 1f, 1f, 0f);
                 hlImg.raycastTarget = false;
+
+                var hlOutline = hlGo.GetComponent<Outline>();
+                hlOutline.effectColor = new Color(1f, 0.88f, 0.35f, 0.95f);
+                hlOutline.effectDistance = new Vector2(1.5f, -1.5f);
+                hlOutline.enabled = false;
 
                 // Priority number badge (1-5) at bottom-right
                 var numTxt = CreateText(qGo.transform, "PriorityNumber", (i + 1).ToString(), 11, TextAlignmentOptions.BottomRight,
@@ -540,7 +670,7 @@ namespace TheLastKnight.UI
                 iconImg.preserveAspect = true;
                 iconImg.color = new Color(1f, 1f, 1f, 0f);
 
-                // Count text (e.g. 3/5)
+                // Count text (e.g. 64)
                 var countTxt = CreateText(qGo.transform, "Count", "", 10, TextAlignmentOptions.TopRight,
                     new Color(1f, 0.92f, 0.5f), FontStyles.Bold);
                 var ctRt = countTxt.rectTransform;
@@ -548,23 +678,18 @@ namespace TheLastKnight.UI
                 ctRt.offsetMin = Vector2.zero;
                 ctRt.offsetMax = new Vector2(-2, -2);
 
-                var btn = qGo.GetComponent<Button>();
-                btn.targetGraphic = bgImg;
-                btn.onClick.AddListener(() => OnQuickItemClicked(index));
+                // Ensure highlight renders on top of icon and text
+                hlGo.transform.SetAsLastSibling();
 
-                AddHoverHighlight(qGo, hlImg, 0f, 0.25f);
-                AddHoverTrigger(qGo,
-                    () => ShowQuickSlotTooltip(index),
-                    HideTooltip);
+                var slotUI = qGo.AddComponent<TheLastKnight.Inventory.InventorySlotUI>();
+                slotUI.slotType = TheLastKnight.Inventory.SlotType.QuickSlot;
+                slotUI.slotIndex = index;
+                slotUI.iconImage = iconImg;
+                slotUI.countText = countTxt;
+                slotUI.highlightImage = hlImg;
+                slotUI.highlightOutline = hlOutline;
 
-                _quickSlots.Add(new QuickSlotUI
-                {
-                    slotIndex = i + 1,
-                    button = btn,
-                    icon = iconImg,
-                    countText = countTxt,
-                    numberText = numTxt
-                });
+                _quickSlotUIs.Add(slotUI);
             }
         }
 
@@ -688,14 +813,12 @@ namespace TheLastKnight.UI
             float[] rowYs = { 262.5f, 219.5f, 176.5f, 133.5f, 90.5f, 47.5f };
             Vector2 slotSize = new Vector2(38f, 39f);
 
-            var items = GetInitialInventoryData();
-
             for (int r = 0; r < 6; r++)
             {
                 for (int c = 0; c < 4; c++)
                 {
                     int index = r * 4 + c;
-                    var slotGo = new GameObject($"InvSlot_{index + 1}", typeof(RectTransform), typeof(Image), typeof(Button));
+                    var slotGo = new GameObject($"InvSlot_{index + 1}", typeof(RectTransform), typeof(Image));
                     slotGo.transform.SetParent(parent, false);
                     var rt = slotGo.GetComponent<RectTransform>();
                     rt.anchoredPosition = ToUI(colXs[c], rowYs[r]);
@@ -704,16 +827,22 @@ namespace TheLastKnight.UI
                     // Invisible click/raycast target
                     var bgImg = slotGo.GetComponent<Image>();
                     bgImg.color = new Color(1f, 1f, 1f, 0.005f);
+                    bgImg.raycastTarget = true;
 
-                    // Child: Highlight image (golden highlight perfectly aligned to slot borders)
-                    var hlGo = new GameObject("Highlight", typeof(RectTransform), typeof(Image));
+                    // Child: Highlight image (golden highlight + outline overlay on hover)
+                    var hlGo = new GameObject("Highlight", typeof(RectTransform), typeof(Image), typeof(Outline));
                     hlGo.transform.SetParent(slotGo.transform, false);
                     var hlRt = hlGo.GetComponent<RectTransform>();
                     hlRt.anchorMin = Vector2.zero; hlRt.anchorMax = Vector2.one;
                     hlRt.offsetMin = Vector2.zero; hlRt.offsetMax = Vector2.zero;
                     var hlImg = hlGo.GetComponent<Image>();
-                    hlImg.color = new Color(1f, 0.88f, 0.4f, 0f);
+                    hlImg.color = new Color(1f, 1f, 1f, 0f);
                     hlImg.raycastTarget = false;
+
+                    var hlOutline = hlGo.GetComponent<Outline>();
+                    hlOutline.effectColor = new Color(1f, 0.88f, 0.35f, 0.95f);
+                    hlOutline.effectDistance = new Vector2(1.5f, -1.5f);
+                    hlOutline.enabled = false;
 
                     // Child: Item Icon (shown only when item is present)
                     var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
@@ -724,76 +853,87 @@ namespace TheLastKnight.UI
                     var iconImg = iconGo.GetComponent<Image>();
                     iconImg.raycastTarget = false;
                     iconImg.preserveAspect = true;
+                    iconImg.color = new Color(1f, 1f, 1f, 0f);
 
-                    var item = (index < items.Count) ? items[index] : null;
-                    if (item != null && item.icon != null)
-                    {
-                        iconImg.sprite = item.icon;
-                        iconImg.color = Color.white;
-                    }
-                    else
-                    {
-                        iconImg.sprite = null;
-                        iconImg.color = new Color(1f, 1f, 1f, 0f);
-                    }
+                    // Child: Stack Count text at bottom-right
+                    var countTxt = CreateText(slotGo.transform, "Count", "", 10, TextAlignmentOptions.BottomRight,
+                        new Color(1f, 0.95f, 0.5f), FontStyles.Bold);
+                    var ctRt = countTxt.rectTransform;
+                    ctRt.anchorMin = Vector2.zero; ctRt.anchorMax = Vector2.one;
+                    ctRt.offsetMin = Vector2.zero;
+                    ctRt.offsetMax = new Vector2(-2, 2);
 
-                    var btn = slotGo.GetComponent<Button>();
-                    btn.targetGraphic = bgImg;
+                    // Ensure highlight overlay renders on top of icon and text
+                    hlGo.transform.SetAsLastSibling();
 
-                    var slotData = new InventorySlotUI
-                    {
-                        index = index,
-                        button = btn,
-                        icon = iconImg,
-                        item = item
-                    };
+                    var slotUI = slotGo.AddComponent<TheLastKnight.Inventory.InventorySlotUI>();
+                    slotUI.slotType = TheLastKnight.Inventory.SlotType.Inventory;
+                    slotUI.slotIndex = index;
+                    slotUI.iconImage = iconImg;
+                    slotUI.countText = countTxt;
+                    slotUI.highlightImage = hlImg;
+                    slotUI.highlightOutline = hlOutline;
 
-                    btn.onClick.AddListener(() => OnInventorySlotClicked(slotData));
-
-                    AddHoverHighlight(slotGo, hlImg, 0f, 0.25f);
-                    AddHoverTrigger(slotGo,
-                        () =>
-                        {
-                            if (slotData.item != null)
-                            {
-                                ShowTooltip(slotData.item.name, slotData.item.typeName, slotData.item.description);
-                            }
-                        },
-                        HideTooltip);
-
-                    _inventorySlots.Add(slotData);
+                    _gridSlotUIs.Add(slotUI);
                 }
             }
         }
 
-        private void BuildTooltipBox(RectTransform parent)
+        private void BuildTooltipBox(Transform parent)
         {
-            _tooltipBox = new GameObject("Tooltip_Box", typeof(RectTransform), typeof(Image));
+            _tooltipBox = new GameObject("Tooltip_Box", typeof(RectTransform), typeof(Image), typeof(Outline), typeof(CanvasGroup), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
             _tooltipBox.transform.SetParent(parent, false);
+            _tooltipBox.transform.SetAsLastSibling();
+
+            var cg = _tooltipBox.GetComponent<CanvasGroup>();
+            cg.blocksRaycasts = false;
+            cg.interactable = false;
+
             var rt = _tooltipBox.GetComponent<RectTransform>();
-            rt.anchoredPosition = ToUI(435, 18);
-            rt.sizeDelta = new Vector2(340, 48);
+            rt.pivot = new Vector2(0f, 1f);
+            rt.sizeDelta = new Vector2(240f, 0f);
 
             var img = _tooltipBox.GetComponent<Image>();
-            img.color = new Color(0.08f, 0.05f, 0.03f, 0.95f);
+            img.color = new Color(0.06f, 0.045f, 0.035f, 0.96f);
+            img.raycastTarget = false;
 
-            _txtTooltipTitle = CreateText(_tooltipBox.transform, "Title", "", 13, TextAlignmentOptions.MidlineLeft,
-                new Color(1f, 0.85f, 0.45f), FontStyles.Bold);
-            var tRt = _txtTooltipTitle.rectTransform;
-            tRt.anchorMin = new Vector2(0.03f, 0.5f); tRt.anchorMax = new Vector2(0.6f, 1f);
-            tRt.offsetMin = tRt.offsetMax = Vector2.zero;
+            var outline = _tooltipBox.GetComponent<Outline>();
+            outline.effectColor = new Color(0.65f, 0.52f, 0.28f, 0.95f);
+            outline.effectDistance = new Vector2(1.5f, -1.5f);
 
-            _txtTooltipSubtitle = CreateText(_tooltipBox.transform, "Subtitle", "", 11, TextAlignmentOptions.MidlineRight,
-                new Color(0.55f, 0.80f, 1f), FontStyles.Italic);
-            var sRt = _txtTooltipSubtitle.rectTransform;
-            sRt.anchorMin = new Vector2(0.6f, 0.5f); sRt.anchorMax = new Vector2(0.97f, 1f);
-            sRt.offsetMin = sRt.offsetMax = Vector2.zero;
+            var vlg = _tooltipBox.GetComponent<VerticalLayoutGroup>();
+            vlg.padding = new RectOffset(10, 10, 8, 8);
+            vlg.spacing = 3;
+            vlg.childControlWidth = true;
+            vlg.childControlHeight = true;
+            vlg.childForceExpandWidth = true;
+            vlg.childForceExpandHeight = false;
 
-            _txtTooltipDesc = CreateText(_tooltipBox.transform, "Desc", "", 11, TextAlignmentOptions.MidlineLeft,
+            var csf = _tooltipBox.GetComponent<ContentSizeFitter>();
+            csf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            _txtTooltipTitle = CreateText(_tooltipBox.transform, "Title", "", 13, TextAlignmentOptions.TopLeft,
+                new Color(1f, 0.88f, 0.45f), FontStyles.Bold);
+
+            _txtTooltipSubtitle = CreateText(_tooltipBox.transform, "Subtitle", "", 10.5f, TextAlignmentOptions.TopLeft,
+                new Color(0.55f, 0.82f, 1f), FontStyles.Italic);
+
+            // Separator Line
+            var sepGo = new GameObject("Separator", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+            sepGo.transform.SetParent(_tooltipBox.transform, false);
+            var sepImg = sepGo.GetComponent<Image>();
+            sepImg.color = new Color(0.5f, 0.4f, 0.25f, 0.5f);
+            sepImg.raycastTarget = false;
+            var sepLe = sepGo.GetComponent<LayoutElement>();
+            sepLe.minHeight = 1f;
+            sepLe.preferredHeight = 1f;
+
+            _txtTooltipDesc = CreateText(_tooltipBox.transform, "Desc", "", 11, TextAlignmentOptions.TopLeft,
                 new Color(0.92f, 0.92f, 0.92f), FontStyles.Normal);
-            var dRt = _txtTooltipDesc.rectTransform;
-            dRt.anchorMin = new Vector2(0.03f, 0f); dRt.anchorMax = new Vector2(0.97f, 0.55f);
-            dRt.offsetMin = dRt.offsetMax = Vector2.zero;
+
+            _txtTooltipHint = CreateText(_tooltipBox.transform, "Hint", "", 9.5f, TextAlignmentOptions.TopLeft,
+                new Color(0.85f, 0.85f, 0.85f), FontStyles.Normal);
 
             _tooltipBox.SetActive(false);
         }
@@ -842,20 +982,82 @@ namespace TheLastKnight.UI
         #endregion
 
         #region Tooltip
-        public void ShowTooltip(string title, string subtitle, string description)
+        public void ShowTooltip(string title, string subtitle, string description, string hint = null)
         {
             if (_tooltipBox == null) return;
+
+            if (_txtTooltipTitle != null) _txtTooltipTitle.text = title ?? "";
+
+            if (_txtTooltipSubtitle != null)
+            {
+                bool hasSub = !string.IsNullOrEmpty(subtitle);
+                _txtTooltipSubtitle.gameObject.SetActive(hasSub);
+                if (hasSub) _txtTooltipSubtitle.text = subtitle;
+            }
+
+            if (_txtTooltipDesc != null)
+            {
+                bool hasDesc = !string.IsNullOrEmpty(description);
+                _txtTooltipDesc.gameObject.SetActive(hasDesc);
+                if (hasDesc) _txtTooltipDesc.text = description;
+            }
+
+            if (_txtTooltipHint != null)
+            {
+                bool hasHint = !string.IsNullOrEmpty(hint);
+                _txtTooltipHint.gameObject.SetActive(hasHint);
+                if (hasHint) _txtTooltipHint.text = hint;
+            }
+
             _tooltipBox.SetActive(true);
-            if (_txtTooltipTitle != null) _txtTooltipTitle.text = title;
-            if (_txtTooltipSubtitle != null) _txtTooltipSubtitle.text = subtitle;
-            if (_txtTooltipDesc != null) _txtTooltipDesc.text = description;
+            _tooltipBox.transform.SetAsLastSibling();
+
+            var rt = _tooltipBox.GetComponent<RectTransform>();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
+            UpdateTooltipPosition();
         }
 
         public void HideTooltip()
         {
-            if (_tooltipBox != null)
+            if (_tooltipBox != null && _tooltipBox.activeSelf)
             {
                 _tooltipBox.SetActive(false);
+            }
+        }
+
+        private void UpdateTooltipPosition()
+        {
+            if (_tooltipBox == null || !_tooltipBox.activeSelf || _canvasObject == null) return;
+
+            Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)UnityEngine.Input.mousePosition;
+            var canvasRt = _canvasObject.GetComponent<RectTransform>();
+            if (canvasRt == null) return;
+
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, mousePos, null, out Vector2 localPoint))
+            {
+                var tooltipRt = _tooltipBox.GetComponent<RectTransform>();
+                float tipW = tooltipRt.rect.width > 0 ? tooltipRt.rect.width : 240f;
+                float tipH = tooltipRt.rect.height > 0 ? tooltipRt.rect.height : 100f;
+
+                float canvasHalfW = canvasRt.rect.width * 0.5f;
+                float canvasHalfH = canvasRt.rect.height * 0.5f;
+
+                float posX = localPoint.x + 16f;
+                float posY = localPoint.y - 12f;
+
+                // If spilling past right edge, flip to left of cursor
+                if (posX + tipW > canvasHalfW - 10f)
+                {
+                    posX = localPoint.x - tipW - 12f;
+                }
+
+                // If spilling past bottom edge, flip above cursor
+                if (posY - tipH < -canvasHalfH + 10f)
+                {
+                    posY = localPoint.y + tipH + 12f;
+                }
+
+                tooltipRt.anchoredPosition = new Vector2(posX, posY);
             }
         }
         #endregion
@@ -910,123 +1112,7 @@ namespace TheLastKnight.UI
             }
         }
 
-        private void ShowQuickSlotTooltip(int index)
-        {
-            var qm = TheLastKnight.Core.QuickItemManager.Instance;
-            var item = qm != null ? qm.GetSlot(index) : null;
 
-            if (item != null && item.count > 0)
-            {
-                string subtitle = index == 0 ? $"{item.typeName} [Ready for Q]" : $"{item.typeName} [Priority {index + 1}]";
-                ShowTooltip(item.name, subtitle, item.description);
-            }
-            else
-            {
-                ShowTooltip($"Quick Slot {index + 1} (Empty)", $"Priority {index + 1}",
-                    index == 0
-                        ? "Currently active quick slot [Q]. No item ready. When items are acquired, they will be placed here."
-                        : "Empty queue slot. When items in earlier slots are exhausted, items in later slots advance forward automatically.");
-            }
-        }
-
-        private void OnQuickItemClicked(int index)
-        {
-            var player = GetPlayer();
-            if (player == null) return;
-
-            var qm = TheLastKnight.Core.QuickItemManager.Instance;
-            var item = qm != null ? qm.GetSlot(index) : null;
-
-            if (item == null || item.count <= 0)
-            {
-                ShowTooltip($"Quick Slot {index + 1} Empty", $"Priority {index + 1}", "This slot is currently empty.");
-                AudioManager.Instance?.PlaySfx("click");
-                return;
-            }
-
-            if (item.id == "potion_heal")
-            {
-                if (player.HealingPotions > 0 && player.CurrentHP < player.MaxHP)
-                {
-                    player.CompletePotionDrink();
-                    AudioManager.Instance?.PlaySfx("click");
-                    GameManager.Instance?.Capture();
-                    Refresh(true);
-                    ShowTooltip("Healing Potion Consumed", "Recovery", "Restored 50 HP. Potions remaining: " + player.HealingPotions);
-                }
-                else if (player.HealingPotions <= 0)
-                {
-                    ShowTooltip("Healing Potion Empty", "Warning", "No healing potions left!");
-                }
-                else
-                {
-                    ShowTooltip("Full Health", "Notice", "Arthur is already at maximum health.");
-                }
-            }
-            else
-            {
-                qm.UseSlot(index, player);
-                AudioManager.Instance?.PlaySfx("click");
-                GameManager.Instance?.Capture();
-                Refresh(true);
-            }
-        }
-
-        private void OnInventorySlotClicked(InventorySlotUI slot)
-        {
-            if (slot.item == null) return;
-            var player = GetPlayer();
-            if (player == null) return;
-
-            if (slot.item.isConsumable)
-            {
-                var qm = TheLastKnight.Core.QuickItemManager.Instance;
-                if (qm != null)
-                {
-                    int emptyIdx = -1;
-                    for (int i = 0; i < TheLastKnight.Core.QuickItemManager.MaxSlots; i++)
-                    {
-                        if (qm.GetSlot(i) == null) { emptyIdx = i; break; }
-                    }
-
-                    if (emptyIdx != -1)
-                    {
-                        qm.SetSlot(emptyIdx, new TheLastKnight.Core.QuickItemSlotData
-                        {
-                            id = slot.item.id,
-                            name = slot.item.name,
-                            typeName = slot.item.typeName,
-                            description = slot.item.description,
-                            icon = slot.item.icon,
-                            count = slot.item.count,
-                            maxCount = 99,
-                            onUse = slot.item.onUse
-                        });
-                        string itemName = slot.item.name;
-                        slot.item = null;
-                        slot.icon.sprite = null;
-                        slot.icon.color = new Color(1f, 1f, 1f, 0f);
-                        AudioManager.Instance?.PlaySfx("click");
-                        Refresh(true);
-                        ShowTooltip("Assigned to Quick Slot", $"Priority {emptyIdx + 1}", $"{itemName} placed in Quick Slot {emptyIdx + 1}.");
-                        return;
-                    }
-                }
-            }
-
-            if (slot.item.onUse != null)
-            {
-                slot.item.onUse.Invoke(player);
-                AudioManager.Instance?.PlaySfx("click");
-                GameManager.Instance?.Capture();
-                Refresh(true);
-            }
-            else
-            {
-                ShowTooltip(slot.item.name, slot.item.typeName, slot.item.description);
-                AudioManager.Instance?.PlaySfx("click");
-            }
-        }
 
         public void Refresh(bool fullSync = true)
         {
@@ -1085,116 +1171,44 @@ namespace TheLastKnight.UI
             if (_btnDexPlus != null) _btnDexPlus.interactable = true;
             if (_btnDexMax != null) _btnDexMax.interactable = true;
 
-            // Sync Quick items (1-5 Priority Queue)
-            var qm = TheLastKnight.Core.QuickItemManager.Instance;
-            if (qm != null && player != null)
+            // Refresh Inventory & Quick Slots from InventoryManager
+            var inv = TheLastKnight.Inventory.InventoryManager.Instance;
+            if (inv != null)
             {
-                qm.SyncItemCount("potion_heal", player.HealingPotions);
-            }
-
-            for (int i = 0; i < _quickSlots.Count; i++)
-            {
-                var slotUI = _quickSlots[i];
-                var item = qm != null ? qm.GetSlot(i) : null;
-
-                if (item != null && item.count > 0)
+                for (int i = 0; i < _gridSlotUIs.Count; i++)
                 {
-                    if (slotUI.icon != null)
-                    {
-                        slotUI.icon.sprite = item.icon;
-                        slotUI.icon.color = Color.white;
-                    }
-                    if (slotUI.countText != null)
-                    {
-                        slotUI.countText.text = item.maxCount > 1 ? $"{item.count}/{item.maxCount}" : $"{item.count}";
-                    }
+                    var item = inv.GetSlot(TheLastKnight.Inventory.SlotType.Inventory, i);
+                    _gridSlotUIs[i].UpdateDisplay(item);
                 }
-                else
+
+                for (int i = 0; i < _quickSlotUIs.Count; i++)
                 {
-                    if (slotUI.icon != null)
-                    {
-                        slotUI.icon.sprite = null;
-                        slotUI.icon.color = new Color(1f, 1f, 1f, 0f);
-                    }
-                    if (slotUI.countText != null)
-                    {
-                        slotUI.countText.text = "";
-                    }
+                    var item = inv.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, i);
+                    _quickSlotUIs[i].UpdateDisplay(item);
                 }
             }
         }
 
-        private List<InventoryItemData> GetInitialInventoryData()
+        public void AddInventoryItem(TheLastKnight.Inventory.InventoryItemData newItem)
         {
-            // Arthur starts with an empty inventory.
-            // Items can be added dynamically via AddInventoryItem().
-            return new List<InventoryItemData>();
-        }
-
-        public void AddInventoryItem(InventoryItemData newItem)
-        {
-            if (newItem == null) return;
-            for (int i = 0; i < _inventorySlots.Count; i++)
-            {
-                if (_inventorySlots[i].item == null)
-                {
-                    _inventorySlots[i].item = newItem;
-                    if (_inventorySlots[i].icon != null)
-                    {
-                        _inventorySlots[i].icon.sprite = newItem.icon;
-                        _inventorySlots[i].icon.color = Color.white;
-                    }
-                    break;
-                }
-            }
+            TheLastKnight.Inventory.InventoryManager.Instance?.AddItem(newItem);
+            Refresh(false);
         }
 
         public void ClearInventory()
         {
-            for (int i = 0; i < _inventorySlots.Count; i++)
+            if (TheLastKnight.Inventory.InventoryManager.Instance != null)
             {
-                _inventorySlots[i].item = null;
-                if (_inventorySlots[i].icon != null)
+                for (int i = 0; i < TheLastKnight.Inventory.InventoryManager.InventorySlotCount; i++)
                 {
-                    _inventorySlots[i].icon.sprite = null;
-                    _inventorySlots[i].icon.color = new Color(1f, 1f, 1f, 0f);
+                    TheLastKnight.Inventory.InventoryManager.Instance.SetSlot(TheLastKnight.Inventory.SlotType.Inventory, i, null);
                 }
             }
+            Refresh(false);
         }
         #endregion
 
         #region Helper Classes
-        public class InventoryItemData
-        {
-            public string id;
-            public string name;
-            public string typeName;
-            public string description;
-            public Sprite icon;
-            public int count = 1;
-            public bool isConsumable;
-            public Action<PlayerStats> onUse;
-        }
-
-        private class InventorySlotUI
-        {
-            public int index;
-            public Button button;
-            public Image icon;
-            public InventoryItemData item;
-        }
-
-        private class QuickSlotUI
-        {
-            public int slotIndex;
-            public Button button;
-            public Image icon;
-            public TextMeshProUGUI countText;
-            public TextMeshProUGUI numberText;
-            public string title;
-            public string description;
-        }
-
         private class SkillSlotUI
         {
             public Button button;

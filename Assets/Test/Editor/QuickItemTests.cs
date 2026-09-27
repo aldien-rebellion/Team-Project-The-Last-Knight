@@ -3,156 +3,311 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 namespace TheLastKnight.Tests
 {
     public class QuickItemTests
     {
-        private GameObject _holder;
-        private Component _manager;
-        private Type _managerType;
-        private Type _slotDataType;
-
+        private GameObject _inventoryObject, _quickObject;
+        private Component _inventory, _quick;
+        private Type _registry, _slotType, _saveType;
+        private object Bag => Enum.Parse(_slotType, "Inventory");
+        private object Quick => Enum.Parse(_slotType, "QuickSlot");
         private static Type RuntimeType(string name) => AppDomain.CurrentDomain.GetAssemblies()
-            .Select(a => a.GetType(name)).FirstOrDefault(t => t != null);
+            .Select(a => a.GetType(name)).First(t => t != null);
+        private static object Call(object target, string method, params object[] args) =>
+            target.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Invoke(target, args);
+        private static object Field(object target, string name) => target.GetType().GetField(name).GetValue(target);
+        private object Item(string id, int count) => _registry.GetMethod("CreateItem").Invoke(null, new object[] { id, count });
+        private object Slot(object type, int index) => Call(_inventory, "GetSlot", type, index);
+        private int Count(object item) => item == null ? 0 : (int)Field(item, "count");
+        private object Held => _inventory.GetType().GetProperty("CursorHeldItem").GetValue(_inventory);
+        private void Set(object type, int index, string id, int count) => Call(_inventory, "SetSlot", type, index, Item(id, count));
+        private void Left(object type, int index, bool shift = false) => Call(_inventory, "HandleLeftClick", type, index, shift, null);
+        private void Right(object type, int index) => Call(_inventory, "HandleRightClick", type, index, null);
 
         [SetUp]
         public void SetUp()
         {
-            _managerType = RuntimeType("TheLastKnight.Core.QuickItemManager");
-            _slotDataType = RuntimeType("TheLastKnight.Core.QuickItemSlotData");
-            Assert.That(_managerType, Is.Not.Null, "QuickItemManager type must exist");
-            Assert.That(_slotDataType, Is.Not.Null, "QuickItemSlotData type must exist");
-
-            _holder = new GameObject("Test_QuickItemManager");
-            _manager = _holder.AddComponent(_managerType);
-            _managerType.GetMethod("InitializeDefaultSlots")?.Invoke(_manager, null);
+            _registry = RuntimeType("TheLastKnight.Inventory.ItemRegistry");
+            _slotType = RuntimeType("TheLastKnight.Inventory.SlotType");
+            _saveType = RuntimeType("TheLastKnight.Core.PlayerSaveData");
+            _inventoryObject = new GameObject("Test_Inventory");
+            _inventory = _inventoryObject.AddComponent(RuntimeType("TheLastKnight.Inventory.InventoryManager"));
+            Call(_inventory, "Awake");
+            _quickObject = new GameObject("Test_QuickItems");
+            _quick = _quickObject.AddComponent(RuntimeType("TheLastKnight.Core.QuickItemManager"));
+            Call(_quick, "Awake");
         }
-
         [TearDown]
         public void TearDown()
         {
-            if (_holder != null)
+            UnityEngine.Object.DestroyImmediate(_quickObject);
+            UnityEngine.Object.DestroyImmediate(_inventoryObject);
+        }
+
+        [UnityEngine.TestTools.UnityTest]
+        public System.Collections.IEnumerator RealWindow_InputModule_DragAndClickMovePotions()
+        {
+            return (System.Collections.IEnumerator)RuntimeType("InventoryPointerCheck").GetMethod("Run").Invoke(null, null);
+        }
+        [UnityEngine.TestTools.UnityTest]
+        public System.Collections.IEnumerator PointerDrag_QuickPotionToBag_UsesRaycastTargetAndConservesStack()
+        {
+
+            var cameraObject = new GameObject("Test_DragCamera", typeof(Camera));
+            var camera = cameraObject.GetComponent<Camera>();
+            camera.transform.position = new Vector3(0, 0, -10);
+            camera.orthographic = true;
+            camera.enabled = false;
+            var renderTexture = new RenderTexture(1280, 720, 24);
+            camera.targetTexture = renderTexture;
+            var canvasObject = new GameObject("Test_DragCanvas", typeof(Canvas), typeof(GraphicRaycaster));
+            var eventObject = new GameObject("Test_DragEvents", typeof(EventSystem));
+            try
             {
-                UnityEngine.Object.DestroyImmediate(_holder);
+                var canvas = canvasObject.GetComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                canvas.worldCamera = camera;
+                canvas.planeDistance = 1f;
+                canvas.sortingOrder = 30000;
+                var slotUiType = RuntimeType("TheLastKnight.Inventory.InventorySlotUI");
+                var source = new GameObject("Source", typeof(RectTransform), typeof(Image));
+                var target = new GameObject("Target", typeof(RectTransform), typeof(Image));
+                source.transform.SetParent(canvasObject.transform, false);
+                target.transform.SetParent(canvasObject.transform, false);
+                ((RectTransform)source.transform).anchoredPosition = new Vector2(-100, 0);
+                ((RectTransform)target.transform).anchoredPosition = new Vector2(100, 0);
+                var sourceUi = source.AddComponent(slotUiType);
+                var targetUi = target.AddComponent(slotUiType);
+                slotUiType.GetField("slotType").SetValue(sourceUi, Quick);
+                slotUiType.GetField("slotType").SetValue(targetUi, Bag);
+
+                Canvas.ForceUpdateCanvases();
+                yield return null;
+                Canvas.ForceUpdateCanvases();
+                camera.Render();
+                var data = new PointerEventData(eventObject.GetComponent<EventSystem>())
+                {
+                    button = PointerEventData.InputButton.Left,
+                    position = RectTransformUtility.WorldToScreenPoint(camera, target.transform.position),
+                    eligibleForClick = true
+                };
+                Assert.That(ExecuteEvents.GetEventHandler<IDragHandler>(source), Is.EqualTo(source));
+                ExecuteEvents.Execute(source, data, ExecuteEvents.beginDragHandler);
+                Assert.That(Slot(Quick, 0), Is.Null);
+                Assert.That(Count(Held), Is.EqualTo(3));
+                ExecuteEvents.Execute(source, data, ExecuteEvents.dragHandler);
+                var hits = new List<RaycastResult>();
+                canvasObject.GetComponent<GraphicRaycaster>().Raycast(data, hits);
+                Assert.That(hits.Count, Is.GreaterThan(0), "depth=" + target.GetComponent<Image>().depth + " screen=" + data.position + " rect=" + ((RectTransform)target.transform).rect);
+                Assert.That(hits[0].gameObject, Is.EqualTo(target));
+                data.pointerCurrentRaycast = hits[0];
+                ExecuteEvents.Execute(source, data, ExecuteEvents.endDragHandler);
+                Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(3));
+                Assert.That(Count(Held), Is.EqualTo(0));
+                Assert.That(data.eligibleForClick, Is.False);
+                Set(Quick, 0, "potion_heal", 3);
+                Set(Bag, 0, "potion_heal", 64);
+                ExecuteEvents.Execute(source, data, ExecuteEvents.beginDragHandler);
+                ExecuteEvents.Execute(source, data, ExecuteEvents.endDragHandler);
+                Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(64));
+                Assert.That(Count(Held), Is.EqualTo(3));
+                ExecuteEvents.Execute(source, data, ExecuteEvents.pointerClickHandler);
+                Assert.That(Count(Slot(Quick, 0)), Is.EqualTo(3));
+                Assert.That(Held, Is.Null);
+            }
+            finally
+            {
+                camera.targetTexture = null;
+                renderTexture.Release();
+                UnityEngine.Object.DestroyImmediate(renderTexture);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+                UnityEngine.Object.DestroyImmediate(canvasObject);
+                UnityEngine.Object.DestroyImmediate(eventObject);
             }
         }
-
-        private object GetSlot(int index)
-        {
-            return _managerType.GetMethod("GetSlot")?.Invoke(_manager, new object[] { index });
-        }
-
-        private void SetSlot(int index, object item)
-        {
-            _managerType.GetMethod("SetSlot")?.Invoke(_manager, new object[] { index, item });
-        }
-
-        private void SyncItemCount(string itemId, int count)
-        {
-            _managerType.GetMethod("SyncItemCount")?.Invoke(_manager, new object[] { itemId, count });
-        }
-
-        private void ShiftQueue()
-        {
-            _managerType.GetMethod("ShiftQueue")?.Invoke(_manager, null);
-        }
-
-        private object CreateSlotData(string id, string name, int count, int maxCount)
-        {
-            var data = Activator.CreateInstance(_slotDataType);
-            _slotDataType.GetField("id")?.SetValue(data, id);
-            _slotDataType.GetField("name")?.SetValue(data, name);
-            _slotDataType.GetField("count")?.SetValue(data, count);
-            _slotDataType.GetField("maxCount")?.SetValue(data, maxCount);
-            return data;
-        }
-
-        private object GetFieldValue(object obj, string field)
-        {
-            return _slotDataType.GetField(field)?.GetValue(obj);
-        }
-
         [Test]
-        public void QuickItemManager_Initializes_WithHealingPotionInSlot1_AndSlots2To5Empty()
+        public void DefaultInventory_IsEmpty_WithThreePotionsAndStackLimit64()
         {
-            var slot1 = GetSlot(0);
-            Assert.That(slot1, Is.Not.Null, "Slot 1 (Index 0) should contain the default healing potion.");
-            Assert.That(GetFieldValue(slot1, "id"), Is.EqualTo("potion_heal"));
-            Assert.That(GetFieldValue(slot1, "count"), Is.EqualTo(3));
-            Assert.That(GetFieldValue(slot1, "maxCount"), Is.EqualTo(5));
-
-            for (int i = 1; i < 5; i++)
+            for (int i = 0; i < 24; i++) Assert.That(Slot(Bag, i), Is.Null);
+            Assert.That(Count(Slot(Quick, 0)), Is.EqualTo(3));
+            for (int i = 1; i < 5; i++) Assert.That(Slot(Quick, i), Is.Null);
+            Assert.That(Field(Call(_quick, "GetSlot", 0), "maxCount"), Is.EqualTo(64));
+        }
+        [Test]
+        public void SplitOddStack_DepositOne_AndMerge_ConserveItems()
+        {
+            Set(Bag, 0, "bread", 5);
+            Right(Bag, 0);
+            Assert.That(Count(Held), Is.EqualTo(3));
+            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(2));
+            Right(Bag, 1);
+            Assert.That(Count(Slot(Bag, 1)), Is.EqualTo(1));
+            Left(Bag, 0);
+            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(4));
+            Assert.That(Held, Is.Null);
+        }
+        [Test]
+        public void FullStack_DoesNotSwapWithCursor_AndOverflowStaysHeld()
+        {
+            Set(Bag, 0, "bread", 64);
+            Set(Bag, 1, "bread", 5);
+            Left(Bag, 1); Left(Bag, 0);
+            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(64));
+            Assert.That(Count(Held), Is.EqualTo(5));
+            Set(Bag, 0, "bread", 62); Left(Bag, 0);
+            Assert.That(Count(Held), Is.EqualTo(3));
+            Right(Bag, 0);
+            Assert.That(Count(Held), Is.EqualTo(3));
+        }
+        [Test]
+        public void DifferentItems_LeftSwaps_RightDoesNothing()
+        {
+            Set(Bag, 0, "bread", 2); Set(Bag, 1, "golden_seed", 1);
+            Left(Bag, 0); Right(Bag, 1);
+            Assert.That(Field(Held, "id"), Is.EqualTo("bread"));
+            Left(Bag, 1);
+            Assert.That(Field(Held, "id"), Is.EqualTo("golden_seed"));
+            Assert.That(Field(Slot(Bag, 1), "id"), Is.EqualTo("bread"));
+        }
+        [Test]
+        public void QuickMove_PartialCapacity_ConservesRemainderAndSyncsHud()
+        {
+            Set(Quick, 0, "potion_heal", 63);
+            for (int i = 1; i < 5; i++) Set(Quick, i, "knight_sword", 1);
+            Set(Bag, 0, "potion_heal", 5); Left(Bag, 0, true);
+            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(4));
+            Assert.That(Count(Call(_quick, "GetSlot", 0)), Is.EqualTo(64));
+            Left(Quick, 0, true);
+            Assert.That(Slot(Quick, 0), Is.Null);
+            Assert.That(Count(Slot(Bag, 0)) + Count(Slot(Bag, 1)), Is.EqualTo(68));
+        }
+        [Test]
+        public void SaveLoad_PreservesEmptyInventory_WithoutFreePotions()
+        {
+            Call(_inventory, "SetSlot", Quick, 0, null);
+            var save = Activator.CreateInstance(_saveType);
+            Call(_inventory, "SaveTo", save);
+            Call(_inventory, "InitializeDefaultInventory", new object[] { null });
+            Call(_inventory, "LoadFrom", save, null);
+            Assert.That(Slot(Quick, 0), Is.Null);
+        }
+        [Test]
+        public void SaveLoad_PreservesCursorStack_AndCloseReturnsToBag()
+        {
+            Set(Bag, 3, "bread", 9); Left(Bag, 3);
+            var save = Activator.CreateInstance(_saveType);
+            Call(_inventory, "SaveTo", save);
+            Call(_inventory, "LoadFrom", save, null);
+            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(9));
+            Assert.That(Held, Is.Null);
+            Left(Bag, 0); Call(_inventory, "Close");
+            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(9));
+            Assert.That(Held, Is.Null);
+        }
+        [Test]
+        public void LegacySave_WithZeroPotions_RemainsEmpty()
+        {
+            var save = Activator.CreateInstance(_saveType);
+            _saveType.GetField("potions").SetValue(save, 0);
+            Call(_inventory, "LoadFrom", save, null);
+            Assert.That(Slot(Quick, 0), Is.Null);
+        }
+        [Test]
+        public void InvalidSlot_DoesNotLoseHeldStack()
+        {
+            Left(Quick, 0); Left(Bag, -1); Right(Bag, 24);
+            Assert.That(Count(Held), Is.EqualTo(3));
+        }
+        [Test]
+        public void Consumption_UpdatesInventoryHudAndStats_WithoutUnintendedEffects()
+        {
+            var playerObject = new GameObject("Test_ItemPlayer");
+            playerObject.SetActive(false);
+            try
             {
-                Assert.That(GetSlot(i), Is.Null, $"Slot {i + 1} should be empty by default.");
+                var player = playerObject.AddComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                var type = player.GetType();
+                Action<string, object> field = (name, value) => type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(player, value);
+                Func<string, object> property = name => type.GetProperty(name).GetValue(player);
+                field("<MaxHP>k__BackingField", 200f);
+                field("_currentHP", 50f);
+                field("_currentStamina", 0f);
+                Set(Quick, 0, "potion_heal", 1);
+                Set(Quick, 1, "potion_stamina", 1);
+                Assert.That(Call(_quick, "UseSlot", 0, player), Is.EqualTo(true));
+                Assert.That(property("CurrentHP"), Is.EqualTo(100f));
+                Assert.That(property("HealingPotions"), Is.EqualTo(0));
+                Assert.That(Field(Slot(Quick, 0), "id"), Is.EqualTo("potion_stamina"));
+                Assert.That(Field(Call(_quick, "GetActiveItem"), "id"), Is.EqualTo("potion_stamina"));
+                Call(_quick, "UseSlot", 0, player);
+                Assert.That(property("CurrentStamina"), Is.EqualTo(100f));
+                Assert.That(property("CurrentHP"), Is.EqualTo(100f), "Stamina elixir must not heal");
+                Set(Quick, 0, "bread", 1); Call(_quick, "UseSlot", 0, player);
+                Assert.That(property("CurrentHP"), Is.EqualTo(125f));
+                Set(Quick, 0, "gold_pouch", 1); Call(_quick, "UseSlot", 0, player);
+                Assert.That(property("Gold"), Is.EqualTo(500));
+                field("_baseAttackPower", 100f);
+                int strength = (int)property("STR");
+                Set(Quick, 0, "potion_might", 2); Call(_quick, "UseSlot", 0, player);
+                Assert.That(property("AttackPower"), Is.EqualTo(125f));
+                Call(_quick, "UseSlot", 0, player);
+                Assert.That(property("AttackPower"), Is.EqualTo(125f), "Buff must not stack");
+                field("_mightExpiresAt", Time.time - 1f);
+                Assert.That(property("AttackPower"), Is.EqualTo(100f));
+                Assert.That(property("STR"), Is.EqualTo(strength));
+                Set(Quick, 0, "smoke_bomb", 2);
+                Assert.That(Call(_quick, "UseSlot", 0, player), Is.EqualTo(false));
+                Assert.That(Count(Slot(Quick, 0)), Is.EqualTo(2));
+                Set(Quick, 0, "knight_sword", 1);
+                Assert.That(Call(_quick, "UseSlot", 0, player), Is.EqualTo(false));
+            }
+            finally { UnityEngine.Object.DestroyImmediate(playerObject); }
+        }
+        [Test]
+        public void WorldDrops_OneThenAll_AndFullBagClose_PreserveQuantities()
+        {
+            var pickupType = RuntimeType("TheLastKnight.Inventory.WorldItemPickup");
+            var before = UnityEngine.Object.FindObjectsByType(pickupType, FindObjectsSortMode.None);
+            try
+            {
+                Left(Quick, 0);
+                Call(_inventory, "DropCursorItemToWorld", true, new Vector3(10000, 10000, 0));
+                Assert.That(Count(Held), Is.EqualTo(2));
+                Call(_inventory, "DropCursorItemToWorld", false, new Vector3(10000, 10000, 0));
+                Assert.That(Held, Is.Null);
+                Set(Quick, 0, "bread", 5); Left(Quick, 0);
+                for (int i = 0; i < 24; i++) Set(Bag, i, "knight_sword", 1);
+                Call(_inventory, "Close");
+                Assert.That(Held, Is.Null);
+                var drops = UnityEngine.Object.FindObjectsByType(pickupType, FindObjectsSortMode.None).Except(before).ToArray();
+                Assert.That(drops.Length, Is.EqualTo(3));
+                Assert.That(drops.Select(d => Count(pickupType.GetProperty("ItemData").GetValue(d))).OrderBy(c => c), Is.EqualTo(new[] { 1, 2, 5 }));
+                foreach (Component drop in drops)
+                {
+                    Assert.That(drop.GetComponent<CircleCollider2D>().isTrigger, Is.True);
+                    Assert.That(drop.GetComponent<SpriteRenderer>().sprite, Is.Not.Null);
+                }
+            }
+            finally
+            {
+                foreach (Component drop in UnityEngine.Object.FindObjectsByType(pickupType, FindObjectsSortMode.None).Except(before))
+                    UnityEngine.Object.DestroyImmediate(drop.gameObject);
             }
         }
-
         [Test]
-        public void ShiftQueue_AdvancesSlot2ToSlot1_AndClearsSlot5()
+        public void Catalog_AllIconsLoad_AndInvalidCountsAreRejected()
         {
-            var item2 = CreateSlotData("item_stamina", "Stamina Brew", 2, 5);
-            var item3 = CreateSlotData("item_bomb", "Fire Bomb", 1, 3);
-
-            SetSlot(1, item2);
-            SetSlot(2, item3);
-
-            ShiftQueue();
-
-            var newSlot1 = GetSlot(0);
-            var newSlot2 = GetSlot(1);
-            var newSlot3 = GetSlot(2);
-            var newSlot5 = GetSlot(4);
-
-            Assert.That(newSlot1, Is.Not.Null, "Slot 1 should now hold item 2.");
-            Assert.That(GetFieldValue(newSlot1, "id"), Is.EqualTo("item_stamina"));
-
-            Assert.That(newSlot2, Is.Not.Null, "Slot 2 should now hold item 3.");
-            Assert.That(GetFieldValue(newSlot2, "id"), Is.EqualTo("item_bomb"));
-
-            Assert.That(newSlot3, Is.Null, "Slot 3 should now be empty.");
-            Assert.That(newSlot5, Is.Null, "Slot 5 should be empty.");
-        }
-
-        [Test]
-        public void SyncItemCount_WhenSlot1ReachesZero_AutomaticallyShiftsQueue()
-        {
-            var item2 = CreateSlotData("item_stamina", "Stamina Brew", 4, 5);
-            SetSlot(1, item2);
-
-            // Potion in slot 1 is consumed down to 0
-            SyncItemCount("potion_heal", 0);
-
-            var active = _managerType.GetMethod("GetActiveItem")?.Invoke(_manager, null);
-            Assert.That(active, Is.Not.Null, "Active item should have shifted to item 2.");
-            Assert.That(GetFieldValue(active, "id"), Is.EqualTo("item_stamina"));
-            Assert.That(GetFieldValue(active, "count"), Is.EqualTo(4));
-
-            Assert.That(GetSlot(1), Is.Null, "Slot 2 should now be empty after shifting.");
-        }
-
-        [Test]
-        public void SyncItemCount_WhenOnlyItemReachesZero_Slot1BecomesEmpty()
-        {
-            SyncItemCount("potion_heal", 0);
-
-            var active = _managerType.GetMethod("GetActiveItem")?.Invoke(_manager, null);
-            Assert.That(active, Is.Null, "Active item should be null when the only item is depleted.");
-        }
-
-        [Test]
-        public void SyncItemCount_WhenPotionsReplenished_AssignsBackToSlot1IfEmpty()
-        {
-            SyncItemCount("potion_heal", 0);
-            var activeBefore = _managerType.GetMethod("GetActiveItem")?.Invoke(_manager, null);
-            Assert.That(activeBefore, Is.Null, "Slot 1 should be empty.");
-
-            SyncItemCount("potion_heal", 2);
-
-            var active = _managerType.GetMethod("GetActiveItem")?.Invoke(_manager, null);
-            Assert.That(active, Is.Not.Null, "Healing potion should be assigned back to Slot 1.");
-            Assert.That(GetFieldValue(active, "id"), Is.EqualTo("potion_heal"));
-            Assert.That(GetFieldValue(active, "count"), Is.EqualTo(2));
+            foreach (string id in new[] { "potion_heal", "potion_stamina", "golden_seed", "potion_might", "bread", "gold_pouch", "smoke_bomb", "throwing_dart", "knight_sword", "silver_armor", "heavy_boots", "moonstone_shard" })
+            {
+                var item = Item(id, 1);
+                Assert.That(item.GetType().GetProperty("Icon").GetValue(item), Is.Not.Null, id);
+            }
+            Assert.That(Item("bread", 0), Is.Null);
         }
     }
 }

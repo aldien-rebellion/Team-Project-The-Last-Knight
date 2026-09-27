@@ -681,16 +681,8 @@ namespace TheLastKnight.Player
             var qm = TheLastKnight.Core.QuickItemManager.Instance;
             var activeItem = qm != null ? qm.GetActiveItem() : null;
 
-            if (activeItem != null)
-            {
-                if (activeItem.id == "potion_heal" && (stats.HealingPotions <= 0 || stats.CurrentHP >= stats.MaxHP))
-                    return;
-            }
-            else
-            {
-                if (stats.HealingPotions <= 0 || stats.CurrentHP >= stats.MaxHP) return;
-            }
-
+            var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
+            if (inventory == null || !inventory.CanUseQuickSlot(0, stats)) return;
             CurrentState = PlayerState.Drinking;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("drink");
             _drinkTimer = _drinkDuration;

@@ -42,19 +42,25 @@ namespace TheLastKnight.Stats
         }
         public bool AddPotion()
         {
-            if (_healingPotions >= MaxHealingPotions) return false;
-            _healingPotions++;
-            TheLastKnight.Core.QuickItemManager.Instance?.SyncItemCount("potion_heal", _healingPotions);
-            return true;
+            var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
+            return inventory != null && inventory.AddItem(TheLastKnight.Inventory.ItemRegistry.CreateItem("potion_heal")) == 0;
         }
         public bool CompletePotionDrink()
         {
-            if (_healingPotions <= 0 || IsDead) return false;
-            _healingPotions--;
-            Heal(50f);
-            TheLastKnight.Core.QuickItemManager.Instance?.SyncItemCount("potion_heal", _healingPotions);
-            return true;
+            var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
+            var item = inventory?.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, 0);
+            return item != null && item.id == "potion_heal" && inventory.UseQuickSlot(0, this);
         }
+        public void SyncHealingPotions(int amount)
+        {
+            _healingPotions = Mathf.Max(0, amount);
+        }
+
+        public void RestoreStamina(float amount)
+        {
+            _currentStamina = Mathf.Min(MaxStamina, _currentStamina + Mathf.Max(0, amount));
+        }
+
         public void AddStatPoints(int amount) => _availableStatPoints += Mathf.Max(0, amount);
         public bool AddStatPotion(string stat)
         {
@@ -131,7 +137,14 @@ namespace TheLastKnight.Stats
         [CreateProperty]
         public float MaxHP { get; private set; }
         [CreateProperty]
-        public float AttackPower { get; private set; }
+        public float AttackPower
+        {
+            get => _baseAttackPower * (Time.time < _mightExpiresAt ? 1.25f : 1f);
+            private set => _baseAttackPower = value;
+        }
+        private float _baseAttackPower;
+        private float _mightExpiresAt;
+        public void ApplyMightBuff() => _mightExpiresAt = Time.time + 30f;
         [CreateProperty]
         public float CriticalChance { get; private set; }
         [CreateProperty]
@@ -337,7 +350,7 @@ namespace TheLastKnight.Stats
             _currentHP = Mathf.Clamp(state.hp, 0, MaxHP);
             _currentStamina = Mathf.Clamp(state.stamina, 0, MaxStamina);
             _lastDamageTime = -100f;
-            TheLastKnight.Core.QuickItemManager.Instance?.SyncItemCount("potion_heal", _healingPotions);
+
         }
     }
 }

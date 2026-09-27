@@ -60,7 +60,7 @@ namespace TheLastKnight.Core
                 return;
             }
             Instance = this;
-            if (transform.parent == null)
+            if (transform.parent == null && Application.isPlaying)
             {
                 DontDestroyOnLoad(gameObject);
             }
@@ -68,179 +68,31 @@ namespace TheLastKnight.Core
             InitializeDefaultSlots();
         }
 
+        private void OnDestroy() { if (Instance == this) Instance = null; }
+
         public void InitializeDefaultSlots()
         {
-            for (int i = 0; i < MaxSlots; i++) _slots[i] = null;
-
-            int initialPotions = 3;
-            if (PlayerStatsActive != null)
-            {
-                initialPotions = PlayerStatsActive.HealingPotions;
-            }
-
-            if (initialPotions > 0)
-            {
-                _slots[0] = CreateHealingPotionSlot(initialPotions);
-            }
-
-            OnQuickItemsChanged?.Invoke();
+            TheLastKnight.Inventory.InventoryManager.Instance?.SyncWithQuickItemManager();
         }
 
-        private PlayerStats PlayerStatsActive
-        {
-            get
-            {
-                if (GameManager.Instance != null && GameManager.Instance.Player != null)
-                {
-                    return GameManager.Instance.Player;
-                }
-                return FindAnyObjectByType<PlayerStats>();
-            }
-        }
-
-        public QuickItemSlotData CreateHealingPotionSlot(int count)
-        {
-            var sprite = Resources.Load<Sprite>("CharacterStatus/Item_RedPotion_Clean")
-                         ?? Resources.Load<Sprite>("CharacterStatus/Item_RedPotion");
-            return new QuickItemSlotData
-            {
-                id = "potion_heal",
-                name = "Healing Potion [Q]",
-                typeName = "Consumable",
-                description = "Restores 50 HP immediately. Hotkey [Q]. [Click to drink]",
-                icon = sprite,
-                count = count,
-                maxCount = 5,
-                onUse = (player) =>
-                {
-                    if (player != null && player.HealingPotions > 0 && player.CurrentHP < player.MaxHP)
-                    {
-                        player.CompletePotionDrink();
-                    }
-                }
-            };
-        }
-
-        public QuickItemSlotData GetSlot(int index)
-        {
-            if (index < 0 || index >= MaxSlots) return null;
-            return _slots[index];
-        }
-
-        public QuickItemSlotData GetActiveItem()
-        {
-            return _slots[0];
-        }
-
-        public void SetSlot(int index, QuickItemSlotData item)
-        {
-            if (index < 0 || index >= MaxSlots) return;
-            _slots[index] = item;
-            OnQuickItemsChanged?.Invoke();
-        }
-
-        /// <summary>
-        /// Syncs item count for a specific item id (e.g. potion count synced from PlayerStats).
-        /// If count reaches 0 and item is in Slot 1, shifts the queue automatically.
-        /// </summary>
-        public void SyncItemCount(string itemId, int count)
-        {
-            bool changed = false;
-            for (int i = 0; i < MaxSlots; i++)
-            {
-                if (_slots[i] != null && _slots[i].id == itemId)
-                {
-                    _slots[i].count = count;
-                    changed = true;
-                    if (count <= 0)
-                    {
-                        if (i == 0)
-                        {
-                            ShiftQueue();
-                            return; // ShiftQueue already invokes OnQuickItemsChanged
-                        }
-                        else
-                        {
-                            _slots[i] = null;
-                        }
-                    }
-                }
-            }
-
-            if (count > 0 && !HasItem(itemId))
-            {
-                AssignToFirstEmptySlot(itemId, count);
-                changed = true;
-            }
-
-            if (changed)
-            {
-                OnQuickItemsChanged?.Invoke();
-            }
-        }
-
-        public bool HasItem(string itemId)
+        public void SyncFromInventory(TheLastKnight.Inventory.InventoryItemData[] items)
         {
             for (int i = 0; i < MaxSlots; i++)
             {
-                if (_slots[i] != null && _slots[i].id == itemId) return true;
-            }
-            return false;
-        }
-
-        public void AssignToFirstEmptySlot(string itemId, int count)
-        {
-            for (int i = 0; i < MaxSlots; i++)
-            {
-                if (_slots[i] == null)
+                var item = items[i];
+                _slots[i] = item == null ? null : new QuickItemSlotData
                 {
-                    if (itemId == "potion_heal")
-                    {
-                        _slots[i] = CreateHealingPotionSlot(count);
-                    }
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Shifts quick items: Slot 2 -> Slot 1, Slot 3 -> Slot 2, Slot 4 -> Slot 3, Slot 5 -> Slot 4, Slot 5 becomes empty.
-        /// </summary>
-        public void ShiftQueue()
-        {
-            for (int i = 0; i < MaxSlots - 1; i++)
-            {
-                _slots[i] = _slots[i + 1];
-            }
-            _slots[MaxSlots - 1] = null;
-            OnQuickItemsChanged?.Invoke();
-        }
-
-        /// <summary>
-        /// Uses the item in the specified slot (0-4).
-        /// </summary>
-        public bool UseSlot(int index, PlayerStats player)
-        {
-            if (index < 0 || index >= MaxSlots) return false;
-            var slot = _slots[index];
-            if (slot == null || slot.count <= 0) return false;
-
-            if (slot.id == "potion_heal")
-            {
-                if (player == null || player.CurrentHP >= player.MaxHP || player.HealingPotions <= 0) return false;
-                player.CompletePotionDrink();
-                return true;
-            }
-
-            slot.onUse?.Invoke(player);
-            slot.count--;
-            if (slot.count <= 0)
-            {
-                if (index == 0) ShiftQueue();
-                else _slots[index] = null;
+                    id = item.id, name = item.name, typeName = item.typeName,
+                    description = item.description, icon = item.Icon,
+                    count = item.count, maxCount = item.maxStack, onUse = item.onUse
+                };
             }
             OnQuickItemsChanged?.Invoke();
-            return true;
         }
+
+        public QuickItemSlotData GetSlot(int index) => index >= 0 && index < MaxSlots ? _slots[index] : null;
+        public QuickItemSlotData GetActiveItem() => _slots[0];
+        public bool UseSlot(int index, PlayerStats player) =>
+            TheLastKnight.Inventory.InventoryManager.Instance?.UseQuickSlot(index, player) ?? false;
     }
 }
