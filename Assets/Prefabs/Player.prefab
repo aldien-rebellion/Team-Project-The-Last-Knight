@@ -208,17 +208,18 @@ MonoBehaviour:
   _skillDuration: 0.5
   _skillCooldown: 5
   _skillDamageMultiplier: 2
-  _skillAttackSize: {x: 3.5, y: 2.5}
-  _skillAttackOffset: {x: 1.5, y: 0}
-  _skillKnockbackForce: {x: 10, y: 3}
-  _skillPushDistance: 2
+  _skillAttackRadius: 2.2
+  _skillAttackSize: {x: 2.8, y: 2.2}
+  _skillAttackOffset: {x: 0, y: 0.5}
+  _skillKnockbackForce: {x: 6, y: 2.5}
+  _skillPushDistance: 1.2
   _buffDuration: 5
   _buffCooldown: 10
   _excaliburDuration: 3.8
   _excaliburCooldown: 15
   _excaliburDamageMultiplier: 5
-  _excaliburHitSize: {x: 15, y: 4}
-  _excaliburHitOffset: {x: 7.5, y: 0.5}
+  _excaliburHitSize: {x: 24, y: 4.2}
+  _excaliburHitOffset: {x: 12, y: 1.47}
   _excaliburDamageDelay: 3.3
   _excaliburStunDuration: 2
   _excaliburVFXController: {fileID: 0}

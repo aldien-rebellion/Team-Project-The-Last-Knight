@@ -45,14 +45,16 @@ namespace TheLastKnight.Player
         private float _skillCooldown = 1.0f;
         [SerializeField, Tooltip("Damage multiplier for Skill 1 (Carnage Burst) multiplied by Player ATK.")]
         private float _skillDamageMultiplier = 2.0f;
+        [SerializeField, Tooltip("Radius of the circular forward area for Skill 1 (Carnage Burst).")]
+        private float _skillAttackRadius = 2.2f;
         [SerializeField, Tooltip("Hitbox size for Skill 1 (Carnage Burst).")]
-        private Vector2 _skillAttackSize = new Vector2(3.5f, 2.5f);
-        [SerializeField, Tooltip("Hitbox offset for Skill 1 (Carnage Burst).")]
-        private Vector2 _skillAttackOffset = new Vector2(1.5f, 0f);
-        [SerializeField, Tooltip("Knockback velocity impulse applied to enemies hit by Skill 1 (pushes outward from player).")]
-        private Vector2 _skillKnockbackForce = new Vector2(10f, 3f);
-        [SerializeField, Tooltip("Displacement distance pushing enemies outward from player along the skill circle.")]
-        private float _skillPushDistance = 2.0f;
+        private Vector2 _skillAttackSize = new Vector2(2.8f, 2.2f);
+        [SerializeField, Tooltip("Hitbox offset for Skill 1 (Carnage Burst). Centered on player.")]
+        private Vector2 _skillAttackOffset = new Vector2(0f, 0.5f);
+        [SerializeField, Tooltip("Knockback velocity impulse applied to enemies hit by Skill 1.")]
+        private Vector2 _skillKnockbackForce = new Vector2(6f, 2.5f);
+        [SerializeField, Tooltip("Displacement distance pushing enemies outward along the skill circle.")]
+        private float _skillPushDistance = 1.2f;
 
         [Header("Skill 2 Settings (Buff - Key R)")]
         [SerializeField, Tooltip("Buff skill duration.")]
@@ -67,10 +69,10 @@ namespace TheLastKnight.Player
         private float _excaliburCooldown = 5.0f;
         [SerializeField, Tooltip("Damage multiplier for Skill 3 (Excalibur) multiplied by Player ATK.")]
         private float _excaliburDamageMultiplier = 5.0f;
-        [SerializeField, Tooltip("Hitbox size for Excalibur beam (length x height).")]
-        private Vector2 _excaliburHitSize = new Vector2(15f, 4f);
+        [SerializeField, Tooltip("Hitbox size for Excalibur beam (length x height), stretched back to touch player.")]
+        private Vector2 _excaliburHitSize = new Vector2(24f, 4.2f);
         [SerializeField, Tooltip("Hitbox offset for Excalibur beam from player center.")]
-        private Vector2 _excaliburHitOffset = new Vector2(7.5f, 0.5f);
+        private Vector2 _excaliburHitOffset = new Vector2(12f, 1.47f);
         [SerializeField, Tooltip("Time delay from skill start before damage is dealt (corresponds to beam release).")]
         private float _excaliburDamageDelay = 3.3f;
         [SerializeField, Tooltip("Stun duration in seconds applied to enemies hit by Skill 3 (Excalibur).")]
@@ -155,6 +157,7 @@ namespace TheLastKnight.Player
 
         public float SkillCooldown { get => _skillCooldown; set => _skillCooldown = value; }
         public float SkillDamageMultiplier { get => _skillDamageMultiplier; set => _skillDamageMultiplier = value; }
+        public float SkillAttackRadius { get => _skillAttackRadius; set => _skillAttackRadius = value; }
         public Vector2 SkillAttackSize { get => _skillAttackSize; set => _skillAttackSize = value; }
         public Vector2 SkillAttackOffset { get => _skillAttackOffset; set => _skillAttackOffset = value; }
         public Vector2 SkillKnockbackForce { get => _skillKnockbackForce; set => _skillKnockbackForce = value; }
@@ -659,17 +662,22 @@ namespace TheLastKnight.Player
             if (stats == null) return;
             float facing = IsFacingRight ? 1f : -1f;
             Vector2 center = (Vector2)transform.position + new Vector2(_skillAttackOffset.x * facing, _skillAttackOffset.y);
-            foreach (var collider in Physics2D.OverlapBoxAll(center, _skillAttackSize, 0f, _attackLayers))
+            foreach (var collider in Physics2D.OverlapCircleAll(center, _skillAttackRadius, _attackLayers))
             {
-                if (collider.transform.root == transform.root) continue;
-                var target = collider.GetComponentInParent<IDamageable>();
+                if (collider.transform == transform || collider.transform.IsChildOf(transform)) continue;
+
+                IDamageable target = collider.GetComponentInParent<TheLastKnight.Combat.EnemyStats>();
+                if (target == null)
+                {
+                    target = collider.GetComponentInParent<IDamageable>();
+                }
                 if (target == null || !_skillTargets.Add(target)) continue;
                 var parry = collider.GetComponentInParent<ParryReceiver>();
                 bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
                 float damage = stats.AttackPower * _skillDamageMultiplier * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
 
-                // Calculate push / knockback direction away from the player
+                // Calculate push / knockback direction away from the player along the skill circle
                 Vector2 diff = (Vector2)collider.transform.position - (Vector2)transform.position;
                 float signX = Mathf.Abs(diff.x) > 0.05f ? Mathf.Sign(diff.x) : facing;
                 Vector2 knockback = new Vector2(signX * _skillKnockbackForce.x, _skillKnockbackForce.y);
@@ -826,16 +834,55 @@ namespace TheLastKnight.Player
             }
         }
 
+        /// <summary>
+        /// Cancels Excalibur immediately, removing all VFX, active beams, particles, and charging effects.
+        /// </summary>
+        public void CancelExcalibur()
+        {
+            if (CurrentState != PlayerState.Excalibur) return;
+
+            _excaliburTargets.Clear();
+            _excaliburTimer = 0f;
+
+            if (_excaliburVFXController != null)
+            {
+                _excaliburVFXController.CancelUltimateAttack();
+            }
+
+            foreach (var vfx in GetComponentsInChildren<ExcaliburVFXController>(true))
+            {
+                if (vfx != null) vfx.CancelUltimateAttack();
+            }
+
+            if (_kinematicController.IsGrounded)
+            {
+                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
+                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
+                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
+                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
+            }
+            else
+            {
+                CurrentState = PlayerState.Falling;
+            }
+        }
+
         public void ApplyExcaliburHits()
         {
             var stats = GetComponent<PlayerStats>();
             if (stats == null) return;
             float facing = IsFacingRight ? 1f : -1f;
             Vector2 center = (Vector2)transform.position + new Vector2(_excaliburHitOffset.x * facing, _excaliburHitOffset.y);
+
             foreach (var collider in Physics2D.OverlapBoxAll(center, _excaliburHitSize, 0f, _attackLayers))
             {
-                if (collider.transform.root == transform.root) continue;
-                var target = collider.GetComponentInParent<IDamageable>();
+                if (collider == null || collider.transform == transform || collider.transform.IsChildOf(transform)) continue;
+                IDamageable target = collider.GetComponentInParent<TheLastKnight.Combat.EnemyStats>();
+                if (target == null)
+                {
+                    target = collider.GetComponentInParent<IDamageable>();
+                }
                 if (target == null || !_excaliburTargets.Add(target)) continue;
                 var parry = collider.GetComponentInParent<ParryReceiver>();
                 bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
@@ -945,6 +992,12 @@ namespace TheLastKnight.Player
         /// </summary>
         public void OnTakeDamage()
         {
+            // Do not interrupt ultimate skill (Excalibur), normal skill (Carnage Burst), or dash with hurt reaction
+            if (CurrentState == PlayerState.Excalibur || CurrentState == PlayerState.UsingSkill || CurrentState == PlayerState.Dashing)
+            {
+                return;
+            }
+
             CurrentState = PlayerState.Hurt;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("hurt");
             _hurtTimer = _hurtFrame1Duration + _hurtFrame2Duration;
@@ -952,6 +1005,47 @@ namespace TheLastKnight.Player
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
                 _animator.Play("Hurt", 0, 0f);
+            }
+        }
+
+        /// <summary>
+        /// Applies a stun effect to Arthur. Cancels Excalibur or other channeled skills immediately,
+        /// removes all Excalibur VFX, and puts Arthur into the Hurt/Stunned state for the specified duration.
+        /// </summary>
+        public void ApplyStun(float duration = 1.0f)
+        {
+            if (CurrentState == PlayerState.Excalibur)
+            {
+                CancelExcalibur();
+            }
+            else if (CurrentState == PlayerState.UsingSkill)
+            {
+                EndSkill();
+            }
+            else if (CurrentState == PlayerState.Buffing)
+            {
+                EndBuff();
+            }
+            else if (CurrentState == PlayerState.Drinking)
+            {
+                EndDrink();
+            }
+
+            CurrentState = PlayerState.Hurt;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("hurt");
+            _hurtTimer = Mathf.Max(duration, _hurtFrame1Duration + _hurtFrame2Duration);
+
+            if (_animator != null && _animator.runtimeAnimatorController != null)
+            {
+                _animator.Play("Hurt", 0, 0f);
+            }
+        }
+
+        public void ApplyStatus(TheLastKnight.Combat.StatusEffect effect, float duration)
+        {
+            if (effect == TheLastKnight.Combat.StatusEffect.Stunned)
+            {
+                ApplyStun(duration);
             }
         }
 
@@ -1295,10 +1389,10 @@ namespace TheLastKnight.Player
             Vector2 attackCenter = (Vector2)transform.position + new Vector2(_attackOffset.x * facing, _attackOffset.y);
             Gizmos.DrawWireCube(attackCenter, _attackSize);
 
-            // Skill 1 Carnage Burst Hitbox (Orange)
+            // Skill 1 Carnage Burst Hitbox (Orange Circle)
             Gizmos.color = new Color(1f, 0.5f, 0f, 0.4f);
             Vector2 skillCenter = (Vector2)transform.position + new Vector2(_skillAttackOffset.x * facing, _skillAttackOffset.y);
-            Gizmos.DrawWireCube(skillCenter, _skillAttackSize);
+            Gizmos.DrawWireSphere(skillCenter, _skillAttackRadius);
 
             // Skill 3 Excalibur Hitbox (Gold / Yellow)
             Gizmos.color = new Color(1f, 0.85f, 0.1f, 0.4f);

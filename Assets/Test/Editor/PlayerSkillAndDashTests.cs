@@ -12,8 +12,13 @@ namespace TheLastKnight.Tests
         private static Type RuntimeType(string name) => AppDomain.CurrentDomain.GetAssemblies()
             .Select(a => a.GetType(name)).First(t => t != null);
 
-        private static void Invoke(Component target, string method) => target.GetType()
-            .GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Invoke(target, null);
+        private static void Invoke(Component target, string method, params object[] args)
+        {
+            var types = args != null && args.Length > 0 ? args.Select(a => a.GetType()).ToArray() : Type.EmptyTypes;
+            var m = target.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, types, null)
+                 ?? target.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            m.Invoke(target, args != null && args.Length == 0 ? null : args);
+        }
 
         private static object GetProp(object target, string prop) => target.GetType().GetProperty(prop).GetValue(target);
         private static void SetProp(object target, string prop, object val) => target.GetType().GetProperty(prop).SetValue(target, val);
@@ -159,6 +164,81 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
+        public void Skill1_CarnageBurst_HitsAndPushesEnemiesOutwardAlongCircle()
+        {
+            GameObject player = null, behindEnemy = null, frontEnemy = null;
+            try
+            {
+                player = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+                player.transform.position = new Vector3(25000, 25000, 0);
+                var controller = player.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController"));
+                var stats = player.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                Invoke(controller, "Awake");
+                Invoke(stats, "Awake");
+                SetField(stats, "<CriticalChance>k__BackingField", 0f);
+
+                // Player faces right (positive X direction)
+                Assert.IsTrue((bool)GetProp(controller, "IsFacingRight"), "Player defaults to facing right");
+
+                // Behind enemy is positioned behind player within skill radius (to the left, negative X direction)
+                behindEnemy = new GameObject("CarnageBurst Behind Enemy");
+                behindEnemy.transform.position = player.transform.position + Vector3.left * 1.2f;
+                var behindStats = behindEnemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+                SetField(behindStats, "_maxHealth", 500f);
+                SetField(behindStats, "_defense", 0f);
+                var behindRb = behindEnemy.AddComponent<Rigidbody2D>();
+                behindRb.gravityScale = 0;
+                behindEnemy.AddComponent<BoxCollider2D>();
+                Invoke(behindStats, "Awake");
+
+                // Front enemy is positioned in front of player within skill radius (to the right, positive X direction)
+                frontEnemy = new GameObject("CarnageBurst Front Enemy");
+                frontEnemy.transform.position = player.transform.position + Vector3.right * 1.2f;
+                var frontStats = frontEnemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+                SetField(frontStats, "_maxHealth", 500f);
+                SetField(frontStats, "_defense", 0f);
+                var frontRb = frontEnemy.AddComponent<Rigidbody2D>();
+                frontRb.gravityScale = 0;
+                frontEnemy.AddComponent<BoxCollider2D>();
+                Invoke(frontStats, "Awake");
+
+                Physics2D.SyncTransforms();
+
+                float initialBehindX = behindEnemy.transform.position.x;
+                float initialFrontX = frontEnemy.transform.position.x;
+                SetProp(controller, "SkillDamageMultiplier", 2.0f);
+                Invoke(controller, "StartSkill");
+                Invoke(controller, "ApplySkillHits");
+
+                float behindHp = (float)GetProp(behindStats, "CurrentHealth");
+                float frontHp = (float)GetProp(frontStats, "CurrentHealth");
+                float maxHP = (float)GetProp(behindStats, "MaxHealth");
+                float atk = (float)GetProp(stats, "AttackPower");
+                float expectedDamage = atk * 2.0f * PlayerDamageMultiplier;
+
+                // Enemy behind player inside circle takes damage and is pushed backward to the left
+                Assert.That(behindHp, Is.LessThan(maxHP), "Skill 1 deals damage to enemy in circle behind player");
+                Assert.That(maxHP - behindHp, Is.EqualTo(expectedDamage).Within(1f));
+                Assert.That(behindEnemy.transform.position.x, Is.LessThan(initialBehindX), "Skill 1 pushes monster behind outward to the left");
+                Assert.That(behindRb.linearVelocity.x, Is.LessThan(0f), "Skill 1 applies outward knockback velocity to monster behind");
+
+                // Enemy in front of player inside circle takes damage and is pushed forward to the right
+                Assert.That(frontHp, Is.LessThan(maxHP), "Skill 1 deals damage to enemy in front of player");
+                Assert.That(maxHP - frontHp, Is.EqualTo(expectedDamage).Within(1f));
+                Assert.That(frontEnemy.transform.position.x, Is.GreaterThan(initialFrontX), "Skill 1 pushes monster forward to the right");
+                Assert.That(frontRb.linearVelocity.x, Is.GreaterThan(0f), "Skill 1 applies forward knockback velocity to monster in front");
+            }
+            finally
+            {
+                if (player != null) UnityEngine.Object.DestroyImmediate(player);
+                if (behindEnemy != null) UnityEngine.Object.DestroyImmediate(behindEnemy);
+                if (frontEnemy != null) UnityEngine.Object.DestroyImmediate(frontEnemy);
+                foreach (var popup in UnityEngine.Object.FindObjectsByType(RuntimeType("TheLastKnight.Combat.FloatingCombatText"), FindObjectsSortMode.None))
+                    UnityEngine.Object.DestroyImmediate(((Component)popup).gameObject);
+            }
+        }
+
+        [Test]
         public void Skill3_Excalibur_DealsConfigurableMultiplierDamage()
         {
             GameObject player = null, enemy = null;
@@ -200,6 +280,159 @@ namespace TheLastKnight.Tests
                 if (enemy != null) UnityEngine.Object.DestroyImmediate(enemy);
                 foreach (var popup in UnityEngine.Object.FindObjectsByType(RuntimeType("TheLastKnight.Combat.FloatingCombatText"), FindObjectsSortMode.None))
                     UnityEngine.Object.DestroyImmediate(((Component)popup).gameObject);
+            }
+        }
+
+        [Test]
+        public void Skill3_Excalibur_HitsPointBlankTouchingEnemy()
+        {
+            GameObject player = null, enemy = null;
+            try
+            {
+                player = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+                player.transform.position = new Vector3(24000, 24000, 0);
+                var controller = player.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController"));
+                var stats = player.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                Invoke(controller, "Awake");
+                Invoke(stats, "Awake");
+                SetField(stats, "<CriticalChance>k__BackingField", 0f);
+
+                // Enemy is touching/overlapping player right at point-blank range (0.2 units away)
+                enemy = new GameObject("Excalibur Point-Blank Enemy");
+                enemy.transform.position = player.transform.position + new Vector3(0.2f, 0f, 0f);
+                var enemyStats = enemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+                SetField(enemyStats, "_maxHealth", 500f);
+                SetField(enemyStats, "_defense", 0f);
+                enemy.AddComponent<BoxCollider2D>();
+                Invoke(enemyStats, "Awake");
+                Physics2D.SyncTransforms();
+
+                SetProp(controller, "ExcaliburDamageMultiplier", 4.0f);
+                Invoke(controller, "StartExcalibur");
+                Invoke(controller, "ApplyExcaliburHits");
+
+                float hpAfterExcalibur = (float)GetProp(enemyStats, "CurrentHealth");
+                float maxHP = (float)GetProp(enemyStats, "MaxHealth");
+                float atk = (float)GetProp(stats, "AttackPower");
+                float expectedDamage = atk * 4.0f * PlayerDamageMultiplier;
+
+                Assert.That(hpAfterExcalibur, Is.LessThan(maxHP), "Excalibur must hit point-blank / touching enemy directly in front of player");
+                Assert.That(maxHP - hpAfterExcalibur, Is.EqualTo(expectedDamage).Within(1f));
+                Assert.That(GetProp(enemyStats, "CurrentStatus").ToString(), Is.EqualTo("Stunned"), "Point-blank enemy hit by Excalibur must be stunned");
+            }
+            finally
+            {
+                if (player != null) UnityEngine.Object.DestroyImmediate(player);
+                if (enemy != null) UnityEngine.Object.DestroyImmediate(enemy);
+                foreach (var popup in UnityEngine.Object.FindObjectsByType(RuntimeType("TheLastKnight.Combat.FloatingCombatText"), FindObjectsSortMode.None))
+                    UnityEngine.Object.DestroyImmediate(((Component)popup).gameObject);
+            }
+        }
+
+        [Test]
+        public void Skill3_Excalibur_DoesNotHitEnemyBehindPlayer()
+        {
+            GameObject player = null, behindEnemy = null, frontEnemy = null;
+            try
+            {
+                player = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+                player.transform.position = new Vector3(27000, 27000, 0);
+                var controller = player.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController"));
+                var stats = player.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                Invoke(controller, "Awake");
+                Invoke(stats, "Awake");
+                SetField(stats, "<CriticalChance>k__BackingField", 0f);
+
+                // Behind enemy
+                behindEnemy = new GameObject("Excalibur Behind Enemy");
+                behindEnemy.transform.position = player.transform.position + Vector3.left * 1.5f;
+                var behindStats = behindEnemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+                SetField(behindStats, "_maxHealth", 500f);
+                SetField(behindStats, "_defense", 0f);
+                behindEnemy.AddComponent<BoxCollider2D>();
+                Invoke(behindStats, "Awake");
+
+                // Front enemy
+                frontEnemy = new GameObject("Excalibur Front Enemy");
+                frontEnemy.transform.position = player.transform.position + Vector3.right * 1.5f;
+                var frontStats = frontEnemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+                SetField(frontStats, "_maxHealth", 500f);
+                SetField(frontStats, "_defense", 0f);
+                frontEnemy.AddComponent<BoxCollider2D>();
+                Invoke(frontStats, "Awake");
+
+                Physics2D.SyncTransforms();
+
+                SetProp(controller, "ExcaliburDamageMultiplier", 4.0f);
+                Invoke(controller, "StartExcalibur");
+                Invoke(controller, "ApplyExcaliburHits");
+
+                float behindHp = (float)GetProp(behindStats, "CurrentHealth");
+                float frontHp = (float)GetProp(frontStats, "CurrentHealth");
+                float maxHP = (float)GetProp(behindStats, "MaxHealth");
+
+                // Enemy behind player MUST NOT take damage and MUST NOT be stunned
+                Assert.That(behindHp, Is.EqualTo(maxHP), "Excalibur must NOT deal damage to enemy behind player");
+                Assert.That(GetProp(behindStats, "CurrentStatus").ToString(), Is.Not.EqualTo("Stunned"), "Excalibur must NOT stun enemy behind player");
+
+                // Enemy in front of player MUST take damage and be stunned
+                Assert.That(frontHp, Is.LessThan(maxHP), "Excalibur must deal damage to enemy in front of player");
+                Assert.That(GetProp(frontStats, "CurrentStatus").ToString(), Is.EqualTo("Stunned"), "Excalibur must stun enemy in front of player");
+            }
+            finally
+            {
+                if (player != null) UnityEngine.Object.DestroyImmediate(player);
+                if (behindEnemy != null) UnityEngine.Object.DestroyImmediate(behindEnemy);
+                if (frontEnemy != null) UnityEngine.Object.DestroyImmediate(frontEnemy);
+                foreach (var popup in UnityEngine.Object.FindObjectsByType(RuntimeType("TheLastKnight.Combat.FloatingCombatText"), FindObjectsSortMode.None))
+                    UnityEngine.Object.DestroyImmediate(((Component)popup).gameObject);
+            }
+        }
+
+        [Test]
+        public void Skill3_Excalibur_NoInvincibility_TakesDamageWithoutInterruption_CancelledByStunWithVFXCleared()
+        {
+            GameObject player = null;
+            try
+            {
+                player = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+                player.transform.position = new Vector3(26000, 26000, 0);
+                var controller = player.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController"));
+                var stats = player.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                var vfx = player.AddComponent(RuntimeType("TheLastKnight.Player.ExcaliburVFXController"));
+                Invoke(controller, "Awake");
+                Invoke(stats, "Awake");
+
+                float initialHP = (float)GetProp(stats, "CurrentHP");
+
+                // Start Excalibur
+                Invoke(controller, "StartExcalibur");
+
+                Assert.That(GetProp(controller, "CurrentState").ToString(), Is.EqualTo("Excalibur"));
+                Assert.IsFalse((bool)GetProp(controller, "IsInvincible"), "Arthur must NOT be invincible during Excalibur channel");
+
+                // Taking normal incoming damage during Excalibur channel is NOT avoided
+                Invoke(stats, "TakeDamage", 25f);
+                Assert.That((float)GetProp(stats, "CurrentHP"), Is.LessThan(initialHP), "Arthur must take damage while channeling Excalibur");
+
+                // Normal OnTakeDamage must NOT knock Arthur out of Excalibur
+                Invoke(controller, "OnTakeDamage");
+                Assert.That(GetProp(controller, "CurrentState").ToString(), Is.EqualTo("Excalibur"), "Arthur must not be interrupted out of Excalibur by normal damage");
+
+                // Create dummy VFX instance under player
+                var dummyBeam = new GameObject("ExcaliburBeam(Clone)");
+                dummyBeam.transform.SetParent(player.transform);
+                Assert.That(player.transform.Find("ExcaliburBeam(Clone)"), Is.Not.Null);
+
+                // Stun attack MUST cancel Excalibur and clear all VFX immediately
+                Invoke(controller, "ApplyStun", 1.5f);
+                Assert.That(GetProp(controller, "CurrentState").ToString(), Is.EqualTo("Hurt"), "Arthur must be interrupted out of Excalibur into Hurt/Stunned");
+                Assert.IsFalse((bool)GetProp(vfx, "IsExecuting"), "All Excalibur VFX must be stopped/cleared immediately upon cancellation");
+                Assert.That(player.transform.Find("ExcaliburBeam(Clone)"), Is.Null, "Excalibur beam and VFX clones must be immediately destroyed upon cancellation");
+            }
+            finally
+            {
+                if (player != null) UnityEngine.Object.DestroyImmediate(player);
             }
         }
 

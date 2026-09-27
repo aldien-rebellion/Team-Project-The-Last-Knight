@@ -133,6 +133,31 @@ namespace TheLastKnight.Player
         private GameObject currentActiveBurst = null;
         private GameObject currentActiveDebris = null;
         private GameObject currentActiveBeam = null;
+        private readonly System.Collections.Generic.List<GameObject> _spawnedTrackedObjects = new System.Collections.Generic.List<GameObject>();
+
+        private GameObject TrackSpawn(GameObject go)
+        {
+            if (go != null)
+            {
+                _spawnedTrackedObjects.Add(go);
+            }
+            return go;
+        }
+
+        private void UntrackAndDestroy(ref GameObject go, float delay = -1f)
+        {
+            if (go == null) return;
+            _spawnedTrackedObjects.Remove(go);
+            if (delay > 0f)
+            {
+                SafeDestroy(go, delay);
+            }
+            else
+            {
+                SafeDestroy(go);
+            }
+            go = null;
+        }
 
         public bool IsExecuting => isExecutingUltimate;
 
@@ -315,7 +340,7 @@ namespace TheLastKnight.Player
             if (auraPrefabPhase1 != null)
             {
                 Vector3 auraPos = GetAnchorPosition() + GetAnchorRotation() * new Vector3(0f, 1.5f, 0f);
-                currentActiveAura = Instantiate(auraPrefabPhase1, auraPos, GetAnchorRotation(), GetAnchorParent());
+                currentActiveAura = TrackSpawn(Instantiate(auraPrefabPhase1, auraPos, GetAnchorRotation(), GetAnchorParent()));
                 
                 ParticleSystem[] auraPS = currentActiveAura.GetComponentsInChildren<ParticleSystem>(true);
                 foreach (var ps in auraPS) if (ps != null) ps.Play();
@@ -325,7 +350,7 @@ namespace TheLastKnight.Player
             if (groundCrackPrefab != null)
             {
                 Vector3 crackPos = GetAnchorPosition() + GetAnchorRotation() * new Vector3(0f, -0.5f, 0f);
-                currentActiveGroundCrack = Instantiate(groundCrackPrefab, crackPos, GetAnchorRotation(), GetAnchorParent());
+                currentActiveGroundCrack = TrackSpawn(Instantiate(groundCrackPrefab, crackPos, GetAnchorRotation(), GetAnchorParent()));
                 
                 ParticleSystem[] crackPS = currentActiveGroundCrack.GetComponentsInChildren<ParticleSystem>(true);
                 foreach (var ps in crackPS) if (ps != null) ps.Play();
@@ -333,11 +358,7 @@ namespace TheLastKnight.Player
 
             yield return new WaitForSeconds(anticipationDuration);
 
-            if (currentActiveAura != null)
-            {
-                SafeDestroy(currentActiveAura);
-                currentActiveAura = null;
-            }
+            UntrackAndDestroy(ref currentActiveAura);
 
             // ==========================================
             // PHASE 2: Spiral Vortex & Red Lightning (0.5s – 3.3s)
@@ -356,7 +377,7 @@ namespace TheLastKnight.Player
             {
                 Vector3 bladePos = GetAnchorPosition() + GetAnchorRotation() * phase2BladeOffset;
 
-                currentActiveVortex = Instantiate(vortexPrefabToSpawn, bladePos, GetAnchorRotation(), GetAnchorParent());
+                currentActiveVortex = TrackSpawn(Instantiate(vortexPrefabToSpawn, bladePos, GetAnchorRotation(), GetAnchorParent()));
                 allVortexPS = currentActiveVortex.GetComponentsInChildren<ParticleSystem>(true);
                 foreach (var ps in allVortexPS) if (ps != null) ps.Play();
             }
@@ -365,7 +386,7 @@ namespace TheLastKnight.Player
             float[] originalBurstCounts = null;
             if (currentActiveVortex != null && lightningArcsPrefab != null)
             {
-                currentActiveLightning = Instantiate(lightningArcsPrefab, currentActiveVortex.transform.position, GetAnchorRotation(), currentActiveVortex.transform);
+                currentActiveLightning = TrackSpawn(Instantiate(lightningArcsPrefab, currentActiveVortex.transform.position, GetAnchorRotation(), currentActiveVortex.transform));
                 activeLightningPS = currentActiveLightning.GetComponent<ParticleSystem>();
                 if (activeLightningPS == null)
                 {
@@ -450,16 +471,11 @@ namespace TheLastKnight.Player
                 {
                     foreach (var ps in allVortexPS) if (ps != null) ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
                 }
-                SafeDestroy(currentActiveVortex);
-                currentActiveVortex = null;
+                UntrackAndDestroy(ref currentActiveVortex);
                 currentActiveLightning = null;
             }
 
-            if (currentActiveGroundCrack != null)
-            {
-                SafeDestroy(currentActiveGroundCrack);
-                currentActiveGroundCrack = null;
-            }
+            UntrackAndDestroy(ref currentActiveGroundCrack);
 
             // ==========================================
             // PHASE 3: THE THRUST / BEAM RELEASE (0.5s)
@@ -493,7 +509,7 @@ namespace TheLastKnight.Player
             // Spawn Energy Beam Prefab facing player's direction
             if (beamPrefabPhase3 != null)
             {
-                currentActiveBeam = Instantiate(beamPrefabPhase3, beamSpawnPos, beamSpawnRot);
+                currentActiveBeam = TrackSpawn(Instantiate(beamPrefabPhase3, beamSpawnPos, beamSpawnRot));
                 currentActiveBeam.transform.position = beamSpawnPos;
 
                 ParticleSystem[] beamPS = currentActiveBeam.GetComponentsInChildren<ParticleSystem>(true);
@@ -502,11 +518,7 @@ namespace TheLastKnight.Player
 
             yield return new WaitForSeconds(beamDuration);
 
-            if (currentActiveBeam != null)
-            {
-                SafeDestroy(currentActiveBeam);
-                currentActiveBeam = null;
-            }
+            UntrackAndDestroy(ref currentActiveBeam);
 
             // ==========================================
             // PHASE 5: Ground Scorch & Residual Smoke (Post-Attack)
@@ -515,15 +527,15 @@ namespace TheLastKnight.Player
 
             if (groundScorchPrefab != null)
             {
-                GameObject activeScorch = Instantiate(groundScorchPrefab, scorchPos, GetAnchorRotation());
+                GameObject activeScorch = TrackSpawn(Instantiate(groundScorchPrefab, scorchPos, GetAnchorRotation()));
                 StartCoroutine(FadeScorchRoutine(activeScorch));
             }
 
             if (residualSmokePrefab != null)
             {
-                GameObject smoke1 = Instantiate(residualSmokePrefab, scorchPos, GetAnchorRotation());
+                GameObject smoke1 = TrackSpawn(Instantiate(residualSmokePrefab, scorchPos, GetAnchorRotation()));
                 Vector3 midPoint = scorchPos + GetAnchorRotation() * new Vector3(8f, 0f, 0f);
-                GameObject smoke2 = Instantiate(residualSmokePrefab, midPoint, GetAnchorRotation());
+                GameObject smoke2 = TrackSpawn(Instantiate(residualSmokePrefab, midPoint, GetAnchorRotation()));
 
                 ParticleSystem[] smokePS1 = smoke1.GetComponentsInChildren<ParticleSystem>(true);
                 foreach (var ps in smokePS1) if (ps != null) ps.Play();
@@ -555,7 +567,7 @@ namespace TheLastKnight.Player
             {
                 if (shockwaveRingPrefab != null)
                 {
-                    GameObject ring = Instantiate(shockwaveRingPrefab, position, Quaternion.identity);
+                    GameObject ring = TrackSpawn(Instantiate(shockwaveRingPrefab, position, Quaternion.identity));
                     StartCoroutine(FadeAndExpandRingRoutine(ring, 0.3f));
                 }
                 yield return new WaitForSeconds(shockwaveRingDelay);
@@ -662,27 +674,66 @@ namespace TheLastKnight.Player
             #endif
         }
 
+        /// <summary>
+        /// Immediately cancels and cleans up all active Excalibur VFX, instances, particles, and coroutines.
+        /// </summary>
+        public void CancelUltimateAttack()
+        {
+            StopAllCoroutines();
+            ultimateCoroutine = null;
+
+            Time.timeScale = 1.0f;
+            SetBackgroundDimmed(false);
+
+            if (whiteScreenFlashOverlay != null)
+            {
+                whiteScreenFlashOverlay.alpha = 0f;
+            }
+
+            if (currentActiveAura != null) { SafeDestroy(currentActiveAura); currentActiveAura = null; }
+            if (currentActiveGroundCrack != null) { SafeDestroy(currentActiveGroundCrack); currentActiveGroundCrack = null; }
+            if (currentActiveVortex != null) { SafeDestroy(currentActiveVortex); currentActiveVortex = null; }
+            if (currentActiveLightning != null) { SafeDestroy(currentActiveLightning); currentActiveLightning = null; }
+            if (currentActiveBurst != null) { SafeDestroy(currentActiveBurst); currentActiveBurst = null; }
+            if (currentActiveDebris != null) { SafeDestroy(currentActiveDebris); currentActiveDebris = null; }
+            if (currentActiveBeam != null) { SafeDestroy(currentActiveBeam); currentActiveBeam = null; }
+
+            for (int i = _spawnedTrackedObjects.Count - 1; i >= 0; i--)
+            {
+                if (_spawnedTrackedObjects[i] != null)
+                {
+                    SafeDestroy(_spawnedTrackedObjects[i]);
+                }
+            }
+            _spawnedTrackedObjects.Clear();
+
+            Transform anchor = (swordVFXAnchor != null) ? swordVFXAnchor : transform;
+            for (int i = anchor.childCount - 1; i >= 0; i--)
+            {
+                Transform child = anchor.GetChild(i);
+                if (child != null && (child.name.Contains("(Clone)") || child.name.Contains("Aura") || child.name.Contains("Vortex") || child.name.Contains("Beam") || child.name.Contains("Shockwave") || child.name.Contains("Crack") || child.name.Contains("Lightning")))
+                {
+                    SafeDestroy(child.gameObject);
+                }
+            }
+
+            StopAllChildParticleSystems();
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.transform.localPosition = Vector3.zero;
+            }
+
+            isExecutingUltimate = false;
+        }
+
+        public void StopUltimateAttack() => CancelUltimateAttack();
+
         private void OnDisable()
         {
             if (isExecutingUltimate)
             {
-                Time.timeScale = 1.0f;
-                SetBackgroundDimmed(false);
-
-                if (whiteScreenFlashOverlay != null)
-                {
-                    whiteScreenFlashOverlay.alpha = 0f;
-                }
-
-                if (currentActiveAura != null) SafeDestroy(currentActiveAura);
-                if (currentActiveGroundCrack != null) SafeDestroy(currentActiveGroundCrack);
-                if (currentActiveVortex != null) SafeDestroy(currentActiveVortex);
-                if (currentActiveLightning != null) SafeDestroy(currentActiveLightning);
-                if (currentActiveBurst != null) SafeDestroy(currentActiveBurst);
-                if (currentActiveDebris != null) SafeDestroy(currentActiveDebris);
-                if (currentActiveBeam != null) SafeDestroy(currentActiveBeam);
-
-                isExecutingUltimate = false;
+                CancelUltimateAttack();
             }
         }
     }
