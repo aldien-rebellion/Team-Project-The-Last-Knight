@@ -310,7 +310,7 @@ namespace TheLastKnight.EditorTools
                 new MonsterConfig("Necromancer", 200f, 25f, 3f, 1.8f, 3.8f, 8f, 1.8f),
                 new MonsterConfig("Reaper", 280f, 30f, 5f, 2.2f, 4.5f, 8f, 2.2f),
                 new MonsterConfig("Satyr", 110f, 20f, 3f, 2.2f, 4.2f, 7f, 1.6f),
-                new MonsterConfig("ShadowDemonDragon", 900f, 55f, 12f, 1.8f, 3.8f, 10f, 3.5f),
+                new MonsterConfig("ShadowDemonDragon", 900f, 55f, 12f, 1.8f, 3.8f, 10f, 0.05f),
                 new MonsterConfig("Skeleton", 45f, 12f, 1f, 1.8f, 3.5f, 7f, 0.05f, scale: 5f),
                 new MonsterConfig("SkeletonKnight", 220f, 28f, 5f, 2.0f, 4.2f, 7f, 1.8f),
                 new MonsterConfig("Skullwolf", 65f, 18f, 1f, 3.2f, 5.8f, 8f, 1.4f),
@@ -393,10 +393,10 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
             serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "FlyingEye" ? 0.05f : cfg.MeleeRange;
             serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye";
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
             serializedAI.FindProperty("_rangedCooldown").floatValue = cfg.Name == "FlyingEye" ? 0f : 3f;
-            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "FlyingEye" ? 4 : 0;
-            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon";
+            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "FlyingEye" ? 4 : cfg.Name == "ShadowDemonDragon" ? 2 : 0;
+            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ShadowDemonDragon";
             serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon";
             serializedAI.FindProperty("_allowBasicParryWithSkills").boolValue = cfg.Name == "Small_dragon";
             serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner";
@@ -451,23 +451,25 @@ namespace TheLastKnight.EditorTools
                     parry.ApplyModifiedPropertiesWithoutUndo();
                 }
             }
-            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner")
+            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon")
             {
                 // Match BlueSlime's world-space UI scale (root 4x, canvas 0.006).
-                float barScale = cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" ? 0.0048f : 0.006f;
+                float barScale = cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" ? 0.0048f : 0.006f;
                 var healthBar = root.GetComponentInChildren<FloatingHealthBar>();
                 healthBar.transform.localScale = new Vector3(barScale, barScale, 1f);
-                if (cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner")
+                if (cfg.Name == "ShadowDemonDragon")
+                    healthBar.transform.localScale = new Vector3(0.024f, 0.024f, 1f);
+                if (cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon")
                     healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
                 var bar = new SerializedObject(root.GetComponentInChildren<FloatingHealthBar>());
                 bar.FindProperty("_followSprite").objectReferenceValue = sr;
-                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner";
+                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon";
                 bar.ApplyModifiedPropertiesWithoutUndo();
                 var receiver = root.GetComponent<ParryReceiver>();
                 if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
                 var parry = new SerializedObject(receiver);
                 parry.FindProperty("_centerSprite").objectReferenceValue = sr;
-                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner";
+                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon";
                 parry.ApplyModifiedPropertiesWithoutUndo();
                 if (cfg.Name == "Skeleton")
                 {

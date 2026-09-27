@@ -121,6 +121,7 @@ namespace TheLastKnight.AI
         public float CurrentAttackMultiplier => _currentAttackMultiplier;
 
         public EnemyAIState CurrentState => _currentState;
+        public bool IsFacingRight => _isFacingRight;
         public bool IsFlying => _isFlying;
 
         private readonly System.Collections.Generic.HashSet<string> _availableAnimParams = new System.Collections.Generic.HashSet<string>();
@@ -521,6 +522,8 @@ namespace TheLastKnight.AI
 
         private IEnumerator WindupAttack(bool ranged, bool canParry)
         {
+            var dragonAudio = GetComponent<DragonAudioController>();
+            dragonAudio?.PrepareAttackAnimation();
             _isActionLocked = true;
             _projectileSpawned = false;
             _damageUntil = 0f;
@@ -548,8 +551,19 @@ namespace TheLastKnight.AI
                 }
             }
 
-            PlayAnimationAction(_basicAttackAnimState);
+            if (dragonAudio != null && !ranged)
+                dragonAudio.PlayAttackAnimation();
+            else
+                PlayAnimationAction(_basicAttackAnimState);
             _smallDragonFireEffect?.Play();
+            // Let the dragon's visible strike reach frame 3 before applying damage.
+            if (dragonAudio != null && !ranged)
+                yield return new WaitForSeconds(2f / 12f);
+            if (_stats.IsDead || _parry.IsStaggered)
+            {
+                _isActionLocked = false;
+                yield break;
+            }
             foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
             {
                 hitbox.BeginAttack();
@@ -562,7 +576,8 @@ namespace TheLastKnight.AI
             if (ranged) SpawnProjectile();
             yield return new WaitForSeconds(0.35f);
             _damageUntil = 0f;
-            float remainingAnimationTime = GetAnimationDuration(_basicAttackAnimState, 0.35f) - 0.35f;
+            float remainingAnimationTime = GetAnimationDuration(_basicAttackAnimState, 0.35f) - 0.35f
+                - (dragonAudio != null && !ranged ? 2f / 12f : 0f);
             if (remainingAnimationTime > 0f)
             {
                 yield return new WaitForSeconds(remainingAnimationTime);
@@ -766,7 +781,8 @@ namespace TheLastKnight.AI
 
             foreach (var clip in _animator.runtimeAnimatorController.animationClips)
             {
-                if (clip != null && clip.name == animationName)
+                if (clip != null && (clip.name == animationName ||
+                    clip.name.EndsWith("_" + animationName, System.StringComparison.Ordinal)))
                 {
                     return clip.length / Mathf.Max(0.01f, _animator.speed);
                 }
@@ -1064,7 +1080,8 @@ namespace TheLastKnight.AI
         {
             _isFacingRight = faceRight;
             Vector3 scale = transform.localScale;
-            float targetSign = _initialFacingRight ? (faceRight ? 1f : -1f) : (faceRight ? -1f : 1f);
+            float targetSign = GetComponent<DragonAudioController>() != null
+                ? 1f : _initialFacingRight ? (faceRight ? 1f : -1f) : (faceRight ? -1f : 1f);
             scale.x = Mathf.Abs(scale.x) * targetSign;
             transform.localScale = scale;
         }
