@@ -32,7 +32,15 @@ namespace TheLastKnight.Combat.Projectiles
 
         public void Initialize(Vector2 direction, float damage, GameObject attacker = null)
         {
-            _direction = direction.normalized;
+            if (_animator != null && _animator.runtimeAnimatorController != null
+                && _animator.HasState(0, Animator.StringToHash("Projectile")))
+            {
+                // Restart the projectile sprite-sheet animation each time this projectile is fired.
+                _animator.Play("Projectile", 0, 0f);
+            }
+
+            
+_direction = direction.normalized;
             if (damage > 0) _damage = damage;
             _attacker = attacker;
 

@@ -489,15 +489,22 @@ namespace TheLastKnight.Player
             Vector2 center = (Vector2)transform.position + new Vector2(_attackOffset.x * facing, _attackOffset.y);
             foreach (var collider in Physics2D.OverlapBoxAll(center, _attackSize, 0f, _attackLayers))
             {
-                if (collider.transform.root == transform.root) continue;
-                var target = collider.GetComponentInParent<IDamageable>();
+                // Only ignore this player's own colliders. Other actors can share a scene/container root.
+                if (collider.transform == transform || collider.transform.IsChildOf(transform)) continue;
+                // Enemy hitboxes are often child trigger colliders. Resolve the root
+                // EnemyStats first so a player hit always reaches the enemy health
+                // component and raises its health-bar event.
+                IDamageable target = collider.GetComponentInParent<TheLastKnight.Combat.EnemyStats>();
+                if (target == null)
+                {
+                    target = collider.GetComponentInParent<IDamageable>();
+                }
                 if (target == null || !_attackTargets.Add(target)) continue;
                 var parry = collider.GetComponentInParent<ParryReceiver>();
                 bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
                 float damage = stats.AttackPower * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
                 target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
-                FloatingCombatText.Show(point, Mathf.CeilToInt(damage).ToString() + (critical ? "!" : ""), critical ? Color.yellow : Color.white);
             }
         }
 

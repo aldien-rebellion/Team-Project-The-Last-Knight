@@ -14,6 +14,10 @@ namespace TheLastKnight.AI
         [Tooltip("Patrol distance walking shortly around the spawn point.")]
         [SerializeField] private float _patrolDistance = 3f;
         [SerializeField] private bool _isFlying = false;
+        [Tooltip("Vertical offset from the target collider center while chasing as a flying enemy.")]
+        [SerializeField] private float _flyingChaseHeightOffset;
+        [Tooltip("Vertical adjustment applied once to this flying enemy's spawn and patrol height.")]
+        [SerializeField] private float _flyingIdleHeightOffset;
         [SerializeField] private bool _avoidLedges = true;
         [SerializeField] private bool _initialFacingRight = true;
 
@@ -34,6 +38,8 @@ namespace TheLastKnight.AI
         [SerializeField] private float _detectionRange = 7f;
         [SerializeField] private float _meleeRange = 1.4f;
         [SerializeField] private float _meleeCooldown = 1.5f;
+        [Tooltip("Measure attack and skill ranges from the nearest enabled non-trigger collider edges.")]
+        [SerializeField] private bool _useColliderEdgeAttackRanges;
         [Tooltip("When enabled, this enemy waits for configured skills instead of using the basic melee attack.")]
         [SerializeField] private bool _disableBasicAttack;
 
@@ -117,6 +123,8 @@ namespace TheLastKnight.AI
             _stats = GetComponent<EnemyStats>();
             _parry = GetComponent<ParryReceiver>();
             if (_parry == null) _parry = gameObject.AddComponent<ParryReceiver>();
+            if (_useColliderEdgeAttackRanges)
+                _parry.SetSpriteCenter(GetComponent<SpriteRenderer>(), true);
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
             _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
@@ -124,6 +132,11 @@ namespace TheLastKnight.AI
             _isFacingRight = _initialFacingRight;
             _startX = transform.position.x;
             _spawnPosition = transform.position;
+            if (_isFlying && !Mathf.Approximately(_flyingIdleHeightOffset, 0f))
+            {
+                transform.position += Vector3.up * _flyingIdleHeightOffset;
+                _spawnPosition = transform.position;
+            }
             _spawnRotation = transform.rotation;
             foreach (var skill in _skills)
                 if (skill != null) skill.nextReadyTime = Time.time + skill.initialDelay;
@@ -235,7 +248,7 @@ namespace TheLastKnight.AI
 
             // Check if current animation state locks movement (e.g. hurt or attacking)
             var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.IsName("Hurt") || stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") || stateInfo.IsName("Cast") || _isActionLocked)
+            if (stateInfo.IsName("Hurt") || stateInfo.IsName("TakeHit") || stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") || stateInfo.IsName("Cast") || _isActionLocked)
             {
                 _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
                 SetAnimBool("IsMoving", false);
@@ -258,10 +271,16 @@ namespace TheLastKnight.AI
             }
 
             float distToPlayer = Vector2.Distance(transform.position, _player.transform.position);
-            float attackDistance = _cycleNonParryableSkills ? GetAttackDistance() : distToPlayer;
-            float meleeDistance = _basicParryEveryNAttacks > 0 ? GetAttackDistance() : attackDistance;
+            float colliderEdgeDistance = (_useColliderEdgeAttackRanges || _cycleNonParryableSkills || _basicParryEveryNAttacks > 0)
+                ? GetAttackDistance()
+                : distToPlayer;
+            float attackDistance = colliderEdgeDistance;
+            float meleeDistance = colliderEdgeDistance;
+            bool withinDetectionRange = _useColliderEdgeAttackRanges
+                ? colliderEdgeDistance <= _detectionRange
+                : distToPlayer <= _detectionRange;
 
-            TheLastKnight.Combat.EnemySkill readySkill = distToPlayer <= _detectionRange
+            TheLastKnight.Combat.EnemySkill readySkill = withinDetectionRange
                 ? GetReadySkill(attackDistance) : null;
             if (readySkill != null)
             {
@@ -277,12 +296,12 @@ namespace TheLastKnight.AI
                     ChasePlayer();
                 }
             }
-            else if (!_disableBasicAttack && meleeDistance <= _meleeRange && distToPlayer <= _detectionRange && Time.time >= _nextMeleeTime)
+            else if (!_disableBasicAttack && meleeDistance <= _meleeRange && withinDetectionRange && Time.time >= _nextMeleeTime)
             {
                 FaceTarget(_player.transform.position);
                 PerformMeleeAttack();
             }
-            else if (_disableBasicAttack && distToPlayer <= _meleeRange)
+            else if (_disableBasicAttack && meleeDistance <= _meleeRange)
             {
                 _currentState = EnemyAIState.Idle;
                 _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
@@ -294,7 +313,7 @@ namespace TheLastKnight.AI
                 FaceTarget(_player.transform.position);
                 PerformRangedAttack();
             }
-            else if (distToPlayer <= _detectionRange)
+            else if (withinDetectionRange)
             {
                 ChasePlayer();
             }
@@ -392,7 +411,19 @@ namespace TheLastKnight.AI
             SetAnimBool("IsChasing", true);
             SetAnimBool("IsMoving", true);
 
-            Vector2 toPlayer = _player.transform.position - transform.position;
+            Vector2 targetPosition = _player.transform.position;
+            if (_isFlying && _useColliderEdgeAttackRanges)
+            {
+                var playerColliders = _player.GetComponentsInChildren<Collider2D>();
+                foreach (var playerCollider in playerColliders)
+                {
+                    if (playerCollider == null || !playerCollider.enabled || playerCollider.isTrigger) continue;
+                    targetPosition = playerCollider.bounds.center + Vector3.up * _flyingChaseHeightOffset;
+                    break;
+                }
+            }
+
+            Vector2 toPlayer = targetPosition - (Vector2)transform.position;
             float dirX = Mathf.Sign(toPlayer.x);
 
             // Flying enemies can move in 2D
@@ -437,20 +468,7 @@ namespace TheLastKnight.AI
             _currentAttackMultiplier = _basicAttackMultiplier;
 
             // Optional attack-count cadence takes precedence over the legacy timed parry cooldown.
-            bool canParryThisTime = false;
-            if (!HasParryableSkill() && _basicAttackCanParry)
-            {
-                _basicAttackCount++;
-                if (_basicParryEveryNAttacks > 0)
-                {
-                    canParryThisTime = _basicAttackCount % _basicParryEveryNAttacks == 0;
-                }
-                else if (Time.time >= _nextBasicParryTime)
-                {
-                    canParryThisTime = true;
-                    _nextBasicParryTime = Time.time + Mathf.Max(4.0f, _basicParryCooldown);
-                }
-            }
+            bool canParryThisTime = ShouldBasicAttackParry();
 
             StartCoroutine(WindupAttack(false, canParryThisTime));
         }
@@ -464,17 +482,25 @@ namespace TheLastKnight.AI
             _nextRangedTime = Time.time + _rangedCooldown;
             _currentAttackMultiplier = _basicAttackMultiplier;
 
-            bool canParryThisTime = false;
-            if (!HasParryableSkill() && _basicAttackCanParry)
-            {
-                if (Time.time >= _nextBasicParryTime)
-                {
-                    canParryThisTime = true;
-                    _nextBasicParryTime = Time.time + Mathf.Max(4.0f, _basicParryCooldown);
-                }
-            }
+            bool canParryThisTime = ShouldBasicAttackParry();
 
             StartCoroutine(WindupAttack(true, canParryThisTime));
+        }
+
+        private bool ShouldBasicAttackParry()
+        {
+            if (!_basicAttackCanParry || (_basicParryEveryNAttacks <= 0 && HasParryableSkill()))
+                return false;
+
+            _basicAttackCount++;
+            if (_basicParryEveryNAttacks > 0)
+                return _basicAttackCount % _basicParryEveryNAttacks == 0;
+
+            if (Time.time < _nextBasicParryTime)
+                return false;
+
+            _nextBasicParryTime = Time.time + Mathf.Max(4.0f, _basicParryCooldown);
+            return true;
         }
 
         private IEnumerator WindupAttack(bool ranged, bool canParry)
@@ -752,13 +778,15 @@ namespace TheLastKnight.AI
             if (_cycleNonParryableSkills)
             {
                 foreach (var prioritySkill in _skills)
-                    if (prioritySkill != null && prioritySkill.isParryable && prioritySkill.IsReady(distToPlayer, Time.time))
+                    if (prioritySkill != null && prioritySkill.isParryable && prioritySkill.IsReady(distToPlayer, Time.time)
+                        && (!prioritySkill.requireLineOfSight || HasLineOfSightToPlayer()))
                         return prioritySkill;
 
                 for (int offset = 0; offset < _skills.Length; offset++)
                 {
                     var candidate = _skills[(_nextCyclicSkill + offset) % _skills.Length];
-                    if (candidate != null && !candidate.isParryable && candidate.IsReady(distToPlayer, Time.time))
+                    if (candidate != null && !candidate.isParryable && candidate.IsReady(distToPlayer, Time.time)
+                        && (!candidate.requireLineOfSight || HasLineOfSightToPlayer()))
                         return candidate;
                 }
                 return null;
@@ -767,12 +795,51 @@ namespace TheLastKnight.AI
             for (int i = 0; i < _skills.Length; i++)
             {
                 var skill = _skills[i];
-                if (skill != null && skill.IsReady(distToPlayer, Time.time))
+                if (skill != null && skill.IsReady(distToPlayer, Time.time)
+                    && (!skill.requireLineOfSight || HasLineOfSightToPlayer()))
                 {
                     return skill;
                 }
             }
             return null;
+        }
+
+        private bool HasLineOfSightToPlayer()
+        {
+            if (_player == null) return false;
+
+            var playerColliders = _player.GetComponentsInChildren<Collider2D>();
+            foreach (var enemyCollider in _colliders)
+            {
+                if (enemyCollider == null || !enemyCollider.enabled || enemyCollider.isTrigger) continue;
+                foreach (var playerCollider in playerColliders)
+                {
+                    if (playerCollider == null || !playerCollider.enabled || playerCollider.isTrigger) continue;
+
+                    Vector2 start = enemyCollider.ClosestPoint(playerCollider.bounds.center);
+                    Vector2 end = playerCollider.ClosestPoint(start);
+                    var hits = Physics2D.LinecastAll(start, end);
+                    bool blocked = false;
+                    foreach (var hit in hits)
+                    {
+                        var hitCollider = hit.collider;
+                        if (hitCollider == null || hitCollider.isTrigger) continue;
+                        if (hitCollider.transform == transform || hitCollider.transform.IsChildOf(transform)) continue;
+                        if (hitCollider.transform == _player.transform || hitCollider.transform.IsChildOf(_player.transform))
+                        {
+                            blocked = false;
+                            break;
+                        }
+
+                        blocked = true;
+                        break;
+                    }
+
+                    if (!blocked) return true;
+                }
+            }
+
+            return false;
         }
 
         private bool CanReachPlayerWithSkill(TheLastKnight.Combat.EnemySkill skill)
@@ -882,7 +949,7 @@ namespace TheLastKnight.AI
             if (_projectilePrefab == null) return;
 
             float dirX = _isFacingRight ? 1f : -1f;
-            Vector3 spawnPos = transform.position + new Vector3(_projectileSpawnOffset.x * dirX, _projectileSpawnOffset.y, 0f);
+            Vector3 spawnPos = GetProjectileSpawnPosition(dirX);
 
             GameObject proj = Instantiate(_projectilePrefab, spawnPos, Quaternion.identity);
 
@@ -895,11 +962,6 @@ namespace TheLastKnight.AI
             if (projectileScript != null)
             {
                 Vector2 fireDir = _isFacingRight ? Vector2.right : Vector2.left;
-                if (_player != null && _isFlying)
-                {
-                    // Target player directly if flying
-                    fireDir = ((Vector2)_player.transform.position - (Vector2)spawnPos).normalized;
-                }
                 float power = _stats != null ? _stats.AttackPower * _currentAttackMultiplier : 10f;
                 projectileScript.Initialize(fireDir, power, gameObject);
             }
@@ -910,7 +972,7 @@ namespace TheLastKnight.AI
             if (_stats.IsDead || _parry.IsStaggered || prefab == null) return;
 
             float dirX = _isFacingRight ? 1f : -1f;
-            Vector3 spawnPos = transform.position + new Vector3(_projectileSpawnOffset.x * dirX, _projectileSpawnOffset.y, 0f);
+            Vector3 spawnPos = GetProjectileSpawnPosition(dirX);
 
             GameObject proj = Instantiate(prefab, spawnPos, Quaternion.identity);
             if (_continuousActions) _activeSkillProjectile = proj;
@@ -922,13 +984,25 @@ namespace TheLastKnight.AI
             if (projectileScript != null)
             {
                 Vector2 fireDir = _isFacingRight ? Vector2.right : Vector2.left;
-                if (_player != null && _isFlying)
-                {
-                    fireDir = ((Vector2)_player.transform.position - (Vector2)spawnPos).normalized;
-                }
                 float power = _stats != null ? _stats.AttackPower * damageMultiplier : 10f * damageMultiplier;
                 projectileScript.Initialize(fireDir, power, gameObject);
             }
+        }
+
+        private Vector3 GetProjectileSpawnPosition(float directionX)
+        {
+            if (_useColliderEdgeAttackRanges)
+            {
+                var sprite = GetComponent<SpriteRenderer>();
+                if (sprite != null && sprite.sprite != null)
+                {
+                    Bounds visibleBounds = SpriteVisualBounds.GetWorldBounds(sprite);
+                    float mouthSide = directionX >= 0f ? visibleBounds.max.x : visibleBounds.min.x;
+                    return new Vector3(mouthSide + directionX * 0.05f, visibleBounds.center.y, transform.position.z);
+                }
+            }
+
+            return transform.position + new Vector3(_projectileSpawnOffset.x * directionX, _projectileSpawnOffset.y, 0f);
         }
 
         private void FaceTarget(Vector3 targetPos)
@@ -953,7 +1027,18 @@ namespace TheLastKnight.AI
             if (_continuousActions && _isActionLocked) return;
 
             _currentState = EnemyAIState.Hurt;
-            SetAnimTrigger("Hurt");
+            // Force the reaction state so damage received during an attack cannot
+            // leave the Animator waiting on an interrupted trigger transition.
+            if (_animator != null && _animator.HasState(0, Animator.StringToHash("TakeHit")))
+            {
+                if (_availableAnimParams.Contains("Hurt")) _animator.ResetTrigger("Hurt");
+                if (_availableAnimParams.Contains("Attack")) _animator.ResetTrigger("Attack");
+                _animator.Play("TakeHit", 0, 0f);
+            }
+            else
+            {
+                SetAnimTrigger("Hurt");
+            }
 
             // Apply slight knockback
             if (data.knockbackForce != Vector2.zero)
@@ -968,12 +1053,28 @@ namespace TheLastKnight.AI
             _currentState = EnemyAIState.Dead;
             SetAnimBool("IsDead", true);
             _rb.linearVelocity = Vector2.zero;
-            _rb.bodyType = RigidbodyType2D.Kinematic;
+            if (_isFlying)
+            {
+                // Let flying monsters fall after death. Keep their solid body
+                // collider enabled so it can land on the floor, but turn off
+                // trigger hitboxes so the corpse cannot keep attacking.
+                _rb.bodyType = RigidbodyType2D.Dynamic;
+                _rb.gravityScale = 2.5f;
+                _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                if (!_canRespawn) StartCoroutine(FitFlyingDeathColliderToSprite());
+            }
+            else
+            {
+                _rb.bodyType = RigidbodyType2D.Kinematic;
+            }
 
-            // Disable all colliders so it doesn't block player or absorb attacks
+            // Ground enemies keep their previous death behavior. Flying enemies
+            // retain only their solid collider to land, disabling all attack triggers.
             foreach (var col in _colliders)
             {
-                if (col != null) col.enabled = false;
+                if (col == null) continue;
+                if (_isFlying && !col.isTrigger) continue;
+                col.enabled = false;
             }
 
             if (_canRespawn)
@@ -984,6 +1085,28 @@ namespace TheLastKnight.AI
             {
                 Destroy(gameObject, _deathDestroyDelay);
             }
+        }
+
+        private IEnumerator FitFlyingDeathColliderToSprite()
+        {
+            // Let the Animator switch to the first death frame, then fit the
+            // landing collider to the visible sprite instead of its oversized
+            // transparent texture rectangle. This keeps the corpse above ground.
+            yield return null;
+
+            var spriteRenderer = GetComponent<SpriteRenderer>();
+            var bodyCollider = GetComponent<CapsuleCollider2D>();
+            if (spriteRenderer == null || spriteRenderer.sprite == null || bodyCollider == null) yield break;
+
+            Bounds visibleBounds = TheLastKnight.Combat.SpriteVisualBounds.GetWorldBounds(spriteRenderer);
+            Vector3 localCenter = transform.InverseTransformPoint(visibleBounds.center);
+            Vector3 scale = transform.lossyScale;
+            float scaleX = Mathf.Max(0.0001f, Mathf.Abs(scale.x));
+            float scaleY = Mathf.Max(0.0001f, Mathf.Abs(scale.y));
+            bodyCollider.offset = new Vector2(localCenter.x, localCenter.y);
+            bodyCollider.size = new Vector2(
+                visibleBounds.size.x / scaleX + 0.08f / scaleX,
+                visibleBounds.size.y / scaleY + 0.08f / scaleY);
         }
 
         private IEnumerator RespawnRoutine()

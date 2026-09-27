@@ -28,9 +28,13 @@ namespace TheLastKnight.Combat
 
         private void Awake()
         {
-            if (_targetStats == null)
+            // The health bar always belongs to the enemy that owns this canvas.
+            // Resolve it from the hierarchy so prefab-local references cannot point
+            // at a stale component after a prefab is copied or rebuilt.
+            var parentStats = GetComponentInParent<EnemyStats>();
+            if (parentStats != null)
             {
-                _targetStats = GetComponentInParent<EnemyStats>();
+                _targetStats = parentStats;
             }
 
             if (_canvas == null)
@@ -90,6 +94,7 @@ namespace TheLastKnight.Combat
 
         private void OnEnable()
         {
+            ResolveTargetStats();
             if (_targetStats != null)
             {
                 _targetStats.OnHealthChanged += HandleHealthChanged;
@@ -109,6 +114,20 @@ namespace TheLastKnight.Combat
 
         private void LateUpdate()
         {
+            // A prefab can be enabled before its parent EnemyStats has finished
+            // initializing. Keep resolving until the valid owner is available.
+            if (_targetStats == null)
+            {
+                ResolveTargetStats();
+                if (_targetStats != null)
+                {
+                    _targetStats.OnHealthChanged -= HandleHealthChanged;
+                    _targetStats.OnHealthChanged += HandleHealthChanged;
+                    _targetStats.OnDeath -= HandleDeath;
+                    _targetStats.OnDeath += HandleDeath;
+                }
+            }
+
             // Keep the visual in sync even if damage was applied before this
             // component subscribed to the health event (or a prefab reference was missing).
             if (_targetStats != null)
@@ -164,10 +183,15 @@ namespace TheLastKnight.Combat
                 }
                 else
                 {
-                    Bounds spriteBounds = _targetSpriteRenderer.bounds;
+                    Bounds spriteBounds = _useVisibleSpriteBounds
+                        ? SpriteVisualBounds.GetWorldBounds(_targetSpriteRenderer)
+                        : _targetSpriteRenderer.bounds;
+                    float barHalfHeight = 0f;
+                    if (_useVisibleSpriteBounds && transform is RectTransform visibleBoundsRect)
+                        barHalfHeight = visibleBoundsRect.rect.height * Mathf.Abs(transform.lossyScale.y) * 0.5f;
                     Vector3 position = transform.position;
                     position.x = spriteBounds.center.x;
-                    position.y = spriteBounds.max.y + _headOffset;
+                    position.y = spriteBounds.max.y + _headOffset + barHalfHeight;
                     transform.position = position;
                     return;
                 }
@@ -177,6 +201,15 @@ namespace TheLastKnight.Combat
                 Vector3 headPosition = _targetSpriteRenderer.transform.TransformPoint(localHeadPoint);
                 headPosition += Vector3.up * _headOffset;
                 transform.position = new Vector3(headPosition.x, headPosition.y, transform.position.z);
+            }
+        }
+
+        private void ResolveTargetStats()
+        {
+            var parentStats = GetComponentInParent<EnemyStats>();
+            if (parentStats != null)
+            {
+                _targetStats = parentStats;
             }
         }
 
@@ -202,26 +235,23 @@ namespace TheLastKnight.Combat
             }
         }
 
-        private void HandleHealthChanged(float current, float max)
+private void HandleHealthChanged(float current, float max)
         {
-            if (max > 0f)
+            if (max <= 0f) return;
+
+            float pct = Mathf.Clamp01(current / max);
+            if (_healthBarFill != null)
             {
-                float pct = Mathf.Clamp01(current / max);
-                if (_healthBarFill != null)
-                {
-                    _healthBarFill.fillAmount = pct;
-                    var fillRt = _healthBarFill.rectTransform;
-                    if (fillRt != null)
-                    {
-                        Vector2 maxAnchor = fillRt.anchorMax;
-                        maxAnchor.x = pct;
-                        fillRt.anchorMax = maxAnchor;
-                    }
-                }
-                if (_healthPercentText != null)
-                {
-                    _healthPercentText.text = Mathf.RoundToInt(pct * 100f) + "%";
-                }
+                // Keep the bar proportional to health by using a single fill mechanism.
+                _healthBarFill.type = Image.Type.Filled;
+                _healthBarFill.fillMethod = Image.FillMethod.Horizontal;
+                _healthBarFill.fillOrigin = (int)Image.OriginHorizontal.Left;
+                _healthBarFill.fillAmount = pct;
+            }
+
+            if (_healthPercentText != null)
+            {
+                _healthPercentText.text = Mathf.RoundToInt(pct * 100f) + "%";
             }
         }
 
