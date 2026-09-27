@@ -52,7 +52,9 @@ namespace TheLastKnight.Tests
         [UnityEngine.TestTools.UnityTest]
         public System.Collections.IEnumerator RealWindow_InputModule_DragAndClickMovePotions()
         {
-            return (System.Collections.IEnumerator)RuntimeType("InventoryPointerCheck").GetMethod("Run").Invoke(null, null);
+            yield return new UnityEngine.TestTools.EnterPlayMode();
+            yield return (System.Collections.IEnumerator)RuntimeType("InventoryPointerCheck").GetMethod("Run").Invoke(null, null);
+            yield return new UnityEngine.TestTools.ExitPlayMode();
         }
         [UnityEngine.TestTools.UnityTest]
         public System.Collections.IEnumerator PointerDrag_QuickPotionToBag_UsesRaycastTargetAndConservesStack()
