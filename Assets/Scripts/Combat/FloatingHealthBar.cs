@@ -22,6 +22,8 @@ namespace TheLastKnight.Combat
         [SerializeField] private float _headOffset = 0.12f;
 
         private Vector3 _originalScale;
+        private float _fillLeftInset;
+        private float _fillRightInset;
         private Text _levelText;
         private Text _healthPercentText;
         private SpriteRenderer _targetSpriteRenderer;
@@ -54,6 +56,8 @@ namespace TheLastKnight.Combat
                     }
                 }
             }
+
+            CaptureFillInsets();
 
             if (_followSpriteBounds)
             {
@@ -242,6 +246,7 @@ namespace TheLastKnight.Combat
         {
             _targetStats = stats;
             _healthBarFill = fillImage;
+            CaptureFillInsets();
 
             if (_targetStats != null)
             {
@@ -251,18 +256,29 @@ namespace TheLastKnight.Combat
             }
         }
 
-private void HandleHealthChanged(float current, float max)
+        private void CaptureFillInsets()
+        {
+            if (_healthBarFill == null) return;
+            var fillRect = _healthBarFill.rectTransform;
+            _fillLeftInset = fillRect.offsetMin.x;
+            _fillRightInset = -fillRect.offsetMax.x;
+        }
+
+        private void HandleHealthChanged(float current, float max)
         {
             if (max <= 0f) return;
 
             float pct = Mathf.Clamp01(current / max);
             if (_healthBarFill != null)
             {
-                // Keep the bar proportional to health by using a single fill mechanism.
-                _healthBarFill.type = Image.Type.Filled;
-                _healthBarFill.fillMethod = Image.FillMethod.Horizontal;
-                _healthBarFill.fillOrigin = (int)Image.OriginHorizontal.Left;
-                _healthBarFill.fillAmount = pct;
+                // These prefab Images have no sprite, so Filled ignores fillAmount.
+                // Resize the RectTransform instead, keeping the authored insets.
+                _healthBarFill.type = Image.Type.Simple;
+                var fillRect = _healthBarFill.rectTransform;
+                fillRect.anchorMax = new Vector2(pct, fillRect.anchorMax.y);
+                var offsetMax = fillRect.offsetMax;
+                offsetMax.x = _fillLeftInset * (1f - pct) - _fillRightInset * pct;
+                fillRect.offsetMax = offsetMax;
             }
 
             if (_healthPercentText != null)
