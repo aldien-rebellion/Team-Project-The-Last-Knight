@@ -124,10 +124,13 @@ namespace TheLastKnight.Tests
                 var enemyStats = enemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
                 SetField(enemyStats, "_maxHealth", 500f);
                 SetField(enemyStats, "_defense", 0f);
+                var enemyRb = enemy.AddComponent<Rigidbody2D>();
+                enemyRb.gravityScale = 0;
                 enemy.AddComponent<BoxCollider2D>();
                 Invoke(enemyStats, "Awake");
                 Physics2D.SyncTransforms();
 
+                float initialEnemyX = enemy.transform.position.x;
                 SetProp(controller, "SkillDamageMultiplier", 2.0f);
                 Invoke(controller, "StartSkill");
                 Invoke(controller, "ApplySkillHits");
@@ -139,6 +142,8 @@ namespace TheLastKnight.Tests
 
                 Assert.That(hpAfterSkill, Is.LessThan(maxHP), "Skill 1 must deal damage to enemy");
                 Assert.That(maxHP - hpAfterSkill, Is.EqualTo(expectedDamage).Within(1f));
+                Assert.That(enemy.transform.position.x, Is.GreaterThan(initialEnemyX), "Skill 1 must push monster outward away from player");
+                Assert.That(enemyRb.linearVelocity.x, Is.GreaterThan(0f), "Skill 1 must apply knockback velocity to monster");
 
                 // Target hit set should prevent duplicate damage on same skill execution
                 Invoke(controller, "ApplySkillHits");
@@ -187,6 +192,7 @@ namespace TheLastKnight.Tests
 
                 Assert.That(hpAfterExcalibur, Is.LessThan(maxHP), "Skill 3 Excalibur must deal damage to enemy in beam path");
                 Assert.That(maxHP - hpAfterExcalibur, Is.EqualTo(expectedDamage).Within(1f));
+                Assert.That(GetProp(enemyStats, "CurrentStatus").ToString(), Is.EqualTo("Stunned"), "Enemy hit by Excalibur must be stunned");
             }
             finally
             {
@@ -208,18 +214,20 @@ namespace TheLastKnight.Tests
 
                 Assert.That((float)GetProp(controller, "DashIFrameDuration"), Is.EqualTo(0.15f).Within(0.001f));
 
-                // Verify default or configurable cooldowns
+                // Verify default or configurable cooldowns & stun duration
                 SetProp(controller, "SkillCooldown", 2.5f);
                 SetProp(controller, "BuffCooldown", 4.0f);
                 SetProp(controller, "ExcaliburCooldown", 8.0f);
                 SetProp(controller, "DashCooldown", 0.8f);
                 SetProp(controller, "DashIFrameDuration", 0.15f);
+                SetProp(controller, "ExcaliburStunDuration", 3.0f);
 
                 Assert.That((float)GetProp(controller, "SkillCooldown"), Is.EqualTo(2.5f));
                 Assert.That((float)GetProp(controller, "BuffCooldown"), Is.EqualTo(4.0f));
                 Assert.That((float)GetProp(controller, "ExcaliburCooldown"), Is.EqualTo(8.0f));
                 Assert.That((float)GetProp(controller, "DashCooldown"), Is.EqualTo(0.8f));
                 Assert.That((float)GetProp(controller, "DashIFrameDuration"), Is.EqualTo(0.15f).Within(0.001f));
+                Assert.That((float)GetProp(controller, "ExcaliburStunDuration"), Is.EqualTo(3.0f));
             }
             finally
             {

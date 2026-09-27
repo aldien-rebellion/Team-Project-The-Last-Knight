@@ -157,6 +157,17 @@ namespace TheLastKnight.Combat
             if (IsDead) return;
             _currentStatus = effect;
             _statusTimer = duration;
+
+            if (effect == StatusEffect.Stunned)
+            {
+                GetComponent<TheLastKnight.AI.EnemyController>()?.CancelAttack();
+                GetComponent<SlimeController>()?.CancelAttack();
+                var rb = GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+                }
+            }
         }
 
         public void ClearStatus()

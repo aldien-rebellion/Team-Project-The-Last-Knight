@@ -120,10 +120,11 @@ public class SlimeController : MonoBehaviour
         
         if (player == null) return;
 
-        if (parryReceiver != null && parryReceiver.IsStaggered)
+        if ((parryReceiver != null && parryReceiver.IsStaggered) || (enemyStats != null && enemyStats.CurrentStatus == TheLastKnight.Combat.StatusEffect.Stunned))
         {
             animator.SetBool("IsMoving", false);
             animator.SetBool("IsChasing", false);
+            if (rb != null) rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
             return;
         }
 

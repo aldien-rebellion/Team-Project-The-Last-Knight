@@ -49,6 +49,10 @@ namespace TheLastKnight.Player
         private Vector2 _skillAttackSize = new Vector2(3.5f, 2.5f);
         [SerializeField, Tooltip("Hitbox offset for Skill 1 (Carnage Burst).")]
         private Vector2 _skillAttackOffset = new Vector2(1.5f, 0f);
+        [SerializeField, Tooltip("Knockback velocity impulse applied to enemies hit by Skill 1 (pushes outward from player).")]
+        private Vector2 _skillKnockbackForce = new Vector2(10f, 3f);
+        [SerializeField, Tooltip("Displacement distance pushing enemies outward from player along the skill circle.")]
+        private float _skillPushDistance = 2.0f;
 
         [Header("Skill 2 Settings (Buff - Key R)")]
         [SerializeField, Tooltip("Buff skill duration.")]
@@ -69,6 +73,8 @@ namespace TheLastKnight.Player
         private Vector2 _excaliburHitOffset = new Vector2(7.5f, 0.5f);
         [SerializeField, Tooltip("Time delay from skill start before damage is dealt (corresponds to beam release).")]
         private float _excaliburDamageDelay = 3.3f;
+        [SerializeField, Tooltip("Stun duration in seconds applied to enemies hit by Skill 3 (Excalibur).")]
+        private float _excaliburStunDuration = 2.0f;
         [SerializeField, Tooltip("VFX controller for Excalibur. Auto-assigned if null.")]
         private ExcaliburVFXController _excaliburVFXController;
 
@@ -147,6 +153,8 @@ namespace TheLastKnight.Player
         public float SkillDamageMultiplier { get => _skillDamageMultiplier; set => _skillDamageMultiplier = value; }
         public Vector2 SkillAttackSize { get => _skillAttackSize; set => _skillAttackSize = value; }
         public Vector2 SkillAttackOffset { get => _skillAttackOffset; set => _skillAttackOffset = value; }
+        public Vector2 SkillKnockbackForce { get => _skillKnockbackForce; set => _skillKnockbackForce = value; }
+        public float SkillPushDistance { get => _skillPushDistance; set => _skillPushDistance = value; }
 
         public float BuffCooldown { get => _buffCooldown; set => _buffCooldown = value; }
 
@@ -155,6 +163,7 @@ namespace TheLastKnight.Player
         public Vector2 ExcaliburHitSize { get => _excaliburHitSize; set => _excaliburHitSize = value; }
         public Vector2 ExcaliburHitOffset { get => _excaliburHitOffset; set => _excaliburHitOffset = value; }
         public float ExcaliburDamageDelay { get => _excaliburDamageDelay; set => _excaliburDamageDelay = value; }
+        public float ExcaliburStunDuration { get => _excaliburStunDuration; set => _excaliburStunDuration = value; }
 
         // State Machine
         public PlayerState CurrentState { get; private set; } = PlayerState.Idle;
@@ -645,8 +654,36 @@ namespace TheLastKnight.Player
                 bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
                 float damage = stats.AttackPower * _skillDamageMultiplier * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
-                target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
+
+                // Calculate push / knockback direction away from the player
+                Vector2 diff = (Vector2)collider.transform.position - (Vector2)transform.position;
+                float signX = Mathf.Abs(diff.x) > 0.05f ? Mathf.Sign(diff.x) : facing;
+                Vector2 knockback = new Vector2(signX * _skillKnockbackForce.x, _skillKnockbackForce.y);
+
+                target.TakeDamage(new DamageData(damage, gameObject, DamageType.Physical, knockback, point));
                 FloatingCombatText.Show(point, Mathf.CeilToInt(damage).ToString() + (critical ? "!" : ""), critical ? Color.yellow : new Color(1f, 0.45f, 0.2f));
+
+                // Push monster outward away from player along the skill circle
+                var enemyRb = collider.GetComponentInParent<Rigidbody2D>();
+                if (enemyRb != null)
+                {
+                    enemyRb.linearVelocity = knockback;
+                    if (_skillPushDistance > 0f)
+                    {
+                        int groundMask = LayerMask.GetMask("Ground");
+                        float pushDist = _skillPushDistance;
+                        if (groundMask != 0)
+                        {
+                            RaycastHit2D wallCheck = Physics2D.Raycast(enemyRb.position, Vector2.right * signX, _skillPushDistance, groundMask);
+                            if (wallCheck.collider != null && wallCheck.collider != collider)
+                            {
+                                pushDist = Mathf.Max(0f, wallCheck.distance - 0.2f);
+                            }
+                        }
+                        enemyRb.position += new Vector2(signX * pushDist, 0f);
+                        enemyRb.transform.position = enemyRb.position;
+                    }
+                }
             }
         }
 
@@ -792,6 +829,17 @@ namespace TheLastKnight.Player
                 Vector2 point = collider.ClosestPoint(center);
                 target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
                 FloatingCombatText.Show(point, Mathf.CeilToInt(damage).ToString() + (critical ? "!" : ""), Color.yellow);
+
+                // Apply Stun for _excaliburStunDuration (configurable in Inspector, default 2s)
+                if (_excaliburStunDuration > 0f)
+                {
+                    var enemyStats = collider.GetComponentInParent<EnemyStats>();
+                    if (enemyStats != null)
+                    {
+                        enemyStats.ApplyStatus(StatusEffect.Stunned, _excaliburStunDuration);
+                        FloatingCombatText.Show(point + Vector2.up * 0.7f, "STUNNED!", Color.cyan);
+                    }
+                }
             }
         }
 
