@@ -38,23 +38,37 @@ namespace TheLastKnight.Player
         [SerializeField, Tooltip("Cooldown between attacks.")]
         private float _attackCooldown = 0.35f;
 
-        [Header("Skill Settings (Carnage Burst - Key E)")]
+        [Header("Skill 1 Settings (Carnage Burst - Key E)")]
         [SerializeField, Tooltip("Carnage Burst skill duration.")]
         private float _skillDuration = 0.5f;
-        [SerializeField, Tooltip("Cooldown between skill uses.")]
+        [SerializeField, Tooltip("Cooldown between Skill 1 uses.")]
         private float _skillCooldown = 1.0f;
+        [SerializeField, Tooltip("Damage multiplier for Skill 1 (Carnage Burst) multiplied by Player ATK.")]
+        private float _skillDamageMultiplier = 2.0f;
+        [SerializeField, Tooltip("Hitbox size for Skill 1 (Carnage Burst).")]
+        private Vector2 _skillAttackSize = new Vector2(3.5f, 2.5f);
+        [SerializeField, Tooltip("Hitbox offset for Skill 1 (Carnage Burst).")]
+        private Vector2 _skillAttackOffset = new Vector2(1.5f, 0f);
 
-        [Header("Buff Settings (Key R)")]
+        [Header("Skill 2 Settings (Buff - Key R)")]
         [SerializeField, Tooltip("Buff skill duration.")]
         private float _buffDuration = 0.6f;
-        [SerializeField, Tooltip("Cooldown between Buff uses.")]
+        [SerializeField, Tooltip("Cooldown between Skill 2 (Buff) uses.")]
         private float _buffCooldown = 1.0f;
 
-        [Header("Excalibur Settings (Key T)")]
+        [Header("Skill 3 Settings (Excalibur - Key T)")]
         [SerializeField, Tooltip("Excalibur skill duration.")]
         private float _excaliburDuration = 3.8f;
-        [SerializeField, Tooltip("Cooldown between Excalibur uses.")]
-        private float _excaliburCooldown = 1.0f;
+        [SerializeField, Tooltip("Cooldown between Skill 3 (Excalibur) uses.")]
+        private float _excaliburCooldown = 5.0f;
+        [SerializeField, Tooltip("Damage multiplier for Skill 3 (Excalibur) multiplied by Player ATK.")]
+        private float _excaliburDamageMultiplier = 5.0f;
+        [SerializeField, Tooltip("Hitbox size for Excalibur beam (length x height).")]
+        private Vector2 _excaliburHitSize = new Vector2(15f, 4f);
+        [SerializeField, Tooltip("Hitbox offset for Excalibur beam from player center.")]
+        private Vector2 _excaliburHitOffset = new Vector2(7.5f, 0.5f);
+        [SerializeField, Tooltip("Time delay from skill start before damage is dealt (corresponds to beam release).")]
+        private float _excaliburDamageDelay = 3.3f;
         [SerializeField, Tooltip("VFX controller for Excalibur. Auto-assigned if null.")]
         private ExcaliburVFXController _excaliburVFXController;
 
@@ -103,10 +117,14 @@ namespace TheLastKnight.Player
         private float _baseDashDuration = 0.2f;
         [SerializeField, Tooltip("Cooldown between dashes.")]
         private float _dashCooldown = 0.5f;
+        [SerializeField, Tooltip("Invincibility duration during dash (i-Frames in seconds).")]
+        private float _dashIFrameDuration = 0.15f;
 
         // Components
         private KinematicCharacterController2D _kinematicController;
         private SpriteRenderer _spriteRenderer;
+        private Collider2D _playerCollider;
+        private readonly List<Collider2D> _ignoredEnemyColliders = new List<Collider2D>();
 
         // Current Active Scaled Stats (Step 7 Preparation)
         public float MoveSpeed { get; set; }
@@ -121,13 +139,31 @@ namespace TheLastKnight.Player
         public float BaseDashSpeed => _baseDashSpeed;
         public float BaseDashDuration => _baseDashDuration;
 
+        // Cooldown and multiplier properties (accessible for tests/UI)
+        public float DashCooldown { get => _dashCooldown; set => _dashCooldown = value; }
+        public float DashIFrameDuration { get => _dashIFrameDuration; set => _dashIFrameDuration = value; }
+
+        public float SkillCooldown { get => _skillCooldown; set => _skillCooldown = value; }
+        public float SkillDamageMultiplier { get => _skillDamageMultiplier; set => _skillDamageMultiplier = value; }
+        public Vector2 SkillAttackSize { get => _skillAttackSize; set => _skillAttackSize = value; }
+        public Vector2 SkillAttackOffset { get => _skillAttackOffset; set => _skillAttackOffset = value; }
+
+        public float BuffCooldown { get => _buffCooldown; set => _buffCooldown = value; }
+
+        public float ExcaliburCooldown { get => _excaliburCooldown; set => _excaliburCooldown = value; }
+        public float ExcaliburDamageMultiplier { get => _excaliburDamageMultiplier; set => _excaliburDamageMultiplier = value; }
+        public Vector2 ExcaliburHitSize { get => _excaliburHitSize; set => _excaliburHitSize = value; }
+        public Vector2 ExcaliburHitOffset { get => _excaliburHitOffset; set => _excaliburHitOffset = value; }
+        public float ExcaliburDamageDelay { get => _excaliburDamageDelay; set => _excaliburDamageDelay = value; }
+
         // State Machine
         public PlayerState CurrentState { get; private set; } = PlayerState.Idle;
 
         // Dash State Variables
         private bool _dashInvincible;
+        private float _dashIFrameTimer = 0f;
         private float _parryInvincibleUntil;
-        public bool IsInvincible { get => _dashInvincible || Time.time < _parryInvincibleUntil; private set => _dashInvincible = value; }
+        public bool IsInvincible { get => _dashIFrameTimer > 0f || _dashInvincible || Time.time < _parryInvincibleUntil; private set => _dashInvincible = value; }
         private float _dashTimer = 0f;
         private float _dashCooldownTimer = 0f;
         private bool _hasDashedInAir = false;
@@ -151,6 +187,8 @@ namespace TheLastKnight.Player
         [SerializeField] private Vector2 _attackOffset = new Vector2(1.1f, 0f);
         [SerializeField] private LayerMask _attackLayers = ~0;
         private readonly HashSet<IDamageable> _attackTargets = new HashSet<IDamageable>();
+        private readonly HashSet<IDamageable> _skillTargets = new HashSet<IDamageable>();
+        private readonly HashSet<IDamageable> _excaliburTargets = new HashSet<IDamageable>();
 
         // Skill State Variables
         private float _skillTimer = 0f;
@@ -176,6 +214,7 @@ namespace TheLastKnight.Player
             _kinematicController = GetComponent<KinematicCharacterController2D>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _animator = GetComponent<Animator>();
+            _playerCollider = GetComponent<Collider2D>();
 
             if (_inputHandler == null)
             {
@@ -203,6 +242,20 @@ namespace TheLastKnight.Player
         {
             var stats = GetComponent<PlayerStats>();
             if (stats != null && stats.IsDead) return;
+
+            // Update Dash i-Frame Timer
+            if (_dashIFrameTimer > 0f)
+            {
+                _dashIFrameTimer -= Time.deltaTime;
+                if (_dashIFrameTimer <= 0f)
+                {
+                    _dashInvincible = false;
+                }
+            }
+
+            // Cleanup ignored enemy colliders when separated
+            CleanupIgnoredColliders();
+
             // Update Dash Cooldown
             if (_dashCooldownTimer > 0f)
             {
@@ -342,8 +395,15 @@ namespace TheLastKnight.Player
             CurrentState = PlayerState.Dashing;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("dash");
             IsInvincible = true;
+            _dashIFrameTimer = _dashIFrameDuration;
             _dashTimer = DashDuration;
             _dashCooldownTimer = _dashCooldown;
+
+            if (_kinematicController != null)
+            {
+                _kinematicController.IgnoreEnemies = true;
+            }
+            IgnoreEnemyCollisions(true);
 
             if (!_kinematicController.IsGrounded)
             {
@@ -368,6 +428,9 @@ namespace TheLastKnight.Player
             // Velocity during dash is flat horizontal speed, gravity is suspended
             _velocity = _dashDirection * DashSpeed;
 
+            // Collect and ignore collision with any enemy colliders passed along the way
+            CollectNearbyEnemyColliders();
+
             // Move character
             _kinematicController.Move(_velocity, Time.deltaTime);
 
@@ -379,7 +442,13 @@ namespace TheLastKnight.Player
 
         private void EndDash()
         {
-            IsInvincible = false;
+            _dashInvincible = false;
+            _dashIFrameTimer = 0f;
+            if (_kinematicController != null)
+            {
+                _kinematicController.IgnoreEnemies = false;
+            }
+            IgnoreEnemyCollisions(false);
 
             // Transition out of dash cleanly
             if (_kinematicController.IsGrounded)
@@ -504,6 +573,7 @@ namespace TheLastKnight.Player
         private void StartSkill()
         {
             if (!GetComponent<PlayerStats>().TrySpendStamina(25f)) return;
+            _skillTargets.Clear();
             CurrentState = PlayerState.UsingSkill;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("skill");
             _skillTimer = _skillDuration;
@@ -520,6 +590,7 @@ namespace TheLastKnight.Player
 
         private void UpdateSkill()
         {
+            ApplySkillHits();
             _skillTimer -= Time.deltaTime;
 
             if (!_kinematicController.IsGrounded)
@@ -544,6 +615,7 @@ namespace TheLastKnight.Player
 
         private void EndSkill()
         {
+            _skillTargets.Clear();
             if (_kinematicController.IsGrounded)
             {
                 float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
@@ -555,6 +627,26 @@ namespace TheLastKnight.Player
             else
             {
                 CurrentState = PlayerState.Falling;
+            }
+        }
+
+        public void ApplySkillHits()
+        {
+            var stats = GetComponent<PlayerStats>();
+            if (stats == null) return;
+            float facing = IsFacingRight ? 1f : -1f;
+            Vector2 center = (Vector2)transform.position + new Vector2(_skillAttackOffset.x * facing, _skillAttackOffset.y);
+            foreach (var collider in Physics2D.OverlapBoxAll(center, _skillAttackSize, 0f, _attackLayers))
+            {
+                if (collider.transform.root == transform.root) continue;
+                var target = collider.GetComponentInParent<IDamageable>();
+                if (target == null || !_skillTargets.Add(target)) continue;
+                var parry = collider.GetComponentInParent<ParryReceiver>();
+                bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
+                float damage = stats.AttackPower * _skillDamageMultiplier * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
+                Vector2 point = collider.ClosestPoint(center);
+                target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
+                FloatingCombatText.Show(point, Mathf.CeilToInt(damage).ToString() + (critical ? "!" : ""), critical ? Color.yellow : new Color(1f, 0.45f, 0.2f));
             }
         }
 
@@ -616,6 +708,7 @@ namespace TheLastKnight.Player
         private void StartExcalibur()
         {
             if (!GetComponent<PlayerStats>().TrySpendStamina(50f)) return;
+            _excaliburTargets.Clear();
             CurrentState = PlayerState.Excalibur;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("excalibur");
             _excaliburTimer = _excaliburDuration;
@@ -637,6 +730,12 @@ namespace TheLastKnight.Player
 
         private void UpdateExcalibur()
         {
+            // Apply beam damage during the beam release window
+            if (_excaliburTimer <= (_excaliburDuration - _excaliburDamageDelay))
+            {
+                ApplyExcaliburHits();
+            }
+
             _excaliburTimer -= Time.deltaTime;
 
             if (!_kinematicController.IsGrounded)
@@ -661,6 +760,7 @@ namespace TheLastKnight.Player
 
         private void EndExcalibur()
         {
+            _excaliburTargets.Clear();
             if (_kinematicController.IsGrounded)
             {
                 float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
@@ -672,6 +772,26 @@ namespace TheLastKnight.Player
             else
             {
                 CurrentState = PlayerState.Falling;
+            }
+        }
+
+        public void ApplyExcaliburHits()
+        {
+            var stats = GetComponent<PlayerStats>();
+            if (stats == null) return;
+            float facing = IsFacingRight ? 1f : -1f;
+            Vector2 center = (Vector2)transform.position + new Vector2(_excaliburHitOffset.x * facing, _excaliburHitOffset.y);
+            foreach (var collider in Physics2D.OverlapBoxAll(center, _excaliburHitSize, 0f, _attackLayers))
+            {
+                if (collider.transform.root == transform.root) continue;
+                var target = collider.GetComponentInParent<IDamageable>();
+                if (target == null || !_excaliburTargets.Add(target)) continue;
+                var parry = collider.GetComponentInParent<ParryReceiver>();
+                bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
+                float damage = stats.AttackPower * _excaliburDamageMultiplier * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
+                Vector2 point = collider.ClosestPoint(center);
+                target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
+                FloatingCombatText.Show(point, Mathf.CeilToInt(damage).ToString() + (critical ? "!" : ""), Color.yellow);
             }
         }
 
@@ -961,6 +1081,143 @@ namespace TheLastKnight.Player
             }
 
             _animator.speed = 1.0f;
+
+            // Visual feedback for dash i-frames
+            if (_spriteRenderer != null)
+            {
+                Color c = _spriteRenderer.color;
+                if (IsInvincible && CurrentState == PlayerState.Dashing)
+                {
+                    c.a = 0.65f;
+                }
+                else
+                {
+                    c.a = 1.0f;
+                }
+                _spriteRenderer.color = c;
+            }
+        }
+
+        private void CollectNearbyEnemyColliders()
+        {
+            if (_playerCollider == null) _playerCollider = GetComponent<Collider2D>();
+            if (_playerCollider == null) return;
+
+            var colliders = Physics2D.OverlapCircleAll(transform.position, 2.5f);
+            foreach (var col in colliders)
+            {
+                if (col != null && col != _playerCollider && !col.isTrigger && KinematicCharacterController2D.IsEnemyCollider(col))
+                {
+                    if (!_ignoredEnemyColliders.Contains(col))
+                    {
+                        Physics2D.IgnoreCollision(_playerCollider, col, true);
+                        _ignoredEnemyColliders.Add(col);
+                    }
+                }
+            }
+        }
+
+        private void IgnoreEnemyCollisions(bool ignore)
+        {
+            if (_playerCollider == null) _playerCollider = GetComponent<Collider2D>();
+            if (_playerCollider == null) return;
+
+            int playerLayer = gameObject.layer;
+            int enemyLayer = LayerMask.NameToLayer("Enemy");
+            if (enemyLayer != -1)
+            {
+                Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, ignore);
+            }
+
+            if (ignore)
+            {
+                _ignoredEnemyColliders.Clear();
+                var colliders = Physics2D.OverlapCircleAll(transform.position, DashSpeed * DashDuration + 5f);
+                foreach (var col in colliders)
+                {
+                    if (col != null && col != _playerCollider && !col.isTrigger && KinematicCharacterController2D.IsEnemyCollider(col))
+                    {
+                        Physics2D.IgnoreCollision(_playerCollider, col, true);
+                        _ignoredEnemyColliders.Add(col);
+                    }
+                }
+            }
+            else
+            {
+                CleanupIgnoredColliders();
+            }
+        }
+
+        private void CleanupIgnoredColliders()
+        {
+            if (_playerCollider == null) _playerCollider = GetComponent<Collider2D>();
+            if (_playerCollider == null || _ignoredEnemyColliders.Count == 0) return;
+
+            for (int i = _ignoredEnemyColliders.Count - 1; i >= 0; i--)
+            {
+                var col = _ignoredEnemyColliders[i];
+                if (col == null)
+                {
+                    _ignoredEnemyColliders.RemoveAt(i);
+                    continue;
+                }
+
+                // If still overlapping with enemy while not dashing, wait until bounds separate
+                if (CurrentState != PlayerState.Dashing && _playerCollider.bounds.Intersects(col.bounds))
+                {
+                    continue;
+                }
+
+                if (CurrentState != PlayerState.Dashing)
+                {
+                    Physics2D.IgnoreCollision(_playerCollider, col, false);
+                    _ignoredEnemyColliders.RemoveAt(i);
+                }
+            }
+        }
+
+        private void OnDisable()
+        {
+            _dashInvincible = false;
+            _dashIFrameTimer = 0f;
+            if (_kinematicController != null)
+            {
+                _kinematicController.IgnoreEnemies = false;
+            }
+            if (_playerCollider != null)
+            {
+                int playerLayer = gameObject.layer;
+                int enemyLayer = LayerMask.NameToLayer("Enemy");
+                if (enemyLayer != -1)
+                {
+                    Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
+                }
+                foreach (var col in _ignoredEnemyColliders)
+                {
+                    if (col != null) Physics2D.IgnoreCollision(_playerCollider, col, false);
+                }
+                _ignoredEnemyColliders.Clear();
+            }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            float facing = IsFacingRight ? 1f : -1f;
+
+            // Attack Hitbox (Red)
+            Gizmos.color = new Color(1f, 0f, 0f, 0.4f);
+            Vector2 attackCenter = (Vector2)transform.position + new Vector2(_attackOffset.x * facing, _attackOffset.y);
+            Gizmos.DrawWireCube(attackCenter, _attackSize);
+
+            // Skill 1 Carnage Burst Hitbox (Orange)
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.4f);
+            Vector2 skillCenter = (Vector2)transform.position + new Vector2(_skillAttackOffset.x * facing, _skillAttackOffset.y);
+            Gizmos.DrawWireCube(skillCenter, _skillAttackSize);
+
+            // Skill 3 Excalibur Hitbox (Gold / Yellow)
+            Gizmos.color = new Color(1f, 0.85f, 0.1f, 0.4f);
+            Vector2 excaliburCenter = (Vector2)transform.position + new Vector2(_excaliburHitOffset.x * facing, _excaliburHitOffset.y);
+            Gizmos.DrawWireCube(excaliburCenter, _excaliburHitSize);
         }
     }
 }
