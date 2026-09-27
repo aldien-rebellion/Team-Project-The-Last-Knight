@@ -471,23 +471,7 @@ AnimatorStateMachine:
     m_State: {fileID: 934356136676605291}
     m_Position: {x: 515, y: 585, z: 0}
   m_ChildStateMachines: []
-  m_AnyStateTransitions:
-  - {fileID: -2772888983747533816}
-  - {fileID: 3424778450305376669}
-  - {fileID: 1221670441663436508}
-  - {fileID: -3285957216854953983}
-  - {fileID: -1791142348795201279}
-  - {fileID: -1898241251491935635}
-  - {fileID: -543203724441906036}
-  - {fileID: -3392641657825247013}
-  - {fileID: 9105801707034407045}
-  - {fileID: 3871174228917566061}
-  - {fileID: -3345460394679883121}
-  - {fileID: -8759235685848949997}
-  - {fileID: 5584183805063035567}
-  - {fileID: 891294095800897541}
-  - {fileID: 2390781989112599871}
-  - {fileID: -4112781327042195953}
+  m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
@@ -732,8 +716,7 @@ AnimatorState:
   m_Name: Walk_Left
   m_Speed: 1
   m_CycleOffset: 0
-  m_Transitions:
-  - {fileID: 4621738213284881621}
+  m_Transitions: []
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0

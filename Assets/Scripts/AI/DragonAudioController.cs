@@ -20,6 +20,12 @@ namespace TheLastKnight.AI
 
         private AudioSource _audioSource;
         private EnemyStats _stats;
+        private EnemyController _ai;
+        private Animator _animator;
+        private Rigidbody2D _body;
+        private string _playedState;
+        private float _nextFootstepTime;
+        private bool _attackAnimationActive;
         private float _nextIdleTime = 0f;
 
         private void Awake()
@@ -28,6 +34,9 @@ namespace TheLastKnight.AI
             _audioSource.playOnAwake = false;
             _audioSource.spatialBlend = 0.8f; // 2D/3D balanced spatial sound
             _stats = GetComponent<EnemyStats>();
+            _ai = GetComponent<EnemyController>();
+            _animator = GetComponent<Animator>();
+            _body = GetComponent<Rigidbody2D>();
         }
 
         private void Start()
@@ -54,10 +63,54 @@ namespace TheLastKnight.AI
         {
             if (_stats != null && _stats.IsDead) return;
 
-            if (Time.time >= _nextIdleTime)
+            if (_ai != null && _ai.CurrentState == EnemyAIState.Idle && Time.time >= _nextIdleTime)
             {
                 PlayIdleSound();
                 _nextIdleTime = Time.time + _idleSoundInterval + Random.Range(-2f, 2f);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (_ai == null || _animator == null) return;
+
+            // This asset has separate left and right sheets. Mirroring the whole
+            // transform would reverse the selected sheet and make it walk backwards.
+            var scale = transform.localScale;
+            if (scale.x < 0f)
+            {
+                scale.x = -scale.x;
+                transform.localScale = scale;
+            }
+
+            var state = _ai.CurrentState;
+            bool moving = state == EnemyAIState.Patrol || state == EnemyAIState.Chase || state == EnemyAIState.ReturningToSpawn;
+            bool faceRight = moving && _body != null && Mathf.Abs(_body.linearVelocity.x) > 0.05f
+                ? _body.linearVelocity.x > 0f : _ai.IsFacingRight;
+            string side = faceRight ? "Right" : "Left";
+            string desired = null;
+            if (state == EnemyAIState.Dead) desired = "Death_" + side;
+            else if (state == EnemyAIState.Hurt) desired = "Hit_" + side;
+            else if (state == EnemyAIState.Patrol || state == EnemyAIState.Chase || state == EnemyAIState.ReturningToSpawn)
+                desired = _body != null && Mathf.Abs(_body.linearVelocity.x) > 0.05f ? "Walk_" + side : "Idle_" + side;
+            else if (state == EnemyAIState.Idle) desired = "Idle_" + side;
+            else if (state == EnemyAIState.MeleeAttack)
+            {
+                desired = _attackAnimationActive ? "Attack_" + side : "Idle_" + side;
+            }
+
+            bool wrongAnimatorState = desired != null && !_animator.GetCurrentAnimatorStateInfo(0).IsName(desired);
+            if (desired != null && (desired != _playedState || wrongAnimatorState)
+                && _animator.HasState(0, Animator.StringToHash(desired)))
+            {
+                _animator.Play(desired, 0, 0f);
+                _playedState = desired;
+            }
+
+            if (desired != null && desired.StartsWith("Walk_") && Time.time >= _nextFootstepTime)
+            {
+                PlayFootstep();
+                _nextFootstepTime = Time.time + 0.45f;
             }
         }
 
@@ -69,6 +122,20 @@ namespace TheLastKnight.AI
         public void PlayAttackSound()
         {
             PlayOneShot(_attackClip, 1.0f);
+        }
+
+        public void PrepareAttackAnimation()
+        {
+            _attackAnimationActive = false;
+        }
+
+        public void PlayAttackAnimation()
+        {
+            if (_animator == null || _ai == null) return;
+            _attackAnimationActive = true;
+            string state = _ai.IsFacingRight ? "Attack_Right" : "Attack_Left";
+            _animator.Play(state, 0, 0f);
+            _playedState = state;
         }
 
         public void PlayIdleSound()

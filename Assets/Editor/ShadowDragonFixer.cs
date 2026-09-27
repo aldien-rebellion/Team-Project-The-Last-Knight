@@ -191,14 +191,24 @@ namespace TheLastKnight.EditorTools
 
             for (int i = 0; i < sprites.Count; i++)
             {
+                // Only the left walk sheet is numbered opposite to its footfall direction.
+                int spriteIndex = def.ClipName.EndsWith("_Walk_Left", System.StringComparison.Ordinal)
+                    ? sprites.Count - 1 - i : i;
                 keyframes[i] = new ObjectReferenceKeyframe
                 {
                     time = i * frameDuration,
-                    value = sprites[i]
+                    value = sprites[spriteIndex]
                 };
             }
 
             AnimationUtility.SetObjectReferenceCurve(clip, binding, keyframes);
+            if (def.ClipName.Contains("_Attack_"))
+            {
+                AnimationUtility.SetAnimationEvents(clip, new[]
+                {
+                    new AnimationEvent { time = 2f / def.FPS, functionName = "PlayAttackSound" }
+                });
+            }
             EditorUtility.SetDirty(clip);
             Debug.Log($"[ShadowDragonFixer] Rebuilt clip {def.ClipName} with {sprites.Count} frames");
         }
@@ -257,13 +267,26 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_patrolSpeed").floatValue = 1.8f;
             serializedAI.FindProperty("_chaseSpeed").floatValue = 3.8f;
             serializedAI.FindProperty("_detectionRange").floatValue = 10f;
-            serializedAI.FindProperty("_meleeRange").floatValue = 3.2f;
+            serializedAI.FindProperty("_meleeRange").floatValue = 0.05f;
+            serializedAI.FindProperty("_meleeCooldown").floatValue = 0f;
+            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = true;
+            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = 2;
             serializedAI.FindProperty("_isFlying").boolValue = false;
             serializedAI.FindProperty("_hasRangedAttack").boolValue = false;
             serializedAI.ApplyModifiedProperties();
 
             // Setup Floating Health Bar Canvas
             CreateHealthBarCanvas(root, stats, 3.2f);
+            var healthBar = root.GetComponentInChildren<FloatingHealthBar>();
+            healthBar.transform.localScale = new Vector3(0.024f, 0.024f, 1f);
+            healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
+            var barSettings = new SerializedObject(healthBar);
+            barSettings.FindProperty("_followSprite").objectReferenceValue = sr;
+            barSettings.FindProperty("_useVisibleSpriteBounds").boolValue = true;
+            barSettings.FindProperty("_headGap").floatValue = 0.08f;
+            barSettings.ApplyModifiedPropertiesWithoutUndo();
+            var parry = root.AddComponent<ParryReceiver>();
+            parry.SetSpriteCenter(sr, true);
 
             // Setup Hitbox for damage dealing
             CreateContactHitbox(root, 55f, 3.8f, 3.2f);
