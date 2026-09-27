@@ -1,11 +1,12 @@
 using UnityEngine;
 using TheLastKnight.Player;
+using TheLastKnight.Combat;
 using Unity.Properties;
 
 namespace TheLastKnight.Stats
 {
     [RequireComponent(typeof(PlayerController))]
-    public class PlayerStats : MonoBehaviour
+    public class PlayerStats : MonoBehaviour, IDamageable
     {
         [Header("Attribute Template Configuration")]
         [SerializeField] private CharacterStatsSO _statsTemplate;
@@ -354,7 +355,7 @@ namespace TheLastKnight.Stats
         {
             if (_playerController != null && _playerController.IsInvincible)
             {
-                Debug.Log("[PlayerStats] Damage avoided! Arthur is invincible while dashing!");
+                Debug.Log("[PlayerStats] Damage avoided! Arthur is invincible!");
                 return;
             }
 
@@ -384,8 +385,42 @@ namespace TheLastKnight.Stats
             }
         }
 
+        public void TakeDamage(DamageData damageData)
+        {
+            TakeDamage(damageData.amount);
+        }
+
+        public void TakeDamage(float damage, bool isStun, float stunDuration = 1.0f)
+        {
+            TakeDamage(damage);
+            if (isStun && !IsDead)
+            {
+                ApplyStun(stunDuration);
+            }
+        }
+
+        public void ApplyStun(float duration = 1.0f)
+        {
+            if (_playerController != null)
+            {
+                _playerController.ApplyStun(duration);
+            }
+        }
+
+        public void ApplyStatus(StatusEffect effect, float duration)
+        {
+            if (_playerController != null)
+            {
+                _playerController.ApplyStatus(effect, duration);
+            }
+        }
+
         private void Die()
         {
+            if (_playerController != null && _playerController.CurrentState == PlayerState.Excalibur)
+            {
+                _playerController.CancelExcalibur();
+            }
             TheLastKnight.Core.GameManager.Instance?.PlayerDied();
         }
 
