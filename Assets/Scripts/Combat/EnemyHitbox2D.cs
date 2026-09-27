@@ -25,6 +25,19 @@ namespace TheLastKnight.Combat
 
         public void BeginAttack() => _lastHitTimes.Clear();
 
+        // Trigger callbacks can be missed when an attack starts while the
+        // hitbox is already overlapping the player. Perform an immediate
+        // overlap query at the damage frame as a deterministic fallback.
+        public void DealDamageToOverlaps()
+        {
+            if (!_isActive || _collider == null || !_collider.enabled) return;
+            var hits = Physics2D.OverlapBoxAll(_collider.bounds.center, _collider.bounds.size, 0f);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i] != null) TryDealDamage(hits[i].gameObject);
+            }
+        }
+
         private void Awake()
         {
             _collider = GetComponent<Collider2D>();

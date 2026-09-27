@@ -139,7 +139,7 @@ namespace TheLastKnight.Stats
         [CreateProperty]
         public float HealthPercentage => MaxHP > 0 ? _currentHP / MaxHP : 0;
         [CreateProperty]
-        public string HPText => $"{Mathf.CeilToInt(_currentHP)} / {Mathf.CeilToInt(MaxHP)}";
+        public string HPText => $"{Mathf.CeilToInt(_currentHP)}/{Mathf.CeilToInt(MaxHP)}";
 
         private PlayerController _playerController;
 
