@@ -63,6 +63,8 @@ namespace TheLastKnight.AI
         [SerializeField] private float _basicAttackMultiplier = 1.0f;
         [Tooltip("If true and this monster has no parryable skills, basic attack triggers the Parry timing ring with a cooldown.")]
         [SerializeField] private bool _basicAttackCanParry = true;
+        [Tooltip("Allow the basic Attack to open a Parry ring even when this monster also has a parryable skill.")]
+        [SerializeField] private bool _allowBasicParryWithSkills;
         [Tooltip("Minimum cooldown in seconds between Parry rings on basic attack (minimum 4.0s).")]
         [SerializeField] private float _basicParryCooldown = 4.0f;
         [Tooltip("When greater than zero, show the basic attack parry ring once every N attacks, without a time cooldown.")]
@@ -110,6 +112,7 @@ namespace TheLastKnight.AI
         private float _currentAttackMultiplier = 1.0f;
         private bool _isActionLocked = false;
         private ParryReceiver _parry;
+        private SmallDragonFireAttackEffect _smallDragonFireEffect;
         private float _damageUntil;
         private bool _projectileSpawned;
         private GameObject _activeSkillProjectile;
@@ -131,6 +134,7 @@ namespace TheLastKnight.AI
             if (_parry == null) _parry = gameObject.AddComponent<ParryReceiver>();
             if (_useColliderEdgeAttackRanges)
                 _parry.SetSpriteCenter(GetComponent<SpriteRenderer>(), true);
+            _smallDragonFireEffect = GetComponentInChildren<SmallDragonFireAttackEffect>(true);
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
             _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
@@ -501,7 +505,7 @@ namespace TheLastKnight.AI
 
         private bool ShouldBasicAttackParry()
         {
-            if (!_basicAttackCanParry || (_basicParryEveryNAttacks <= 0 && HasParryableSkill()))
+            if (!_basicAttackCanParry || (!_allowBasicParryWithSkills && _basicParryEveryNAttacks <= 0 && HasParryableSkill()))
                 return false;
 
             _basicAttackCount++;
@@ -545,6 +549,7 @@ namespace TheLastKnight.AI
             }
 
             PlayAnimationAction(_basicAttackAnimState);
+            _smallDragonFireEffect?.Play();
             foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
             {
                 hitbox.BeginAttack();
@@ -629,6 +634,7 @@ namespace TheLastKnight.AI
                 _animator.Play(skill.animationName, 0, 0f);
             else
                 PlayAnimationAction(skill.animationName, skill.actionIndex);
+            _smallDragonFireEffect?.Play();
             if (skill.animationName == "Summon")
                 GetComponent<TheLastKnight.Combat.UndeadExecutionerSummonEffect>()?.Play(_player);
             _damageUntil = 0f;
@@ -947,6 +953,7 @@ namespace TheLastKnight.AI
         private void StopAttack()
         {
             StopAllCoroutines();
+            _smallDragonFireEffect?.Stop();
             _parry?.FinishWindup();
             _damageUntil = 0f;
             _projectileSpawned = true;

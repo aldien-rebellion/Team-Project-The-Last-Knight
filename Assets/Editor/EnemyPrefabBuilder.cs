@@ -314,7 +314,7 @@ namespace TheLastKnight.EditorTools
                 new MonsterConfig("Skeleton", 45f, 12f, 1f, 1.8f, 3.5f, 7f, 0.05f, scale: 5f),
                 new MonsterConfig("SkeletonKnight", 220f, 28f, 5f, 2.0f, 4.2f, 7f, 1.8f),
                 new MonsterConfig("Skullwolf", 65f, 18f, 1f, 3.2f, 5.8f, 8f, 1.4f),
-                new MonsterConfig("Small_dragon", 80f, 16f, 2f, 2.2f, 4.2f, 7f, 1.5f, false, true, "SmallDragon_FireBall"),
+                new MonsterConfig("Small_dragon", 80f, 16f, 2f, 2.2f, 4.2f, 7f, 0.05f, false, false, "SmallDragon_FireBall", scale: 5f),
                 new MonsterConfig("Trader_1", 100f, 0f, 0f, 0f, 0f, 0f, 0f), // NPC
                 new MonsterConfig("UndeadExecutioner", 550f, 40f, 7f, 1.6f, 3.6f, 8f, 0.05f, scale: 5f)
             };
@@ -347,6 +347,11 @@ namespace TheLastKnight.EditorTools
             if (controller != null)
             {
                 anim.runtimeAnimatorController = controller;
+            }
+
+            if (cfg.Name == "Small_dragon")
+            {
+                SetupSmallDragonFireAttack(root);
             }
 
             // Rigidbody2D
@@ -388,11 +393,12 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
             serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "FlyingEye" ? 0.05f : cfg.MeleeRange;
             serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye";
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
             serializedAI.FindProperty("_rangedCooldown").floatValue = cfg.Name == "FlyingEye" ? 0f : 3f;
             serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "FlyingEye" ? 4 : 0;
-            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "UndeadExecutioner";
-            serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner";
+            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon";
+            serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon";
+            serializedAI.FindProperty("_allowBasicParryWithSkills").boolValue = cfg.Name == "Small_dragon";
             serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner";
             if (cfg.Name == "UndeadExecutioner")
                 serializedAI.FindProperty("_deathDestroyDelay").floatValue = 2.2f;
@@ -445,23 +451,23 @@ namespace TheLastKnight.EditorTools
                     parry.ApplyModifiedPropertiesWithoutUndo();
                 }
             }
-            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner")
+            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner")
             {
                 // Match BlueSlime's world-space UI scale (root 4x, canvas 0.006).
-                float barScale = cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner" ? 0.0048f : 0.006f;
+                float barScale = cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" ? 0.0048f : 0.006f;
                 var healthBar = root.GetComponentInChildren<FloatingHealthBar>();
                 healthBar.transform.localScale = new Vector3(barScale, barScale, 1f);
-                if (cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner")
+                if (cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner")
                     healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
                 var bar = new SerializedObject(root.GetComponentInChildren<FloatingHealthBar>());
                 bar.FindProperty("_followSprite").objectReferenceValue = sr;
-                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner";
+                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner";
                 bar.ApplyModifiedPropertiesWithoutUndo();
                 var receiver = root.GetComponent<ParryReceiver>();
                 if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
                 var parry = new SerializedObject(receiver);
                 parry.FindProperty("_centerSprite").objectReferenceValue = sr;
-                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner";
+                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner";
                 parry.ApplyModifiedPropertiesWithoutUndo();
                 if (cfg.Name == "Skeleton")
                 {
@@ -498,6 +504,43 @@ namespace TheLastKnight.EditorTools
             property.arraySize = frames.Length;
             for (int i = 0; i < frames.Length; i++)
                 property.GetArrayElementAtIndex(i).objectReferenceValue = frames[i];
+        }
+
+        private static void SetupSmallDragonFireAttack(GameObject root)
+        {
+            var effect = new GameObject("FireAttack");
+            effect.transform.SetParent(root.transform, false);
+            effect.transform.localPosition = new Vector3(0.46f, 0.08f, -0.02f);
+            effect.transform.localScale = new Vector3(1.75f, 1.75f, 1f);
+
+            var fireRenderer = effect.AddComponent<SpriteRenderer>();
+            fireRenderer.enabled = false;
+            fireRenderer.sortingOrder = 3;
+
+            var fireEffect = effect.AddComponent<SmallDragonFireAttackEffect>();
+
+            var sprites = new Sprite[6];
+            for (int i = 0; i < 5; i++)
+            {
+                sprites[i] = AssetDatabase.LoadAssetAtPath<Sprite>(
+                    $"Assets/sprites/Monsters/craftpix-561178-free-rpg-monster-sprites-pixel-art/PNG/small_dragon/Fire_Attack{i + 1}.png");
+            }
+
+            // Fire_Attack6 is imported as a single Sprite in Unity; use that
+            // full frame instead of an automatically sliced sub-sprite.
+            sprites[5] = AssetDatabase.LoadAssetAtPath<Sprite>(
+                "Assets/sprites/Monsters/craftpix-561178-free-rpg-monster-sprites-pixel-art/PNG/small_dragon/Fire_Attack6.png");
+            if (sprites.Any(sprite => sprite == null)) return;
+
+            var effectData = new SerializedObject(fireEffect);
+            effectData.FindProperty("_renderer").objectReferenceValue = fireRenderer;
+            var frameProperty = effectData.FindProperty("_frames");
+            frameProperty.arraySize = sprites.Length;
+            for (int i = 0; i < sprites.Length; i++)
+                frameProperty.GetArrayElementAtIndex(i).objectReferenceValue = sprites[i];
+            effectData.FindProperty("_duration").floatValue = 2f;
+            effectData.FindProperty("_frameRate").floatValue = 16f;
+            effectData.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void CreateHealthBarCanvas(GameObject parent, EnemyStats stats, float characterHeight)
@@ -876,7 +919,7 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("SmallFireBall", "Attack", -1, 1.3f, 4.0f, 2.5f, 7.0f, false, "SmallDragon_FireBall")
+                        new SkillData("SmallFireBall", "Attack", -1, 1.3f, 5.0f, 0f, 0.05f, true, "SmallDragon_FireBall")
                     });
                     break;
 
@@ -886,7 +929,7 @@ namespace TheLastKnight.EditorTools
             }
 
             ai.SetSkills(skills);
-            ai.SetBasicAttackConfiguration(basicAnim, 1.0f, name != "Skeleton" && name != "UndeadExecutioner", 4.0f);
+            ai.SetBasicAttackConfiguration(basicAnim, 1.0f, name != "Skeleton" && name != "UndeadExecutioner", name == "Small_dragon" ? 5.0f : 4.0f);
             ai.SetBoss(isBoss);
             EditorUtility.SetDirty(ai);
         }
