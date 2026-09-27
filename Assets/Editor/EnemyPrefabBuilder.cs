@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
@@ -287,7 +288,7 @@ namespace TheLastKnight.EditorTools
                 new MonsterConfig("Skullwolf", 65f, 18f, 1f, 3.2f, 5.8f, 8f, 1.4f),
                 new MonsterConfig("Small_dragon", 80f, 16f, 2f, 2.2f, 4.2f, 7f, 1.5f, false, true, "SmallDragon_FireBall"),
                 new MonsterConfig("Trader_1", 100f, 0f, 0f, 0f, 0f, 0f, 0f), // NPC
-                new MonsterConfig("UndeadExecutioner", 550f, 40f, 7f, 1.6f, 3.6f, 8f, 2.4f)
+                new MonsterConfig("UndeadExecutioner", 550f, 40f, 7f, 1.6f, 3.6f, 8f, 0.05f, scale: 5f)
             };
 
             foreach (var cfg in configs)
@@ -358,7 +359,12 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_chaseSpeed").floatValue = cfg.ChaseSpeed;
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
             serializedAI.FindProperty("_meleeRange").floatValue = cfg.MeleeRange;
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" ? 0f : 1.5f;
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "UndeadExecutioner";
+            serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner";
+            serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner";
+            if (cfg.Name == "UndeadExecutioner")
+                serializedAI.FindProperty("_deathDestroyDelay").floatValue = 2.2f;
             serializedAI.FindProperty("_cycleNonParryableSkills").boolValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton";
             serializedAI.FindProperty("_continuousActions").boolValue = cfg.Name == "Skeleton";
             if (cfg.Name == "Skeleton")
@@ -369,26 +375,36 @@ namespace TheLastKnight.EditorTools
             if (spellPrefab != null) serializedAI.FindProperty("_groundSpellPrefab").objectReferenceValue = spellPrefab;
             serializedAI.ApplyModifiedProperties();
             ConfigureMonsterSkillsAndParry(ai, cfg.Name);
+            if (cfg.Name == "UndeadExecutioner")
+            {
+                var effect = root.AddComponent<UndeadExecutionerSummonEffect>();
+                var effectData = new SerializedObject(effect);
+                string spriteDir = "Assets/sprites/Monsters/Undead executioner/Undead executioner puppet/png";
+                AssignSummonFrames(effectData.FindProperty("_appearFrames"), $"{spriteDir}/summonAppear.png");
+                AssignSummonFrames(effectData.FindProperty("_idleFrames"), $"{spriteDir}/summonIdle.png");
+                AssignSummonFrames(effectData.FindProperty("_deathFrames"), $"{spriteDir}/summonDeath.png");
+                effectData.ApplyModifiedPropertiesWithoutUndo();
+            }
 
             // Setup Floating Health Bar Canvas
             CreateHealthBarCanvas(root, stats, colHeight);
-            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton")
+            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner")
             {
                 // Match BlueSlime's world-space UI scale (root 4x, canvas 0.006).
-                float barScale = cfg.Name == "Skeleton" ? 0.0048f : 0.006f;
+                float barScale = cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner" ? 0.0048f : 0.006f;
                 var healthBar = root.GetComponentInChildren<FloatingHealthBar>();
                 healthBar.transform.localScale = new Vector3(barScale, barScale, 1f);
-                if (cfg.Name == "Skeleton")
+                if (cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner")
                     healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
                 var bar = new SerializedObject(root.GetComponentInChildren<FloatingHealthBar>());
                 bar.FindProperty("_followSprite").objectReferenceValue = sr;
-                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton";
+                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner";
                 bar.ApplyModifiedPropertiesWithoutUndo();
                 var receiver = root.GetComponent<ParryReceiver>();
                 if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
                 var parry = new SerializedObject(receiver);
                 parry.FindProperty("_centerSprite").objectReferenceValue = sr;
-                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton";
+                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner";
                 parry.ApplyModifiedPropertiesWithoutUndo();
                 if (cfg.Name == "Skeleton")
                 {
@@ -416,6 +432,15 @@ namespace TheLastKnight.EditorTools
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
             Object.DestroyImmediate(root);
             Debug.Log($"[EnemyPrefabBuilder] Created monster prefab: {cfg.Name}");
+        }
+
+        private static void AssignSummonFrames(SerializedProperty property, string assetPath)
+        {
+            var frames = AssetDatabase.LoadAllAssetsAtPath(assetPath).OfType<Sprite>()
+                .OrderBy(sprite => sprite.name, System.StringComparer.Ordinal).ToArray();
+            property.arraySize = frames.Length;
+            for (int i = 0; i < frames.Length; i++)
+                property.GetArrayElementAtIndex(i).objectReferenceValue = frames[i];
         }
 
         private static void CreateHealthBarCanvas(GameObject parent, EnemyStats stats, float characterHeight)
@@ -801,7 +826,7 @@ namespace TheLastKnight.EditorTools
             }
 
             ai.SetSkills(skills);
-            ai.SetBasicAttackConfiguration(basicAnim, 1.0f, name != "Skeleton", 4.0f);
+            ai.SetBasicAttackConfiguration(basicAnim, 1.0f, name != "Skeleton" && name != "UndeadExecutioner", 4.0f);
             ai.SetBoss(isBoss);
             EditorUtility.SetDirty(ai);
         }

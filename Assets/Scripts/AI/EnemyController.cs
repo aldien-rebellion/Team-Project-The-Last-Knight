@@ -34,6 +34,12 @@ namespace TheLastKnight.AI
         [SerializeField] private float _detectionRange = 7f;
         [SerializeField] private float _meleeRange = 1.4f;
         [SerializeField] private float _meleeCooldown = 1.5f;
+        [Tooltip("Measure attack range between the nearest edges of the enemy and player solid colliders.")]
+        [SerializeField] private bool _useColliderEdgeAttackDistance;
+        [Tooltip("Require contact skills to start at melee distance even when their configured maximum range is larger.")]
+        [SerializeField] private bool _requireCloseRangeForContactSkills;
+        [Tooltip("Play named attack states directly instead of sharing an Attack trigger and stale ActionIndex.")]
+        [SerializeField] private bool _playAttackStatesDirectly;
         [Tooltip("When enabled, this enemy waits for configured skills instead of using the basic melee attack.")]
         [SerializeField] private bool _disableBasicAttack;
 
@@ -258,14 +264,18 @@ namespace TheLastKnight.AI
             }
 
             float distToPlayer = Vector2.Distance(transform.position, _player.transform.position);
-            float attackDistance = _cycleNonParryableSkills ? GetAttackDistance() : distToPlayer;
-            float meleeDistance = _basicParryEveryNAttacks > 0 ? GetAttackDistance() : attackDistance;
+            float attackDistance = _useColliderEdgeAttackDistance || _cycleNonParryableSkills
+                ? GetAttackDistance() : distToPlayer;
+            float meleeDistance = _useColliderEdgeAttackDistance || _basicParryEveryNAttacks > 0
+                ? attackDistance : distToPlayer;
 
             TheLastKnight.Combat.EnemySkill readySkill = distToPlayer <= _detectionRange
                 ? GetReadySkill(attackDistance) : null;
             if (readySkill != null)
             {
-                if (!_disableBasicAttack || CanReachPlayerWithSkill(readySkill))
+                bool isContactSkill = readySkill.projectilePrefab == null && readySkill.groundSpellPrefab == null;
+                if ((!_requireCloseRangeForContactSkills || !isContactSkill || attackDistance <= _meleeRange)
+                    && (!_disableBasicAttack || CanReachPlayerWithSkill(readySkill)))
                 {
                     FaceTarget(_player.transform.position);
                     PerformSkill(readySkill);
@@ -277,7 +287,8 @@ namespace TheLastKnight.AI
                     ChasePlayer();
                 }
             }
-            else if (!_disableBasicAttack && meleeDistance <= _meleeRange && distToPlayer <= _detectionRange && Time.time >= _nextMeleeTime)
+            else if (!_disableBasicAttack && meleeDistance <= _meleeRange && distToPlayer <= _detectionRange
+                && Time.time >= _nextMeleeTime)
             {
                 FaceTarget(_player.transform.position);
                 PerformMeleeAttack();
@@ -583,6 +594,8 @@ namespace TheLastKnight.AI
                 _animator.Play(skill.animationName, 0, 0f);
             else
                 PlayAnimationAction(skill.animationName, skill.actionIndex);
+            if (skill.animationName == "Summon")
+                GetComponent<TheLastKnight.Combat.UndeadExecutionerSummonEffect>()?.Play(_player);
             _damageUntil = 0f;
 
             float damageStartDelay = Mathf.Max(0f, skill.damageStartDelay);
@@ -719,6 +732,16 @@ namespace TheLastKnight.AI
         {
             if (_animator == null) return;
 
+            if (_playAttackStatesDirectly && !string.IsNullOrEmpty(animName))
+            {
+                int directStateHash = Animator.StringToHash(animName);
+                if (_animator.HasState(0, directStateHash))
+                {
+                    _animator.Play(directStateHash, 0, 0f);
+                    return;
+                }
+            }
+
             if (actionIndex >= 0 && _availableAnimParams.Contains("ActionIndex"))
             {
                 _animator.SetInteger("ActionIndex", actionIndex);
@@ -779,7 +802,12 @@ namespace TheLastKnight.AI
         {
             if (skill == null || _player == null) return false;
             if (skill.projectilePrefab != null || skill.groundSpellPrefab != null) return true;
-            if (_attackHitbox == null) return false;
+            return CanReachPlayerWithContactHitbox();
+        }
+
+        private bool CanReachPlayerWithContactHitbox()
+        {
+            if (_player == null || _attackHitbox == null || !_attackHitbox.enabled) return false;
 
             var playerColliders = _player.GetComponentsInChildren<Collider2D>();
             for (int i = 0; i < playerColliders.Length; i++)
@@ -967,6 +995,8 @@ namespace TheLastKnight.AI
             StopAttack();
             _currentState = EnemyAIState.Dead;
             SetAnimBool("IsDead", true);
+            if (_playAttackStatesDirectly && _animator != null && _animator.HasState(0, Animator.StringToHash("Death")))
+                _animator.Play("Death", 0, 0f);
             _rb.linearVelocity = Vector2.zero;
             _rb.bodyType = RigidbodyType2D.Kinematic;
 
