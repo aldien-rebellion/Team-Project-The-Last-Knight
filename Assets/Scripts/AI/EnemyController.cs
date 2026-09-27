@@ -216,9 +216,11 @@ namespace TheLastKnight.AI
         {
             if (_stats.IsDead) return;
 
-            if (_parry.IsStaggered)
+            if ((_parry != null && _parry.IsStaggered) || (_stats != null && _stats.CurrentStatus == StatusEffect.Stunned))
             {
-                _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);
+                _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
+                SetAnimBool("IsMoving", false);
+                SetAnimBool("IsChasing", false);
                 return;
             }
 
@@ -243,7 +245,8 @@ namespace TheLastKnight.AI
             var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
             if (stateInfo.IsName("Hurt") || stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") || stateInfo.IsName("Cast") || _isActionLocked)
             {
-                _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
+                float vx = stateInfo.IsName("Hurt") ? Mathf.MoveTowards(_rb.linearVelocity.x, 0f, 15f * Time.deltaTime) : 0f;
+                _rb.linearVelocity = new Vector2(vx, _isFlying ? 0f : _rb.linearVelocity.y);
                 SetAnimBool("IsMoving", false);
                 SetAnimBool("IsChasing", false);
                 return;
