@@ -120,6 +120,23 @@ namespace TheLastKnight.Combat
                 actualDamage = Mathf.Max(1f, actualDamage);
             }
 
+            var attackingPlayer = damageData.attacker != null
+                ? damageData.attacker.GetComponent<TheLastKnight.Player.PlayerController>()
+                : null;
+            if (attackingPlayer != null)
+            {
+                var playerStats = damageData.attacker.GetComponent<TheLastKnight.Stats.PlayerStats>();
+                float normalDamage = playerStats != null
+                    ? playerStats.AttackPower * TheLastKnight.Core.GameDifficultyManager.PlayerDamage
+                    : 0f;
+                bool critical = damageData.amount > normalDamage + 0.01f;
+                Vector3 hitPosition = damageData.hitPoint != Vector2.zero
+                    ? (Vector3)damageData.hitPoint
+                    : transform.position;
+                FloatingCombatText.Show(hitPosition, Mathf.CeilToInt(actualDamage).ToString() + (critical ? "!" : ""),
+                    critical ? Color.yellow : Color.white);
+            }
+
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
             CurrentHealth = Mathf.Max(0f, CurrentHealth - actualDamage);
 

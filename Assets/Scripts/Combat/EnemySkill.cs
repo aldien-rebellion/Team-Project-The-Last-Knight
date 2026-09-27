@@ -59,6 +59,9 @@ namespace TheLastKnight.Combat
         [Tooltip("Optional projectile prefab for ranged skills (e.g. Goblin_Bomb, FlyingEye_Projectile).")]
         public GameObject projectilePrefab;
 
+        [Tooltip("Only use this skill when there is a clear line of sight to the player.")]
+        public bool requireLineOfSight;
+
         [Tooltip("Optional ground spell prefab for area skills (e.g. BringerOfDeath_Spell, Jinn_Magic).")]
         public GameObject groundSpellPrefab;
 

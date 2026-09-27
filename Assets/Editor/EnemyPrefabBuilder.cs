@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine.UI;
 using TheLastKnight.Combat;
 using TheLastKnight.Combat.Projectiles;
@@ -73,15 +74,37 @@ namespace TheLastKnight.EditorTools
             BuildBringerOfDeathSpell();
         }
 
+        [MenuItem("Tools/Rebuild FlyingEye Projectile Prefab")]
+        public static void RebuildFlyingEyeProjectilePrefab()
+        {
+            BuildDirectProjectile("FlyingEye_Projectile", 9f, 10f, 0.25f, true);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
         private static void BuildDirectProjectile(string name, float speed, float damage, float colliderRadius, bool isCircle)
         {
             string prefabPath = $"{ProjectilesOutputDir}/{name}.prefab";
             string controllerPath = $"{AnimationsProjectilesDir}/{name}/{name}Controller.controller";
             var controller = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(controllerPath);
+            AnimationClip fallbackClip = null;
+            if (name == "FlyingEye_Projectile" && controller == null)
+            {
+                string clipPath = $"{AnimationsProjectilesDir}/{name}/{name}_Projectile.anim";
+                fallbackClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(clipPath);
+                if (fallbackClip != null)
+                {
+                    var generatedController = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
+                    controller = generatedController;
+                    var state = generatedController.layers[0].stateMachine.AddState("Projectile");
+                    state.motion = fallbackClip;
+                    generatedController.layers[0].stateMachine.defaultState = state;
+                }
+            }
 
             GameObject go = new GameObject(name);
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 5;
+            sr.sortingOrder = name == "FlyingEye_Projectile" ? 9 : 5;
 
             var anim = go.AddComponent<Animator>();
             if (controller != null)
@@ -102,6 +125,10 @@ namespace TheLastKnight.EditorTools
                     }
                 }
                 sr.sprite = swordSprite;
+            }
+            else if (name == "FlyingEye_Projectile")
+            {
+                AssignFirstSpriteFromClip(sr, fallbackClip);
             }
 
             var rb = go.AddComponent<Rigidbody2D>();
@@ -268,7 +295,8 @@ namespace TheLastKnight.EditorTools
                 new MonsterConfig("Fairy", 25f, 8f, 0f, 2.5f, 4.5f, 7f, 1.0f, true),
                 new MonsterConfig("FantasyMushroom", 55f, 12f, 1f, 1.8f, 3.5f, 7f, 1.3f, false, true, "FantasyMushroom_Projectile"),
                 new MonsterConfig("FireWorm", 50f, 14f, 1f, 1.6f, 3.2f, 7f, 1.4f, false, true, "FireWorm_FireBall"),
-                new MonsterConfig("FlyingEye", 35f, 10f, 0f, 2.2f, 4.2f, 7f, 1.2f, true, true, "FlyingEye_Projectile"),
+                // FlyingEye closes in for its basic Attack; the projectile is reserved for EyeBeam.
+                new MonsterConfig("FlyingEye", 35f, 10f, 0f, 2.2f, 4.2f, 7f, 1.2f, true, false),
                 new MonsterConfig("ForestMushroom", 50f, 12f, 1f, 1.8f, 3.5f, 6f, 1.3f),
                 new MonsterConfig("Fox", 40f, 12f, 0f, 3.0f, 5.5f, 7f, 1.2f),
                 new MonsterConfig("Goblin", 45f, 12f, 0f, 2.2f, 4.2f, 7f, 1.3f, false, true, "Goblin_Bomb"),
@@ -308,7 +336,7 @@ namespace TheLastKnight.EditorTools
 
             // SpriteRenderer
             var sr = root.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 2;
+            sr.sortingOrder = cfg.Name == "FlyingEye" ? 8 : 2;
             if (controller != null)
             {
                 AssignFirstSpriteFromController(sr, controller);
@@ -358,8 +386,11 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_patrolSpeed").floatValue = cfg.PatrolSpeed;
             serializedAI.FindProperty("_chaseSpeed").floatValue = cfg.ChaseSpeed;
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
-            serializedAI.FindProperty("_meleeRange").floatValue = cfg.MeleeRange;
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "FlyingEye" ? 0.05f : cfg.MeleeRange;
+            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye";
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_rangedCooldown").floatValue = cfg.Name == "FlyingEye" ? 0f : 3f;
+            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "FlyingEye" ? 4 : 0;
             serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "UndeadExecutioner";
             serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner";
             serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner";
@@ -370,6 +401,8 @@ namespace TheLastKnight.EditorTools
             if (cfg.Name == "Skeleton")
                 serializedAI.FindProperty("_projectileSpawnOffset").vector2Value = new Vector2(0.6f, 1.4f);
             serializedAI.FindProperty("_isFlying").boolValue = cfg.IsFlying;
+            serializedAI.FindProperty("_flyingChaseHeightOffset").floatValue = cfg.Name == "FlyingEye" ? -0.7f : 0f;
+            serializedAI.FindProperty("_flyingIdleHeightOffset").floatValue = cfg.Name == "FlyingEye" ? -0.7f : 0f;
             serializedAI.FindProperty("_hasRangedAttack").boolValue = cfg.HasRanged;
             if (projPrefab != null) serializedAI.FindProperty("_projectilePrefab").objectReferenceValue = projPrefab;
             if (spellPrefab != null) serializedAI.FindProperty("_groundSpellPrefab").objectReferenceValue = spellPrefab;
@@ -388,6 +421,30 @@ namespace TheLastKnight.EditorTools
 
             // Setup Floating Health Bar Canvas
             CreateHealthBarCanvas(root, stats, colHeight);
+            if (cfg.Name == "FlyingEye")
+            {
+                var healthBar = root.GetComponentInChildren<FloatingHealthBar>();
+                if (healthBar != null)
+                {
+                    float parentScale = Mathf.Max(0.01f, Mathf.Abs(root.transform.lossyScale.x));
+                    float matchingLocalScale = 0.024f / parentScale;
+                    healthBar.transform.localScale = new Vector3(matchingLocalScale, matchingLocalScale, 1f);
+                    healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
+                    var serializedHealthBar = new SerializedObject(healthBar);
+                    serializedHealthBar.FindProperty("_followSprite").objectReferenceValue = sr;
+                    serializedHealthBar.FindProperty("_useVisibleSpriteBounds").boolValue = true;
+                    serializedHealthBar.FindProperty("_followSpriteBounds").boolValue = true;
+                    serializedHealthBar.FindProperty("_headOffset").floatValue = 0.08f;
+                    serializedHealthBar.ApplyModifiedPropertiesWithoutUndo();
+
+                    var receiver = root.GetComponent<ParryReceiver>();
+                    if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
+                    var parry = new SerializedObject(receiver);
+                    parry.FindProperty("_centerSprite").objectReferenceValue = sr;
+                    parry.FindProperty("_useVisibleSpriteBounds").boolValue = true;
+                    parry.ApplyModifiedPropertiesWithoutUndo();
+                }
+            }
             if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "UndeadExecutioner")
             {
                 // Match BlueSlime's world-space UI scale (root 4x, canvas 0.006).
@@ -572,8 +629,9 @@ namespace TheLastKnight.EditorTools
             public bool IsParryable;
             public string ProjName;
             public string SpellName;
+            public bool RequireLineOfSight;
 
-            public SkillData(string name, string animName, int actionIndex, float mult, float cd, float minR, float maxR, bool parry, string proj = null, string spell = null)
+            public SkillData(string name, string animName, int actionIndex, float mult, float cd, float minR, float maxR, bool parry, string proj = null, string spell = null, bool requireLineOfSight = false)
             {
                 Name = name;
                 AnimName = animName;
@@ -585,6 +643,7 @@ namespace TheLastKnight.EditorTools
                 IsParryable = parry;
                 ProjName = proj;
                 SpellName = spell;
+                RequireLineOfSight = requireLineOfSight;
             }
         }
 
@@ -599,7 +658,8 @@ namespace TheLastKnight.EditorTools
                 cooldown = d.Cooldown,
                 minRange = d.MinRange,
                 maxRange = d.MaxRange,
-                isParryable = d.IsParryable
+                isParryable = d.IsParryable,
+                requireLineOfSight = d.RequireLineOfSight
             };
             if (!string.IsNullOrEmpty(d.ProjName))
             {
@@ -663,7 +723,7 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("EyeBeam", "Attack3", -1, 1.5f, 5.0f, 2.5f, 7.5f, true, "FlyingEye_Projectile")
+                        new SkillData("EyeBeam", "Attack3", -1, 1.5f, 5.0f, 0f, 7.0f, true, "FlyingEye_Projectile", requireLineOfSight: true)
                     });
                     break;
 
