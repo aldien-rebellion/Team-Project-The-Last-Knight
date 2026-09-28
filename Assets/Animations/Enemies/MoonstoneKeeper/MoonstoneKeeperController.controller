@@ -251,22 +251,7 @@ AnimatorStateMachine:
     m_Position: {x: 585, y: 715, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
-  - {fileID: -4996626768379950323}
-  - {fileID: -4983648961792771050}
-  - {fileID: -349533563471558672}
-  - {fileID: -1726660541678492956}
-  - {fileID: -5174050929513534711}
-  - {fileID: 6708203161899368055}
   - {fileID: 6102347097617781925}
-  - {fileID: 3054526505865992487}
-  - {fileID: -6376069428960130431}
-  - {fileID: -222189086868954541}
-  - {fileID: -10844767876106733}
-  - {fileID: -1292360955960146364}
-  - {fileID: -6224059264988424453}
-  - {fileID: -285550635274078741}
-  - {fileID: -3111707683882953109}
-  - {fileID: -2130135525972766581}
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []

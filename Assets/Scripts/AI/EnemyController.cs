@@ -50,6 +50,8 @@ namespace TheLastKnight.AI
         [SerializeField] private bool _requireCloseRangeForContactSkills;
         [Tooltip("Play named attack states directly instead of sharing an Attack trigger and stale ActionIndex.")]
         [SerializeField] private bool _playAttackStatesDirectly;
+        [Tooltip("Play authored Idle, Walk, Run, Jump, Land and Hit states from movement (Moonstone Keeper).")]
+        [SerializeField] private bool _useMovementAnimationStates;
         [Tooltip("Use passive patrol, weapon draw, and hostile movement animations (Reaper).")]
         [SerializeField] private bool _usePassiveStanceAnimations;
         [Tooltip("Measure attack and skill ranges from the nearest enabled non-trigger collider edges.")]
@@ -133,6 +135,7 @@ namespace TheLastKnight.AI
         private SmallDragonFireAttackEffect _smallDragonFireEffect;
         private float _damageUntil;
         private bool _projectileSpawned;
+        private bool _wasAirborne;
         private GameObject _activeSkillProjectile;
         public bool CanDealMeleeDamage => !_stats.IsDead && !_parry.IsStaggered && Time.time < _damageUntil;
         public float CurrentAttackDamage => _stats != null ? _stats.AttackPower * _currentAttackMultiplier : 10f;
@@ -189,6 +192,8 @@ namespace TheLastKnight.AI
                 {
                     _availableAnimParams.Add(p.name);
                 }
+                if (_playAttackStatesDirectly && _availableAnimParams.Contains("ActionIndex"))
+                    _animator.SetInteger("ActionIndex", -1);
             }
 
             if (_isFlying)
@@ -203,6 +208,52 @@ namespace TheLastKnight.AI
             {
                 _animator.SetBool(paramName, val);
             }
+        }
+
+        private void LateUpdate()
+        {
+            if (!_useMovementAnimationStates || _animator == null || _stats == null || _stats.IsDead)
+                return;
+
+            var state = _animator.GetCurrentAnimatorStateInfo(0);
+            if (_isActionLocked || _currentState == EnemyAIState.Skill ||
+                _currentState == EnemyAIState.MeleeAttack || _currentState == EnemyAIState.RangedAttack)
+                return;
+
+            if (state.IsName("Hit") && state.normalizedTime < 1f)
+                return;
+
+            // Vertical movement can come from a jump, fall, or knockback. Show the
+            // authored jump sequence only while the monster is actually airborne.
+            bool airborne = Mathf.Abs(_rb.linearVelocity.y) > 0.12f;
+            if (airborne)
+            {
+                if (!_wasAirborne) PlayMovementState("JumpStart");
+                else if (state.IsName("JumpStart") && state.normalizedTime >= 1f)
+                    PlayMovementState("JumpLoop");
+                _wasAirborne = true;
+                return;
+            }
+
+            if (_wasAirborne)
+            {
+                _wasAirborne = false;
+                PlayMovementState("Land");
+                return;
+            }
+            if (state.IsName("Land") && state.normalizedTime < 1f)
+                return;
+
+            string movementState = _currentState == EnemyAIState.Chase ? "Run"
+                : (_currentState == EnemyAIState.Patrol || _currentState == EnemyAIState.ReturningToSpawn) ? "Walk"
+                : "Idle";
+            PlayMovementState(movementState);
+        }
+
+        private void PlayMovementState(string stateName)
+        {
+            if (!_animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+                TryPlayAnimatorState(stateName);
         }
 
         private void SetAnimTrigger(string paramName)
@@ -292,7 +343,9 @@ namespace TheLastKnight.AI
 
             // Check if current animation state locks movement (e.g. hurt or attacking)
             var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.IsName("Hurt") || stateInfo.IsName("TakeHit") || stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") || stateInfo.IsName("Cast") || _isActionLocked)
+            if (stateInfo.IsName("Hurt") || stateInfo.IsName("TakeHit") ||
+                (_useMovementAnimationStates && stateInfo.IsName("Hit") && stateInfo.normalizedTime < 1f) ||
+                stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") || stateInfo.IsName("Cast") || _isActionLocked)
             {
                 float vx = stateInfo.IsName("Hurt") ? Mathf.MoveTowards(_rb.linearVelocity.x, 0f, 15f * Time.deltaTime) : 0f;
                 _rb.linearVelocity = new Vector2(vx, _isFlying ? 0f : _rb.linearVelocity.y);
@@ -1259,10 +1312,17 @@ namespace TheLastKnight.AI
             // A cyclic action finishes before the next action or hurt pose can start.
             if (_continuousActions && _isActionLocked) return;
 
+            if (_useMovementAnimationStates && _isActionLocked)
+                StopAttack();
+
             _currentState = EnemyAIState.Hurt;
             // Force the reaction state so damage received during an attack cannot
             // leave the Animator waiting on an interrupted trigger transition.
-            if (_animator != null && _animator.HasState(0, Animator.StringToHash("TakeHit")))
+            if (_useMovementAnimationStates && TryPlayAnimatorState("Hit"))
+            {
+                // The Hit clip has its own frames; no trigger transition is needed.
+            }
+            else if (_animator != null && _animator.HasState(0, Animator.StringToHash("TakeHit")))
             {
                 if (_availableAnimParams.Contains("Hurt")) _animator.ResetTrigger("Hurt");
                 if (_availableAnimParams.Contains("Attack")) _animator.ResetTrigger("Attack");
