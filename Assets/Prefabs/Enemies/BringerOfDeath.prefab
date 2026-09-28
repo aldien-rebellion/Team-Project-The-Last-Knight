@@ -177,7 +177,7 @@ Transform:
   m_GameObject: {fileID: 6725129673494148614}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.315, z: 0}
+  m_LocalPosition: {x: -0.0016732557, y: 0.030895, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -227,7 +227,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.44000003, y: 0.63}
+  m_Size: {x: 0.6, y: 0.63}
   m_EdgeRadius: 0
 --- !u!114 &6136183120465333397
 MonoBehaviour:
@@ -262,7 +262,8 @@ GameObject:
   - component: {fileID: 3639377234909846209}
   - component: {fileID: 3554818860070388528}
   - component: {fileID: 8950396428505929908}
-  m_Layer: 0
+  - component: {fileID: 9010000000000000002}
+  m_Layer: 9
   m_Name: BringerOfDeath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -278,9 +279,9 @@ Transform:
   m_GameObject: {fileID: 7106126184130273626}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -0.03, y: 2.06, z: 0}
+  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3166189509435108775}
   - {fileID: 4231591306728454217}
@@ -331,9 +332,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 332267243
+  m_SortingLayer: 5
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 547910251586419615, guid: 81947a93830857e439a47ec4764df3f3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -429,8 +430,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.3}
-  m_Size: {x: 0.4, y: 0.6}
+  m_Offset: {x: -0.0033465114, y: 0.01740299}
+  m_Size: {x: 0.58070225, y: 0.6030154}
   m_Direction: 0
 --- !u!114 &3554818860070388528
 MonoBehaviour:
@@ -468,8 +469,13 @@ MonoBehaviour:
   _chaseSpeed: 3.5
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
-  _initialFacingRight: 1
+  _initialFacingRight: 0
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -479,32 +485,77 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 9
-  _meleeRange: 2.5
-  _meleeCooldown: 1.5
-  _hasRangedAttack: 1
+  _meleeRange: 0.05
+  _meleeCooldown: 0
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 0
+  _playAttackStatesDirectly: 0
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
+  _useColliderEdgeAttackRanges: 1
+  _disableBasicAttack: 0
+  _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 4469011341799646039, guid: c229eed2ab8ebee4b96d99c2f838a6d7, type: 3}
   _basicAttackAnimState: Attack
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0.4166667
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 4
   _skills:
   - skillName: HellfirePillar
     animationName: Cast
     actionIndex: -1
     damageMultiplier: 2
-    cooldown: 8
+    cooldown: 10
     minRange: 1.5
     maxRange: 8
     isParryable: 1
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    additionalDamageHitTimes: []
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
     groundSpellPrefab: {fileID: 4469011341799646039, guid: c229eed2ab8ebee4b96d99c2f838a6d7, type: 3}
+  _cycleNonParryableSkills: 0
+  _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 1
+  _attackSortingOrder: 1
+--- !u!114 &9010000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7106126184130273626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 8424317837142993542}
+  _useVisibleSpriteBounds: 1
 --- !u!1 &8344078601126805837
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +583,7 @@ RectTransform:
   m_GameObject: {fileID: 8344078601126805837}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.0034285714, y: 0.0034285714, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3301438923232306912}
@@ -542,7 +593,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0.95000005}
-  m_SizeDelta: {x: 100, y: 14}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8851739208188024727
 Canvas:
@@ -585,3 +636,8 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 8424317837142993542}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _followSpriteBounds: 1
+  _headOffset: 0.08

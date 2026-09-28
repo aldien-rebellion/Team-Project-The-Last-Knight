@@ -192,8 +192,7 @@ namespace TheLastKnight.EditorTools
             Object.DestroyImmediate(go);
             Debug.Log($"[EnemyPrefabBuilder] Created ground spell prefab: {name}");
         }
-
-        private static void BuildBringerOfDeathSpell()
+private static void BuildBringerOfDeathSpell()
         {
             string name = "BringerOfDeath_Spell";
             string prefabPath = $"{ProjectilesOutputDir}/{name}.prefab";
@@ -214,8 +213,11 @@ namespace TheLastKnight.EditorTools
             }
 
             GameObject go = new GameObject(name);
+            go.transform.localScale = new Vector3(8.75f, 8.75f, 1f);
+            go.layer = LayerMask.NameToLayer("Player");
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 5;
+            sr.sortingLayerName = "Player";
+            sr.sortingOrder = 0;
 
             var anim = go.AddComponent<Animator>();
             if (controller != null)
@@ -226,15 +228,18 @@ namespace TheLastKnight.EditorTools
 
             var col = go.AddComponent<BoxCollider2D>();
             col.isTrigger = true;
-            col.size = new Vector2(1.8f, 3.2f);
-            col.offset = new Vector2(0f, 1.6f);
+            col.size = new Vector2(0.36f, 0.64f);
+            col.offset = new Vector2(0f, 0.32f);
 
             var spell = go.AddComponent<GroundSpellArea>();
             var serializedSpell = new SerializedObject(spell);
             serializedSpell.FindProperty("_damage").floatValue = 30f;
-            serializedSpell.FindProperty("_delayBeforeDamage").floatValue = 0.45f;
+            serializedSpell.FindProperty("_delayBeforeDamage").floatValue = 0.2f;
             serializedSpell.FindProperty("_damageDuration").floatValue = 0.5f;
             serializedSpell.FindProperty("_totalLifetime").floatValue = 1.4f;
+            serializedSpell.FindProperty("_alignSpriteBottomToSpawn").boolValue = true;
+            serializedSpell.FindProperty("_secondDamageDelay").floatValue = 1.05f;
+            serializedSpell.FindProperty("_secondDamageDuration").floatValue = 0.18f;
             serializedSpell.ApplyModifiedProperties();
 
             PrefabUtility.SaveAsPrefabAsset(go, prefabPath);
@@ -287,7 +292,7 @@ namespace TheLastKnight.EditorTools
                 // Bosses & Elites
                 new MonsterConfig("ArchDemon", 500f, 35f, 5f, 1.8f, 3.8f, 8f, 2.2f, scale: 5f),
                 new MonsterConfig("BlueSlime", 35f, 10f, 0f, 1.8f, 3.2f, 6f, 0.05f, scale: 4f),
-                new MonsterConfig("BringerOfDeath", 600f, 40f, 8f, 1.6f, 3.5f, 9f, 2.5f, false, true, null, "BringerOfDeath_Spell"),
+                new MonsterConfig("BringerOfDeath", 600f, 40f, 8f, 1.6f, 3.5f, 9f, 0.05f, false, false, null, "BringerOfDeath_Spell"),
                 new MonsterConfig("Demon", 70f, 15f, 2f, 2.0f, 4.0f, 7f, 1.6f),
                 new MonsterConfig("DemonBoss", 800f, 50f, 10f, 1.5f, 3.6f, 10f, 3.2f),
                 new MonsterConfig("DemonKin", 60f, 12f, 1f, 2.2f, 4.2f, 7f, 1.5f),
@@ -336,7 +341,12 @@ namespace TheLastKnight.EditorTools
 
             // SpriteRenderer
             var sr = root.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = cfg.Name == "FlyingEye" ? 8 : 2;
+            sr.sortingOrder = cfg.Name == "FlyingEye" ? 8 : cfg.Name == "BringerOfDeath" ? 0 : 2;
+            if (cfg.Name == "BringerOfDeath")
+            {
+                root.layer = LayerMask.NameToLayer("Player");
+                sr.sortingLayerName = "Player";
+            }
             if (controller != null)
             {
                 AssignFirstSpriteFromController(sr, controller);
@@ -394,10 +404,13 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_patrolSpeed").floatValue = cfg.PatrolSpeed;
             serializedAI.FindProperty("_chaseSpeed").floatValue = cfg.ChaseSpeed;
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
+                        serializedAI.FindProperty("_bringToFrontWhileAttacking").boolValue = cfg.Name == "BringerOfDeath";
+            serializedAI.FindProperty("_attackSortingOrder").intValue = 1;
+serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "BringerOfDeath";
             serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 0.05f : cfg.MeleeRange;
             serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight";
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "ArchDemon" || cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
-            serializedAI.FindProperty("_basicAttackDamageDelay").floatValue = cfg.Name == "ArchDemon" ? 7f / 12f : 0f;
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "ArchDemon" || cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_basicAttackDamageDelay").floatValue = cfg.Name == "ArchDemon" ? 7f / 12f : cfg.Name == "BringerOfDeath" ? 5f / 12f : 0f;
             serializedAI.FindProperty("_canRespawn").boolValue = cfg.Name == "ArchDemon";
             serializedAI.FindProperty("_maxRespawns").intValue = cfg.Name == "ArchDemon" ? 1 : -1;
             serializedAI.FindProperty("_respawnsUsed").intValue = 0;
@@ -405,9 +418,9 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_requirePlayerAwayToRespawn").boolValue = cfg.Name != "ArchDemon";
             serializedAI.FindProperty("_respawnAtDeathPosition").boolValue = cfg.Name == "ArchDemon";
             serializedAI.FindProperty("_rangedCooldown").floatValue = cfg.Name == "FlyingEye" ? 0f : 3f;
-            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 4 : cfg.Name == "ShadowDemonDragon" ? 2 : cfg.Name == "Reaper" ? 3 : 0;
-            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
-            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
+            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" ? 4 : cfg.Name == "ShadowDemonDragon" ? 2 : cfg.Name == "Reaper" ? 3 : 0;
+            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
+            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
             serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ForestMushroom" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
             serializedAI.FindProperty("_allowBasicParryWithSkills").boolValue = cfg.Name == "Small_dragon";
             serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight";
@@ -482,11 +495,13 @@ namespace TheLastKnight.EditorTools
                     parry.ApplyModifiedPropertiesWithoutUndo();
                 }
             }
-            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer")
+            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath")
             {
                 // Match BlueSlime's world-space UI scale (root 4x, canvas 0.006).
                 float barScale = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Necromancer" ? 0.0048f : 0.006f;
                 if (cfg.Name == "SkeletonKnight") barScale = 0.0032f;
+                if (cfg.Name == "BringerOfDeath")
+                    barScale = 0.024f / Mathf.Max(0.01f, Mathf.Abs(root.transform.lossyScale.x));
                 var healthBar = root.GetComponentInChildren<FloatingHealthBar>();
                 healthBar.transform.localScale = new Vector3(barScale, barScale, 1f);
                 if (cfg.Name == "ShadowDemonDragon")
@@ -498,19 +513,20 @@ namespace TheLastKnight.EditorTools
                 }
                 if (cfg.Name == "SkeletonKnight")
                     healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(100f, 14f);
-                else if (cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer")
+                else if (cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath")
                     healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
                 var bar = new SerializedObject(root.GetComponentInChildren<FloatingHealthBar>());
                 bar.FindProperty("_followSprite").objectReferenceValue = sr;
-                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer";
-                bar.FindProperty("_followSpriteBounds").boolValue = false;
+                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
+                bar.FindProperty("_followSpriteBounds").boolValue = cfg.Name == "BringerOfDeath";
                 bar.FindProperty("_headGap").floatValue = 0.08f;
+                if (cfg.Name == "BringerOfDeath") bar.FindProperty("_headOffset").floatValue = 0.08f;
                 bar.ApplyModifiedPropertiesWithoutUndo();
                 var receiver = root.GetComponent<ParryReceiver>();
                 if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
                 var parry = new SerializedObject(receiver);
                 parry.FindProperty("_centerSprite").objectReferenceValue = sr;
-                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer";
+                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
                 parry.ApplyModifiedPropertiesWithoutUndo();
                 if (cfg.Name == "Skeleton")
                 {
@@ -526,6 +542,14 @@ namespace TheLastKnight.EditorTools
                 root.GetComponentInChildren<EnemyHitbox2D>().GetComponent<BoxCollider2D>().size = new Vector2(0.52f, 0.63f);
             if (cfg.Name == "ForestMushroom")
                 root.GetComponentInChildren<EnemyHitbox2D>().GetComponent<BoxCollider2D>().size = new Vector2(0.6f, 0.65f);
+            if (cfg.Name == "BringerOfDeath")
+            {
+                var hitbox = root.GetComponentInChildren<EnemyHitbox2D>();
+                var hitboxCollider = hitbox.GetComponent<BoxCollider2D>();
+                hitboxCollider.size = new Vector2(0.6f, 0.63f);
+                hitbox.transform.localPosition = new Vector3(col.offset.x,
+                    col.offset.y - col.size.y * 0.5f + hitboxCollider.size.y * 0.5f, 0f);
+            }
             if (cfg.Name == "Skeleton")
             {
                 var hitbox = root.GetComponentInChildren<EnemyHitbox2D>();
@@ -919,7 +943,7 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("HellfirePillar", "Cast", -1, 2.0f, 8.0f, 1.5f, 8.0f, true, null, "BringerOfDeath_Spell")
+                        new SkillData("HellfirePillar", "Cast", -1, 2.0f, 10.0f, 1.5f, 8.0f, true, null, "BringerOfDeath_Spell")
                     });
                     break;
 

@@ -117,8 +117,14 @@ namespace TheLastKnight.AI
         [Tooltip("Respawn at the position where this enemy died instead of its original spawn point.")]
         [SerializeField] private bool _respawnAtDeathPosition;
 
-        // Components
-        private Rigidbody2D _rb;
+                [Header("Attack Rendering")]
+        [SerializeField] private bool _bringToFrontWhileAttacking;
+        [SerializeField] private int _attackSortingOrder = 1;
+
+// Components
+                private SpriteRenderer _spriteRenderer;
+        private int _defaultSortingOrder;
+private Rigidbody2D _rb;
         private Animator _animator;
         private EnemyStats _stats;
         private Collider2D[] _colliders;
@@ -161,7 +167,9 @@ namespace TheLastKnight.AI
 
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody2D>();
+                        _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (_spriteRenderer != null) _defaultSortingOrder = _spriteRenderer.sortingOrder;
+_rb = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _stats = GetComponent<EnemyStats>();
             _parry = GetComponent<ParryReceiver>();
@@ -326,6 +334,7 @@ namespace TheLastKnight.AI
 
         private void Update()
         {
+            UpdateAttackSortingOrder();
             if (_stats.IsDead) return;
 
             if ((_parry != null && _parry.IsStaggered) || (_stats != null && _stats.CurrentStatus == StatusEffect.Stunned))
@@ -1256,7 +1265,7 @@ namespace TheLastKnight.AI
             // Ground spell check (e.g. BringerOfDeath Spell, Jinn Magic)
             if (_groundSpellPrefab != null && _player != null)
             {
-                Vector3 spellPos = new Vector3(_player.transform.position.x, _player.transform.position.y, 0f);
+                Vector3 spellPos = GetGroundSpellSpawnPosition(_player);
                 var spellObj = Instantiate(_groundSpellPrefab, spellPos, Quaternion.identity);
                 var spellArea = spellObj.GetComponent<GroundSpellArea>();
                 if (spellArea != null && _stats != null)
@@ -1733,5 +1742,42 @@ namespace TheLastKnight.AI
             _projectilePrefab = projPrefab;
             _groundSpellPrefab = spellPrefab;
         }
-    }
+    
+
+private Vector3 GetGroundSpellSpawnPosition(GameObject target)
+        {
+            if (target == null) return transform.position;
+
+            // The target transform is often at the character's center. Ground
+            // telegraphs must start at the bottom edge of its solid collider.
+            Collider2D groundCollider = target.GetComponent<Collider2D>();
+            if (groundCollider == null || !groundCollider.enabled || groundCollider.isTrigger)
+            {
+                var colliders = target.GetComponentsInChildren<Collider2D>();
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    if (colliders[i] != null && colliders[i].enabled && !colliders[i].isTrigger)
+                    {
+                        groundCollider = colliders[i];
+                        break;
+                    }
+                }
+            }
+
+            float groundY = groundCollider != null ? groundCollider.bounds.min.y : target.transform.position.y;
+            return new Vector3(target.transform.position.x, groundY, transform.position.z);
+        }
+
+
+        private void UpdateAttackSortingOrder()
+        {
+            if (!_bringToFrontWhileAttacking || _spriteRenderer == null || _animator == null) return;
+            var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+            bool isSlashing = stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") ||
+                (!string.IsNullOrEmpty(_basicAttackAnimState) && stateInfo.IsName(_basicAttackAnimState));
+            int targetOrder = isSlashing ? _attackSortingOrder : _defaultSortingOrder;
+            if (_spriteRenderer.sortingOrder != targetOrder)
+                _spriteRenderer.sortingOrder = targetOrder;
+        }
+}
 }
