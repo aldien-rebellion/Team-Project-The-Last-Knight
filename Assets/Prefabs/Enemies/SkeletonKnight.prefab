@@ -330,6 +330,10 @@ MonoBehaviour:
   - SideSwing
   - FwdSwing
   - DownSwing
+  _basicAttackDamageStartDelays:
+  - 0.25
+  - 0.125
+  - 0.375
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
   _allowBasicParryWithSkills: 0
@@ -346,10 +350,13 @@ MonoBehaviour:
     isParryable: 0
     initialDelay: 0
     guardDuration: 0
-    damageStartDelay: 0.4
-    damageDuration: 0.4
+    damageStartDelay: 0.42
+    damageDuration: 0.18
     dealDamageAsSingleHit: 0
     secondDamageHitTime: -1
+    additionalDamageHitTimes:
+    - 1.15
+    - 1.88
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
     requireLineOfSight: 0

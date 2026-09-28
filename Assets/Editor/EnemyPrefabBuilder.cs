@@ -428,6 +428,11 @@ namespace TheLastKnight.EditorTools
                 attackSequence.GetArrayElementAtIndex(0).stringValue = "SideSwing";
                 attackSequence.GetArrayElementAtIndex(1).stringValue = "FwdSwing";
                 attackSequence.GetArrayElementAtIndex(2).stringValue = "DownSwing";
+                var damageDelays = serializedAI.FindProperty("_basicAttackDamageStartDelays");
+                damageDelays.arraySize = 3;
+                damageDelays.GetArrayElementAtIndex(0).floatValue = 0.25f;
+                damageDelays.GetArrayElementAtIndex(1).floatValue = 0.125f;
+                damageDelays.GetArrayElementAtIndex(2).floatValue = 0.375f;
             }
             if (cfg.Name == "Skeleton")
                 serializedAI.FindProperty("_projectileSpawnOffset").vector2Value = new Vector2(0.6f, 1.4f);
@@ -752,6 +757,15 @@ namespace TheLastKnight.EditorTools
                 isParryable = d.IsParryable,
                 requireLineOfSight = d.RequireLineOfSight
             };
+            if (d.Name == "FullCombo")
+            {
+                // The 21-frame clip contains three seven-frame swing sections.
+                // Match one damage window to the impact frame in each section
+                // (Animator state speed is 0.8, clip sample rate is 12 fps).
+                s.damageStartDelay = 0.42f;
+                s.damageDuration = 0.18f;
+                s.additionalDamageHitTimes = new[] { 1.15f, 1.88f };
+            }
             if (!string.IsNullOrEmpty(d.ProjName))
             {
                 s.projectilePrefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{ProjectilesOutputDir}/{d.ProjName}.prefab");
