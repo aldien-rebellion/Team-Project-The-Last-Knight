@@ -285,7 +285,7 @@ namespace TheLastKnight.EditorTools
             MonsterConfig[] configs = new MonsterConfig[]
             {
                 // Bosses & Elites
-                new MonsterConfig("ArchDemon", 500f, 35f, 5f, 1.8f, 3.8f, 8f, 2.2f),
+                new MonsterConfig("ArchDemon", 500f, 35f, 5f, 1.8f, 3.8f, 8f, 2.2f, scale: 5f),
                 new MonsterConfig("BlueSlime", 35f, 10f, 0f, 1.8f, 3.2f, 6f, 0.05f, scale: 4f),
                 new MonsterConfig("BringerOfDeath", 600f, 40f, 8f, 1.6f, 3.5f, 9f, 2.5f, false, true, null, "BringerOfDeath_Spell"),
                 new MonsterConfig("Demon", 70f, 15f, 2f, 2.0f, 4.0f, 7f, 1.6f),
@@ -365,6 +365,8 @@ namespace TheLastKnight.EditorTools
             // Collider2D (CapsuleCollider2D)
             var col = root.AddComponent<CapsuleCollider2D>();
             Bounds bounds = sr.bounds;
+            if (cfg.Name == "ArchDemon" && !Mathf.Approximately(cfg.Scale, 0f))
+                bounds.size /= Mathf.Abs(cfg.Scale);
             float colHeight = Mathf.Max(0.6f, bounds.size.y * 0.8f);
             float colWidth = Mathf.Max(0.4f, bounds.size.x * 0.45f);
             col.size = new Vector2(colWidth, colHeight);
@@ -392,22 +394,31 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_patrolSpeed").floatValue = cfg.PatrolSpeed;
             serializedAI.FindProperty("_chaseSpeed").floatValue = cfg.ChaseSpeed;
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
-            serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "FlyingEye" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 0.05f : cfg.MeleeRange;
+            serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 0.05f : cfg.MeleeRange;
             serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight";
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "ArchDemon" || cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_basicAttackDamageDelay").floatValue = cfg.Name == "ArchDemon" ? 7f / 12f : 0f;
+            serializedAI.FindProperty("_canRespawn").boolValue = cfg.Name == "ArchDemon";
+            serializedAI.FindProperty("_maxRespawns").intValue = cfg.Name == "ArchDemon" ? 1 : -1;
+            serializedAI.FindProperty("_respawnsUsed").intValue = 0;
+            serializedAI.FindProperty("_respawnTime").floatValue = cfg.Name == "ArchDemon" ? 0.5f : 30f;
+            serializedAI.FindProperty("_requirePlayerAwayToRespawn").boolValue = cfg.Name != "ArchDemon";
+            serializedAI.FindProperty("_respawnAtDeathPosition").boolValue = cfg.Name == "ArchDemon";
             serializedAI.FindProperty("_rangedCooldown").floatValue = cfg.Name == "FlyingEye" ? 0f : 3f;
-            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 4 : cfg.Name == "ShadowDemonDragon" ? 2 : cfg.Name == "Reaper" ? 3 : 0;
-            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
-            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
+            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 4 : cfg.Name == "ShadowDemonDragon" ? 2 : cfg.Name == "Reaper" ? 3 : 0;
+            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
+            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
             serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ForestMushroom" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
             serializedAI.FindProperty("_allowBasicParryWithSkills").boolValue = cfg.Name == "Small_dragon";
             serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight";
             serializedAI.FindProperty("_usePassiveStanceAnimations").boolValue = cfg.Name == "Reaper";
-            serializedAI.FindProperty("_flipSpriteInsteadOfTransformScale").boolValue = cfg.Name == "SkeletonKnight";
-            serializedAI.FindProperty("_facingFlipDeadZone").floatValue = cfg.Name == "SkeletonKnight" ? 0.12f : 0f;
-            serializedAI.FindProperty("_avoidTeleportOnReturn").boolValue = cfg.Name == "SkeletonKnight";
+            serializedAI.FindProperty("_flipSpriteInsteadOfTransformScale").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "SkeletonKnight";
+            serializedAI.FindProperty("_facingFlipDeadZone").floatValue = cfg.Name == "SkeletonKnight" ? 0.12f : cfg.Name == "ArchDemon" ? 0.1f : 0f;
+            serializedAI.FindProperty("_avoidTeleportOnReturn").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "SkeletonKnight";
             if (cfg.Name == "UndeadExecutioner")
                 serializedAI.FindProperty("_deathDestroyDelay").floatValue = 2.2f;
+            else if (cfg.Name == "ArchDemon")
+                serializedAI.FindProperty("_deathDestroyDelay").floatValue = 0.8f;
             serializedAI.FindProperty("_cycleNonParryableSkills").boolValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton";
             serializedAI.FindProperty("_continuousActions").boolValue = cfg.Name == "Skeleton";
             if (cfg.Name == "SkeletonKnight")

@@ -73,6 +73,8 @@ namespace TheLastKnight.AI
         [SerializeField] private string _basicAttackAnimState = "Attack";
         [Tooltip("Optional repeating animation sequence for basic melee attacks.")]
         [SerializeField] private string[] _basicAttackAnimStates = new string[0];
+        [Tooltip("Delay from the attack animation start to the visible damage frame.")]
+        [SerializeField, Min(0f)] private float _basicAttackDamageDelay;
         private int _nextBasicAttackAnimIndex;
         [Tooltip("Damage multiplier for basic attack (always 1.0x ATK).")]
         [SerializeField] private float _basicAttackMultiplier = 1.0f;
@@ -102,9 +104,16 @@ namespace TheLastKnight.AI
         [Tooltip("If true, this monster will respawn after being defeated.")]
         [SerializeField] private bool _canRespawn = false;
         public bool CanRespawn => _canRespawn;
+        [Tooltip("Maximum number of respawns. Use -1 for unlimited respawns.")]
+        [SerializeField] private int _maxRespawns = -1;
+        [SerializeField] private int _respawnsUsed;
         [Tooltip("Time in seconds before the monster attempts to respawn after death.")]
         [SerializeField] private float _respawnTime = 30f;
         public float RespawnTime => _respawnTime;
+        [Tooltip("If false, respawn even when the player is still near the spawn point.")]
+        [SerializeField] private bool _requirePlayerAwayToRespawn = true;
+        [Tooltip("Respawn at the position where this enemy died instead of its original spawn point.")]
+        [SerializeField] private bool _respawnAtDeathPosition;
 
         // Components
         private Rigidbody2D _rb;
@@ -116,6 +125,7 @@ namespace TheLastKnight.AI
 
         // Spawn / Respawn Tracking
         private Vector3 _spawnPosition;
+        private Vector3 _deathPosition;
         private Quaternion _spawnRotation;
 
         // State Machine
@@ -334,23 +344,26 @@ namespace TheLastKnight.AI
                 }
             }
 
-            // If currently returning to spawn position, execute return logic
-            if (_currentState == EnemyAIState.ReturningToSpawn)
-            {
-                ReturnToSpawn();
-                return;
-            }
-
             // Check if current animation state locks movement (e.g. hurt or attacking)
             var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+            bool isBasicAttackAnimation = !string.IsNullOrEmpty(_basicAttackAnimState)
+                && stateInfo.IsName(_basicAttackAnimState);
             if (stateInfo.IsName("Hurt") || stateInfo.IsName("TakeHit") ||
                 (_useMovementAnimationStates && stateInfo.IsName("Hit") && stateInfo.normalizedTime < 1f) ||
-                stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") || stateInfo.IsName("Cast") || _isActionLocked)
+                stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") || stateInfo.IsName("Cast") ||
+                isBasicAttackAnimation || _isActionLocked)
             {
                 float vx = stateInfo.IsName("Hurt") ? Mathf.MoveTowards(_rb.linearVelocity.x, 0f, 15f * Time.deltaTime) : 0f;
                 _rb.linearVelocity = new Vector2(vx, _isFlying ? 0f : _rb.linearVelocity.y);
                 SetAnimBool("IsMoving", false);
                 SetAnimBool("IsChasing", false);
+                return;
+            }
+
+            // Keep the return AI from moving the enemy while an attack animation is still playing.
+            if (_currentState == EnemyAIState.ReturningToSpawn)
+            {
+                ReturnToSpawn();
                 return;
             }
 
@@ -701,9 +714,12 @@ namespace TheLastKnight.AI
             else
                 PlayAnimationAction(_basicAttackAnimState);
             _smallDragonFireEffect?.Play();
-            // Let the dragon's visible strike reach frame 3 before applying damage.
-            if (dragonAudio != null && !ranged)
-                yield return new WaitForSeconds(2f / 12f);
+            // Apply contact damage on the authored hit frame, not when the animation starts.
+            float damageDelay = !ranged
+                ? Mathf.Max(_basicAttackDamageDelay, dragonAudio != null ? 2f / 12f : 0f)
+                : 0f;
+            if (damageDelay > 0f)
+                yield return new WaitForSeconds(damageDelay);
             if (_stats.IsDead || _parry.IsStaggered)
             {
                 _isActionLocked = false;
@@ -722,7 +738,7 @@ namespace TheLastKnight.AI
             yield return new WaitForSeconds(0.35f);
             _damageUntil = 0f;
             float remainingAnimationTime = GetAnimationDuration(_basicAttackAnimState, 0.35f) - 0.35f
-                - (dragonAudio != null && !ranged ? 2f / 12f : 0f);
+                - damageDelay;
             if (remainingAnimationTime > 0f)
             {
                 yield return new WaitForSeconds(remainingAnimationTime);
@@ -1328,6 +1344,14 @@ namespace TheLastKnight.AI
                 if (_availableAnimParams.Contains("Attack")) _animator.ResetTrigger("Attack");
                 _animator.Play("TakeHit", 0, 0f);
             }
+            else if (_animator != null && _animator.HasState(0, Animator.StringToHash("Base Layer.Hurt")))
+            {
+                if (_availableAnimParams.Contains("ActionIndex"))
+                    _animator.SetInteger("ActionIndex", -1);
+                if (_availableAnimParams.Contains("Hurt")) _animator.ResetTrigger("Hurt");
+                if (_availableAnimParams.Contains("Attack")) _animator.ResetTrigger("Attack");
+                _animator.Play("Base Layer.Hurt", 0, 0f);
+            }
             else
             {
                 SetAnimTrigger("Hurt");
@@ -1342,12 +1366,25 @@ namespace TheLastKnight.AI
 
         private void HandleDeath()
         {
+            _deathPosition = transform.position;
+            bool willRespawn = _canRespawn && (_maxRespawns < 0 || _respawnsUsed < _maxRespawns);
+            if (willRespawn)
+                _respawnsUsed++;
+
             StopAttack();
             _currentState = EnemyAIState.Dead;
             SetAnimBool("IsDead", true);
             int deathStateHash = Animator.StringToHash("Base Layer.Death");
-            if (_playAttackStatesDirectly && _animator != null && _animator.HasState(0, deathStateHash))
+            if (_animator != null && _animator.HasState(0, deathStateHash))
+            {
+                if (_availableAnimParams.Contains("ActionIndex"))
+                    _animator.SetInteger("ActionIndex", -1);
+                if (_availableAnimParams.Contains("Attack"))
+                    _animator.ResetTrigger("Attack");
+                if (_availableAnimParams.Contains("Hurt"))
+                    _animator.ResetTrigger("Hurt");
                 _animator.Play(deathStateHash, 0, 0f);
+            }
             _rb.linearVelocity = Vector2.zero;
             if (_isFlying)
             {
@@ -1357,7 +1394,7 @@ namespace TheLastKnight.AI
                 _rb.bodyType = RigidbodyType2D.Dynamic;
                 _rb.gravityScale = 2.5f;
                 _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-                if (!_canRespawn) StartCoroutine(FitFlyingDeathColliderToSprite());
+                if (!willRespawn) StartCoroutine(FitFlyingDeathColliderToSprite());
             }
             else
             {
@@ -1373,7 +1410,7 @@ namespace TheLastKnight.AI
                 col.enabled = false;
             }
 
-            if (_canRespawn)
+            if (willRespawn)
             {
                 StartCoroutine(RespawnRoutine());
             }
@@ -1418,7 +1455,7 @@ namespace TheLastKnight.AI
 
             // 4. Distance check: Do not respawn if player is within detection range of spawn position!
             // มอนสเตอร์จะไม่เกิดถ้า player อยู่ใกล้จุดเกิดในระยะเท่ากับระยะการมองเห็น (_detectionRange)
-            while (true)
+            while (_requirePlayerAwayToRespawn)
             {
                 if (_player == null)
                 {
@@ -1441,10 +1478,11 @@ namespace TheLastKnight.AI
                 yield return new WaitForSeconds(0.5f);
             }
 
-            // 5. Reset position and orientation
-            transform.position = _spawnPosition;
+            // 5. Restore at the death location when this monster uses a revival life.
+            Vector3 respawnPosition = _respawnAtDeathPosition ? _deathPosition : _spawnPosition;
+            transform.position = respawnPosition;
             transform.rotation = _spawnRotation;
-            _startX = _spawnPosition.x;
+            _startX = respawnPosition.x;
             _isFacingRight = _initialFacingRight;
             FaceDirection(_isFacingRight);
 
@@ -1469,7 +1507,14 @@ namespace TheLastKnight.AI
             SetAnimBool("IsDead", false);
             SetAnimBool("IsMoving", false);
             SetAnimBool("IsChasing", false);
-            if (_animator != null && _animator.runtimeAnimatorController != null)
+            bool playedRespawnEffect = false;
+            int hurtStateHash = Animator.StringToHash("Base Layer.Hurt");
+            if (_respawnAtDeathPosition && _animator != null && _animator.HasState(0, hurtStateHash))
+            {
+                _animator.Play(hurtStateHash, 0, 0f);
+                playedRespawnEffect = true;
+            }
+            if (!playedRespawnEffect && _animator != null && _animator.runtimeAnimatorController != null)
             {
                 _animator.Play("Idle", 0, 0f);
             }
