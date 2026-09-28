@@ -119,6 +119,63 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &103115346
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 14.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 720548707519476863, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306785311533167210, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
+      propertyPath: m_Name
+      value: Reaper
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
 --- !u!1 &106892029
 GameObject:
   m_ObjectHideFlags: 0
@@ -65452,7 +65509,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _expReward
-      value: 22
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _maxHealth
@@ -65460,7 +65517,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _goldReward
-      value: 24
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _useLevelScaling
@@ -80828,10 +80885,20 @@ MonoBehaviour:
   _attackCooldown: 0.5
   _skillDuration: 0.5
   _skillCooldown: 1
+  _skillDamageMultiplier: 2
+  _skillAttackSize: {x: 3.5, y: 2.5}
+  _skillAttackOffset: {x: 1.5, y: 0}
+  _skillKnockbackForce: {x: 10, y: 3}
+  _skillPushDistance: 2
   _buffDuration: 0.6
   _buffCooldown: 1
   _excaliburDuration: 3.8
   _excaliburCooldown: 1
+  _excaliburDamageMultiplier: 5
+  _excaliburHitSize: {x: 15, y: 4}
+  _excaliburHitOffset: {x: 7.5, y: 0.5}
+  _excaliburDamageDelay: 3.3
+  _excaliburStunDuration: 2
   _excaliburVFXController: {fileID: 0}
   _drinkDuration: 2.5
   _drinkCooldown: 1
@@ -80851,6 +80918,7 @@ MonoBehaviour:
   _baseDashSpeed: 20
   _baseDashDuration: 0.2
   _dashCooldown: 0.5
+  _dashIFrameDuration: 0.15
   _attackSize: {x: 2.2, y: 2}
   _attackOffset: {x: 1.1, y: 0}
   _attackLayers:
@@ -101738,3 +101806,4 @@ SceneRoots:
   - {fileID: 1756866606}
   - {fileID: 2012203833}
   - {fileID: 1190154662}
+  - {fileID: 103115346}

@@ -27,7 +27,7 @@ RectTransform:
   m_GameObject: {fileID: 2662548676842354271}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0042857143, y: 0.0042857143, z: 1}
+  m_LocalScale: {x: 0.006, y: 0.006, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 765120271178275558}
@@ -118,7 +118,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6360110036420094652}
@@ -284,12 +284,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 1
-  _useLevelScaling: 0
-  _maxHealth: 280
-  _defense: 5
-  _attackPower: 30
-  _goldReward: 8
-  _expReward: 15
+  _useLevelScaling: 1
+  _maxHealth: 100
+  _defense: 1
+  _attackPower: 10
+  _goldReward: 24
+  _expReward: 25
   _currentStatus: 0
 --- !u!114 &5522708467596627523
 MonoBehaviour:
@@ -325,6 +325,7 @@ MonoBehaviour:
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 0
   _playAttackStatesDirectly: 1
+  _usePassiveStanceAnimations: 1
   _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 0
   _hasRangedAttack: 0

@@ -400,6 +400,7 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ForestMushroom";
             serializedAI.FindProperty("_allowBasicParryWithSkills").boolValue = cfg.Name == "Small_dragon";
             serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper";
+            serializedAI.FindProperty("_usePassiveStanceAnimations").boolValue = cfg.Name == "Reaper";
             if (cfg.Name == "UndeadExecutioner")
                 serializedAI.FindProperty("_deathDestroyDelay").floatValue = 2.2f;
             serializedAI.FindProperty("_cycleNonParryableSkills").boolValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton";
@@ -462,7 +463,7 @@ namespace TheLastKnight.EditorTools
                     healthBar.transform.localScale = new Vector3(0.024f, 0.024f, 1f);
                 if (cfg.Name == "Reaper")
                 {
-                    float matchingLocalScale = 0.03f / Mathf.Abs(root.transform.lossyScale.x);
+                    float matchingLocalScale = 0.042f / Mathf.Abs(root.transform.lossyScale.x);
                     healthBar.transform.localScale = new Vector3(matchingLocalScale, matchingLocalScale, 1f);
                 }
                 if (cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper")
