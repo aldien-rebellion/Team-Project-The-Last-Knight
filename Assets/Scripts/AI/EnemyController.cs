@@ -67,6 +67,8 @@ namespace TheLastKnight.AI
         [SerializeField] private string _basicAttackAnimState = "Attack";
         [Tooltip("Optional repeating animation sequence for basic melee attacks.")]
         [SerializeField] private string[] _basicAttackAnimStates = new string[0];
+        [Tooltip("Per-animation delay from attack animation start to the damage frame; indices match Basic Attack Anim States.")]
+        [SerializeField] private float[] _basicAttackDamageStartDelays = new float[0];
         private int _nextBasicAttackAnimIndex;
         [Tooltip("Damage multiplier for basic attack (always 1.0x ATK).")]
         [SerializeField] private float _basicAttackMultiplier = 1.0f;
@@ -590,33 +592,53 @@ namespace TheLastKnight.AI
             else
                 PlayAnimationAction(_basicAttackAnimState);
             _smallDragonFireEffect?.Play();
-            // Let the dragon's visible strike reach frame 3 before applying damage.
+            float damageStartDelay = ranged ? 0f : GetBasicAttackDamageStartDelay(_basicAttackAnimState);
+            // Keep damage aligned with the visible impact frame (including dragon-specific timing).
             if (dragonAudio != null && !ranged)
-                yield return new WaitForSeconds(2f / 12f);
+                damageStartDelay = Mathf.Max(damageStartDelay, 2f / 12f);
+            if (damageStartDelay > 0f)
+            {
+                yield return new WaitForSeconds(damageStartDelay);
+                yield return null;
+            }
             if (_stats.IsDead || _parry.IsStaggered)
             {
                 _isActionLocked = false;
                 yield break;
             }
+            // A new basic swing is a new hit window. Reset each hitbox's per-target
+            // cooldown so SideSwing, FwdSwing, and DownSwing can all damage in sequence.
             foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
             {
                 hitbox.BeginAttack();
             }
-            _damageUntil = Time.time + 0.35f;
+            float damageWindow = ranged ? 0.35f : 0.18f;
+            _damageUntil = Time.time + damageWindow;
             foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
             {
                 hitbox.DealDamageToOverlaps();
             }
             if (ranged) SpawnProjectile();
-            yield return new WaitForSeconds(0.35f);
+            yield return new WaitForSeconds(damageWindow);
             _damageUntil = 0f;
-            float remainingAnimationTime = GetAnimationDuration(_basicAttackAnimState, 0.35f) - 0.35f
-                - (dragonAudio != null && !ranged ? 2f / 12f : 0f);
+            float remainingAnimationTime = GetAnimationDuration(_basicAttackAnimState, 0.35f)
+                - damageWindow - damageStartDelay;
             if (remainingAnimationTime > 0f)
             {
                 yield return new WaitForSeconds(remainingAnimationTime);
             }
             _isActionLocked = false;
+        }
+
+        private float GetBasicAttackDamageStartDelay(string animationName)
+        {
+            if (_basicAttackAnimStates == null || _basicAttackDamageStartDelays == null)
+                return 0f;
+
+            int index = System.Array.IndexOf(_basicAttackAnimStates, animationName);
+            return index >= 0 && index < _basicAttackDamageStartDelays.Length
+                ? Mathf.Max(0f, _basicAttackDamageStartDelays[index])
+                : 0f;
         }
 
         private void PerformSkill(TheLastKnight.Combat.EnemySkill skill)
@@ -738,6 +760,43 @@ namespace TheLastKnight.AI
                 foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
                 {
                     hitbox.DealDamageToOverlaps();
+                }
+            }
+
+            if (skill.additionalDamageHitTimes != null)
+            {
+                foreach (float hitTime in skill.additionalDamageHitTimes)
+                {
+                    if (hitTime <= elapsedAnimationTime) continue;
+
+                    float delayToHit = hitTime - elapsedAnimationTime;
+                    if (delayToHit > 0f)
+                    {
+                        yield return new WaitForSeconds(delayToHit);
+                        yield return null;
+                        elapsedAnimationTime = hitTime;
+                    }
+
+                    if (_stats.IsDead || _parry.IsStaggered)
+                    {
+                        _damageUntil = 0f;
+                        _isActionLocked = false;
+                        yield break;
+                    }
+
+                    if (skill.dealDamageAsSingleHit)
+                    {
+                        ApplySingleSkillHit(skill.requireSpriteBoundsOverlap);
+                    }
+                    else
+                    {
+                        // Each combo strike gets its own damage window and fresh hit gate.
+                        foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
+                            hitbox.BeginAttack();
+                        _damageUntil = Time.time + Mathf.Max(0.08f, skill.damageDuration);
+                        foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
+                            hitbox.DealDamageToOverlaps();
+                    }
                 }
             }
 
