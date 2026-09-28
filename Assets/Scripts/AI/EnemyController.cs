@@ -20,6 +20,12 @@ namespace TheLastKnight.AI
         [SerializeField] private float _flyingIdleHeightOffset;
         [SerializeField] private bool _avoidLedges = true;
         [SerializeField] private bool _initialFacingRight = true;
+        [Tooltip("Flip only the sprite instead of mirroring the enemy root and its attached UI/physics.")]
+        [SerializeField] private bool _flipSpriteInsteadOfTransformScale;
+        [Tooltip("Ignore tiny horizontal target changes to prevent rapid left/right facing flicker.")]
+        [SerializeField, Min(0f)] private float _facingFlipDeadZone;
+        [Tooltip("For enemies that need it, stop safely instead of snapping to the spawn point when the return path is blocked.")]
+        [SerializeField] private bool _avoidTeleportOnReturn;
 
         [Header("Boss & Leash Settings")]
         [Tooltip("If true, this monster is considered a Boss and will not leash/return to spawn or reset HP when player runs far away.")]
@@ -61,6 +67,9 @@ namespace TheLastKnight.AI
 
         [Header("Basic Attack & Parry Settings")]
         [SerializeField] private string _basicAttackAnimState = "Attack";
+        [Tooltip("Optional repeating animation sequence for basic melee attacks.")]
+        [SerializeField] private string[] _basicAttackAnimStates = new string[0];
+        private int _nextBasicAttackAnimIndex;
         [Tooltip("Damage multiplier for basic attack (always 1.0x ATK).")]
         [SerializeField] private float _basicAttackMultiplier = 1.0f;
         [Tooltip("If true and this monster has no parryable skills, basic attack triggers the Parry timing ring with a cooldown.")]
@@ -145,6 +154,17 @@ namespace TheLastKnight.AI
             _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
 
             _isFacingRight = _initialFacingRight;
+            if (_flipSpriteInsteadOfTransformScale)
+            {
+                Vector3 rootScale = transform.localScale;
+                rootScale.x = Mathf.Abs(rootScale.x);
+                transform.localScale = rootScale;
+
+                var spriteRenderer = GetComponent<SpriteRenderer>();
+                if (spriteRenderer != null)
+                    spriteRenderer.flipX = !_initialFacingRight;
+            }
+
             _startX = transform.position.x;
             _spawnPosition = transform.position;
             if (_isFlying && !Mathf.Approximately(_flyingIdleHeightOffset, 0f))
@@ -454,7 +474,7 @@ namespace TheLastKnight.AI
             // Patrol bounds around spawn point
             if (_movingRight)
             {
-                _rb.linearVelocity = new Vector2(_patrolSpeed, _isFlying ? 0f : _rb.linearVelocity.y);
+                SetHorizontalVelocity(_patrolSpeed);
                 FaceDirection(true);
                 if (currentX > centerOriginX + _patrolDistance)
                 {
@@ -464,7 +484,7 @@ namespace TheLastKnight.AI
             }
             else
             {
-                _rb.linearVelocity = new Vector2(-_patrolSpeed, _isFlying ? 0f : _rb.linearVelocity.y);
+                SetHorizontalVelocity(-_patrolSpeed);
                 FaceDirection(false);
                 if (currentX < centerOriginX - _patrolDistance)
                 {
@@ -494,6 +514,13 @@ namespace TheLastKnight.AI
             }
 
             Vector2 toPlayer = targetPosition - (Vector2)transform.position;
+            if (!_isFlying && _facingFlipDeadZone > 0f && Mathf.Abs(toPlayer.x) <= _facingFlipDeadZone)
+            {
+                SetHorizontalVelocity(0f);
+                SetAnimBool("IsMoving", Mathf.Abs(_rb.linearVelocity.x) > 0.05f);
+                return;
+            }
+
             float dirX = Mathf.Sign(toPlayer.x);
 
             // Flying enemies can move in 2D
@@ -518,10 +545,11 @@ namespace TheLastKnight.AI
                     }
                 }
 
-                _rb.linearVelocity = new Vector2(dirX * _chaseSpeed, _rb.linearVelocity.y);
+                SetHorizontalVelocity(dirX * _chaseSpeed);
             }
 
-            FaceDirection(dirX > 0);
+            if (Mathf.Abs(targetPosition.x - transform.position.x) > _facingFlipDeadZone)
+                FaceDirection(dirX > 0);
             if (_isBoss)
             {
                 _startX = transform.position.x;
@@ -536,6 +564,12 @@ namespace TheLastKnight.AI
             SetAnimBool("IsChasing", false);
             _nextMeleeTime = Time.time + _meleeCooldown;
             _currentAttackMultiplier = _basicAttackMultiplier;
+
+            if (_basicAttackAnimStates != null && _basicAttackAnimStates.Length > 0)
+            {
+                _basicAttackAnimState = _basicAttackAnimStates[_nextBasicAttackAnimIndex % _basicAttackAnimStates.Length];
+                _nextBasicAttackAnimIndex = (_nextBasicAttackAnimIndex + 1) % _basicAttackAnimStates.Length;
+            }
 
             // Optional attack-count cadence takes precedence over the legacy timed parry cooldown.
             bool canParryThisTime = ShouldBasicAttackParry();
@@ -837,7 +871,11 @@ namespace TheLastKnight.AI
                 if (clip != null && (clip.name == animationName ||
                     clip.name.EndsWith("_" + animationName, System.StringComparison.Ordinal)))
                 {
-                    return clip.length / Mathf.Max(0.01f, _animator.speed);
+                    float stateSpeed = 1f;
+                    var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+                    if (stateInfo.IsName(animationName) || stateInfo.IsName("Base Layer." + animationName))
+                        stateSpeed = Mathf.Max(0.01f, Mathf.Abs(stateInfo.speed));
+                    return clip.length / Mathf.Max(0.01f, _animator.speed * stateSpeed);
                 }
             }
 
@@ -850,12 +888,7 @@ namespace TheLastKnight.AI
 
             if (_playAttackStatesDirectly && !string.IsNullOrEmpty(animName))
             {
-                int directStateHash = Animator.StringToHash("Base Layer." + animName);
-                if (_animator.HasState(0, directStateHash))
-                {
-                    _animator.Play(directStateHash, 0, 0f);
-                    return;
-                }
+                if (TryPlayAnimatorState(animName)) return;
             }
 
             if (actionIndex >= 0 && _availableAnimParams.Contains("ActionIndex"))
@@ -873,15 +906,44 @@ namespace TheLastKnight.AI
                     return;
                 }
 
-                int stateHash = Animator.StringToHash(animName);
-                if (_animator.HasState(0, stateHash))
-                {
-                    _animator.Play(stateHash, 0, 0f);
-                    return;
-                }
+                if (TryPlayAnimatorState(animName)) return;
             }
 
             SetAnimTrigger("Attack");
+        }
+
+        private bool TryPlayAnimatorState(string stateName)
+        {
+            if (_animator == null || string.IsNullOrEmpty(stateName)) return false;
+
+            int fullPathHash = Animator.StringToHash("Base Layer." + stateName);
+            if (_animator.HasState(0, fullPathHash))
+            {
+                PrepareDirectAnimatorState();
+                _animator.Play(fullPathHash, 0, 0f);
+                return true;
+            }
+
+            int shortNameHash = Animator.StringToHash(stateName);
+            if (_animator.HasState(0, shortNameHash))
+            {
+                PrepareDirectAnimatorState();
+                _animator.Play(shortNameHash, 0, 0f);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void PrepareDirectAnimatorState()
+        {
+            // Controllers with Any State ActionIndex transitions can immediately
+            // override a state played directly if ActionIndex remains at its default (0).
+            if (_availableAnimParams.Contains("ActionIndex"))
+                _animator.SetInteger("ActionIndex", -1);
+
+            if (_availableAnimParams.Contains("Attack"))
+                _animator.ResetTrigger("Attack");
         }
 
         public TheLastKnight.Combat.EnemySkill GetReadySkill(float distToPlayer)
@@ -1126,12 +1188,47 @@ namespace TheLastKnight.AI
 
         private void FaceTarget(Vector3 targetPos)
         {
-            FaceDirection(targetPos.x > transform.position.x);
+            float deltaX = targetPos.x - transform.position.x;
+            if (Mathf.Abs(deltaX) > _facingFlipDeadZone)
+                FaceDirection(deltaX > 0f);
+        }
+
+        private void SetHorizontalVelocity(float targetVelocity)
+        {
+            Vector2 velocity = _rb.linearVelocity;
+            if (_facingFlipDeadZone > 0f)
+            {
+                float turnAcceleration = Mathf.Max(1f, _chaseSpeed * 8f);
+                velocity.x = Mathf.MoveTowards(velocity.x, targetVelocity, turnAcceleration * Time.deltaTime);
+            }
+            else
+            {
+                velocity.x = targetVelocity;
+            }
+
+            _rb.linearVelocity = velocity;
         }
 
         private void FaceDirection(bool faceRight)
         {
             _isFacingRight = faceRight;
+            if (_flipSpriteInsteadOfTransformScale)
+            {
+                Vector3 rootScale = transform.localScale;
+                if (rootScale.x < 0f)
+                {
+                    rootScale.x = Mathf.Abs(rootScale.x);
+                    transform.localScale = rootScale;
+                }
+
+                var spriteRenderer = GetComponent<SpriteRenderer>();
+                if (spriteRenderer != null)
+                {
+                    spriteRenderer.flipX = faceRight != _initialFacingRight;
+                    return;
+                }
+            }
+
             Vector3 scale = transform.localScale;
             float targetSign = GetComponent<DragonAudioController>() != null
                 ? 1f : _initialFacingRight ? (faceRight ? 1f : -1f) : (faceRight ? -1f : 1f);
@@ -1342,10 +1439,12 @@ namespace TheLastKnight.AI
             float totalDist = Vector2.Distance(transform.position, _spawnPosition);
 
             // Reached original spawn position
-            if ((_isFlying && totalDist <= 0.4f) || (!_isFlying && distToSpawnX <= 0.4f))
+            float arrivalDistance = _avoidTeleportOnReturn ? Mathf.Max(0.05f, _chaseSpeed * Time.fixedDeltaTime) : 0.4f;
+            if ((_isFlying && totalDist <= arrivalDistance) || (!_isFlying && distToSpawnX <= arrivalDistance))
             {
                 _rb.linearVelocity = Vector2.zero;
-                transform.position = new Vector3(_spawnPosition.x, _isFlying ? _spawnPosition.y : transform.position.y, transform.position.z);
+                if (!_avoidTeleportOnReturn)
+                    transform.position = new Vector3(_spawnPosition.x, _isFlying ? _spawnPosition.y : transform.position.y, transform.position.z);
                 _startX = _spawnPosition.x;
                 _currentState = EnemyAIState.Patrol;
                 SetAnimBool("IsMoving", false);
@@ -1377,19 +1476,30 @@ namespace TheLastKnight.AI
                     RaycastHit2D groundHit = Physics2D.Raycast(ledgeCheckOrigin, Vector2.down, _groundCheckDistance, _groundLayer);
                     if (groundHit.collider == null)
                     {
-                        // Ledge blocks path, snap to spawn point
-                        transform.position = _spawnPosition;
-                        if (_stats != null && _stats.CurrentHealth < _stats.MaxHealth)
+                        if (_avoidTeleportOnReturn)
                         {
-                            _stats.Heal(_stats.MaxHealth);
-                            FloatingCombatText.Show(transform.position, "Full HP", Color.green);
+                            // Stop at the safe edge instead of teleporting through the blocked route.
+                            _rb.linearVelocity = Vector2.zero;
+                            _spawnPosition = transform.position;
+                            _startX = transform.position.x;
+                            _currentState = EnemyAIState.Patrol;
+                            SetAnimBool("IsMoving", false);
                         }
-                        _currentState = EnemyAIState.Patrol;
+                        else
+                        {
+                            transform.position = _spawnPosition;
+                            if (_stats != null && _stats.CurrentHealth < _stats.MaxHealth)
+                            {
+                                _stats.Heal(_stats.MaxHealth);
+                                FloatingCombatText.Show(transform.position, "Full HP", Color.green);
+                            }
+                            _currentState = EnemyAIState.Patrol;
+                        }
                         return;
                     }
                 }
 
-                _rb.linearVelocity = new Vector2(dirX * _chaseSpeed, _rb.linearVelocity.y);
+                SetHorizontalVelocity(dirX * _chaseSpeed);
                 FaceDirection(dirX > 0);
             }
 
