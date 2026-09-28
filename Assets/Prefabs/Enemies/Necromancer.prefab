@@ -75,20 +75,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9010000000000000002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1911040737338714719}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
-  _centerSprite: {fileID: 4534870292885995537}
-  _useVisibleSpriteBounds: 1
 --- !u!1 &150218980312359201
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,8 +205,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3947854768330473904}
   - {fileID: 4371970769181413460}
@@ -408,8 +394,13 @@ MonoBehaviour:
   _chaseSpeed: 3.8
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -423,7 +414,10 @@ MonoBehaviour:
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 1
+  _playAttackStatesDirectly: 0
+  _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
+  _disableBasicAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -431,8 +425,10 @@ MonoBehaviour:
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack1
+  _basicAttackAnimStates: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 4
   _skills:
@@ -444,7 +440,15 @@ MonoBehaviour:
     minRange: 0
     maxRange: 0.05
     isParryable: 0
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
     groundSpellPrefab: {fileID: 0}
   - skillName: SoulBlast
     animationName: Attack3
@@ -454,11 +458,35 @@ MonoBehaviour:
     minRange: 0
     maxRange: 0.05
     isParryable: 1
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
     groundSpellPrefab: {fileID: 0}
+  _cycleNonParryableSkills: 0
+  _continuousActions: 0
   _deathDestroyDelay: 1.5
   _canRespawn: 0
   _respawnTime: 30
+--- !u!114 &9010000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911040737338714719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 4534870292885995537}
+  _useVisibleSpriteBounds: 1
 --- !u!1 &2142861945114295911
 GameObject:
   m_ObjectHideFlags: 0
