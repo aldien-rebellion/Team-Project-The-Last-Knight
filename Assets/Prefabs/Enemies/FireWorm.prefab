@@ -107,8 +107,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4276687186499322518}
   - {fileID: 4046388965963887564}
@@ -274,11 +274,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 1
   _useLevelScaling: 0
-  _maxHealth: 50
+  _maxHealth: 100
   _defense: 1
-  _attackPower: 14
-  _goldReward: 8
-  _expReward: 15
+  _attackPower: 10
+  _goldReward: 27
+  _expReward: 23
   _currentStatus: 0
 --- !u!114 &8036376436895113427
 MonoBehaviour:
@@ -296,6 +296,8 @@ MonoBehaviour:
   _chaseSpeed: 3.2
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
   _isBoss: 0
@@ -307,29 +309,49 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 7
-  _meleeRange: 1.4
+  _meleeRange: 0.05
   _meleeCooldown: 1.5
-  _hasRangedAttack: 1
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 0
+  _playAttackStatesDirectly: 1
+  _usePassiveStanceAnimations: 0
+  _useColliderEdgeAttackRanges: 1
+  _disableBasicAttack: 1
+  _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 1561035384361864587, guid: 5931138bd9bf01045bc224818c2e8fe8, type: 3}
-  _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _projectileSpawnOffset: {x: 1, y: 1.15}
+  _useProjectileSpawnOffset: 1
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack
   _basicAttackMultiplier: 1
-  _basicAttackCanParry: 1
+  _basicAttackCanParry: 0
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 0
   _skills:
   - skillName: FireBall
     animationName: Attack
     actionIndex: -1
     damageMultiplier: 1.4
-    cooldown: 4
-    minRange: 2.5
+    cooldown: 3
+    minRange: 0
     maxRange: 7
-    isParryable: 0
+    isParryable: 1
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.916667
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 1561035384361864587, guid: 5931138bd9bf01045bc224818c2e8fe8, type: 3}
+    requireLineOfSight: 0
     groundSpellPrefab: {fileID: 0}
+  _cycleNonParryableSkills: 0
+  _continuousActions: 1
+  _parryEveryNSkillUses: 2
   _deathDestroyDelay: 1.5
   _canRespawn: 0
   _respawnTime: 30
@@ -360,7 +382,7 @@ RectTransform:
   m_GameObject: {fileID: 4974995506213776732}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.0048, y: 0.0048, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6349628044243848207}
@@ -370,7 +392,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 1.0699999}
-  m_SizeDelta: {x: 100, y: 14}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &5096938533553176721
 Canvas:
@@ -413,6 +435,11 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 2643178670257829043}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _followSpriteBounds: 0
+  _headOffset: 0.12
 --- !u!1 &6486612062760854548
 GameObject:
   m_ObjectHideFlags: 0

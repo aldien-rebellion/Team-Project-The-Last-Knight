@@ -10,6 +10,7 @@ namespace TheLastKnight.Combat.Projectiles
         [SerializeField] private float _speed = 8f;
         [SerializeField] private float _damage = 10f;
         [SerializeField] private float _lifetime = 5f;
+        [SerializeField, Min(0f)] private float _maxTravelDistance;
         [SerializeField] private bool _destroyOnGround = true;
         [SerializeField] private Vector2 _knockback = new Vector2(3f, 2f);
 
@@ -19,6 +20,8 @@ namespace TheLastKnight.Combat.Projectiles
         private Animator _animator;
         private Collider2D _collider;
         private bool _hasImpacted = false;
+        private Vector2 _startPosition;
+        private bool _initialized;
 
         private void Awake()
         {
@@ -27,20 +30,23 @@ namespace TheLastKnight.Combat.Projectiles
             _collider = GetComponent<Collider2D>();
             _collider.isTrigger = true;
 
-            Destroy(gameObject, _lifetime);
+            Invoke(nameof(TriggerImpact), _lifetime);
         }
 
         public void Initialize(Vector2 direction, float damage, GameObject attacker = null)
         {
-            if (_animator != null && _animator.runtimeAnimatorController != null
-                && _animator.HasState(0, Animator.StringToHash("Projectile")))
+            if (_animator != null && _animator.runtimeAnimatorController != null)
             {
-                // Restart the projectile sprite-sheet animation each time this projectile is fired.
-                _animator.Play("Projectile", 0, 0f);
+                // Restart the moving animation when the projectile is reused.
+                if (_animator.HasState(0, Animator.StringToHash("Projectile")))
+                    _animator.Play("Projectile", 0, 0f);
+                else if (_animator.HasState(0, Animator.StringToHash("Move")))
+                    _animator.Play("Move", 0, 0f);
             }
 
-            
-_direction = direction.normalized;
+            _direction = direction.normalized;
+            _startPosition = transform.position;
+            _initialized = true;
             if (damage > 0) _damage = damage;
             _attacker = attacker;
 
@@ -61,10 +67,17 @@ _direction = direction.normalized;
         {
             if (_hasImpacted) return;
 
-            // Move if Rigidbody2D is not handling it
-            if (_rb == null || _rb.bodyType == RigidbodyType2D.Kinematic)
+            // Rigidbody2D velocity also moves kinematic bodies. Do not move them twice.
+            if (_rb == null)
             {
                 transform.position += (Vector3)(_direction * _speed * Time.deltaTime);
+            }
+
+            if (_initialized && _maxTravelDistance > 0f
+                && Vector2.Distance(_startPosition, transform.position) >= _maxTravelDistance)
+            {
+                transform.position = _startPosition + _direction * _maxTravelDistance;
+                TriggerImpact();
             }
         }
 
@@ -123,6 +136,7 @@ _direction = direction.normalized;
 
         private void TriggerImpact()
         {
+            if (_hasImpacted) return;
             _hasImpacted = true;
             if (_collider != null) _collider.enabled = false;
             if (_rb != null) _rb.linearVelocity = Vector2.zero;
@@ -130,8 +144,18 @@ _direction = direction.normalized;
             // Play impact / explosion animation if available
             if (_animator != null && _animator.HasState(0, Animator.StringToHash("Explosion")))
             {
-                _animator.Play("Explosion");
-                Destroy(gameObject, 0.5f);
+                _animator.Play("Explosion", 0, 0f);
+                float explosionDuration = 0.5f;
+                foreach (var clip in _animator.runtimeAnimatorController.animationClips)
+                {
+                    if (clip != null && (clip.name == "Explosion"
+                        || clip.name.EndsWith("_Explosion", System.StringComparison.Ordinal)))
+                    {
+                        explosionDuration = clip.length;
+                        break;
+                    }
+                }
+                Destroy(gameObject, explosionDuration);
             }
             else
             {

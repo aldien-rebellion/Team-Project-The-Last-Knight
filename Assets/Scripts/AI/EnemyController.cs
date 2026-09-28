@@ -57,6 +57,8 @@ namespace TheLastKnight.AI
         [SerializeField] private float _rangedCooldown = 3.0f;
         [SerializeField] private GameObject _projectilePrefab;
         [SerializeField] private Vector2 _projectileSpawnOffset = new Vector2(0.6f, 0.2f);
+        [Tooltip("Use the authored local mouth offset instead of the animated sprite edge for projectiles.")]
+        [SerializeField] private bool _useProjectileSpawnOffset;
         [SerializeField] private GameObject _groundSpellPrefab;
 
         [Header("Basic Attack & Parry Settings")]
@@ -79,7 +81,10 @@ namespace TheLastKnight.AI
         [SerializeField] private bool _cycleNonParryableSkills;
         [Tooltip("Run the configured cycle without anticipation gaps and finish actions before reacting to damage.")]
         [SerializeField] private bool _continuousActions;
+        [Tooltip("Show a skill's Parry ring on every Nth use of a parryable skill.")]
+        [SerializeField, Min(1)] private int _parryEveryNSkillUses = 1;
         private int _nextCyclicSkill;
+        private int _parryableSkillUseCount;
 
         [Header("Death & Respawn Settings")]
         [SerializeField] private float _deathDestroyDelay = 1.5f;
@@ -650,10 +655,16 @@ namespace TheLastKnight.AI
                 _nextCyclicSkill = (System.Array.IndexOf(_skills, skill) + 1) % _skills.Length;
             _currentAttackMultiplier = skill.damageMultiplier;
 
-            StartCoroutine(ExecuteSkillRoutine(skill));
+            bool canParry = false;
+            if (skill.isParryable)
+            {
+                _parryableSkillUseCount++;
+                canParry = _parryableSkillUseCount % Mathf.Max(1, _parryEveryNSkillUses) == 0;
+            }
+            StartCoroutine(ExecuteSkillRoutine(skill, canParry));
         }
 
-        private IEnumerator ExecuteSkillRoutine(TheLastKnight.Combat.EnemySkill skill)
+        private IEnumerator ExecuteSkillRoutine(TheLastKnight.Combat.EnemySkill skill, bool canParry)
         {
             _isActionLocked = true;
             _projectileSpawned = false;
@@ -661,7 +672,7 @@ namespace TheLastKnight.AI
             _parry?.FinishWindup();
 
             // ท่าที่สามารถ Parry ได้ จะแสดงวงกลม Timing Ring
-            if (skill.isParryable && _parry != null)
+            if (canParry && _parry != null)
             {
                 _parry.BeginWindup();
                 yield return new WaitForSeconds(ParryReceiver.WindupDuration + ParryReceiver.TimingTolerance);
@@ -991,6 +1002,7 @@ namespace TheLastKnight.AI
         {
             _skills = skills;
             _nextCyclicSkill = 0;
+            _parryableSkillUseCount = 0;
         }
 
         public void SetBasicAttackConfiguration(string animState, float multiplier, bool canParry, float parryCooldown)
@@ -1110,6 +1122,10 @@ namespace TheLastKnight.AI
 
         private Vector3 GetProjectileSpawnPosition(float directionX)
         {
+            if (_useProjectileSpawnOffset)
+                return transform.position + new Vector3(_projectileSpawnOffset.x * directionX,
+                    _projectileSpawnOffset.y, 0f);
+
             if (_useColliderEdgeAttackRanges)
             {
                 var sprite = GetComponent<SpriteRenderer>();
@@ -1307,6 +1323,7 @@ namespace TheLastKnight.AI
             _damageUntil = 0f;
             _isActionLocked = false;
             _nextCyclicSkill = 0;
+            _parryableSkillUseCount = 0;
             foreach (var skill in _skills)
                 if (skill != null) skill.nextReadyTime = Time.time + skill.initialDelay;
             _currentState = EnemyAIState.Idle;
