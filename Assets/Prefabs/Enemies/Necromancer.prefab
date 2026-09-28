@@ -75,6 +75,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9010000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911040737338714719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 4534870292885995537}
+  _useVisibleSpriteBounds: 1
 --- !u!1 &150218980312359201
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,7 +166,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.792, y: 1.0752}
+  m_Size: {x: 0.864, y: 1.0752}
   m_EdgeRadius: 0
 --- !u!114 &8759801726866902932
 MonoBehaviour:
@@ -187,6 +201,7 @@ GameObject:
   - component: {fileID: 1981270814240022201}
   - component: {fileID: 3798922646203173292}
   - component: {fileID: 299598731170541727}
+  - component: {fileID: 9010000000000000002}
   m_Layer: 0
   m_Name: Necromancer
   m_TagString: Untagged
@@ -371,9 +386,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 1
   _useLevelScaling: 0
-  _maxHealth: 200
-  _defense: 3
-  _attackPower: 25
+  _maxHealth: 45
+  _defense: 1
+  _attackPower: 12
   _goldReward: 8
   _expReward: 15
   _currentStatus: 0
@@ -404,8 +419,11 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 8
-  _meleeRange: 1.8
-  _meleeCooldown: 1.5
+  _meleeRange: 0.05
+  _meleeCooldown: 0
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 1
+  _useColliderEdgeAttackRanges: 1
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -416,25 +434,26 @@ MonoBehaviour:
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 4
   _skills:
-  - skillName: SoulBlast
-    animationName: Attack3
-    actionIndex: -1
-    damageMultiplier: 2.2
-    cooldown: 9
-    minRange: 1.5
-    maxRange: 7
-    isParryable: 1
-    projectilePrefab: {fileID: 0}
-    groundSpellPrefab: {fileID: 0}
   - skillName: DarkWave
     animationName: Attack2
     actionIndex: -1
     damageMultiplier: 1.6
     cooldown: 5
-    minRange: 2
-    maxRange: 7.5
+    minRange: 0
+    maxRange: 0.05
     isParryable: 0
+    projectilePrefab: {fileID: 0}
+    groundSpellPrefab: {fileID: 0}
+  - skillName: SoulBlast
+    animationName: Attack3
+    actionIndex: -1
+    damageMultiplier: 2.2
+    cooldown: 10
+    minRange: 0
+    maxRange: 0.05
+    isParryable: 1
     projectilePrefab: {fileID: 0}
     groundSpellPrefab: {fileID: 0}
   _deathDestroyDelay: 1.5
@@ -467,7 +486,7 @@ RectTransform:
   m_GameObject: {fileID: 2142861945114295911}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.0048, y: 0.0048, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3123211746393819039}
@@ -476,8 +495,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1.3740001}
-  m_SizeDelta: {x: 100, y: 14}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4152802715161147140
 Canvas:
@@ -520,6 +539,11 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 4534870292885995537}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _followSpriteBounds: 0
+  _headOffset: 0.08
 --- !u!1 &8281328734106744021
 GameObject:
   m_ObjectHideFlags: 0
