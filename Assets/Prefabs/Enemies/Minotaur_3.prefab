@@ -77,7 +77,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6336, y: 1.0752}
+  m_Size: {x: 0.8, y: 1.0752}
   m_EdgeRadius: 0
 --- !u!114 &7555979791027402754
 MonoBehaviour:
@@ -274,7 +274,7 @@ RectTransform:
   m_GameObject: {fileID: 7917017059986148625}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.008, y: 0.008, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1079565756038239298}
@@ -284,7 +284,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 1.3740001}
-  m_SizeDelta: {x: 100, y: 14}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4145397560264113466
 Canvas:
@@ -327,6 +327,11 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 5853311420288475180}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _followSpriteBounds: 0
+  _headOffset: 0.12
 --- !u!1 &8716831701360258471
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,6 +347,7 @@ GameObject:
   - component: {fileID: 7949144223473529938}
   - component: {fileID: 1188425600521551158}
   - component: {fileID: 7449588073238095416}
+  - component: {fileID: 9010000000000000003}
   m_Layer: 0
   m_Name: Minotaur_3
   m_TagString: Untagged
@@ -359,8 +365,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1206582098600388111}
   - {fileID: 4457074926019544044}
@@ -525,12 +531,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 1
-  _useLevelScaling: 0
-  _maxHealth: 160
-  _defense: 5
-  _attackPower: 28
-  _goldReward: 8
-  _expReward: 15
+  _useLevelScaling: 1
+  _maxHealth: 100
+  _defense: 1
+  _attackPower: 10
+  _goldReward: 20
+  _expReward: 26
   _currentStatus: 0
 --- !u!114 &7449588073238095416
 MonoBehaviour:
@@ -548,8 +554,13 @@ MonoBehaviour:
   _chaseSpeed: 3.8
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -559,19 +570,47 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 7
-  _meleeRange: 1.8
-  _meleeCooldown: 1.5
+  _meleeRange: 0.3
+  _meleeCooldown: 1
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 0
+  _playAttackStatesDirectly: 1
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
+  _useColliderEdgeAttackRanges: 1
+  _disableBasicAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack
+  _basicAttackAnimStates: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 3
   _skills: []
+  _cycleNonParryableSkills: 0
+  _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
   _respawnTime: 30
+--- !u!114 &9010000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8716831701360258471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 5853311420288475180}
+  _useVisibleSpriteBounds: 1
