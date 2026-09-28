@@ -242,6 +242,8 @@ namespace TheLastKnight.UI
             }
 
             SetHUDVisible(false);
+            // Restore UI input after blocking gameplay and hiding the HUD.
+            EnsureEventSystem();
             AudioManager.Instance?.PlaySfx("click");
             SetWindowVisible(true);
             Refresh(true);
@@ -282,7 +284,7 @@ namespace TheLastKnight.UI
                 {
                     doc.rootVisualElement.style.display = visible ? UnityEngine.UIElements.DisplayStyle.Flex : UnityEngine.UIElements.DisplayStyle.None;
                 }
-                _cachedHUD.gameObject.SetActive(visible);
+                // Keep the document alive so hiding the HUD does not tear down shared UI input.
             }
         }
 

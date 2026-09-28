@@ -29,6 +29,11 @@ public static class InventoryPointerCheck
     private static IEnumerator RunCore()
     {
         var holder = new GameObject("InventoryPointerCheck_UI");
+        var hudObject = new GameObject("InventoryPointerCheck_HUD");
+        var panelSettings = ScriptableObject.CreateInstance<UnityEngine.UIElements.PanelSettings>();
+        var document = hudObject.AddComponent<UnityEngine.UIElements.UIDocument>();
+        document.panelSettings = panelSettings;
+        var hud = hudObject.AddComponent<HUDController>();
         var cameraObject = new GameObject("InventoryPointerCheck_Camera", typeof(Camera));
         var camera = cameraObject.GetComponent<Camera>();
         camera.enabled = false;
@@ -45,6 +50,7 @@ public static class InventoryPointerCheck
             var ui = CharacterStatusUI.Instance;
             if (ui == null) ui = holder.AddComponent<CharacterStatusUI>();
             var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+            typeof(CharacterStatusUI).GetField("_cachedHUD", flags).SetValue(ui, hud);
             typeof(CharacterStatusUI).GetMethod("BuildUI", flags).Invoke(ui, null);
             ui.CanvasObject.SetActive(true);
             otherRaycasters = UnityEngine.Object.FindObjectsByType<UnityEngine.UI.GraphicRaycaster>(FindObjectsSortMode.None).Where(r => r.enabled && r.gameObject != ui.CanvasObject).ToArray();
@@ -63,8 +69,20 @@ public static class InventoryPointerCheck
             module.leftClick.action.Disable();
             typeof(CharacterStatusUI).GetMethod("EnsureEventSystem", flags).Invoke(ui, null);
             Check(module.point.action.enabled && module.leftClick.action.enabled, "UI pointer actions remained disabled after opening the window");
+            Check(module.actionsAsset != InputSystem.actions, "uGUI must not share the global input asset");
+            // Reproduce another system disabling the global UI actions after the window opens.
+            var globalUI = InputSystem.actions?.FindActionMap("UI");
+            globalUI?.Disable();
+            RuntimeUI.EnsureEventSystem();
+            Check(module.actionsAsset != InputSystem.actions, "Opening another menu restored shared input");
+            Check(module.point.action.enabled && module.leftClick.action.enabled, "Global input shutdown disabled inventory input");
+            // Opening the inventory hides the UI Toolkit HUD after setting up uGUI input.
+            typeof(CharacterStatusUI).GetMethod("SetHUDVisible", flags).Invoke(ui, new object[] { false });
+            Check(hudObject.activeInHierarchy, "Hiding the HUD disabled its document and shared input lifecycle");
+            Check(document.rootVisualElement.style.display.value == UnityEngine.UIElements.DisplayStyle.None, "HUD remained visible");
             typeof(EventSystem).GetMethod("OnApplicationFocus", flags).Invoke(eventSystem, new object[] { true });
             yield return null;
+            Check(module.point.action.enabled && module.leftClick.action.enabled, "Hiding the HUD disabled pointer actions on the next frame");
             Canvas.ForceUpdateCanvases();
             camera.Render();
             var slots = ui.GetComponentsInChildren<InventorySlotUI>();
@@ -120,6 +138,8 @@ public static class InventoryPointerCheck
             InputSystem.RemoveDevice(mouse);
             if (previousMouse != null) previousMouse.MakeCurrent();
             UnityEngine.Object.DestroyImmediate(holder);
+            UnityEngine.Object.DestroyImmediate(hudObject);
+            UnityEngine.Object.DestroyImmediate(panelSettings);
             camera.targetTexture = null;
             texture.Release();
             UnityEngine.Object.DestroyImmediate(texture);
