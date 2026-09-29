@@ -88,12 +88,17 @@ namespace TheLastKnight.AI
         [SerializeField] private float _basicParryCooldown = 4.0f;
         [Tooltip("When greater than zero, show the basic attack parry ring once every N attacks, without a time cooldown.")]
         [SerializeField, Min(0)] private int _basicParryEveryNAttacks;
+        [Tooltip("On every Nth basic melee opportunity, use the named guard skill instead of attacking. Zero disables this cadence.")]
+        [SerializeField, Min(0)] private int _basicGuardEveryNAttacks;
+        [SerializeField] private string _basicGuardSkillName;
 
         [Header("Skills Configuration")]
         [Tooltip("Special attacks and skills configured from the monster's Animation Controller.")]
         [SerializeField] private TheLastKnight.Combat.EnemySkill[] _skills = new TheLastKnight.Combat.EnemySkill[0];
         public TheLastKnight.Combat.EnemySkill[] Skills => _skills;
         [SerializeField] private bool _cycleNonParryableSkills;
+        [SerializeField] private bool _waitForAttackAnimationToFinish;
+        [SerializeField] private bool _waitForAttackProjectileToFinish;
         [Tooltip("Run the configured cycle without anticipation gaps and finish actions before reacting to damage.")]
         [SerializeField] private bool _continuousActions;
         [Tooltip("Show a skill's Parry ring on every Nth use of a parryable skill.")]
@@ -145,6 +150,7 @@ private Rigidbody2D _rb;
         private float _nextRangedTime = 0f;
         private float _nextBasicParryTime = 0f;
         private int _basicAttackCount;
+        private int _basicMeleeOpportunityCount;
         private float _currentAttackMultiplier = 1.0f;
         private bool _isActionLocked = false;
         private bool _weaponDrawn;
@@ -345,6 +351,14 @@ _rb = GetComponent<Rigidbody2D>();
                 return;
             }
 
+            if (_waitForAttackAnimationToFinish && _isActionLocked)
+            {
+                _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
+                SetAnimBool("IsMoving", false);
+                SetAnimBool("IsChasing", false);
+                return;
+            }
+
             if (_player == null)
             {
                 FindPlayer();
@@ -359,10 +373,23 @@ _rb = GetComponent<Rigidbody2D>();
             var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
             bool isBasicAttackAnimation = !string.IsNullOrEmpty(_basicAttackAnimState)
                 && stateInfo.IsName(_basicAttackAnimState);
+            bool isSkillAnimationPlaying = false;
+            if (_waitForAttackAnimationToFinish && stateInfo.normalizedTime < 1f && _skills != null)
+            {
+                foreach (var skill in _skills)
+                {
+                    if (skill != null && !string.IsNullOrEmpty(skill.animationName)
+                        && stateInfo.IsName(skill.animationName))
+                    {
+                        isSkillAnimationPlaying = true;
+                        break;
+                    }
+                }
+            }
             if (stateInfo.IsName("Hurt") || stateInfo.IsName("TakeHit") ||
                 (_useMovementAnimationStates && stateInfo.IsName("Hit") && stateInfo.normalizedTime < 1f) ||
                 stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") || stateInfo.IsName("Cast") ||
-                isBasicAttackAnimation || _isActionLocked)
+                isBasicAttackAnimation || isSkillAnimationPlaying || _isActionLocked)
             {
                 float vx = stateInfo.IsName("Hurt") ? Mathf.MoveTowards(_rb.linearVelocity.x, 0f, 15f * Time.deltaTime) : 0f;
                 _rb.linearVelocity = new Vector2(vx, _isFlying ? 0f : _rb.linearVelocity.y);
@@ -640,6 +667,21 @@ _rb = GetComponent<Rigidbody2D>();
 
         private void PerformMeleeAttack()
         {
+            if (_basicGuardEveryNAttacks > 0 && !string.IsNullOrEmpty(_basicGuardSkillName))
+            {
+                _basicMeleeOpportunityCount++;
+                if (_basicMeleeOpportunityCount % _basicGuardEveryNAttacks == 0)
+                {
+                    foreach (var skill in _skills)
+                    {
+                        if (skill == null || skill.skillName != _basicGuardSkillName) continue;
+                        _nextMeleeTime = Time.time + _meleeCooldown;
+                        PerformSkill(skill);
+                        return;
+                    }
+                }
+            }
+
             _currentState = EnemyAIState.MeleeAttack;
             _rb.linearVelocity = Vector2.zero;
             SetAnimBool("IsMoving", false);
@@ -762,6 +804,11 @@ _rb = GetComponent<Rigidbody2D>();
             {
                 yield return new WaitForSeconds(remainingAnimationTime);
             }
+            while (_waitForAttackAnimationToFinish && _animator != null
+                && _animator.GetCurrentAnimatorStateInfo(0).IsName(_basicAttackAnimState)
+                && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+                yield return null;
+            if (_waitForAttackAnimationToFinish) yield return null;
             _isActionLocked = false;
         }
 
@@ -826,23 +873,25 @@ _rb = GetComponent<Rigidbody2D>();
                 }
             }
 
-            bool waitForAnimation = _cycleNonParryableSkills && _animator != null
-                && _animator.HasState(0, Animator.StringToHash(skill.animationName));
+            bool waitForAnimation = (_cycleNonParryableSkills || _waitForAttackAnimationToFinish) && _animator != null
+                && (_animator.HasState(0, Animator.StringToHash(skill.animationName))
+                    || _animator.HasState(0, Animator.StringToHash("Base Layer." + skill.animationName)));
 
             if (skill.guardDuration > 0f)
             {
-                if (waitForAnimation)
+                if (waitForAnimation && _cycleNonParryableSkills)
                     _animator.Play(skill.animationName, 0, 0f);
                 else
                     PlayAnimationAction(skill.animationName, skill.actionIndex);
                 yield return new WaitForSeconds(skill.guardDuration);
                 if (waitForAnimation) _animator.Play("Idle", 0, 0f);
+                if (_waitForAttackAnimationToFinish) yield return null;
                 _currentAttackMultiplier = _basicAttackMultiplier;
                 _isActionLocked = false;
                 yield break;
             }
 
-            if (waitForAnimation)
+            if (waitForAnimation && _cycleNonParryableSkills)
                 _animator.Play(skill.animationName, 0, 0f);
             else
                 PlayAnimationAction(skill.animationName, skill.actionIndex);
@@ -965,7 +1014,14 @@ _rb = GetComponent<Rigidbody2D>();
             while (waitForAnimation && _animator.GetCurrentAnimatorStateInfo(0).IsName(skill.animationName)
                 && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
                 yield return null;
+            if (_waitForAttackProjectileToFinish && skill.projectilePrefab != null)
+            {
+                while (_activeSkillProjectile != null && !_stats.IsDead && !_parry.IsStaggered)
+                    yield return null;
+                _activeSkillProjectile = null;
+            }
             if (_continuousActions && waitForAnimation) _animator.Play("Idle", 0, 0f);
+            if (_waitForAttackAnimationToFinish) yield return null;
             _currentAttackMultiplier = _basicAttackMultiplier;
             _isActionLocked = false;
         }
@@ -1100,14 +1156,16 @@ _rb = GetComponent<Rigidbody2D>();
             if (_cycleNonParryableSkills)
             {
                 foreach (var prioritySkill in _skills)
-                    if (prioritySkill != null && prioritySkill.isParryable && prioritySkill.IsReady(distToPlayer, Time.time)
+                    if (prioritySkill != null && prioritySkill.skillName != _basicGuardSkillName
+                        && prioritySkill.isParryable && prioritySkill.IsReady(distToPlayer, Time.time)
                         && (!prioritySkill.requireLineOfSight || HasLineOfSightToPlayer()))
                         return prioritySkill;
 
                 for (int offset = 0; offset < _skills.Length; offset++)
                 {
                     var candidate = _skills[(_nextCyclicSkill + offset) % _skills.Length];
-                    if (candidate != null && !candidate.isParryable && candidate.IsReady(distToPlayer, Time.time)
+                    if (candidate != null && candidate.skillName != _basicGuardSkillName
+                        && !candidate.isParryable && candidate.IsReady(distToPlayer, Time.time)
                         && (!candidate.requireLineOfSight || HasLineOfSightToPlayer()))
                         return candidate;
                 }
@@ -1117,7 +1175,8 @@ _rb = GetComponent<Rigidbody2D>();
             for (int i = 0; i < _skills.Length; i++)
             {
                 var skill = _skills[i];
-                if (skill != null && skill.IsReady(distToPlayer, Time.time)
+                if (skill != null && skill.skillName != _basicGuardSkillName
+                    && skill.IsReady(distToPlayer, Time.time)
                     && (!skill.requireLineOfSight || HasLineOfSightToPlayer()))
                 {
                     return skill;
@@ -1201,6 +1260,7 @@ _rb = GetComponent<Rigidbody2D>();
             _skills = skills;
             _nextCyclicSkill = 0;
             _parryableSkillUseCount = 0;
+            _basicMeleeOpportunityCount = 0;
         }
 
         public void SetBasicAttackConfiguration(string animState, float multiplier, bool canParry, float parryCooldown)
@@ -1304,7 +1364,7 @@ _rb = GetComponent<Rigidbody2D>();
             Vector3 spawnPos = GetProjectileSpawnPosition(dirX);
 
             GameObject proj = Instantiate(prefab, spawnPos, Quaternion.identity);
-            if (_continuousActions) _activeSkillProjectile = proj;
+            if (_continuousActions || _waitForAttackProjectileToFinish) _activeSkillProjectile = proj;
             Vector3 scale = proj.transform.localScale;
             scale.x = Mathf.Abs(scale.x) * dirX;
             proj.transform.localScale = scale;
@@ -1393,7 +1453,7 @@ _rb = GetComponent<Rigidbody2D>();
             if (_stats.IsDead) return;
 
             // A cyclic action finishes before the next action or hurt pose can start.
-            if (_continuousActions && _isActionLocked) return;
+            if ((_continuousActions || _waitForAttackAnimationToFinish) && _isActionLocked) return;
 
             if (_useMovementAnimationStates && _isActionLocked)
                 StopAttack();
@@ -1593,6 +1653,7 @@ _rb = GetComponent<Rigidbody2D>();
             _isActionLocked = false;
             _nextCyclicSkill = 0;
             _parryableSkillUseCount = 0;
+            _basicMeleeOpportunityCount = 0;
             foreach (var skill in _skills)
                 if (skill != null) skill.nextReadyTime = Time.time + skill.initialDelay;
             _currentState = EnemyAIState.Idle;
