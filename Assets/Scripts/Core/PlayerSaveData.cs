@@ -36,6 +36,8 @@ namespace TheLastKnight.Core
         public int gold, potions = 3;
         public bool[] runes = new bool[4];
         public List<SavedRuneDrop> runeDrops = new List<SavedRuneDrop>();
+        // Area-boss identifiers (currently the scene name) that this world has cleared.
+        public List<string> defeatedAreaBosses = new List<string>();
         public bool pentagramRuneChestOpened;
         public bool churchKey, introSeen, victory, demonCastleGateUnlocked;
         public GameDifficulty difficulty;

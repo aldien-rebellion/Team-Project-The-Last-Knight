@@ -210,6 +210,14 @@ namespace TheLastKnight.Core
             return true;
         }
 
+        /// <summary>Saves progression without resting the player or changing their checkpoint position.</summary>
+        public void SaveProgress()
+        {
+            Capture();
+            if (!string.IsNullOrEmpty(State.worldId) && SaveSystem.Save(State, out _))
+                _checkpoint = State.Copy();
+        }
+
         public void Travel(string scene)
         {
             if (ArenaLocked || InputBlocked) return;

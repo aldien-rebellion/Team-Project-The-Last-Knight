@@ -18,6 +18,15 @@ namespace TheLastKnight.Environment
             if (churchKey)
             {
                 WorldItemPickup.Spawn(ItemRegistry.CreateItem("church_key", 1), transform.position);
+                var gameManager = GameManager.Instance;
+                if (gameManager != null)
+                {
+                    var defeated = gameManager.State.defeatedAreaBosses;
+                    if (defeated == null)
+                        gameManager.State.defeatedAreaBosses = defeated = new System.Collections.Generic.List<string>();
+                    if (!defeated.Contains("Church")) defeated.Add("Church");
+                    gameManager.SaveProgress();
+                }
             }
             if (runeIndex >= 0) DemonRuneManager.Instance.DropRune(runeIndex, transform.position);
             if (finalBoss)

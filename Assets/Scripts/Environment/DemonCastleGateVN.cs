@@ -53,9 +53,7 @@ namespace TheLastKnight.Environment
             {
                 var follow = camera.GetComponent<TheLastKnight.Camera.CameraFollow2D>();
                 if (follow != null) follow.enabled = false;
-                // Keep the viewport inside the entrance background; the former framing exposed
-                // an empty strip beneath the lower edge of the castle artwork.
-                camera.transform.position = new Vector3(0, 1.25f, -10);
+                camera.transform.position = new Vector3(0, 0.7f, -10);
                 camera.orthographicSize = 5.7f;
             }
             if (GameManager.Instance.State.demonCastleGateUnlocked)

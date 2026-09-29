@@ -1315,6 +1315,13 @@ _rb = GetComponent<Rigidbody2D>();
             _isBoss = isBoss;
         }
 
+        /// <summary>Area bosses are permanently cleared and must not use the enemy respawn loop.</summary>
+        public void DisableRespawn()
+        {
+            _isBoss = true;
+            _canRespawn = false;
+        }
+
         public void CancelAttack()
         {
             StopAttack();
