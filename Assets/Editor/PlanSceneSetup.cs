@@ -64,14 +64,15 @@ public static class PlanSceneSetup
         if (name == "CityCenter")
         {
             Statue(root.transform, 5, -4.5f, true);
-            float[] xs = { -180, -140, -100, -60, -30, 30, 60, 90, 120, 150 };
+            float[] xs = { -180, -140, -100, -60, -30, 30, 60, 90, 120 };
             for (int i = 0; i < xs.Length; i++) Enemy(root.transform, i % 2 == 0 ? "BlueSlime" : "Skeleton", xs[i], -4.5f);
+            var boss = Enemy(root.transform, "MechaStoneGolem", 150, -4.5f, 750, 45);
+            Arena(root.transform, boss, 150, -4.5f, 10, true);
         }
         else if (name == "Church")
         {
             var boss = Enemy(root.transform, "MoonstoneKeeper", 60, -4.5f, 250, 25);
             boss.gameObject.AddComponent<EnemyProgressionReward>().churchKey = true;
-            Arena(root.transform, boss, 60, -4.5f, 10);
             var chest = Prop(root.transform, "Pentagram Chest", "Assets/sprites/Progression/RuneChest.png", 76, 16.75f);
             chest.AddComponent<RuneChest>();
         }
@@ -83,27 +84,78 @@ public static class PlanSceneSetup
             Enemy(root.transform, "Skeleton", -65, -4.5f);
             Enemy(root.transform, "BlueSlime", -20, -4.5f);
             var boss = Enemy(root.transform, "DemonBoss", 40, -4.5f, 350, 28);
-            Arena(root.transform, boss, 40, -4.5f, 11);
+            Arena(root.transform, boss, 40, -4.5f, 11, true);
             Enemy(root.transform, "Skeleton", 85, -4.5f);
         }
         else if (name == "SuburbToForest")
         {
             Statue(root.transform, -185, -6.7f, false);
-            var fox = Enemy(root.transform, "Fox", -130, -6.245f);
-            fox.gameObject.AddComponent<EnemyProgressionReward>().runeIndex = 2;
+            Enemy(root.transform, "Fox", -130, -6.245f);
             Enemy(root.transform, "FireWorm", -80, -6.38f);
             Enemy(root.transform, "Fox", -25, -5.6f);
-            Enemy(root.transform, "FireWorm", 30, -6.0f);
+            var boss = Enemy(root.transform, "Fox", 30, -6.0f, 450, 32);
+            boss.gameObject.AddComponent<EnemyProgressionReward>().runeIndex = 2;
+            Arena(root.transform, boss, 30, -6.0f, 10, true);
         }
         else if (name == "DemonCastle")
         {
             Statue(root.transform, -10, -1.85f, false);
-            var boss = Enemy(root.transform, "DemonBoss", 25, -1.885f, 600, 35);
+            var boss = Enemy(root.transform, "Volcanox", 25, -1.885f, 900, 40);
             boss.gameObject.AddComponent<EnemyProgressionReward>().finalBoss = true;
-            Arena(root.transform, boss, 25, -1.885f, 9);
+            Arena(root.transform, boss, 25, -1.885f, 16, false);
         }
         EditorSceneManager.SaveScene(scene);
         return name + " populated: " + root.GetComponentsInChildren<EnemyStats>().Length + " enemies";
+    }
+
+    [MenuItem("The Last Knight/Apply Boss Progression")]
+    public static void ApplyBossProgression()
+    {
+        ApplyBossProgression("CityCenter", "MechaStoneGolem", 150f, -4.5f, 750f, 45f, 10f, true, -1, false);
+        ApplyBossProgression("OutdoorMarket", "DemonBoss", 40f, -4.5f, 800f, 50f, 11f, true, -1, false);
+        ApplyBossProgression("SuburbToForest", "Fox", 30f, -6f, 450f, 32f, 10f, true, 2, false);
+        ApplyBossProgression("DemonCastle", "Volcanox", 25f, -1.885f, 900f, 40f, 16f, false, -1, true);
+        RemoveRedSeals("Church");
+        AssetDatabase.SaveAssets();
+    }
+
+    private static void ApplyBossProgression(string sceneName, string bossName, float x, float floor, float hp, float attack,
+        float arenaHalfWidth, bool oneSided, int runeIndex, bool finalBoss)
+    {
+        var scene = EditorSceneManager.OpenScene("Assets/Scenes/Maps/" + sceneName + ".unity", OpenSceneMode.Single);
+        var root = GameObject.Find("Plan Gameplay");
+        if (root == null) root = new GameObject("Plan Gameplay");
+
+        foreach (var arena in Object.FindObjectsByType<BossArena>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (arena.boss != null) Object.DestroyImmediate(arena.boss.gameObject);
+            Object.DestroyImmediate(arena.gameObject);
+        }
+
+        foreach (var reward in Object.FindObjectsByType<EnemyProgressionReward>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            Object.DestroyImmediate(reward);
+
+        var boss = Enemy(root.transform, bossName, x, floor, hp, attack);
+        if (runeIndex >= 0 || finalBoss)
+        {
+            var reward = boss.gameObject.AddComponent<EnemyProgressionReward>();
+            reward.runeIndex = runeIndex;
+            reward.finalBoss = finalBoss;
+        }
+        Arena(root.transform, boss, x, floor, arenaHalfWidth, oneSided);
+        EditorSceneManager.SaveScene(scene);
+    }
+
+    private static void RemoveRedSeals(string sceneName)
+    {
+        var scene = EditorSceneManager.OpenScene("Assets/Scenes/Maps/" + sceneName + ".unity", OpenSceneMode.Single);
+        foreach (var transform in scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<Transform>(true))
+            .Where(transform => transform.name.StartsWith("Red Seal"))
+            .ToArray())
+        {
+            Object.DestroyImmediate(transform.gameObject);
+        }
+        EditorSceneManager.SaveScene(scene);
     }
 
     private static GameObject Prop(Transform parent, string name, string path, float x, float floor)
@@ -157,24 +209,41 @@ public static class PlanSceneSetup
         return stats;
     }
 
-    private static void Arena(Transform parent, EnemyStats boss, float x, float floor, float halfWidth)
+    private static void Arena(Transform parent, EnemyStats boss, float x, float floor, float halfWidth, bool oneSided = false)
     {
         var go = new GameObject("Boss Arena", typeof(BoxCollider2D));
         go.transform.SetParent(parent, false); go.transform.position = new Vector3(x, floor + 3, 0);
         var area = go.GetComponent<BoxCollider2D>(); area.isTrigger = true; area.size = new Vector2(halfWidth * 2 - 3, 6);
         var arena = go.AddComponent<BossArena>(); arena.boss = boss;
-        arena.barriers = new GameObject[2];
-        for (int i = 0; i < 2; i++)
+        arena.oneSided = oneSided;
+        if (oneSided)
         {
-            var barrier = new GameObject("Red Seal " + i, typeof(BoxCollider2D), typeof(SpriteRenderer));
+            arena.barriers = new GameObject[1];
+            var barrier = new GameObject("Red Seal", typeof(BoxCollider2D), typeof(SpriteRenderer));
             barrier.transform.SetParent(go.transform, false); barrier.layer = 6;
-            barrier.transform.localPosition = new Vector3((i == 0 ? -1 : 1) * halfWidth, 0, 0);
+            barrier.transform.localPosition = new Vector3(halfWidth, 0, 0);
             barrier.GetComponent<BoxCollider2D>().size = new Vector2(0.4f, 10);
             var renderer = barrier.GetComponent<SpriteRenderer>();
             renderer.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
             renderer.drawMode = SpriteDrawMode.Sliced; renderer.size = new Vector2(0.4f, 10);
             renderer.color = new Color(1, 0.12f, 0.15f, 0.75f); renderer.sortingLayerName = "VFX";
-            arena.barriers[i] = barrier;
+            arena.barriers[0] = barrier;
+        }
+        else
+        {
+            arena.barriers = new GameObject[2];
+            for (int i = 0; i < 2; i++)
+            {
+                var barrier = new GameObject("Red Seal " + i, typeof(BoxCollider2D), typeof(SpriteRenderer));
+                barrier.transform.SetParent(go.transform, false); barrier.layer = 6;
+                barrier.transform.localPosition = new Vector3((i == 0 ? -1 : 1) * halfWidth, 0, 0);
+                barrier.GetComponent<BoxCollider2D>().size = new Vector2(0.4f, 10);
+                var renderer = barrier.GetComponent<SpriteRenderer>();
+                renderer.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+                renderer.drawMode = SpriteDrawMode.Sliced; renderer.size = new Vector2(0.4f, 10);
+                renderer.color = new Color(1, 0.12f, 0.15f, 0.75f); renderer.sortingLayerName = "VFX";
+                arena.barriers[i] = barrier;
+            }
         }
     }
 

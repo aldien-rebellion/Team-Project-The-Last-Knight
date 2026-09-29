@@ -56,6 +56,11 @@ namespace TheLastKnight.Environment
                 camera.transform.position = new Vector3(0, 0.7f, -10);
                 camera.orthographicSize = 5.7f;
             }
+            if (GameManager.Instance.State.demonCastleGateUnlocked)
+            {
+                ShowUnlockedChoices();
+                yield break;
+            }
             _panel = RuntimeUI.Panel("THE FOUR SEALS", out var content);
             _panel.transform.Find("Backdrop").GetComponent<Image>().color = new Color(0.02f, 0.03f, 0.05f, 0.15f);
             var rect = content.GetComponent<RectTransform>();
@@ -113,9 +118,30 @@ namespace TheLastKnight.Environment
             }
             if (camera != null) camera.transform.position = origin;
             if (gate != null) { gate.isUnlocked = true; gate.UpdateVisuals(); }
+            GameManager.Instance.State.demonCastleGateUnlocked = true;
             yield return new WaitForSeconds(0.8f);
-            ScenePortal.lastSceneLoaded = "DemonCastleEntrance"; ScenePortal.targetPortalExpected = "";
-            GameManager.Instance.Load("DemonCastle");
+            ShowUnlockedChoices();
+        }
+
+        private void ShowUnlockedChoices()
+        {
+            if (gate != null) { gate.isUnlocked = true; gate.UpdateVisuals(); }
+            if (_panel != null) Destroy(_panel);
+            _panel = RuntimeUI.Panel("DEMON CASTLE GATE", out var content);
+            _panel.transform.Find("Backdrop").GetComponent<Image>().color = new Color(0.02f, 0.03f, 0.05f, 0.25f);
+            RuntimeUI.Label(content, "The gate stands open.", 20);
+            RuntimeUI.Button(content, "Enter Demon Castle", () =>
+            {
+                ScenePortal.lastSceneLoaded = "DemonCastleEntrance";
+                ScenePortal.targetPortalExpected = "";
+                GameManager.Instance.Load("DemonCastle");
+            });
+            RuntimeUI.Button(content, "Return to Suburb to Forest", () =>
+            {
+                ScenePortal.lastSceneLoaded = "DemonCastleEntrance";
+                ScenePortal.targetPortalExpected = "";
+                GameManager.Instance.Load("SuburbToForest");
+            });
         }
     }
 }
