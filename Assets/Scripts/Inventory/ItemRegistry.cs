@@ -187,6 +187,23 @@ namespace TheLastKnight.Inventory
 
         public static IEnumerable<string> LegacyIds => _registry.Keys;
 
+        public static List<InventoryItemData> GetAllItems()
+        {
+            LoadDefinitions();
+            var items = new List<InventoryItemData>();
+            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var definition in _definitions.Values)
+            {
+                if (definition == null || string.IsNullOrWhiteSpace(definition.id)) continue;
+                ids.Add(definition.id);
+                items.Add(definition.CreateItem(1, CreateLegacyItem(definition.id)));
+            }
+            foreach (var id in _registry.Keys)
+                if (ids.Add(id)) items.Add(CreateItem(id));
+            items.Sort((a, b) => string.Compare(a.name, b.name, StringComparison.OrdinalIgnoreCase));
+            return items;
+        }
+
         public static InventoryItemData CreateLegacyItem(string id)
         {
             return id != null && _registry.TryGetValue(id, out var factory) ? factory() : null;

@@ -141,6 +141,8 @@ namespace TheLastKnight.Player
         public float DashSpeed { get; set; }
         public float DashDuration { get; set; }
         public float AttackSpeedMultiplier { get; set; } = 1.0f;
+        public bool AdminNoCooldown { get; set; }
+        public bool AdminStatusImmunity { get; set; }
         public bool CanDoubleJump { get; set; } = false;
         private bool _hasDoubleJumped = false;
         public bool HasDoubleJumped => _hasDoubleJumped;
@@ -306,6 +308,16 @@ namespace TheLastKnight.Player
             if (_drinkCooldownTimer > 0f)
             {
                 _drinkCooldownTimer -= Time.deltaTime;
+            }
+
+            if (AdminNoCooldown)
+            {
+                _attackCooldownTimer = 0f;
+                _skillCooldownTimer = 0f;
+                _buffCooldownTimer = 0f;
+                _excaliburCooldownTimer = 0f;
+                _drinkCooldownTimer = 0f;
+                _dashCooldownTimer = 0f;
             }
 
             // Coyote time update
@@ -1006,6 +1018,7 @@ namespace TheLastKnight.Player
         /// </summary>
         public void ApplyStun(float duration = 1.0f)
         {
+            if (AdminStatusImmunity) return;
             if (CurrentState == PlayerState.Excalibur)
             {
                 CancelExcalibur();
@@ -1035,6 +1048,7 @@ namespace TheLastKnight.Player
 
         public void ApplyStatus(TheLastKnight.Combat.StatusEffect effect, float duration)
         {
+            if (AdminStatusImmunity) return;
             if (effect == TheLastKnight.Combat.StatusEffect.Stunned)
             {
                 ApplyStun(duration);

@@ -3,9 +3,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TheLastKnight.Inventory;
 using TheLastKnight.Core;
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
 
 namespace TheLastKnight.Environment
 {
@@ -124,34 +121,6 @@ namespace TheLastKnight.Environment
             }
         }
 
-        public void ToggleRune(int runeId)
-        {
-            if (runeId < 0 || runeId >= _collectedRunes.Length) return;
-            _collectedRunes[runeId] = !_collectedRunes[runeId];
-            Debug.Log($"<color=yellow>[DemonRuneManager]</color> สลับสถานะรูน {runeId + 1}: {_collectedRunes[runeId]} (รวม: {CollectedCount}/4)");
-            OnRunesChanged?.Invoke();
-        }
-
-        public void CollectAllRunes()
-        {
-            for (int i = 0; i < _collectedRunes.Length; i++)
-            {
-                _collectedRunes[i] = true;
-            }
-            Debug.Log("<color=green>[DemonRuneManager]</color> รวบรวมรูนครบทั้ง 4 ชิ้นเรียบร้อยแล้ว!");
-            OnRunesChanged?.Invoke();
-        }
-
-        public void ResetRunes()
-        {
-            for (int i = 0; i < _collectedRunes.Length; i++)
-            {
-                _collectedRunes[i] = false;
-            }
-            Debug.Log("<color=cyan>[DemonRuneManager]</color> รีเซ็ตสถานะรูนทั้งหมดเป็น 0/4");
-            OnRunesChanged?.Invoke();
-        }
-
         public string GetRuneSlotVisualText()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -165,29 +134,5 @@ namespace TheLastKnight.Environment
             return sb.ToString();
         }
 
-        private void Update()
-        {
-            // Rune acquisition is driven by world interactions, never debug keys in a build.
-        }
-
-        private void HandleDebugHotkeys()
-        {
-#if ENABLE_INPUT_SYSTEM
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.digit1Key.wasPressedThisFrame) ToggleRune(0);
-                if (Keyboard.current.digit2Key.wasPressedThisFrame) ToggleRune(1);
-                if (Keyboard.current.digit3Key.wasPressedThisFrame) ToggleRune(2);
-                if (Keyboard.current.digit4Key.wasPressedThisFrame) ToggleRune(3);
-                if (Keyboard.current.rKey.wasPressedThisFrame && Keyboard.current.ctrlKey.isPressed) CollectAllRunes();
-            }
-#else
-            if (Input.GetKeyDown(KeyCode.Alpha1)) ToggleRune(0);
-            if (Input.GetKeyDown(KeyCode.Alpha2)) ToggleRune(1);
-            if (Input.GetKeyDown(KeyCode.Alpha3)) ToggleRune(2);
-            if (Input.GetKeyDown(KeyCode.Alpha4)) ToggleRune(3);
-            if (Input.GetKeyDown(KeyCode.R) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) CollectAllRunes();
-#endif
-        }
     }
 }

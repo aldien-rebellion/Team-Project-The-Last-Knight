@@ -187,38 +187,6 @@ namespace TheLastKnight.UI
                 return;
             }
 
-            // Quick Testing Hotkeys (Available in Editor / Development)
-            if (keyboard.f1Key != null && keyboard.f1Key.wasPressedThisFrame)
-            {
-                var p = GetPlayer();
-                if (p != null)
-                {
-                    p.AddAGI(50);
-                    if (_isOpen) Refresh(true);
-                    Debug.Log($"<color=cyan>[Test Hotkey F1]</color> +50 AGI! Current AGI: {p.AGI}, DoubleJump: {p.CanDoubleJump}, AtkSpd: {p.AttackSpeedMultiplier:F2}x");
-                }
-            }
-            else if (keyboard.f2Key != null && keyboard.f2Key.wasPressedThisFrame)
-            {
-                var p = GetPlayer();
-                if (p != null)
-                {
-                    p.SetAGI(250);
-                    if (_isOpen) Refresh(true);
-                    Debug.Log($"<color=green>[Test Hotkey F2]</color> AGI set to 250! DoubleJump Unlocked: {p.CanDoubleJump}, AtkSpd: {p.AttackSpeedMultiplier:F2}x");
-                }
-            }
-            else if (keyboard.f3Key != null && keyboard.f3Key.wasPressedThisFrame)
-            {
-                var p = GetPlayer();
-                if (p != null)
-                {
-                    p.AddStatPoints(100);
-                    if (_isOpen) Refresh(true);
-                    Debug.Log($"<color=yellow>[Test Hotkey F3]</color> +100 SP added! Remaining SP: {p.StatPoints}");
-                }
-            }
-
             // Close with Escape if open
             if (_isOpen)
             {

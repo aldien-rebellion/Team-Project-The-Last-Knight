@@ -367,6 +367,7 @@ namespace TheLastKnight.Stats
         /// </summary>
         public void TakeDamage(float damage)
         {
+            if (_adminInvincible) return;
             if (_playerController != null && _playerController.IsInvincible)
             {
                 Debug.Log("[PlayerStats] Damage avoided! Arthur is invincible!");
@@ -398,6 +399,9 @@ namespace TheLastKnight.Stats
                 Die();
             }
         }
+
+        private bool _adminInvincible;
+        public bool AdminInvincible { get => _adminInvincible; set => _adminInvincible = value; }
 
         public void TakeDamage(DamageData damageData)
         {

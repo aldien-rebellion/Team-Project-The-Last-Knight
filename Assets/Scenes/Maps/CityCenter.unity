@@ -20520,8 +20520,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.BossArena
   boss: {fileID: 1575984076}
+  bossObjectName: 
   barriers:
   - {fileID: 1539500305}
+  defeatId: 
   oneSided: 1
 --- !u!61 &254899526
 BoxCollider2D:
@@ -70930,12 +70932,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3759819579243811750, guid: 2f32dd678db2cf74dbaa6df5b3a32f42, type: 3}
+      propertyPath: _canRespawn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3759819579243811750, guid: 2f32dd678db2cf74dbaa6df5b3a32f42, type: 3}
       propertyPath: _patrolDistance
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3759819579243811750, guid: 2f32dd678db2cf74dbaa6df5b3a32f42, type: 3}
       propertyPath: _groundLayer.m_Bits
       value: 193
+      objectReference: {fileID: 0}
+    - target: {fileID: 3759819579243811750, guid: 2f32dd678db2cf74dbaa6df5b3a32f42, type: 3}
+      propertyPath: _requirePlayerAwayToRespawn
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -81541,7 +81551,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8921592104868888672, guid: 9eb488f02e0ba70438d0aeaf932bbd79, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 150
+      value: 163.25
       objectReference: {fileID: 0}
     - target: {fileID: 8921592104868888672, guid: 9eb488f02e0ba70438d0aeaf932bbd79, type: 3}
       propertyPath: m_LocalPosition.y

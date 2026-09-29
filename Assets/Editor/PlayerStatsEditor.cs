@@ -153,64 +153,6 @@ namespace TheLastKnight.Editor
                 serializedObject.ApplyModifiedProperties();
             }
 
-            // 5. Quick Test & Debug Controls (One-click testing during Play Mode)
-            EditorGUILayout.Space(8);
-            EditorGUILayout.LabelField("⚡ Quick Test Controls (ปุ่มลัดสำหรับทดสอบสเตตัส)", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("⚡ Set AGI = 250\n(Double Jump + 1.96x Spd)", GUILayout.Height(36)))
-            {
-                serializedObject.FindProperty("_agility").intValue = 250;
-                serializedObject.ApplyModifiedProperties();
-                playerStats.RecalculateStats(true);
-                EditorUtility.SetDirty(playerStats);
-            }
-            if (GUILayout.Button("➕ +50 AGI\n(เพิ่มความเร็ว)", GUILayout.Height(36)))
-            {
-                serializedObject.FindProperty("_agility").intValue += 50;
-                serializedObject.ApplyModifiedProperties();
-                playerStats.RecalculateStats(true);
-                EditorUtility.SetDirty(playerStats);
-            }
-            if (GUILayout.Button("➕ +100 SP\n(เพิ่มแต้มอัป)", GUILayout.Height(36)))
-            {
-                serializedObject.FindProperty("_availableStatPoints").intValue += 100;
-                serializedObject.ApplyModifiedProperties();
-                EditorUtility.SetDirty(playerStats);
-            }
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.Space(2);
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("🎯 Set DEX = 250 (99% Crit)"))
-            {
-                serializedObject.FindProperty("_dexterity").intValue = 250;
-                serializedObject.ApplyModifiedProperties();
-                playerStats.RecalculateStats(true);
-                EditorUtility.SetDirty(playerStats);
-            }
-            if (GUILayout.Button("🛡️ +1 Level (DEF +1)"))
-            {
-                serializedObject.FindProperty("_currentLevel").intValue += 1;
-                serializedObject.ApplyModifiedProperties();
-                playerStats.RecalculateStats(true);
-                EditorUtility.SetDirty(playerStats);
-            }
-            if (GUILayout.Button("🔄 Reset All (Base 10)"))
-            {
-                serializedObject.FindProperty("_strength").intValue = 10;
-                serializedObject.FindProperty("_vitality").intValue = 10;
-                serializedObject.FindProperty("_dexterity").intValue = 10;
-                serializedObject.FindProperty("_agility").intValue = 10;
-                serializedObject.FindProperty("_currentLevel").intValue = 1;
-                serializedObject.ApplyModifiedProperties();
-                playerStats.RecalculateStats(true);
-                EditorUtility.SetDirty(playerStats);
-            }
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.EndVertical();
         }
     }
 }
