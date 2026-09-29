@@ -169,8 +169,8 @@ namespace TheLastKnight.Environment
             if (state.defeatedAreaBosses == null) state.defeatedAreaBosses = new System.Collections.Generic.List<string>();
             if (!state.defeatedAreaBosses.Contains(DefeatId)) state.defeatedAreaBosses.Add(DefeatId);
 
-            // Save immediately so returning through a portal or respawning cannot bring the boss back.
-            GameManager.Instance.SaveProgress();
+            // Keep the defeat in the current world's runtime state. It is persisted only
+            // when the player explicitly saves at a save point.
         }
 
         private void HideWorldHealthBars()

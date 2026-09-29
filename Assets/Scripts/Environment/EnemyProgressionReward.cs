@@ -25,7 +25,6 @@ namespace TheLastKnight.Environment
                     if (defeated == null)
                         gameManager.State.defeatedAreaBosses = defeated = new System.Collections.Generic.List<string>();
                     if (!defeated.Contains("Church")) defeated.Add("Church");
-                    gameManager.SaveProgress();
                 }
             }
             if (runeIndex >= 0) DemonRuneManager.Instance.DropRune(runeIndex, transform.position);

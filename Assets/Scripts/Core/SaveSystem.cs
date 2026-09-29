@@ -229,7 +229,8 @@ namespace TheLastKnight.Core
 
         public static bool Save(PlayerSaveData state, out string error, string path = null)
         {
-            if (!IsValid(state)) { error = "Could not save: player state is invalid."; return false; }
+            string invalidReason = GetInvalidStateReason(state);
+            if (invalidReason != null) { error = "Could not save: " + invalidReason + "."; return false; }
 
             if (path == null)
             {
@@ -315,13 +316,31 @@ namespace TheLastKnight.Core
 
         public static bool IsValid(PlayerSaveData state)
         {
-            if (state == null || state.version != 1 || !state.initialized || state.runes == null || state.runes.Length != 4) return false;
-            if (state.scene != "CityCenter" && state.scene != "OutdoorMarket" && state.scene != "Church" && state.scene != "SuburbToForest" && state.scene != "DemonCastle") return false;
-            return state.level >= 1 && state.level <= 1000 && state.exp >= 0 && state.statPoints >= 0
-                && state.strength > 0 && state.vitality > 0 && state.dexterity > 0 && state.agility > 0
-                && state.gold >= 0 && state.potions >= 0 && state.potions <= 5 && Enum.IsDefined(typeof(GameDifficulty), state.difficulty)
-                && float.IsFinite(state.hp) && state.hp > 0 && float.IsFinite(state.stamina) && state.stamina >= 0 && state.stamina <= 100
-                && float.IsFinite(state.position.x) && float.IsFinite(state.position.y) && float.IsFinite(state.position.z);
+            return GetInvalidStateReason(state) == null;
+        }
+
+        private static string GetInvalidStateReason(PlayerSaveData state)
+        {
+            if (state == null) return "player state is missing";
+            if (state.version != 1) return "save version is unsupported";
+            if (!state.initialized) return "player state has not been initialized";
+            if (state.runes == null || state.runes.Length != 4) return "rune data is invalid";
+            if (state.scene != "CityCenter" && state.scene != "OutdoorMarket" && state.scene != "Church" &&
+                state.scene != "SuburbToForest" && state.scene != "DemonCastleEntrance" && state.scene != "DemonCastle")
+                return "current scene is not saveable: " + (state.scene ?? "<empty>");
+            if (state.level < 1 || state.level > 1000) return "player level is invalid";
+            if (state.exp < 0 || state.statPoints < 0) return "player progression data is invalid";
+            if (state.strength <= 0 || state.vitality <= 0 || state.dexterity <= 0 || state.agility <= 0)
+                return "player attributes are invalid";
+            // Healing potions are stored in inventory now; the old five-potion cap no longer applies.
+            if (state.gold < 0 || state.potions < 0) return "inventory totals are invalid";
+            if (!Enum.IsDefined(typeof(GameDifficulty), state.difficulty)) return "game difficulty is invalid";
+            if (!float.IsFinite(state.hp) || state.hp <= 0) return "player health is invalid";
+            // Stamina maximum grows with VIT, so it is not always capped at the base 100.
+            if (!float.IsFinite(state.stamina) || state.stamina < 0) return "player stamina is invalid";
+            if (!float.IsFinite(state.position.x) || !float.IsFinite(state.position.y) || !float.IsFinite(state.position.z))
+                return "player position is invalid";
+            return null;
         }
 
         private static bool TryRead(string path, out PlayerSaveData state)
@@ -339,4 +358,3 @@ namespace TheLastKnight.Core
         }
     }
 }
-
