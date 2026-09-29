@@ -1722,6 +1722,14 @@ _rb = GetComponent<Rigidbody2D>();
             }
 
             // 10. Re-enable visuals and floating UI
+            // FloatingHealthBar hides its own GameObject on death, so restoring
+            // child renderers and canvases alone cannot make that UI visible again.
+            var healthBars = GetComponentsInChildren<TheLastKnight.Combat.FloatingHealthBar>(true);
+            foreach (var healthBar in healthBars)
+            {
+                if (healthBar != null && !healthBar.gameObject.activeSelf)
+                    healthBar.gameObject.SetActive(true);
+            }
             SetVisibility(true);
 
             _damageUntil = 0f;
