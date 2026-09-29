@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 3868687501017033158}
   - component: {fileID: 1651603626899836737}
   - component: {fileID: 3759819579243811750}
+  - component: {fileID: 9010000000000000010}
   m_Layer: 0
   m_Name: MechaStoneGolem
   m_TagString: Untagged
@@ -107,8 +108,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6677937697487440676}
   - {fileID: 2991203256037454933}
@@ -296,8 +297,13 @@ MonoBehaviour:
   _chaseSpeed: 3.2
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -306,53 +312,106 @@ MonoBehaviour:
   _groundCheckDistance: 1.2
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
-  _detectionRange: 9
-  _meleeRange: 2.8
-  _meleeCooldown: 1.5
-  _hasRangedAttack: 1
+  _detectionRange: 12
+  _meleeRange: 0.05
+  _meleeCooldown: 0
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 0
+  _playAttackStatesDirectly: 1
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
+  _useColliderEdgeAttackRanges: 1
+  _disableBasicAttack: 0
+  _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 5532559193775845973, guid: 85a78ffbed125a44882b35db4d464e71, type: 3}
-  _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _projectileSpawnOffset: {x: 0.85, y: 0.6}
+  _useProjectileSpawnOffset: 1
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Melee
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0.3
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
-  _basicAttackCanParry: 1
+  _basicAttackCanParry: 0
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 0
+  _basicGuardEveryNAttacks: 2
+  _basicGuardSkillName: StoneShield
   _skills:
   - skillName: RocketPunch
     animationName: Shoot
     actionIndex: -1
     damageMultiplier: 1.5
-    cooldown: 5
-    minRange: 2.5
+    cooldown: 3
+    minRange: 0
     maxRange: 8
-    isParryable: 1
+    isParryable: 0
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    additionalDamageHitTimes: []
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 5532559193775845973, guid: 85a78ffbed125a44882b35db4d464e71, type: 3}
+    requireLineOfSight: 0
     groundSpellPrefab: {fileID: 0}
   - skillName: LaserBeam
     animationName: LaserCast
     actionIndex: -1
     damageMultiplier: 2.5
-    cooldown: 10
-    minRange: 2.5
+    cooldown: 5
+    minRange: 0
     maxRange: 9
-    isParryable: 0
+    isParryable: 1
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    additionalDamageHitTimes: []
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 5424475676180225107, guid: e81554edf4b629d4f92cfb77189b494f, type: 3}
+    requireLineOfSight: 0
     groundSpellPrefab: {fileID: 0}
   - skillName: StoneShield
     animationName: ShieldCast
     actionIndex: -1
     damageMultiplier: 0.5
-    cooldown: 12
+    cooldown: 0
     minRange: 0
-    maxRange: 3
+    maxRange: 0.05
     isParryable: 0
+    initialDelay: 0
+    guardDuration: 2
+    damageStartDelay: 0.4
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    additionalDamageHitTimes: []
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
     groundSpellPrefab: {fileID: 0}
+  _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 1
+  _waitForAttackProjectileToFinish: 1
+  _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
 --- !u!1 &3455329745194790000
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,7 +514,7 @@ RectTransform:
   m_GameObject: {fileID: 7144710399414694371}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.006, y: 0.006, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3041016618191306721}
@@ -465,7 +524,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 1.15}
-  m_SizeDelta: {x: 100, y: 14}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4139676860901052680
 Canvas:
@@ -508,6 +567,11 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 4887483311359214869}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _followSpriteBounds: 0
+  _headOffset: 0.12
 --- !u!1 &8331585804025797662
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,3 +669,18 @@ MonoBehaviour:
   _hitCooldown: 0.8
   _activeOnlyDuringAttack: 0
   _isActive: 1
+
+--- !u!114 &9010000000000000010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2819804112159387095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 4887483311359214869}
+  _useVisibleSpriteBounds: 1
