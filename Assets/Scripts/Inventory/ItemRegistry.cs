@@ -185,9 +185,49 @@ namespace TheLastKnight.Inventory
             }
         };
 
+        public static IEnumerable<string> LegacyIds => _registry.Keys;
+
+        public static InventoryItemData CreateLegacyItem(string id)
+        {
+            return id != null && _registry.TryGetValue(id, out var factory) ? factory() : null;
+        }
+
+        private static Dictionary<string, ItemDefinition> _definitions;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void ReloadDefinitions() => _definitions = null;
+
+        private static void LoadDefinitions()
+        {
+            if (_definitions != null) return;
+            _definitions = new Dictionary<string, ItemDefinition>(StringComparer.OrdinalIgnoreCase);
+            var duplicates = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var definition in Resources.LoadAll<ItemDefinition>("Items/Definitions"))
+            {
+                if (string.IsNullOrWhiteSpace(definition.id))
+                {
+                    Debug.LogError($"Item definition '{definition.name}' needs an ID.", definition);
+                    continue;
+                }
+                if (duplicates.Contains(definition.id)) continue;
+                if (_definitions.ContainsKey(definition.id))
+                {
+                    Debug.LogError($"Duplicate item ID '{definition.id}'. Definitions for this ID are ignored.", definition);
+                    _definitions.Remove(definition.id);
+                    duplicates.Add(definition.id);
+                    continue;
+                }
+                _definitions.Add(definition.id, definition);
+            }
+        }
+
         public static InventoryItemData CreateItem(string id, int count = 1)
         {
             if (string.IsNullOrEmpty(id) || count <= 0) return null;
+
+            LoadDefinitions();
+            if (_definitions.TryGetValue(id, out var definition))
+                return definition.CreateItem(count, CreateLegacyItem(id));
 
             if (_registry.TryGetValue(id, out var factory))
             {

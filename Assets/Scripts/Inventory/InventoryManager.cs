@@ -183,10 +183,43 @@ namespace TheLastKnight.Inventory
             return remaining;
         }
 
+        // Contextual use (e.g. a chest) consumes one physical item, never an unlock flag.
+        public int CountItem(string id)
+        {
+            int count = 0;
+            foreach (var slots in new[] { _inventorySlots, _quickSlots })
+                foreach (var item in slots)
+                    if (item != null && string.Equals(item.id, id, StringComparison.OrdinalIgnoreCase)) count += item.count;
+            if (CursorHeldItem != null && string.Equals(CursorHeldItem.id, id, StringComparison.OrdinalIgnoreCase)) count += CursorHeldItem.count;
+            return count;
+        }
+
+        public bool TryConsumeItem(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id)) return false;
+            foreach (var slots in new[] { _inventorySlots, _quickSlots })
+            {
+                for (int i = 0; i < slots.Length; i++)
+                {
+                    var item = slots[i];
+                    if (item == null || item.count <= 0 || !string.Equals(item.id, id, StringComparison.OrdinalIgnoreCase)) continue;
+                    if (--item.count == 0) slots[i] = null;
+                    Changed();
+                    return true;
+                }
+            }
+            if (CursorHeldItem == null || CursorHeldItem.count <= 0 ||
+                !string.Equals(CursorHeldItem.id, id, StringComparison.OrdinalIgnoreCase)) return false;
+            if (--CursorHeldItem.count == 0) CursorHeldItem = null;
+            Changed();
+            return true;
+        }
+
         public bool CanUseQuickSlot(int index, PlayerStats player)
         {
             var item = GetSlot(SlotType.QuickSlot, index);
             if (player == null || player.IsDead || item == null || item.count <= 0 || !item.isConsumable || item.onUse == null) return false;
+            if (item.canUse != null) return item.canUse(player);
             if ((item.id == "potion_heal" || item.id == "bread") && player.CurrentHP >= player.MaxHP) return false;
             if (item.id == "potion_stamina" && player.CurrentStamina >= player.MaxStamina) return false;
             return true;
@@ -275,6 +308,22 @@ namespace TheLastKnight.Inventory
                 {
                     held.count = TryAddToSlots(_inventorySlots, held);
                     if (held.count > 0) CursorHeldItem = held;
+                }
+            }
+            // Convert old permanent-key saves once. If every slot and the cursor are
+            // occupied, retain the legacy flag until there is room on a later load.
+            if (data.churchKey)
+            {
+                bool alreadyOwned = Array.Exists(_inventorySlots, i => i != null && i.id == "church_key") ||
+                    Array.Exists(_quickSlots, i => i != null && i.id == "church_key") || CursorHeldItem?.id == "church_key";
+                if (alreadyOwned || (data.runes != null && data.runes.Length > 0 && data.runes[0])) data.churchKey = false;
+                else
+                {
+                    var key = ItemRegistry.CreateItem("church_key");
+                    key.count = TryAddToSlots(_inventorySlots, key);
+                    key.count = TryAddToSlots(_quickSlots, key);
+                    if (key.count > 0 && CursorHeldItem == null) { CursorHeldItem = key; key = null; }
+                    if (key == null || key.count == 0) data.churchKey = false;
                 }
             }
             Changed(player);

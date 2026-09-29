@@ -78,6 +78,9 @@ namespace TheLastKnight.Inventory
 
             var pickup = go.AddComponent<WorldItemPickup>();
             pickup.Initialize(item, floorLevel);
+            int rune = TheLastKnight.Environment.DemonRuneManager.ItemIndex(item.id);
+            if (rune >= 0 && TheLastKnight.Environment.DemonRuneManager.Instance != null)
+                TheLastKnight.Environment.DemonRuneManager.Instance.TrackDrop(rune, position);
             return pickup;
         }
 
@@ -164,6 +167,8 @@ namespace TheLastKnight.Inventory
             int pickedUp = initialCount - remaining;
             if (pickedUp > 0)
             {
+                int rune = TheLastKnight.Environment.DemonRuneManager.ItemIndex(_itemData.id);
+                if (rune >= 0) TheLastKnight.Environment.DemonRuneManager.Instance?.PickedUp(rune);
                 AudioManager.Instance?.PlaySfx("click");
                 FloatingCombatText.Show(transform.position + Vector3.up * 0.3f, $"+{pickedUp} {_itemData.name}", new Color(1f, 0.88f, 0.4f));
 

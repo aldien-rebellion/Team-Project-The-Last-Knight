@@ -1,5 +1,8 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TheLastKnight.Inventory;
+using TheLastKnight.Core;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -24,6 +27,56 @@ namespace TheLastKnight.Environment
 
         public event Action OnRunesChanged;
 
+        public static readonly string[] ItemIds = { "rune_pentagram", "rune_hand", "rune_eye", "rune_trident" };
+        public static int ItemIndex(string id) => Array.IndexOf(ItemIds, id);
+        public bool IsSocketed(int index) => index >= 0 && index < 4 && _collectedRunes[index];
+        public bool HasReward(int index) => index >= 0 && index < 4 && (HasRune(index) ||
+            (GameManager.Instance.State.runeDrops != null && GameManager.Instance.State.runeDrops.Exists(d => d != null && d.runeId == index)));
+
+        public bool DropRune(int index, Vector3 position)
+        {
+            if (index < 0 || index >= 4 || HasReward(index)) return false;
+            return WorldItemPickup.Spawn(ItemRegistry.CreateItem(ItemIds[index]), position) != null;
+        }
+
+        public void TrackDrop(int index, Vector3 position)
+        {
+            var state = GameManager.Instance.State;
+            if (state.runeDrops == null) state.runeDrops = new System.Collections.Generic.List<SavedRuneDrop>();
+            var drops = state.runeDrops;
+            drops.RemoveAll(d => d.runeId == index);
+            drops.Add(new SavedRuneDrop { runeId = index, scene = SceneManager.GetActiveScene().name, position = position });
+        }
+
+        public void PickedUp(int index)
+        {
+            GameManager.Instance.State.runeDrops?.RemoveAll(d => d != null && d.runeId == index);
+            OnRunesChanged?.Invoke();
+        }
+
+        public void RestoreDrops()
+        {
+            var state = GameManager.Instance.State;
+            if (state.runeDrops == null) state.runeDrops = new System.Collections.Generic.List<SavedRuneDrop>();
+            foreach (var drop in state.runeDrops.ToArray())
+            {
+                if (drop.runeId < 0 || drop.runeId >= 4 || drop.scene != SceneManager.GetActiveScene().name) continue;
+                if (HasRune(drop.runeId)) { state.runeDrops.Remove(drop); continue; }
+                bool exists = false;
+                foreach (var pickup in FindObjectsByType<WorldItemPickup>(FindObjectsSortMode.None))
+                    if (pickup.ItemData?.id == ItemIds[drop.runeId]) { exists = true; break; }
+                if (!exists) WorldItemPickup.Spawn(ItemRegistry.CreateItem(ItemIds[drop.runeId]), drop.position);
+            }
+        }
+
+        public bool TrySocketRune(int index)
+        {
+            if (index < 0 || index >= 4 || IsSocketed(index)) return false;
+            if (InventoryManager.Instance == null || !InventoryManager.Instance.TryConsumeItem(ItemIds[index])) return false;
+            CollectRune(index);
+            return true;
+        }
+
         public int CollectedCount
         {
             get
@@ -31,7 +84,7 @@ namespace TheLastKnight.Environment
                 int count = 0;
                 for (int i = 0; i < _collectedRunes.Length; i++)
                 {
-                    if (_collectedRunes[i]) count++;
+                    if (HasRune(i)) count++;
                 }
                 return count;
             }
@@ -53,7 +106,7 @@ namespace TheLastKnight.Environment
         public bool HasRune(int runeId)
         {
             if (runeId < 0 || runeId >= _collectedRunes.Length) return false;
-            return _collectedRunes[runeId];
+            return _collectedRunes[runeId] || (InventoryManager.Instance != null && InventoryManager.Instance.CountItem(ItemIds[runeId]) > 0);
         }
 
         public void CollectRune(int runeId)

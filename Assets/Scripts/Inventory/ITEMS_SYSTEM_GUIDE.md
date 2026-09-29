@@ -9,6 +9,10 @@ last_updated: "2026-09-27"
 
 # SYSTEM SPECIFICATION: INVENTORY & ITEM SUBSYSTEM
 
+> Authoring update (2026-09-29): Use `ItemDefinition` assets under `Assets/Resources/Items/Definitions/` to author items and drag a Sprite into `Icon`. These override the legacy catalog below by ID. See [Thai authoring guide](ITEM_AUTHORING_TH.md). `ItemRegistry.cs` remains the compatibility fallback; new items do not require registry edits. `InventoryItemData.canUse` optionally validates consumption before the legacy ID checks.
+
+Rune progression uses four unique one-count item IDs (`rune_pentagram`, `rune_hand`, `rune_eye`, `rune_trident`). Pickups are saved with scene and position; inserting a rune at a gate consumes it and records its socketed state.
+
 > **AI AGENT CONTEXT**: This document provides strict operational parameters, architectural contracts, and reference specifications for the Inventory and Item Subsystem in *The Last Knight*. Any coding agent working on or extending this codebase MUST adhere to the invariants, type contracts, and directory structures defined herein.
 
 ---

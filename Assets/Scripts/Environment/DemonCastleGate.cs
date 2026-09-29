@@ -151,6 +151,8 @@ namespace TheLastKnight.Environment
                 bool hasAll = DemonRuneManager.Instance != null && DemonRuneManager.Instance.HasAllRunes;
                 if (hasAll)
                 {
+                    for (int i = 0; i < 4; i++)
+                        if (!DemonRuneManager.Instance.IsSocketed(i)) DemonRuneManager.Instance.TrySocketRune(i);
                     // Unlock the gate!
                     isUnlocked = true;
                     UpdateVisuals();

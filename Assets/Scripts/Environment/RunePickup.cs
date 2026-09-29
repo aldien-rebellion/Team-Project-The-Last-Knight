@@ -37,7 +37,7 @@ namespace TheLastKnight.Environment
             }
 
             // If already collected previously in another map/session, disable
-            if (DemonRuneManager.Instance != null && DemonRuneManager.Instance.HasRune(runeId))
+            if (DemonRuneManager.Instance != null && DemonRuneManager.Instance.HasReward(runeId))
             {
                 gameObject.SetActive(false);
             }
@@ -62,7 +62,7 @@ namespace TheLastKnight.Environment
 
                 if (DemonRuneManager.Instance != null)
                 {
-                    DemonRuneManager.Instance.CollectRune(runeId);
+                    DemonRuneManager.Instance.DropRune(runeId, transform.position);
                 }
 
                 Debug.Log($"<color=orange>[RunePickup]</color> ผู้เล่นเก็บรูน: {runeDisplayName} (ID: {runeId})");
