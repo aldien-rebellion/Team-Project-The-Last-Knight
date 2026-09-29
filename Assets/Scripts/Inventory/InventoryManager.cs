@@ -123,7 +123,9 @@ namespace TheLastKnight.Inventory
         {
             if (CursorHeldItem == null) return;
             int count = dropOneOnly ? 1 : CursorHeldItem.count;
-            if (WorldItemPickup.Spawn(CursorHeldItem.Clone(count), dropPos) == null) return;
+            var pickup = WorldItemPickup.Spawn(CursorHeldItem.Clone(count), dropPos);
+            if (pickup == null) return;
+            pickup.ConfigurePlayerDrop(FindAnyObjectByType<PlayerStats>());
             CursorHeldItem.count -= count;
             if (CursorHeldItem.count <= 0) CursorHeldItem = null;
             Changed();

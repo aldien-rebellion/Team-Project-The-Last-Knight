@@ -302,6 +302,49 @@ namespace TheLastKnight.Tests
             finally { UnityEngine.Object.DestroyImmediate(playerObject); }
         }
         [Test]
+        public void PlayerDrop_WaitsForLandingAndOwnerSeparationBeforePickup()
+        {
+            var ownerObject = new GameObject("Test_DropOwner");
+            var dropObject = new GameObject("Test_OwnerDrop");
+            try
+            {
+                ownerObject.SetActive(false);
+                var owner = ownerObject.AddComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                ownerObject.AddComponent<BoxCollider2D>();
+                ownerObject.SetActive(true);
+                var pickup = dropObject.AddComponent(RuntimeType("TheLastKnight.Inventory.WorldItemPickup"));
+                Call(pickup, "Initialize", Item("bread", 1), 0f);
+                Call(pickup, "ConfigurePlayerDrop", owner);
+                var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                var type = pickup.GetType();
+                Func<bool> locked = () => (bool)type.GetField("_waitForOwnerSeparation", flags).GetValue(pickup);
+                Assert.That(((Vector2)type.GetField("_velocity", flags).GetValue(pickup)).x, Is.GreaterThan(4f));
+                ownerObject.transform.position = Vector3.right * 10;
+                Physics2D.SyncTransforms();
+                Call(pickup, "UpdateOwnerSeparation");
+                Assert.That(locked(), Is.True, "Airborne items must not re-arm");
+                type.GetField("_isSettled", flags).SetValue(pickup, true);
+                ownerObject.transform.position = Vector3.zero;
+                Physics2D.SyncTransforms();
+                Call(pickup, "UpdateOwnerSeparation");
+                Assert.That(locked(), Is.True, "Landing on the owner must not collect the drop");
+                ownerObject.transform.position = Vector3.right * 10;
+                Physics2D.SyncTransforms();
+                Call(pickup, "UpdateOwnerSeparation");
+                Assert.That(locked(), Is.False, "Leaving the pickup range must allow returning to collect it");
+                ownerObject.transform.position = Vector3.zero;
+                Physics2D.SyncTransforms();
+                Call(pickup, "UpdateOwnerSeparation");
+                Assert.That(locked(), Is.False);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(dropObject);
+                UnityEngine.Object.DestroyImmediate(ownerObject);
+            }
+        }
+
+        [Test]
         public void WorldDrops_OneThenAll_AndFullBagClose_PreserveQuantities()
         {
             var pickupType = RuntimeType("TheLastKnight.Inventory.WorldItemPickup");
