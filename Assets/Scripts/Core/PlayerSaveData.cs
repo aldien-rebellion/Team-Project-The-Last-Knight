@@ -37,7 +37,7 @@ namespace TheLastKnight.Core
         public bool[] runes = new bool[4];
         public List<SavedRuneDrop> runeDrops = new List<SavedRuneDrop>();
         public bool pentagramRuneChestOpened;
-        public bool churchKey, introSeen, victory;
+        public bool churchKey, introSeen, victory, demonCastleGateUnlocked;
         public GameDifficulty difficulty;
         public bool inventoryInitialized;
         public SavedItemData cursorItem;
