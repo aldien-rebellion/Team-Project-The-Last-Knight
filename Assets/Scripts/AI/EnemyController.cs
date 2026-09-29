@@ -99,6 +99,8 @@ namespace TheLastKnight.AI
         [SerializeField] private bool _cycleNonParryableSkills;
         [SerializeField] private bool _waitForAttackAnimationToFinish;
         [SerializeField] private bool _waitForAttackProjectileToFinish;
+        [Tooltip("Cancel the current attack and play TakeHit when this enemy takes damage.")]
+        [SerializeField] private bool _interruptAttackOnDamage;
         [Tooltip("Run the configured cycle without anticipation gaps and finish actions before reacting to damage.")]
         [SerializeField] private bool _continuousActions;
         [Tooltip("Show a skill's Parry ring on every Nth use of a parryable skill.")]
@@ -1374,7 +1376,30 @@ _rb = GetComponent<Rigidbody2D>();
             {
                 Vector2 fireDir = _isFacingRight ? Vector2.right : Vector2.left;
                 float power = _stats != null ? _stats.AttackPower * damageMultiplier : 10f * damageMultiplier;
-                projectileScript.Initialize(fireDir, power, gameObject);
+                Vector2? landingPoint = null;
+                if (_player != null)
+                {
+                    Collider2D playerBody = _player.GetComponent<Collider2D>();
+                    if (playerBody != null)
+                    {
+                        Bounds playerBounds = playerBody.bounds;
+                        float frontX = dirX > 0f ? playerBounds.min.x - 0.35f : playerBounds.max.x + 0.35f;
+                        float groundY = playerBounds.min.y;
+                        foreach (var hit in Physics2D.RaycastAll(
+                            new Vector2(frontX, playerBounds.min.y + 1f), Vector2.down, 6f))
+                        {
+                            if (hit.collider == null || hit.collider.isTrigger
+                                || hit.collider.transform.IsChildOf(_player.transform)
+                                || hit.collider.transform.IsChildOf(transform)
+                                || hit.point.y > playerBounds.min.y + 0.25f)
+                                continue;
+                            groundY = hit.point.y;
+                            break;
+                        }
+                        landingPoint = new Vector2(frontX, groundY + 0.35f);
+                    }
+                }
+                projectileScript.Initialize(fireDir, power, gameObject, landingPoint);
             }
         }
 
@@ -1453,15 +1478,20 @@ _rb = GetComponent<Rigidbody2D>();
             if (_stats.IsDead) return;
 
             // A cyclic action finishes before the next action or hurt pose can start.
-            if ((_continuousActions || _waitForAttackAnimationToFinish) && _isActionLocked) return;
+            if ((_continuousActions || _waitForAttackAnimationToFinish) && _isActionLocked
+                && !_interruptAttackOnDamage) return;
 
-            if (_useMovementAnimationStates && _isActionLocked)
+            if (_isActionLocked && (_interruptAttackOnDamage || _useMovementAnimationStates))
                 StopAttack();
 
             _currentState = EnemyAIState.Hurt;
             // Force the reaction state so damage received during an attack cannot
             // leave the Animator waiting on an interrupted trigger transition.
-            if (_useMovementAnimationStates && TryPlayAnimatorState("Hit"))
+            if (_interruptAttackOnDamage && TryPlayAnimatorState("TakeHit"))
+            {
+                if (_availableAnimParams.Contains("Hurt")) _animator.ResetTrigger("Hurt");
+            }
+            else if (_useMovementAnimationStates && TryPlayAnimatorState("Hit"))
             {
                 // The Hit clip has its own frames; no trigger transition is needed.
             }

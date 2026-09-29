@@ -17,6 +17,11 @@ namespace TheLastKnight.Combat.Projectiles
         [SerializeField, Min(0f)] private float _continuousDamageInterval;
         [SerializeField] private bool _destroyOnGround = true;
         [SerializeField] private Vector2 _knockback = new Vector2(3f, 2f);
+        [Header("Lobbed Projectile")]
+        [SerializeField] private bool _lobToTarget;
+        [SerializeField, Min(0.1f)] private float _lobFlightTime = 0.9f;
+        [SerializeField, Min(0f)] private float _lobArcHeight = 2f;
+        [SerializeField, Min(0f)] private float _explosionRadius = 1.25f;
 
         private Vector2 _direction = Vector2.right;
         private GameObject _attacker;
@@ -30,6 +35,10 @@ namespace TheLastKnight.Combat.Projectiles
         private Vector2 _startPosition;
         private bool _initialized;
         private bool _beamActive;
+        private bool _lobActive;
+        private Vector2 _lobStart;
+        private Vector2 _lobTarget;
+        private float _lobStartTime;
         private float _beamEndTime;
         private float _nextBeamDamageTime;
 
@@ -45,7 +54,7 @@ namespace TheLastKnight.Combat.Projectiles
             Invoke(nameof(TriggerImpact), _lifetime);
         }
 
-        public void Initialize(Vector2 direction, float damage, GameObject attacker = null)
+        public void Initialize(Vector2 direction, float damage, GameObject attacker = null, Vector2? targetPosition = null)
         {
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
@@ -61,6 +70,16 @@ namespace TheLastKnight.Combat.Projectiles
             _initialized = true;
             if (damage > 0) _damage = damage;
             _attacker = attacker;
+
+            if (_lobToTarget)
+            {
+                _lobStart = transform.position;
+                _lobTarget = targetPosition ?? (_lobStart + _direction * _speed * _lobFlightTime);
+                _lobStartTime = Time.time;
+                _lobActive = true;
+                if (_rb != null) _rb.linearVelocity = Vector2.zero;
+                return;
+            }
 
             if (_rb != null)
             {
@@ -93,6 +112,8 @@ namespace TheLastKnight.Combat.Projectiles
                 return;
             }
 
+            if (_lobActive) return;
+
             if (_beamActive)
             {
                 if (Time.time >= _beamEndTime)
@@ -124,9 +145,28 @@ namespace TheLastKnight.Combat.Projectiles
             }
         }
 
+        private void FixedUpdate()
+        {
+            if (!_lobActive || _hasImpacted) return;
+
+            float progress = Mathf.Clamp01((Time.time - _lobStartTime) / _lobFlightTime);
+            Vector2 position = Vector2.Lerp(_lobStart, _lobTarget, progress);
+            position.y += 4f * _lobArcHeight * progress * (1f - progress);
+            if (_rb != null) _rb.MovePosition(position);
+            else transform.position = position;
+
+            if (progress >= 1f)
+            {
+                if (_rb != null) _rb.position = _lobTarget;
+                else transform.position = _lobTarget;
+                TriggerImpact();
+            }
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (_hasImpacted) return;
+            if (_lobActive) return;
             if (_beamActive && Time.time < _nextBeamDamageTime) return;
 
             // Ignore shooter
@@ -210,9 +250,21 @@ namespace TheLastKnight.Combat.Projectiles
         {
             if (_hasImpacted) return;
             _hasImpacted = true;
+            _lobActive = false;
             _impactStartTime = Time.time;
             if (_collider != null) _collider.enabled = false;
             if (_rb != null) _rb.linearVelocity = Vector2.zero;
+
+            if (_lobToTarget && _explosionRadius > 0f)
+            {
+                foreach (var victim in Physics2D.OverlapCircleAll(transform.position, _explosionRadius))
+                {
+                    var player = victim.GetComponentInParent<PlayerStats>();
+                    if (player == null) continue;
+                    player.TakeDamage(_damage);
+                    break;
+                }
+            }
 
             // Play impact / explosion animation if available
             int explosionState = Animator.StringToHash("Base Layer.Explosion");
