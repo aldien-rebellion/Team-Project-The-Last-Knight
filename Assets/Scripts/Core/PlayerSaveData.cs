@@ -13,6 +13,14 @@ namespace TheLastKnight.Core
     }
 
     [Serializable]
+    public class SavedRuneDrop
+    {
+        public int runeId;
+        public string scene;
+        public Vector3 position;
+    }
+
+    [Serializable]
     public class PlayerSaveData
     {
         public int version = 1;
@@ -27,6 +35,8 @@ namespace TheLastKnight.Core
         public int level = 1, exp, statPoints, strength = 10, vitality = 10, dexterity = 10, agility = 10;
         public int gold, potions = 3;
         public bool[] runes = new bool[4];
+        public List<SavedRuneDrop> runeDrops = new List<SavedRuneDrop>();
+        public bool pentagramRuneChestOpened;
         public bool churchKey, introSeen, victory;
         public GameDifficulty difficulty;
         public bool inventoryInitialized;

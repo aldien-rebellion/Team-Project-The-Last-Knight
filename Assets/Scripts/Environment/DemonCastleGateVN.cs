@@ -73,10 +73,12 @@ namespace TheLastKnight.Environment
             for (int i = 0; i < 4; i++)
             {
                 int index = i;
+                _socketed[i] = DemonRuneManager.Instance.IsSocketed(i);
                 _buttons[i] = RuntimeUI.Button(tray.transform, names[i], () => InsertRune(index));
-                _buttons[i].interactable = DemonRuneManager.Instance.HasRune(i);
-                if (gate != null && gate.socketRenderers[i] != null) gate.socketRenderers[i].sprite = gate.unlitRuneSprites[i];
+                _buttons[i].interactable = !_socketed[i] && DemonRuneManager.Instance.HasRune(i);
+                if (gate != null && gate.socketRenderers[i] != null) gate.socketRenderers[i].sprite = _socketed[i] ? gate.litRuneSprites[i] : gate.unlitRuneSprites[i];
             }
+            if (SocketedCount == 4) StartCoroutine(OpenGate());
             RuntimeUI.Button(content, "Return to Suburb to Forest", () =>
             {
                 ScenePortal.lastSceneLoaded = "DemonCastleEntrance";
@@ -88,6 +90,7 @@ namespace TheLastKnight.Environment
         public bool InsertRune(int index)
         {
             if (_opening || index < 0 || index >= 4 || _socketed[index] || !DemonRuneManager.Instance.HasRune(index)) return false;
+            if (!DemonRuneManager.Instance.TrySocketRune(index)) return false;
             _socketed[index] = true;
             if (_buttons[index] != null) { _buttons[index].interactable = false; _buttons[index].GetComponent<Image>().color = new Color(0.3f, 0.55f, 0.45f); }
             if (gate != null && gate.socketRenderers[index] != null) gate.socketRenderers[index].sprite = gate.litRuneSprites[index];

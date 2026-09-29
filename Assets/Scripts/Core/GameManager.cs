@@ -86,6 +86,7 @@ namespace TheLastKnight.Core
                 }
                 if (_checkpoint == null) { Capture(); _checkpoint = State.Copy(); }
             }
+            GetComponent<TheLastKnight.Environment.DemonRuneManager>()?.RestoreDrops();
             _restorePosition = false;
             _restoring = false;
             if (Player != null && SceneManager.GetActiveScene().name == "CityCenter" && !State.introSeen)

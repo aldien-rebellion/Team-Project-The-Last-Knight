@@ -133,6 +133,94 @@ namespace TheLastKnight.Tests
             }
         }
         [Test]
+        public void ChurchKey_ConsumesOneFromBagQuickAndCursor_AndSurvivesSaveLoad()
+        {
+            Set(Bag, 0, "church_key", 2);
+            Set(Quick, 1, "church_key", 1);
+            Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(true));
+            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(1));
+            var save = Activator.CreateInstance(_saveType);
+            Call(_inventory, "SaveTo", save);
+            Call(_inventory, "LoadFrom", save, null);
+            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(1));
+            Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(true));
+            Assert.IsNull(Slot(Bag, 0));
+            Left(Quick, 1);
+            Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(true));
+            Assert.IsNull(Held);
+            Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(false));
+            Assert.That(Count(Slot(Quick, 0)), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void LegacyChurchKey_MigratesOnce_AndAlreadyOpenedChestDoesNotGrantKey()
+        {
+            var save = Activator.CreateInstance(_saveType);
+            _saveType.GetField("churchKey").SetValue(save, true);
+            Call(_inventory, "LoadFrom", save, null);
+            Assert.That(Field(save, "churchKey"), Is.EqualTo(false));
+            Call(_inventory, "SaveTo", save);
+            Call(_inventory, "LoadFrom", save, null);
+            Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(true));
+            Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(false));
+            save = Activator.CreateInstance(_saveType);
+            _saveType.GetField("churchKey").SetValue(save, true);
+            ((bool[])Field(save, "runes"))[0] = true;
+            Call(_inventory, "LoadFrom", save, null);
+            Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(false));
+            Assert.That(Field(save, "churchKey"), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void KeeperKey_DropsRequestedSprite_ChestConsumesOnlyOnFirstOpening()
+        {
+            var gmType = RuntimeType("TheLastKnight.Core.GameManager");
+            var runeType = RuntimeType("TheLastKnight.Environment.DemonRuneManager");
+            var gmInstance = gmType.GetProperty("Instance");
+            var runeInstance = runeType.GetProperty("Instance");
+            var oldGm = gmInstance.GetValue(null);
+            var oldRunes = runeInstance.GetValue(null);
+            var go = new GameObject("Test_KeyContext");
+            go.SetActive(false);
+            Component pickup = null;
+            try
+            {
+                var gm = go.AddComponent(gmType);
+                gmInstance.SetValue(null, gm);
+                var runes = go.AddComponent(runeType);
+                runeInstance.SetValue(null, runes);
+                var chest = go.AddComponent(RuntimeType("TheLastKnight.Environment.RuneChest"));
+                var reward = go.AddComponent(RuntimeType("TheLastKnight.Environment.EnemyProgressionReward"));
+                reward.GetType().GetField("churchKey").SetValue(reward, true);
+                Call(reward, "Award");
+                pickup = UnityEngine.Object.FindObjectsByType(RuntimeType("TheLastKnight.Inventory.WorldItemPickup"), FindObjectsSortMode.None)
+                    .Cast<Component>().Single(p => p.name == "Pickup_church_key");
+                var dropped = pickup.GetType().GetProperty("ItemData").GetValue(pickup);
+                Assert.That(Count(dropped), Is.EqualTo(1));
+                Assert.That(pickup.GetComponent<SpriteRenderer>().sprite.name, Is.EqualTo("Key 13 - GOLD - frame0026_0"));
+                var state = gmType.GetProperty("State").GetValue(gm);
+                Assert.That(Field(state, "churchKey"), Is.EqualTo(false));
+                Call(chest, "Interact");
+                Assert.That(((bool[])Field(state, "runes"))[0], Is.False, "A world drop is not an owned key");
+                Set(Bag, 0, "church_key", 2);
+                Call(chest, "Interact");
+                Assert.That(((bool[])Field(state, "runes"))[0], Is.True);
+                Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(1));
+                Call(chest, "Interact");
+                Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(1), "Reopening must not consume another key");
+            }
+            finally
+            {
+                if (pickup != null) UnityEngine.Object.DestroyImmediate(pickup.gameObject);
+                UnityEngine.Object.DestroyImmediate(go);
+                gmInstance.SetValue(null, oldGm);
+                runeInstance.SetValue(null, oldRunes);
+                foreach (var popup in UnityEngine.Object.FindObjectsByType(RuntimeType("TheLastKnight.Combat.FloatingCombatText"), FindObjectsSortMode.None))
+                    UnityEngine.Object.DestroyImmediate(((Component)popup).gameObject);
+            }
+        }
+
+        [Test]
         public void DefaultInventory_IsEmpty_WithThreePotionsAndStackLimit64()
         {
             for (int i = 0; i < 24; i++) Assert.That(Slot(Bag, i), Is.Null);
@@ -301,6 +389,49 @@ namespace TheLastKnight.Tests
             }
             finally { UnityEngine.Object.DestroyImmediate(playerObject); }
         }
+        [Test]
+        public void PlayerDrop_WaitsForLandingAndOwnerSeparationBeforePickup()
+        {
+            var ownerObject = new GameObject("Test_DropOwner");
+            var dropObject = new GameObject("Test_OwnerDrop");
+            try
+            {
+                ownerObject.SetActive(false);
+                var owner = ownerObject.AddComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                ownerObject.AddComponent<BoxCollider2D>();
+                ownerObject.SetActive(true);
+                var pickup = dropObject.AddComponent(RuntimeType("TheLastKnight.Inventory.WorldItemPickup"));
+                Call(pickup, "Initialize", Item("bread", 1), 0f);
+                Call(pickup, "ConfigurePlayerDrop", owner);
+                var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                var type = pickup.GetType();
+                Func<bool> locked = () => (bool)type.GetField("_waitForOwnerSeparation", flags).GetValue(pickup);
+                Assert.That(((Vector2)type.GetField("_velocity", flags).GetValue(pickup)).x, Is.GreaterThan(4f));
+                ownerObject.transform.position = Vector3.right * 10;
+                Physics2D.SyncTransforms();
+                Call(pickup, "UpdateOwnerSeparation");
+                Assert.That(locked(), Is.True, "Airborne items must not re-arm");
+                type.GetField("_isSettled", flags).SetValue(pickup, true);
+                ownerObject.transform.position = Vector3.zero;
+                Physics2D.SyncTransforms();
+                Call(pickup, "UpdateOwnerSeparation");
+                Assert.That(locked(), Is.True, "Landing on the owner must not collect the drop");
+                ownerObject.transform.position = Vector3.right * 10;
+                Physics2D.SyncTransforms();
+                Call(pickup, "UpdateOwnerSeparation");
+                Assert.That(locked(), Is.False, "Leaving the pickup range must allow returning to collect it");
+                ownerObject.transform.position = Vector3.zero;
+                Physics2D.SyncTransforms();
+                Call(pickup, "UpdateOwnerSeparation");
+                Assert.That(locked(), Is.False);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(dropObject);
+                UnityEngine.Object.DestroyImmediate(ownerObject);
+            }
+        }
+
         [Test]
         public void WorldDrops_OneThenAll_AndFullBagClose_PreserveQuantities()
         {
