@@ -1,6 +1,7 @@
 using UnityEngine;
 using TheLastKnight.Core;
 using TheLastKnight.Combat;
+using TheLastKnight.Inventory;
 
 namespace TheLastKnight.Environment
 {
@@ -16,10 +17,9 @@ namespace TheLastKnight.Environment
         {
             if (churchKey)
             {
-                GameManager.Instance.State.churchKey = true;
-                FloatingCombatText.Show(transform.position + Vector3.up, "Church Key acquired", Color.yellow);
+                WorldItemPickup.Spawn(ItemRegistry.CreateItem("church_key", 1), transform.position);
             }
-            if (runeIndex >= 0) DemonRuneManager.Instance.CollectRune(runeIndex);
+            if (runeIndex >= 0) DemonRuneManager.Instance.DropRune(runeIndex, transform.position);
             if (finalBoss)
             {
                 GameManager.Instance.State.victory = true;

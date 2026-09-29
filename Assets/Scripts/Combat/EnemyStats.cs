@@ -142,6 +142,11 @@ namespace TheLastKnight.Combat
 
             OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
             OnDamaged?.Invoke(damageData);
+            var enemyController = GetComponent<TheLastKnight.AI.EnemyController>();
+            if (enemyController != null)
+            {
+                enemyController.NotifyDamaged(damageData);
+            }
 
             if (CurrentHealth <= 0f)
             {

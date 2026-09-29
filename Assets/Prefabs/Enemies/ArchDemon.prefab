@@ -102,7 +102,7 @@ RectTransform:
   m_GameObject: {fileID: 1258815622534977188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.004, y: 0.004, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8320436840600715744}
@@ -111,7 +111,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.79}
+  m_AnchoredPosition: {x: 0, y: 0.95}
   m_SizeDelta: {x: 100, y: 14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7175683642019844449
@@ -463,6 +463,9 @@ MonoBehaviour:
   _flipSpriteInsteadOfTransformScale: 1
   _facingFlipDeadZone: 0.1
   _avoidTeleportOnReturn: 1
+  _bringToFrontWhileAttacking: 1
+  _attackSortingOrder: 1
+  _attackSortingLayerName: Player
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:

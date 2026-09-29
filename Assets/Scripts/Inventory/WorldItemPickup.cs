@@ -20,6 +20,37 @@ namespace TheLastKnight.Inventory
         private const float Gravity = -14f;
         private const float PickupDelay = 0.5f;
         private bool _collected;
+        private PlayerStats _dropOwner;
+        private Collider2D[] _ownerColliders;
+        private bool _waitForOwnerSeparation;
+        private bool _playerDropped;
+
+        public void ConfigurePlayerDrop(PlayerStats owner)
+        {
+            if (owner == null) return;
+            _dropOwner = owner;
+            _ownerColliders = owner.GetComponentsInChildren<Collider2D>();
+            _waitForOwnerSeparation = true;
+            _playerDropped = true;
+            var controller = owner.GetComponent<TheLastKnight.Player.PlayerController>();
+            float direction = controller == null || controller.IsFacingRight ? 1f : -1f;
+            _velocity = new Vector2(direction * 4.5f, 3.5f);
+        }
+
+        private void UpdateOwnerSeparation()
+        {
+            // Do not re-arm during the throw: the owner may still be under its landing point.
+            if (!_waitForOwnerSeparation || !_isSettled) return;
+            if (_dropOwner != null)
+            {
+                var pickupBounds = GetComponent<CircleCollider2D>().bounds;
+                pickupBounds.Expand(0.2f);
+                foreach (var ownerCollider in _ownerColliders)
+                    if (ownerCollider != null && ownerCollider.enabled && ownerCollider.gameObject.activeInHierarchy &&
+                        pickupBounds.Intersects(ownerCollider.bounds)) return;
+            }
+            _waitForOwnerSeparation = false;
+        }
 
         private void Start()
         {
@@ -47,6 +78,9 @@ namespace TheLastKnight.Inventory
 
             var pickup = go.AddComponent<WorldItemPickup>();
             pickup.Initialize(item, floorLevel);
+            int rune = TheLastKnight.Environment.DemonRuneManager.ItemIndex(item.id);
+            if (rune >= 0 && TheLastKnight.Environment.DemonRuneManager.Instance != null)
+                TheLastKnight.Environment.DemonRuneManager.Instance.TrackDrop(rune, position);
             return pickup;
         }
 
@@ -96,6 +130,7 @@ namespace TheLastKnight.Inventory
                 float bob = Mathf.Sin((Time.time - _spawnTime) * 3f) * 0.12f;
                 transform.position = new Vector3(_basePosition.x, _basePosition.y + bob, _basePosition.z);
             }
+            UpdateOwnerSeparation();
         }
 
         private void OnTriggerStay2D(Collider2D other)
@@ -121,6 +156,8 @@ namespace TheLastKnight.Inventory
             }
 
             if (player == null || player.IsDead) return;
+            if (_playerDropped && !_isSettled) return;
+            if (_waitForOwnerSeparation && player == _dropOwner) return;
 
             int initialCount = _itemData.count;
             int remaining = InventoryManager.Instance != null
@@ -130,6 +167,8 @@ namespace TheLastKnight.Inventory
             int pickedUp = initialCount - remaining;
             if (pickedUp > 0)
             {
+                int rune = TheLastKnight.Environment.DemonRuneManager.ItemIndex(_itemData.id);
+                if (rune >= 0) TheLastKnight.Environment.DemonRuneManager.Instance?.PickedUp(rune);
                 AudioManager.Instance?.PlaySfx("click");
                 FloatingCombatText.Show(transform.position + Vector3.up * 0.3f, $"+{pickedUp} {_itemData.name}", new Color(1f, 0.88f, 0.4f));
 

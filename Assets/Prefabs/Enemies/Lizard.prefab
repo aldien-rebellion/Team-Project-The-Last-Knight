@@ -274,7 +274,7 @@ RectTransform:
   m_GameObject: {fileID: 6405477882538168608}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.0048, y: 0.0048, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7559579646028037979}
@@ -284,7 +284,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 2.398}
-  m_SizeDelta: {x: 100, y: 14}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4660462065601648298
 Canvas:
@@ -327,6 +327,11 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 9105380181155648557}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _followSpriteBounds: 0
+  _headOffset: 0.12
 --- !u!1 &7637840696979085048
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,6 +347,7 @@ GameObject:
   - component: {fileID: 5062369850836459734}
   - component: {fileID: 4253242033822077166}
   - component: {fileID: 1622342608833867159}
+  - component: {fileID: 9010000000000000002}
   m_Layer: 0
   m_Name: Lizard
   m_TagString: Untagged
@@ -359,8 +365,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5046260536431763258}
   - {fileID: 5189656707433789771}
@@ -548,8 +554,13 @@ MonoBehaviour:
   _chaseSpeed: 3.8
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -559,19 +570,59 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 7
-  _meleeRange: 1.5
-  _meleeCooldown: 1.5
+  _meleeRange: 0.05
+  _meleeCooldown: 0
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 0
+  _playAttackStatesDirectly: 1
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
+  _useColliderEdgeAttackRanges: 0
+  _disableBasicAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0.375
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 3
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills: []
+  _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 1
+  _waitForAttackProjectileToFinish: 0
+  _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
+--- !u!114 &9010000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7637840696979085048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 9105380181155648557}
+  _useVisibleSpriteBounds: 1

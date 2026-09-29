@@ -404,12 +404,13 @@ private static void BuildBringerOfDeathSpell()
             serializedAI.FindProperty("_patrolSpeed").floatValue = cfg.PatrolSpeed;
             serializedAI.FindProperty("_chaseSpeed").floatValue = cfg.ChaseSpeed;
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
-                        serializedAI.FindProperty("_bringToFrontWhileAttacking").boolValue = cfg.Name == "BringerOfDeath";
+            serializedAI.FindProperty("_bringToFrontWhileAttacking").boolValue = cfg.Name == "BringerOfDeath" || cfg.Name == "Demon" || cfg.Name == "ArchDemon";
             serializedAI.FindProperty("_attackSortingOrder").intValue = 1;
+            serializedAI.FindProperty("_attackSortingLayerName").stringValue = cfg.Name == "Demon" || cfg.Name == "ArchDemon" ? "Player" : string.Empty;
 serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "BringerOfDeath";
-            serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 0.05f : cfg.MeleeRange;
-            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight";
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "ArchDemon" || cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "Demon" ? 0.05f : cfg.MeleeRange;
+            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Demon";
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "ArchDemon" || cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
             serializedAI.FindProperty("_basicAttackDamageDelay").floatValue = cfg.Name == "ArchDemon" ? 7f / 12f : cfg.Name == "BringerOfDeath" ? 5f / 12f : 0f;
             serializedAI.FindProperty("_canRespawn").boolValue = cfg.Name == "ArchDemon";
             serializedAI.FindProperty("_maxRespawns").intValue = cfg.Name == "ArchDemon" ? 1 : -1;
@@ -418,13 +419,15 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             serializedAI.FindProperty("_requirePlayerAwayToRespawn").boolValue = cfg.Name != "ArchDemon";
             serializedAI.FindProperty("_respawnAtDeathPosition").boolValue = cfg.Name == "ArchDemon";
             serializedAI.FindProperty("_rangedCooldown").floatValue = cfg.Name == "FlyingEye" ? 0f : 3f;
-            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" ? 4 : cfg.Name == "ShadowDemonDragon" ? 2 : cfg.Name == "Reaper" ? 3 : 0;
+            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon" ? 4 : cfg.Name == "ShadowDemonDragon" ? 2 : cfg.Name == "Reaper" ? 3 : 0;
             serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
-            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
+            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon";
             serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ForestMushroom" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
             serializedAI.FindProperty("_allowBasicParryWithSkills").boolValue = cfg.Name == "Small_dragon";
             serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight";
             serializedAI.FindProperty("_usePassiveStanceAnimations").boolValue = cfg.Name == "Reaper";
+            serializedAI.FindProperty("_useMovementAnimationStates").boolValue = cfg.Name == "Demon";
+            serializedAI.FindProperty("_flipSpriteInsteadOfTransformScale").boolValue = cfg.Name == "Demon";
             serializedAI.FindProperty("_flipSpriteInsteadOfTransformScale").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "SkeletonKnight";
             serializedAI.FindProperty("_facingFlipDeadZone").floatValue = cfg.Name == "SkeletonKnight" ? 0.12f : cfg.Name == "ArchDemon" ? 0.1f : 0f;
             serializedAI.FindProperty("_avoidTeleportOnReturn").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "SkeletonKnight";
@@ -495,10 +498,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                     parry.ApplyModifiedPropertiesWithoutUndo();
                 }
             }
-            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath")
+            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon" || cfg.Name == "ArchDemon")
             {
                 // Match BlueSlime's world-space UI scale (root 4x, canvas 0.006).
-                float barScale = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Necromancer" ? 0.0048f : 0.006f;
+                float barScale = cfg.Name == "ArchDemon" ? 0.004f : cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Necromancer" || cfg.Name == "Demon" ? 0.0048f : 0.006f;
                 if (cfg.Name == "SkeletonKnight") barScale = 0.0032f;
                 if (cfg.Name == "BringerOfDeath")
                     barScale = 0.024f / Mathf.Max(0.01f, Mathf.Abs(root.transform.lossyScale.x));
@@ -511,22 +514,31 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                     float matchingLocalScale = 0.042f / Mathf.Abs(root.transform.lossyScale.x);
                     healthBar.transform.localScale = new Vector3(matchingLocalScale, matchingLocalScale, 1f);
                 }
-                if (cfg.Name == "SkeletonKnight")
+                if (cfg.Name == "SkeletonKnight" || cfg.Name == "ArchDemon")
                     healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(100f, 14f);
-                else if (cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath")
+                else if (cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon")
                     healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
                 var bar = new SerializedObject(root.GetComponentInChildren<FloatingHealthBar>());
-                bar.FindProperty("_followSprite").objectReferenceValue = sr;
-                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
+                bar.FindProperty("_followSprite").objectReferenceValue = cfg.Name == "ArchDemon" ? null : sr;
+                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon";
                 bar.FindProperty("_followSpriteBounds").boolValue = cfg.Name == "BringerOfDeath";
                 bar.FindProperty("_headGap").floatValue = 0.08f;
+                bar.FindProperty("_headHorizontalOffset").floatValue = cfg.Name == "Demon" ? -0.08f : 0f;
                 if (cfg.Name == "BringerOfDeath") bar.FindProperty("_headOffset").floatValue = 0.08f;
                 bar.ApplyModifiedPropertiesWithoutUndo();
+                if (cfg.Name == "ArchDemon")
+                {
+                    // Keep this boss bar at a stable height relative to the enemy root;
+                    // attack frames have sprite bounds that extend far above the head.
+                    healthBar.transform.localPosition = Vector3.zero;
+                    healthBar.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, 0.95f);
+                }
                 var receiver = root.GetComponent<ParryReceiver>();
                 if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
                 var parry = new SerializedObject(receiver);
                 parry.FindProperty("_centerSprite").objectReferenceValue = sr;
-                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
+                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon";
+                parry.FindProperty("_centerLocalOffset").vector2Value = cfg.Name == "Demon" ? new Vector2(-0.08f, 0f) : Vector2.zero;
                 parry.ApplyModifiedPropertiesWithoutUndo();
                 if (cfg.Name == "Skeleton")
                 {

@@ -45,6 +45,7 @@ namespace TheLastKnight.Inventory
         }
 
         public Action<PlayerStats> onUse;
+        public Func<PlayerStats, bool> canUse;
 
         public InventoryItemData Clone(int customCount = -1)
         {
@@ -60,7 +61,8 @@ namespace TheLastKnight.Inventory
                 maxStack = this.maxStack,
                 category = this.category,
                 isConsumable = this.isConsumable,
-                onUse = this.onUse
+                onUse = this.onUse,
+                canUse = this.canUse
             };
         }
 

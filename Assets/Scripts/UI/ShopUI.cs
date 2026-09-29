@@ -37,11 +37,11 @@ namespace TheLastKnight.UI
             bool rune = item == "RUNE", heal = item == "HEAL";
             bool stat = item == "STR" || item == "VIT" || item == "DEX" || item == "AGI";
             if (player == null || (!rune && !heal && !stat)) return false;
-            if (rune && DemonRuneManager.Instance.HasRune(3)) return false;
+            if (rune && DemonRuneManager.Instance.HasReward(3)) return false;
             if (heal && player.HealingPotions >= 5) return false;
             int cost = rune ? 150 : heal ? 50 : 100;
             if (!player.TrySpendGold(cost)) return false;
-            if (rune) DemonRuneManager.Instance.CollectRune(3);
+            if (rune) DemonRuneManager.Instance.DropRune(3, player.transform.position);
             else if (heal) player.AddPotion();
             else player.AddStatPotion(item);
             GameManager.Instance.Capture();
@@ -58,7 +58,7 @@ namespace TheLastKnight.UI
         {
             var player = GameManager.Instance.Player;
             _balance.text = $"Gold: {player.Gold}     Potions: {player.HealingPotions}/5";
-            _rune.interactable = !DemonRuneManager.Instance.HasRune(3) && player.Gold >= 150;
+            _rune.interactable = !DemonRuneManager.Instance.HasReward(3) && player.Gold >= 150;
             _potion.interactable = player.HealingPotions < 5 && player.Gold >= 50;
         }
 

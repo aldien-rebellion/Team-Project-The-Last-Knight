@@ -99,6 +99,8 @@ namespace TheLastKnight.AI
         [SerializeField] private bool _cycleNonParryableSkills;
         [SerializeField] private bool _waitForAttackAnimationToFinish;
         [SerializeField] private bool _waitForAttackProjectileToFinish;
+        [Tooltip("Cancel the current attack and play TakeHit when this enemy takes damage.")]
+        [SerializeField] private bool _interruptAttackOnDamage;
         [Tooltip("Run the configured cycle without anticipation gaps and finish actions before reacting to damage.")]
         [SerializeField] private bool _continuousActions;
         [Tooltip("Show a skill's Parry ring on every Nth use of a parryable skill.")]
@@ -122,13 +124,15 @@ namespace TheLastKnight.AI
         [Tooltip("Respawn at the position where this enemy died instead of its original spawn point.")]
         [SerializeField] private bool _respawnAtDeathPosition;
 
-                [Header("Attack Rendering")]
+        [Header("Attack Rendering")]
         [SerializeField] private bool _bringToFrontWhileAttacking;
         [SerializeField] private int _attackSortingOrder = 1;
+        [SerializeField] private string _attackSortingLayerName;
 
 // Components
-                private SpriteRenderer _spriteRenderer;
+        private SpriteRenderer _spriteRenderer;
         private int _defaultSortingOrder;
+        private string _defaultSortingLayerName;
 private Rigidbody2D _rb;
         private Animator _animator;
         private EnemyStats _stats;
@@ -160,6 +164,8 @@ private Rigidbody2D _rb;
         private float _damageUntil;
         private bool _projectileSpawned;
         private bool _wasAirborne;
+        private bool _hurtAnimationPending;
+        private float _hurtAnimationPendingUntil;
         private GameObject _activeSkillProjectile;
         public bool CanDealMeleeDamage => !_stats.IsDead && !_parry.IsStaggered && Time.time < _damageUntil;
         public float CurrentAttackDamage => _stats != null ? _stats.AttackPower * _currentAttackMultiplier : 10f;
@@ -174,7 +180,11 @@ private Rigidbody2D _rb;
         private void Awake()
         {
                         _spriteRenderer = GetComponent<SpriteRenderer>();
-            if (_spriteRenderer != null) _defaultSortingOrder = _spriteRenderer.sortingOrder;
+            if (_spriteRenderer != null)
+            {
+                _defaultSortingOrder = _spriteRenderer.sortingOrder;
+                _defaultSortingLayerName = _spriteRenderer.sortingLayerName;
+            }
 _rb = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _stats = GetComponent<EnemyStats>();
@@ -220,6 +230,7 @@ _rb = GetComponent<Rigidbody2D>();
                 }
                 if (_playAttackStatesDirectly && _availableAnimParams.Contains("ActionIndex"))
                     _animator.SetInteger("ActionIndex", -1);
+
             }
 
             if (_isFlying)
@@ -246,6 +257,23 @@ _rb = GetComponent<Rigidbody2D>();
                 _currentState == EnemyAIState.MeleeAttack || _currentState == EnemyAIState.RangedAttack)
                 return;
 
+            // Animator.Play takes effect on the next Animator evaluation. Do not
+            // reassert locomotion in the same frame that damage requested Hurt.
+            if (_hurtAnimationPending)
+            {
+                if (state.IsName("Hurt") || state.IsName("TakeHit") || state.IsName("Hit"))
+                    _hurtAnimationPending = false;
+                else if (Time.time < _hurtAnimationPendingUntil)
+                    return;
+                else
+                    _hurtAnimationPending = false;
+            }
+
+            // Keep authored one-shot actions in control. Movement-state playback
+            // is reasserted after these clips return to locomotion.
+            if (state.IsName("Attack") || state.IsName("Hurt") || state.IsName("TakeHit") || state.IsName("Death"))
+                return;
+
             if (state.IsName("Hit") && state.normalizedTime < 1f)
                 return;
 
@@ -270,7 +298,8 @@ _rb = GetComponent<Rigidbody2D>();
             if (state.IsName("Land") && state.normalizedTime < 1f)
                 return;
 
-            string movementState = _currentState == EnemyAIState.Chase ? "Run"
+            string movementState = _currentState == EnemyAIState.Chase
+                ? (_animator.HasState(0, Animator.StringToHash("Base Layer.Run")) ? "Run" : "Walk")
                 : (_currentState == EnemyAIState.Patrol || _currentState == EnemyAIState.ReturningToSpawn) ? "Walk"
                 : "Idle";
             PlayMovementState(movementState);
@@ -293,10 +322,13 @@ _rb = GetComponent<Rigidbody2D>();
         private void Start()
         {
             FindPlayer();
+        }
 
+        private void OnEnable()
+        {
+            if (_stats == null) _stats = GetComponent<EnemyStats>();
             if (_stats != null)
             {
-                _stats.OnDamaged += HandleDamaged;
                 _stats.OnDeath += HandleDeath;
             }
         }
@@ -305,13 +337,16 @@ _rb = GetComponent<Rigidbody2D>();
         {
             if (_stats != null)
             {
-                _stats.OnDamaged -= HandleDamaged;
                 _stats.OnDeath -= HandleDeath;
             }
         }
 
         private void OnDisable()
         {
+            if (_stats != null)
+            {
+                _stats.OnDeath -= HandleDeath;
+            }
             StopAttack();
         }
 
@@ -549,9 +584,6 @@ _rb = GetComponent<Rigidbody2D>();
                 PlayStanceAnimation("PassiveIdle");
                 return;
             }
-            SetAnimBool("IsMoving", true);
-            if (_usePassiveStanceAnimations) PlayStanceAnimation("PassiveRunning");
-
             float currentX = transform.position.x;
             float moveDir = _movingRight ? 1f : -1f;
             float centerOriginX = _isBoss ? _startX : _spawnPosition.x;
@@ -566,6 +598,8 @@ _rb = GetComponent<Rigidbody2D>();
                     _movingRight = !_movingRight;
                     if (_usePassiveStanceAnimations) _patrolPauseUntil = Time.time + 0.75f;
                     FaceDirection(_movingRight);
+                    SetHorizontalVelocity(0f);
+                    SetAnimBool("IsMoving", false);
                     return;
                 }
             }
@@ -577,8 +611,13 @@ _rb = GetComponent<Rigidbody2D>();
                 _movingRight = !_movingRight;
                 if (_usePassiveStanceAnimations) _patrolPauseUntil = Time.time + 0.75f;
                 FaceDirection(_movingRight);
+                SetHorizontalVelocity(0f);
+                SetAnimBool("IsMoving", false);
                 return;
             }
+
+            SetAnimBool("IsMoving", true);
+            if (_usePassiveStanceAnimations) PlayStanceAnimation("PassiveRunning");
 
             // Patrol bounds around spawn point
             if (_movingRight)
@@ -1374,7 +1413,30 @@ _rb = GetComponent<Rigidbody2D>();
             {
                 Vector2 fireDir = _isFacingRight ? Vector2.right : Vector2.left;
                 float power = _stats != null ? _stats.AttackPower * damageMultiplier : 10f * damageMultiplier;
-                projectileScript.Initialize(fireDir, power, gameObject);
+                Vector2? landingPoint = null;
+                if (_player != null)
+                {
+                    Collider2D playerBody = _player.GetComponent<Collider2D>();
+                    if (playerBody != null)
+                    {
+                        Bounds playerBounds = playerBody.bounds;
+                        float frontX = dirX > 0f ? playerBounds.min.x - 0.35f : playerBounds.max.x + 0.35f;
+                        float groundY = playerBounds.min.y;
+                        foreach (var hit in Physics2D.RaycastAll(
+                            new Vector2(frontX, playerBounds.min.y + 1f), Vector2.down, 6f))
+                        {
+                            if (hit.collider == null || hit.collider.isTrigger
+                                || hit.collider.transform.IsChildOf(_player.transform)
+                                || hit.collider.transform.IsChildOf(transform)
+                                || hit.point.y > playerBounds.min.y + 0.25f)
+                                continue;
+                            groundY = hit.point.y;
+                            break;
+                        }
+                        landingPoint = new Vector2(frontX, groundY + 0.35f);
+                    }
+                }
+                projectileScript.Initialize(fireDir, power, gameObject, landingPoint);
             }
         }
 
@@ -1448,20 +1510,33 @@ _rb = GetComponent<Rigidbody2D>();
             transform.localScale = scale;
         }
 
-        private void HandleDamaged(DamageData data)
+        public void NotifyDamaged(DamageData data)
         {
             if (_stats.IsDead) return;
 
             // A cyclic action finishes before the next action or hurt pose can start.
-            if ((_continuousActions || _waitForAttackAnimationToFinish) && _isActionLocked) return;
+            bool shouldInterruptAttack = _interruptAttackOnDamage || _useMovementAnimationStates;
+            if ((_continuousActions || _waitForAttackAnimationToFinish) && _isActionLocked
+                && !shouldInterruptAttack) return;
 
-            if (_useMovementAnimationStates && _isActionLocked)
+            // Cancel active attacks before the hurt animation, including authored
+            // movement-state enemies whose attack animation is not action-locked.
+            if (shouldInterruptAttack)
                 StopAttack();
 
             _currentState = EnemyAIState.Hurt;
+            if (_useMovementAnimationStates)
+            {
+                _hurtAnimationPending = true;
+                _hurtAnimationPendingUntil = Time.time + 0.5f;
+            }
             // Force the reaction state so damage received during an attack cannot
             // leave the Animator waiting on an interrupted trigger transition.
-            if (_useMovementAnimationStates && TryPlayAnimatorState("Hit"))
+            if (_interruptAttackOnDamage && TryPlayAnimatorState("TakeHit"))
+            {
+                if (_availableAnimParams.Contains("Hurt")) _animator.ResetTrigger("Hurt");
+            }
+            else if (_useMovementAnimationStates && TryPlayAnimatorState("Hit"))
             {
                 // The Hit clip has its own frames; no trigger transition is needed.
             }
@@ -1647,6 +1722,14 @@ _rb = GetComponent<Rigidbody2D>();
             }
 
             // 10. Re-enable visuals and floating UI
+            // FloatingHealthBar hides its own GameObject on death, so restoring
+            // child renderers and canvases alone cannot make that UI visible again.
+            var healthBars = GetComponentsInChildren<TheLastKnight.Combat.FloatingHealthBar>(true);
+            foreach (var healthBar in healthBars)
+            {
+                if (healthBar != null && !healthBar.gameObject.activeSelf)
+                    healthBar.gameObject.SetActive(true);
+            }
             SetVisibility(true);
 
             _damageUntil = 0f;
@@ -1837,6 +1920,11 @@ private Vector3 GetGroundSpellSpawnPosition(GameObject target)
             bool isSlashing = stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") ||
                 (!string.IsNullOrEmpty(_basicAttackAnimState) && stateInfo.IsName(_basicAttackAnimState));
             int targetOrder = isSlashing ? _attackSortingOrder : _defaultSortingOrder;
+            string targetLayer = isSlashing && !string.IsNullOrEmpty(_attackSortingLayerName)
+                ? _attackSortingLayerName
+                : _defaultSortingLayerName;
+            if (_spriteRenderer.sortingLayerName != targetLayer)
+                _spriteRenderer.sortingLayerName = targetLayer;
             if (_spriteRenderer.sortingOrder != targetOrder)
                 _spriteRenderer.sortingOrder = targetOrder;
         }
