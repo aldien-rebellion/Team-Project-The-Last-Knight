@@ -455,15 +455,18 @@ _rb = GetComponent<Rigidbody2D>();
             }
 
             float distToPlayer = Vector2.Distance(transform.position, _player.transform.position);
-            float colliderEdgeDistance = (_useColliderEdgeAttackRanges || _useColliderEdgeAttackDistance
-                || _cycleNonParryableSkills || _basicParryEveryNAttacks > 0)
-                ? GetAttackDistance()
-                : distToPlayer;
+            bool isTouching = IsTouchingPlayer();
+            float colliderEdgeDistance = isTouching
+                ? 0f
+                : ((_useColliderEdgeAttackRanges || _useColliderEdgeAttackDistance
+                    || _cycleNonParryableSkills || _basicParryEveryNAttacks > 0)
+                    ? GetAttackDistance()
+                    : distToPlayer);
             float attackDistance = colliderEdgeDistance;
             float meleeDistance = colliderEdgeDistance;
-            bool withinDetectionRange = _useColliderEdgeAttackRanges
+            bool withinDetectionRange = isTouching || (_useColliderEdgeAttackRanges
                 ? colliderEdgeDistance <= _detectionRange
-                : distToPlayer <= _detectionRange;
+                : distToPlayer <= _detectionRange);
 
             if (_usePassiveStanceAnimations && withinDetectionRange && !_weaponDrawn)
             {
@@ -476,20 +479,28 @@ _rb = GetComponent<Rigidbody2D>();
             if (readySkill != null)
             {
                 bool isContactSkill = readySkill.projectilePrefab == null && readySkill.groundSpellPrefab == null;
-                if ((!_requireCloseRangeForContactSkills || !isContactSkill || attackDistance <= _meleeRange)
-                    && (!_disableBasicAttack || CanReachPlayerWithSkill(readySkill)))
+                if ((!_requireCloseRangeForContactSkills || !isContactSkill || attackDistance <= _meleeRange || isTouching)
+                    && (!_disableBasicAttack || CanReachPlayerWithSkill(readySkill) || isTouching))
                 {
                     FaceTarget(_player.transform.position);
                     PerformSkill(readySkill);
                 }
                 else
                 {
-                    // Keep closing the gap until the actual attack collider can touch
-                    // the player; configured max range alone can make a skill whiff.
-                    ChasePlayer();
+                    if (isTouching)
+                    {
+                        _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
+                        SetAnimBool("IsMoving", false);
+                        SetAnimBool("IsChasing", false);
+                        if (_useMovementAnimationStates) PlayMovementState("Idle");
+                    }
+                    else
+                    {
+                        ChasePlayer();
+                    }
                 }
             }
-            else if (!_disableBasicAttack && meleeDistance <= _meleeRange && withinDetectionRange && Time.time >= _nextMeleeTime)
+            else if (!_disableBasicAttack && (meleeDistance <= _meleeRange || isTouching) && withinDetectionRange && Time.time >= _nextMeleeTime)
             {
                 FaceTarget(_player.transform.position);
                 PerformMeleeAttack();
@@ -528,6 +539,27 @@ _rb = GetComponent<Rigidbody2D>();
                     Patrol();
                 }
             }
+        }
+
+        private bool IsTouchingPlayer()
+        {
+            if (_player == null || _colliders == null) return false;
+            var targets = _player.GetComponentsInChildren<Collider2D>();
+            for (int i = 0; i < _colliders.Length; i++)
+            {
+                var body = _colliders[i];
+                if (body == null || !body.enabled || body.isTrigger) continue;
+                for (int j = 0; j < targets.Length; j++)
+                {
+                    var target = targets[j];
+                    if (target == null || !target.enabled || target.isTrigger) continue;
+                    if (body.IsTouching(target)) return true;
+                    var separation = body.Distance(target);
+                    if (separation.isValid && (separation.isOverlapped || separation.distance <= 0.02f))
+                        return true;
+                }
+            }
+            return false;
         }
 
         private float GetAttackDistance()
@@ -725,6 +757,7 @@ _rb = GetComponent<Rigidbody2D>();
             _rb.linearVelocity = Vector2.zero;
             SetAnimBool("IsMoving", false);
             SetAnimBool("IsChasing", false);
+            if (_useMovementAnimationStates) PlayMovementState("Idle");
             _nextMeleeTime = Time.time + _meleeCooldown;
             _currentAttackMultiplier = _basicAttackMultiplier;
 
@@ -746,6 +779,7 @@ _rb = GetComponent<Rigidbody2D>();
             _rb.linearVelocity = Vector2.zero;
             SetAnimBool("IsMoving", false);
             SetAnimBool("IsChasing", false);
+            if (_useMovementAnimationStates) PlayMovementState("Idle");
             _nextRangedTime = Time.time + _rangedCooldown;
             _currentAttackMultiplier = _basicAttackMultiplier;
 
@@ -792,12 +826,15 @@ _rb = GetComponent<Rigidbody2D>();
             }
             else
             {
-                // Unparried attack: short anticipation delay
-                yield return new WaitForSeconds(0.15f);
-                if (_stats.IsDead || _parry.IsStaggered)
+                // Unparried attack: short anticipation delay for normal enemies; bosses attack immediately
+                if (!_isBoss)
                 {
-                    _isActionLocked = false;
-                    yield break;
+                    yield return new WaitForSeconds(0.15f);
+                    if (_stats.IsDead || _parry.IsStaggered)
+                    {
+                        _isActionLocked = false;
+                        yield break;
+                    }
                 }
             }
 
@@ -868,6 +905,7 @@ _rb = GetComponent<Rigidbody2D>();
             _rb.linearVelocity = Vector2.zero;
             SetAnimBool("IsMoving", false);
             SetAnimBool("IsChasing", false);
+            if (_useMovementAnimationStates) PlayMovementState("Idle");
 
             skill.nextReadyTime = Time.time + skill.cooldown;
             if (_cycleNonParryableSkills && !skill.isParryable)
@@ -902,7 +940,7 @@ _rb = GetComponent<Rigidbody2D>();
                     yield break;
                 }
             }
-            else if (!_continuousActions)
+            else if (!_continuousActions && !_isBoss)
             {
                 yield return new WaitForSeconds(0.15f);
                 if (_stats.IsDead || _parry.IsStaggered)
@@ -1038,6 +1076,10 @@ _rb = GetComponent<Rigidbody2D>();
                 {
                     spellArea.Initialize(_stats.AttackPower * skill.damageMultiplier, gameObject);
                 }
+                else
+                {
+                    PlaySkillVisualEffect(spellObj);
+                }
             }
             else if (skill.projectilePrefab != null)
             {
@@ -1063,6 +1105,25 @@ _rb = GetComponent<Rigidbody2D>();
             if (_waitForAttackAnimationToFinish) yield return null;
             _currentAttackMultiplier = _basicAttackMultiplier;
             _isActionLocked = false;
+        }
+
+        private static void PlaySkillVisualEffect(GameObject effect)
+        {
+            if (effect == null) return;
+
+            var particles = effect.GetComponentsInChildren<ParticleSystem>(true);
+            float lifetime = 0f;
+            foreach (var particle in particles)
+            {
+                if (particle == null) continue;
+                var main = particle.main;
+                particle.Play(true);
+                lifetime = Mathf.Max(lifetime, main.duration + main.startLifetime.constantMax);
+            }
+
+            // Non-spell VFX prefabs are often authored with Play On Awake disabled.
+            // Start them explicitly and remove the instance after its particles finish.
+            Destroy(effect, Mathf.Max(1f, lifetime + 0.25f));
         }
 
         private void ApplySingleSkillHit(bool requireSpriteBoundsOverlap)
@@ -1562,7 +1623,15 @@ _rb = GetComponent<Rigidbody2D>();
             // Apply slight knockback
             if (data.knockbackForce != Vector2.zero)
             {
-                _rb.linearVelocity = data.knockbackForce;
+                if (_isBoss)
+                {
+                    // Bosses resist upward knockback so they stay firmly grounded
+                    _rb.linearVelocity = new Vector2(data.knockbackForce.x * 0.25f, Mathf.Min(0f, _rb.linearVelocity.y));
+                }
+                else
+                {
+                    _rb.linearVelocity = data.knockbackForce;
+                }
             }
         }
 
@@ -1917,8 +1986,20 @@ private Vector3 GetGroundSpellSpawnPosition(GameObject target)
         {
             if (!_bringToFrontWhileAttacking || _spriteRenderer == null || _animator == null) return;
             var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-            bool isSlashing = stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") ||
+            bool isSlashing = stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") || stateInfo.IsName("Attack_01") || stateInfo.IsName("Attack_02") ||
+                stateInfo.IsName("Jump") || stateInfo.IsName("Shout") ||
                 (!string.IsNullOrEmpty(_basicAttackAnimState) && stateInfo.IsName(_basicAttackAnimState));
+            if (!isSlashing && _basicAttackAnimStates != null)
+            {
+                for (int i = 0; i < _basicAttackAnimStates.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(_basicAttackAnimStates[i]) && stateInfo.IsName(_basicAttackAnimStates[i]))
+                    {
+                        isSlashing = true;
+                        break;
+                    }
+                }
+            }
             int targetOrder = isSlashing ? _attackSortingOrder : _defaultSortingOrder;
             string targetLayer = isSlashing && !string.IsNullOrEmpty(_attackSortingLayerName)
                 ? _attackSortingLayerName
