@@ -1,4 +1,6 @@
 using UnityEngine;
+using TheLastKnight.Combat;
+using TheLastKnight.AI;
 
 namespace TheLastKnight.Physics
 {
@@ -23,6 +25,7 @@ namespace TheLastKnight.Physics
         public bool IsGrounded { get; private set; }
         public bool HitWall { get; private set; }
         public bool HitCeiling { get; private set; }
+        public bool IgnoreEnemies { get; set; }
 
         private void Awake()
         {
@@ -192,6 +195,11 @@ namespace TheLastKnight.Physics
                 var hit = _hitBuffer[i];
                 if (hit.collider != null && !hit.collider.isTrigger && Vector2.Dot(hit.normal, direction) < -0.001f)
                 {
+                    if (IgnoreEnemies && IsEnemyCollider(hit.collider))
+                    {
+                        continue;
+                    }
+
                     // Touching the floor is not an obstruction when moving along
                     // it or away from it. Only keep surfaces opposing movement.
                     if (closestHit.collider == null || hit.distance < closestHit.distance) closestHit = hit;
@@ -199,6 +207,34 @@ namespace TheLastKnight.Physics
             }
 
             return closestHit;
+        }
+
+        public static bool IsEnemyCollider(Collider2D col)
+        {
+            if (col == null) return false;
+
+            int enemyLayer = LayerMask.NameToLayer("Enemy");
+            if (enemyLayer != -1 && col.gameObject.layer == enemyLayer) return true;
+            try
+            {
+                if (col.CompareTag("Enemy")) return true;
+            }
+            catch (UnityException) { }
+
+            // Check enemy components while ensuring player is never treated as enemy
+            if (col.GetComponentInParent<EnemyStats>() != null) return true;
+            if (col.GetComponentInParent<EnemyController>() != null) return true;
+            if (col.GetComponentInParent<SlimeController>() != null) return true;
+            if (col.GetComponentInParent<IDamageable>() != null)
+            {
+                if (col.GetComponentInParent<TheLastKnight.Player.PlayerController>() == null &&
+                    col.GetComponentInParent<TheLastKnight.Stats.PlayerStats>() == null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

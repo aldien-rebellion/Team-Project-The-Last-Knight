@@ -53,11 +53,17 @@ namespace TheLastKnight.Combat
         [Tooltip("Optional second single-hit time in seconds after the animation starts. Use -1 to disable.")]
         public float secondDamageHitTime = -1f;
 
+        [Tooltip("Additional hit times in seconds after the animation starts, used for multi-hit skills such as a three-swing combo.")]
+        public float[] additionalDamageHitTimes = Array.Empty<float>();
+
         [Tooltip("Require the player's collider to overlap the current sprite bounds before a single hit is applied.")]
         public bool requireSpriteBoundsOverlap = false;
 
         [Tooltip("Optional projectile prefab for ranged skills (e.g. Goblin_Bomb, FlyingEye_Projectile).")]
         public GameObject projectilePrefab;
+
+        [Tooltip("Only use this skill when there is a clear line of sight to the player.")]
+        public bool requireLineOfSight;
 
         [Tooltip("Optional ground spell prefab for area skills (e.g. BringerOfDeath_Spell, Jinn_Magic).")]
         public GameObject groundSpellPrefab;

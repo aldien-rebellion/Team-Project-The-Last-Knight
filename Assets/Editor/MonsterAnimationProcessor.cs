@@ -230,6 +230,8 @@ namespace TheLastKnight.EditorTools
 
             var controller = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
             var rootStateMachine = controller.layers[0].stateMachine;
+            bool directUndeadActions = monsterName == "UndeadExecutioner";
+            bool directForestActions = monsterName == "ForestMushroom";
 
             controller.AddParameter("IsMoving", AnimatorControllerParameterType.Bool);
             controller.AddParameter("ActionIndex", AnimatorControllerParameterType.Int);
@@ -259,20 +261,24 @@ namespace TheLastKnight.EditorTools
                     rootStateMachine.defaultState = state;
                 }
 
-                // AnyState transition via ActionIndex
-                var anyTrans = rootStateMachine.AddAnyStateTransition(state);
-                anyTrans.hasExitTime = false;
-                anyTrans.hasFixedDuration = true;
-                anyTrans.duration = 0f;
-                anyTrans.canTransitionToSelf = false;
-                anyTrans.AddCondition(AnimatorConditionMode.Equals, i, "ActionIndex");
+                // This monster plays named states directly. An always-true Idle
+                // ActionIndex transition would interrupt every attack on frame zero.
+                if (!directUndeadActions && !directForestActions)
+                {
+                    var anyTrans = rootStateMachine.AddAnyStateTransition(state);
+                    anyTrans.hasExitTime = false;
+                    anyTrans.hasFixedDuration = true;
+                    anyTrans.duration = 0f;
+                    anyTrans.canTransitionToSelf = false;
+                    anyTrans.AddCondition(AnimatorConditionMode.Equals, i, "ActionIndex");
+                }
 
                 // Attack trigger
-                if (m.Name.IndexOf("Attack", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                if (!directUndeadActions && (m.Name.IndexOf("Attack", StringComparison.OrdinalIgnoreCase) >= 0 ||
                     m.Name.IndexOf("Atk", StringComparison.OrdinalIgnoreCase) >= 0 ||
                     m.Name.IndexOf("Swing", StringComparison.OrdinalIgnoreCase) >= 0 ||
                     m.Name.IndexOf("Combo", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    m.Name.IndexOf("Skill", StringComparison.OrdinalIgnoreCase) >= 0)
+                    m.Name.IndexOf("Skill", StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     var atkTrans = rootStateMachine.AddAnyStateTransition(state);
                     atkTrans.hasExitTime = false;
@@ -289,6 +295,16 @@ namespace TheLastKnight.EditorTools
                         exitToIdle.hasFixedDuration = true;
                         exitToIdle.duration = 0f;
                     }
+                }
+
+                if (directUndeadActions && !m.IsLooping && state != defaultState &&
+                    m.Name.IndexOf("Death", StringComparison.OrdinalIgnoreCase) < 0)
+                {
+                    var exitToIdle = state.AddTransition(defaultState);
+                    exitToIdle.hasExitTime = true;
+                    exitToIdle.exitTime = 0.95f;
+                    exitToIdle.hasFixedDuration = true;
+                    exitToIdle.duration = 0f;
                 }
 
                 // Hurt trigger
@@ -327,6 +343,18 @@ namespace TheLastKnight.EditorTools
             }
 
             var walkMove = moves.FirstOrDefault(m => m.Name.IndexOf("Walk", StringComparison.OrdinalIgnoreCase) >= 0 || m.Name.IndexOf("Run", StringComparison.OrdinalIgnoreCase) >= 0);
+            if (directForestActions && defaultState != null)
+            {
+                foreach (var attackName in new[] { "Attack", "AttackWithStun" })
+                {
+                    if (!statesByName.TryGetValue(attackName, out var attackState)) continue;
+                    var exitToIdle = attackState.AddTransition(defaultState);
+                    exitToIdle.hasExitTime = true;
+                    exitToIdle.exitTime = 0.95f;
+                    exitToIdle.hasFixedDuration = true;
+                    exitToIdle.duration = 0f;
+                }
+            }
             if (defaultState != null && walkMove != null && statesByName.ContainsKey(walkMove.Name))
             {
                 var walkState = statesByName[walkMove.Name];

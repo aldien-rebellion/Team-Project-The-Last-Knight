@@ -43,6 +43,9 @@ namespace TheLastKnight.UI
         private Image _imgStmFill;
         private TextMeshProUGUI _txtStm;
 
+        // Derived Combat
+        private TextMeshProUGUI _txtDef;
+
         // Gold
         private TextMeshProUGUI _txtGold;
 
@@ -185,6 +188,38 @@ namespace TheLastKnight.UI
             {
                 Toggle();
                 return;
+            }
+
+            // Quick Testing Hotkeys (Available in Editor / Development)
+            if (keyboard.f1Key != null && keyboard.f1Key.wasPressedThisFrame)
+            {
+                var p = GetPlayer();
+                if (p != null)
+                {
+                    p.AddAGI(50);
+                    if (_isOpen) Refresh(true);
+                    Debug.Log($"<color=cyan>[Test Hotkey F1]</color> +50 AGI! Current AGI: {p.AGI}, DoubleJump: {p.CanDoubleJump}, AtkSpd: {p.AttackSpeedMultiplier:F2}x");
+                }
+            }
+            else if (keyboard.f2Key != null && keyboard.f2Key.wasPressedThisFrame)
+            {
+                var p = GetPlayer();
+                if (p != null)
+                {
+                    p.SetAGI(250);
+                    if (_isOpen) Refresh(true);
+                    Debug.Log($"<color=green>[Test Hotkey F2]</color> AGI set to 250! DoubleJump Unlocked: {p.CanDoubleJump}, AtkSpd: {p.AttackSpeedMultiplier:F2}x");
+                }
+            }
+            else if (keyboard.f3Key != null && keyboard.f3Key.wasPressedThisFrame)
+            {
+                var p = GetPlayer();
+                if (p != null)
+                {
+                    p.AddStatPoints(100);
+                    if (_isOpen) Refresh(true);
+                    Debug.Log($"<color=yellow>[Test Hotkey F3]</color> +100 SP added! Remaining SP: {p.StatPoints}");
+                }
             }
 
             // Close with Escape if open
@@ -555,6 +590,24 @@ namespace TheLastKnight.UI
             CreateStatBar(parent, "STM_Bar", ToUI(408, 281), new Vector2(230, 14),
                 new Color(0.85f, 0.55f, 0.15f), out _imgStmFill, out _txtStm, "STM: 30/100");
 
+            // DEF display (between stamina and gold)
+            var defGo = new GameObject("Txt_DEF", typeof(RectTransform));
+            defGo.transform.SetParent(parent, false);
+            var defRt = defGo.GetComponent<RectTransform>();
+            defRt.anchoredPosition = ToUI(408, 264);
+            defRt.sizeDelta = new Vector2(230, 14);
+
+            _txtDef = CreateText(defGo.transform, "Label", "DEF: 1", 11, TextAlignmentOptions.MidlineLeft,
+                new Color(0.75f, 0.75f, 0.85f), FontStyles.Normal);
+            var defTxtRt = _txtDef.rectTransform;
+            defTxtRt.anchorMin = Vector2.zero; defTxtRt.anchorMax = Vector2.one;
+            defTxtRt.offsetMin = defTxtRt.offsetMax = Vector2.zero;
+
+            AddHoverTrigger(defGo,
+                () => ShowTooltip("Defense (DEF)", "Level-Based",
+                    $"Reduces incoming damage by a flat amount.\nDEF scales with Level (baseDEF + Level × defPerLevel).\nMinimum 1 damage is always taken."),
+                () => HideTooltip());
+
             // 3. Dynamic Gold Display
             var goldGo = new GameObject("Txt_Gold", typeof(RectTransform));
             goldGo.transform.SetParent(parent, false);
@@ -750,17 +803,21 @@ namespace TheLastKnight.UI
             UnityEngine.Events.UnityAction onPlus, UnityEngine.Events.UnityAction onMax)
         {
             // Value Box (Clean text directly on wood)
-            var valGo = new GameObject($"Val_{name}", typeof(RectTransform));
+            var valGo = new GameObject($"Val_{name}", typeof(RectTransform), typeof(Image));
             valGo.transform.SetParent(parent, false);
+            var valImg = valGo.GetComponent<Image>();
+            valImg.color = new Color(1f, 1f, 1f, 0.001f);
+            valImg.raycastTarget = true;
             var valRt = valGo.GetComponent<RectTransform>();
-            valRt.anchoredPosition = ToUI(660, py);
-            valRt.sizeDelta = new Vector2(32, 20);
+            valRt.anchoredPosition = ToUI(655, py);
+            valRt.sizeDelta = new Vector2(46, 22);
 
             valueTxt = CreateText(valGo.transform, "Label", "10", 16, TextAlignmentOptions.Center,
                 Color.white, FontStyles.Bold);
             var vtRt = valueTxt.rectTransform;
             vtRt.anchorMin = Vector2.zero; vtRt.anchorMax = Vector2.one;
             vtRt.offsetMin = vtRt.offsetMax = Vector2.zero;
+            AddHoverTrigger(valGo, () => ShowStatTooltip(label), () => HideTooltip());
 
             // [+] Button
             var plusGo = new GameObject($"BtnPlus_{name}", typeof(RectTransform), typeof(Image), typeof(Button));
@@ -1064,7 +1121,7 @@ namespace TheLastKnight.UI
                 AudioManager.Instance?.PlaySfx("click");
                 GameManager.Instance?.Capture();
                 Refresh(true);
-                ShowTooltip($"{statName} Upgraded", "Attribute Increased", $"+1 to {statName}! Remaining SP: {player.StatPoints}");
+                ShowStatTooltip(statName, $"+1 to {statName}! Remaining SP: {player.StatPoints}");
             }
         }
 
@@ -1092,8 +1149,47 @@ namespace TheLastKnight.UI
                 AudioManager.Instance?.PlaySfx("click");
                 GameManager.Instance?.Capture();
                 Refresh(true);
-                ShowTooltip($"{statName} Maximized", "Attributes Allocated", $"Allocated +{count} points to {statName}! Remaining SP: {player.StatPoints}");
+                ShowStatTooltip(statName, $"Allocated +{count} points to {statName}! Remaining SP: {player.StatPoints}");
             }
+        }
+
+        private void ShowStatTooltip(string statName, string prefix = null)
+        {
+            var player = GetPlayer();
+            string desc = "";
+            switch (statName.ToUpper())
+            {
+                case "STR":
+                    float atk = player != null ? player.AttackPower : 15f;
+                    desc = $"Increases Physical Attack Power (ATK).\nCurrent ATK: {atk:F1}";
+                    break;
+                case "AGI":
+                    int agi = player != null ? player.AGI : 10;
+                    var ctrl = player != null ? player.GetComponent<Player.PlayerController>() : null;
+                    float moveSpd = ctrl != null ? ctrl.MoveSpeed : 8f;
+                    float atkSpd = player != null ? player.AttackSpeedMultiplier : 1f;
+                    bool canDoubleJump = player != null && player.CanDoubleJump;
+                    string djStatus = canDoubleJump ? "<color=green>Unlocked</color>" : $"Unlocks at 250 AGI ({agi}/250)";
+                    desc = $"Increases Attack Speed and Movement Speed.\nAttack Speed: {atkSpd:F2}x | Move Speed: {moveSpd:F1}\nDouble Jump: {djStatus}";
+                    break;
+                case "VIT":
+                    float maxHp = player != null ? player.MaxHP : 100f;
+                    float maxStm = player != null ? player.MaxStamina : 100f;
+                    desc = $"Increases Maximum HP and Maximum Stamina.\nMax HP: {Mathf.CeilToInt(maxHp)} | Max Stamina: {Mathf.CeilToInt(maxStm)}";
+                    break;
+                case "DEX":
+                    int dex = player != null ? player.DEX : 10;
+                    float crit = player != null ? player.CriticalChance : 16.8f;
+                    desc = $"Increases Critical Chance approaching 100% limit (99% at 250 DEX).\nCurrent Critical Rate: {crit:F2}%";
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(prefix))
+            {
+                desc = $"{prefix}\n\n{desc}";
+            }
+
+            ShowTooltip($"{statName.ToUpper()} Attribute", "Player Status", desc);
         }
 
 
@@ -1132,6 +1228,10 @@ namespace TheLastKnight.UI
 
             if (_imgStmFill != null) _imgStmFill.fillAmount = stmPct;
             if (_txtStm != null) _txtStm.text = $"STM: {curStm}/{maxStm}";
+
+            // DEF (level-based)
+            float def = player != null ? player.Defense : 1f;
+            if (_txtDef != null) _txtDef.text = $"DEF: {Mathf.CeilToInt(def)}";
 
             // Gold
             if (_txtGold != null) _txtGold.text = $"{gold:N0}";

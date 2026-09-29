@@ -7,7 +7,11 @@ namespace TheLastKnight.UI
 {
     public class MainMenuController : MonoBehaviour
     {
+        [Tooltip("Background sprite for the main menu. Assign 'main menu background' sprite here.")]
+        [SerializeField] private Sprite _backgroundSprite;
+
         private GameObject _panel;
+        private GameObject _backgroundCanvas;
 
         private void OnEnable()
         {
@@ -35,11 +39,64 @@ namespace TheLastKnight.UI
                 else DestroyImmediate(_panel);
                 _panel = null;
             }
+            if (_backgroundCanvas != null)
+            {
+                if (Application.isPlaying) Destroy(_backgroundCanvas);
+                else DestroyImmediate(_backgroundCanvas);
+                _backgroundCanvas = null;
+            }
         }
 
         private void Start()
         {
+            CreateBackground();
             ShowMain();
+        }
+
+        private void CreateBackground()
+        {
+            if (_backgroundCanvas != null) return;
+
+            // Try to find the sprite if not assigned via Inspector
+            Sprite bgSprite = _backgroundSprite;
+            if (bgSprite == null)
+            {
+                // Load from known asset path via Resources or direct sprite load
+                bgSprite = Resources.Load<Sprite>("main menu background");
+            }
+
+            if (bgSprite == null)
+            {
+                Debug.LogWarning("[MainMenuController] Background sprite not assigned and not found in Resources. Skipping background.");
+                return;
+            }
+
+            // Create a separate canvas below the UI panels
+            _backgroundCanvas = new GameObject("MainMenuBackground", typeof(Canvas), typeof(CanvasScaler));
+            var canvas = _backgroundCanvas.GetComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 0; // Below UI panels (sortingOrder 200)
+
+            var scaler = _backgroundCanvas.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1280, 720);
+            scaler.matchWidthOrHeight = 0.5f;
+
+            // Create the background image
+            var bgGo = new GameObject("BackgroundImage", typeof(RectTransform), typeof(Image));
+            bgGo.transform.SetParent(_backgroundCanvas.transform, false);
+            var rt = bgGo.GetComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+
+            var img = bgGo.GetComponent<Image>();
+            img.sprite = bgSprite;
+            img.type = Image.Type.Simple;
+            img.preserveAspect = false;
+            img.color = Color.white;
+            img.raycastTarget = false;
         }
 
         private Transform Replace(string title)
@@ -51,6 +108,21 @@ namespace TheLastKnight.UI
                 _panel = null;
             }
             _panel = RuntimeUI.Panel(title, out var content);
+
+            // Make the backdrop semi-transparent so the background image shows through
+            if (_backgroundCanvas != null)
+            {
+                var backdrop = _panel.transform.Find("Backdrop");
+                if (backdrop != null)
+                {
+                    var backdropImg = backdrop.GetComponent<Image>();
+                    if (backdropImg != null)
+                    {
+                        backdropImg.color = new Color(0.02f, 0.03f, 0.06f, 0.55f);
+                    }
+                }
+            }
+
             return content;
         }
 

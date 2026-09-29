@@ -19,6 +19,12 @@ namespace TheLastKnight.Combat
         public bool IsStaggered => Time.time < _staggerUntil;
         public bool IsWindingUp => _windingUp;
         public float Progress => Mathf.Clamp01((Time.time - _start) / WindupDuration);
+
+        public void SetSpriteCenter(SpriteRenderer sprite, bool useVisibleBounds)
+        {
+            _centerSprite = sprite;
+            _useVisibleSpriteBounds = useVisibleBounds;
+        }
         public static bool InPerfectWindow(float elapsed) => elapsed >= WindupDuration - PerfectWindow - TimingTolerance
             && elapsed <= WindupDuration + TimingTolerance;
 

@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using TheLastKnight.Stats;
 using TheLastKnight.Input;
 using TheLastKnight.Player;
@@ -49,6 +52,8 @@ namespace TheLastKnight.Core
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (_deathPanel != null) Destroy(_deathPanel);
+            _deathPanel = null;
             Player = null;
             _restoring = true;
             ArenaLocked = false;
@@ -93,6 +98,23 @@ namespace TheLastKnight.Core
         private void LateUpdate()
         {
             if (!_restoring && Player != null) Capture();
+            if (_deathShown) EnsureDeathPanelInput();
+        }
+
+        private void EnsureDeathPanelInput()
+        {
+            var actions = InputSystem.actions;
+            var uiMap = actions != null ? actions.FindActionMap("UI") : null;
+            if (uiMap != null && !uiMap.enabled) uiMap.Enable();
+
+            var eventSystem = EventSystem.current;
+            if (eventSystem == null || !eventSystem.isActiveAndEnabled) return;
+            var module = eventSystem.GetComponent<InputSystemUIInputModule>();
+            if (module == null) module = eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();
+            module.enabled = true;
+            if (actions != null) module.actionsAsset = actions;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
 
         public void Capture()
@@ -209,11 +231,25 @@ namespace TheLastKnight.Core
             RuntimeUI.Label(content, "Arthur's journey is not over.", 22);
             RuntimeUI.Button(content, "Respawn", () =>
             {
+                CloseDeathPanel();
                 if (_checkpoint != null) RestoreCheckpoint(_checkpoint);
                 else if (SaveSystem.TryLoad(out var saved)) RestoreCheckpoint(saved);
                 else NewGame(GameDifficultyManager.Current, State?.saveName);
             });
-            RuntimeUI.Button(content, "Exit to Main Menu", () => Load("MainMenu", false));
+            RuntimeUI.Button(content, "Exit to Main Menu", () =>
+            {
+                CloseDeathPanel();
+                Load("MainMenu", false);
+            });
+            EnsureDeathPanelInput();
+        }
+
+        private void CloseDeathPanel()
+        {
+            if (_deathPanel != null) Destroy(_deathPanel);
+            _deathPanel = null;
+            _deathShown = false;
+            SetInputBlocked(false);
         }
     }
 }

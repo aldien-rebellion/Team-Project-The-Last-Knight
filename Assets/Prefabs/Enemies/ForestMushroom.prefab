@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 3461703854693351262}
   - component: {fileID: 6406445017849334945}
   - component: {fileID: 7681025776881044541}
+  - component: {fileID: 9010000000000000004}
+  - component: {fileID: 9010000000000000003}
   m_Layer: 0
   m_Name: ForestMushroom
   m_TagString: Untagged
@@ -32,8 +34,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8065592200709781627}
   - {fileID: 9216962146179378422}
@@ -205,6 +207,18 @@ MonoBehaviour:
   _goldReward: 8
   _expReward: 15
   _currentStatus: 0
+--- !u!114 &9010000000000000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074529124440158488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b8a92058bf646dcb847c18e26c9b03d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.ForestMushroomRunSync
 --- !u!114 &7681025776881044541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,8 +235,10 @@ MonoBehaviour:
   _chaseSpeed: 3.5
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
-  _initialFacingRight: 1
+  _initialFacingRight: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -232,8 +248,13 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 6
-  _meleeRange: 1.3
-  _meleeCooldown: 1.5
+  _meleeRange: 0.05
+  _meleeCooldown: 0
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 1
+  _playAttackStatesDirectly: 1
+  _useColliderEdgeAttackRanges: 0
+  _disableBasicAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -242,22 +263,48 @@ MonoBehaviour:
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack
   _basicAttackMultiplier: 1
-  _basicAttackCanParry: 1
+  _basicAttackCanParry: 0
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 0
   _skills:
   - skillName: AttackWithStun
     animationName: AttackWithStun
     actionIndex: 1
     damageMultiplier: 1.5
-    cooldown: 6
+    cooldown: 5
     minRange: 0
     maxRange: 1.6
     isParryable: 1
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
     groundSpellPrefab: {fileID: 0}
+  _cycleNonParryableSkills: 0
+  _continuousActions: 0
   _deathDestroyDelay: 1.5
   _canRespawn: 0
   _respawnTime: 30
+--- !u!114 &9010000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074529124440158488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 2477640869991753115}
+  _useVisibleSpriteBounds: 1
 --- !u!1 &1725371688503105587
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,7 +332,7 @@ RectTransform:
   m_GameObject: {fileID: 1725371688503105587}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.0048, y: 0.0048, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1703599889452316641}
@@ -295,7 +342,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0.95000005}
-  m_SizeDelta: {x: 100, y: 14}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1377217328962823757
 Canvas:
@@ -338,6 +385,11 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 2477640869991753115}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _followSpriteBounds: 0
+  _headOffset: 0.12
 --- !u!1 &4835802712343001208
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,7 +542,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.44000003, y: 0.63}
+  m_Size: {x: 0.6, y: 0.65}
   m_EdgeRadius: 0
 --- !u!114 &384450811716457081
 MonoBehaviour:

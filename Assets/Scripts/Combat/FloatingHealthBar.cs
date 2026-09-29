@@ -22,15 +22,21 @@ namespace TheLastKnight.Combat
         [SerializeField] private float _headOffset = 0.12f;
 
         private Vector3 _originalScale;
+        private float _fillLeftInset;
+        private float _fillRightInset;
         private Text _levelText;
         private Text _healthPercentText;
         private SpriteRenderer _targetSpriteRenderer;
 
         private void Awake()
         {
-            if (_targetStats == null)
+            // The health bar always belongs to the enemy that owns this canvas.
+            // Resolve it from the hierarchy so prefab-local references cannot point
+            // at a stale component after a prefab is copied or rebuilt.
+            var parentStats = GetComponentInParent<EnemyStats>();
+            if (parentStats != null)
             {
-                _targetStats = GetComponentInParent<EnemyStats>();
+                _targetStats = parentStats;
             }
 
             if (_canvas == null)
@@ -51,6 +57,8 @@ namespace TheLastKnight.Combat
                 }
             }
 
+            CaptureFillInsets();
+
             if (_followSpriteBounds)
             {
                 _targetSpriteRenderer = GetComponentInParent<SpriteRenderer>();
@@ -63,33 +71,50 @@ namespace TheLastKnight.Combat
                 label.transform.SetParent(_canvas.transform, false);
                 _levelText = label.GetComponent<Text>();
                 _levelText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                _levelText.fontSize = 18;
+                // Keep the level label readable on small enemy bars without
+                // allowing it to overflow when the label has more digits.
+                _levelText.fontSize = 14;
+                _levelText.resizeTextForBestFit = true;
+                _levelText.resizeTextMinSize = 8;
+                _levelText.resizeTextMaxSize = 14;
+                _levelText.horizontalOverflow = HorizontalWrapMode.Overflow;
+                _levelText.verticalOverflow = VerticalWrapMode.Overflow;
                 _levelText.alignment = TextAnchor.MiddleCenter;
                 _levelText.raycastTarget = false;
                 var rect = _levelText.rectTransform;
                 rect.anchorMin = new Vector2(0, 1);
                 rect.anchorMax = new Vector2(1, 1);
-                rect.sizeDelta = new Vector2(0, 24);
-                rect.anchoredPosition = new Vector2(0, 14);
+                rect.offsetMin = new Vector2(2, 0);
+                rect.offsetMax = new Vector2(-2, 20);
+                rect.anchoredPosition = new Vector2(0, 8);
 
                 var percentObj = new GameObject("Health Percent", typeof(RectTransform), typeof(Text));
                 percentObj.transform.SetParent(_canvas.transform, false);
                 _healthPercentText = percentObj.GetComponent<Text>();
                 _healthPercentText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                _healthPercentText.fontSize = 12;
+                // The percentage is rendered inside the bar. Best-fit plus a
+                // small inset keeps values such as 100% inside narrow bars.
+                _healthPercentText.fontSize = 10;
+                _healthPercentText.resizeTextForBestFit = true;
+                _healthPercentText.resizeTextMinSize = 6;
+                _healthPercentText.resizeTextMaxSize = 10;
+                _healthPercentText.horizontalOverflow = HorizontalWrapMode.Overflow;
+                _healthPercentText.verticalOverflow = VerticalWrapMode.Overflow;
                 _healthPercentText.alignment = TextAnchor.MiddleCenter;
                 _healthPercentText.color = Color.white;
                 _healthPercentText.raycastTarget = false;
                 var rectP = _healthPercentText.rectTransform;
                 rectP.anchorMin = Vector2.zero;
                 rectP.anchorMax = Vector2.one;
-                rectP.sizeDelta = Vector2.zero;
+                rectP.offsetMin = new Vector2(2, 0);
+                rectP.offsetMax = new Vector2(-2, 0);
                 rectP.anchoredPosition = Vector2.zero;
             }
         }
 
         private void OnEnable()
         {
+            ResolveTargetStats();
             if (_targetStats != null)
             {
                 _targetStats.OnHealthChanged += HandleHealthChanged;
@@ -109,6 +134,20 @@ namespace TheLastKnight.Combat
 
         private void LateUpdate()
         {
+            // A prefab can be enabled before its parent EnemyStats has finished
+            // initializing. Keep resolving until the valid owner is available.
+            if (_targetStats == null)
+            {
+                ResolveTargetStats();
+                if (_targetStats != null)
+                {
+                    _targetStats.OnHealthChanged -= HandleHealthChanged;
+                    _targetStats.OnHealthChanged += HandleHealthChanged;
+                    _targetStats.OnDeath -= HandleDeath;
+                    _targetStats.OnDeath += HandleDeath;
+                }
+            }
+
             // Keep the visual in sync even if damage was applied before this
             // component subscribed to the health event (or a prefab reference was missing).
             if (_targetStats != null)
@@ -164,10 +203,15 @@ namespace TheLastKnight.Combat
                 }
                 else
                 {
-                    Bounds spriteBounds = _targetSpriteRenderer.bounds;
+                    Bounds spriteBounds = _useVisibleSpriteBounds
+                        ? SpriteVisualBounds.GetWorldBounds(_targetSpriteRenderer)
+                        : _targetSpriteRenderer.bounds;
+                    float barHalfHeight = 0f;
+                    if (_useVisibleSpriteBounds && transform is RectTransform visibleBoundsRect)
+                        barHalfHeight = visibleBoundsRect.rect.height * Mathf.Abs(transform.lossyScale.y) * 0.5f;
                     Vector3 position = transform.position;
                     position.x = spriteBounds.center.x;
-                    position.y = spriteBounds.max.y + _headOffset;
+                    position.y = spriteBounds.max.y + _headOffset + barHalfHeight;
                     transform.position = position;
                     return;
                 }
@@ -177,6 +221,15 @@ namespace TheLastKnight.Combat
                 Vector3 headPosition = _targetSpriteRenderer.transform.TransformPoint(localHeadPoint);
                 headPosition += Vector3.up * _headOffset;
                 transform.position = new Vector3(headPosition.x, headPosition.y, transform.position.z);
+            }
+        }
+
+        private void ResolveTargetStats()
+        {
+            var parentStats = GetComponentInParent<EnemyStats>();
+            if (parentStats != null)
+            {
+                _targetStats = parentStats;
             }
         }
 
@@ -193,6 +246,7 @@ namespace TheLastKnight.Combat
         {
             _targetStats = stats;
             _healthBarFill = fillImage;
+            CaptureFillInsets();
 
             if (_targetStats != null)
             {
@@ -202,26 +256,34 @@ namespace TheLastKnight.Combat
             }
         }
 
+        private void CaptureFillInsets()
+        {
+            if (_healthBarFill == null) return;
+            var fillRect = _healthBarFill.rectTransform;
+            _fillLeftInset = fillRect.offsetMin.x;
+            _fillRightInset = -fillRect.offsetMax.x;
+        }
+
         private void HandleHealthChanged(float current, float max)
         {
-            if (max > 0f)
+            if (max <= 0f) return;
+
+            float pct = Mathf.Clamp01(current / max);
+            if (_healthBarFill != null)
             {
-                float pct = Mathf.Clamp01(current / max);
-                if (_healthBarFill != null)
-                {
-                    _healthBarFill.fillAmount = pct;
-                    var fillRt = _healthBarFill.rectTransform;
-                    if (fillRt != null)
-                    {
-                        Vector2 maxAnchor = fillRt.anchorMax;
-                        maxAnchor.x = pct;
-                        fillRt.anchorMax = maxAnchor;
-                    }
-                }
-                if (_healthPercentText != null)
-                {
-                    _healthPercentText.text = Mathf.RoundToInt(pct * 100f) + "%";
-                }
+                // These prefab Images have no sprite, so Filled ignores fillAmount.
+                // Resize the RectTransform instead, keeping the authored insets.
+                _healthBarFill.type = Image.Type.Simple;
+                var fillRect = _healthBarFill.rectTransform;
+                fillRect.anchorMax = new Vector2(pct, fillRect.anchorMax.y);
+                var offsetMax = fillRect.offsetMax;
+                offsetMax.x = _fillLeftInset * (1f - pct) - _fillRightInset * pct;
+                fillRect.offsetMax = offsetMax;
+            }
+
+            if (_healthPercentText != null)
+            {
+                _healthPercentText.text = Mathf.RoundToInt(pct * 100f) + "%";
             }
         }
 

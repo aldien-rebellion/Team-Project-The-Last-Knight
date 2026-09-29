@@ -1,6 +1,8 @@
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine.UI;
 using TheLastKnight.Combat;
 using TheLastKnight.Combat.Projectiles;
@@ -72,15 +74,37 @@ namespace TheLastKnight.EditorTools
             BuildBringerOfDeathSpell();
         }
 
+        [MenuItem("Tools/Rebuild FlyingEye Projectile Prefab")]
+        public static void RebuildFlyingEyeProjectilePrefab()
+        {
+            BuildDirectProjectile("FlyingEye_Projectile", 9f, 10f, 0.25f, true);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
         private static void BuildDirectProjectile(string name, float speed, float damage, float colliderRadius, bool isCircle)
         {
             string prefabPath = $"{ProjectilesOutputDir}/{name}.prefab";
             string controllerPath = $"{AnimationsProjectilesDir}/{name}/{name}Controller.controller";
             var controller = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(controllerPath);
+            AnimationClip fallbackClip = null;
+            if (name == "FlyingEye_Projectile" && controller == null)
+            {
+                string clipPath = $"{AnimationsProjectilesDir}/{name}/{name}_Projectile.anim";
+                fallbackClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(clipPath);
+                if (fallbackClip != null)
+                {
+                    var generatedController = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
+                    controller = generatedController;
+                    var state = generatedController.layers[0].stateMachine.AddState("Projectile");
+                    state.motion = fallbackClip;
+                    generatedController.layers[0].stateMachine.defaultState = state;
+                }
+            }
 
             GameObject go = new GameObject(name);
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 5;
+            sr.sortingOrder = name == "FlyingEye_Projectile" ? 9 : 5;
 
             var anim = go.AddComponent<Animator>();
             if (controller != null)
@@ -101,6 +125,10 @@ namespace TheLastKnight.EditorTools
                     }
                 }
                 sr.sprite = swordSprite;
+            }
+            else if (name == "FlyingEye_Projectile")
+            {
+                AssignFirstSpriteFromClip(sr, fallbackClip);
             }
 
             var rb = go.AddComponent<Rigidbody2D>();
@@ -164,8 +192,7 @@ namespace TheLastKnight.EditorTools
             Object.DestroyImmediate(go);
             Debug.Log($"[EnemyPrefabBuilder] Created ground spell prefab: {name}");
         }
-
-        private static void BuildBringerOfDeathSpell()
+private static void BuildBringerOfDeathSpell()
         {
             string name = "BringerOfDeath_Spell";
             string prefabPath = $"{ProjectilesOutputDir}/{name}.prefab";
@@ -186,8 +213,11 @@ namespace TheLastKnight.EditorTools
             }
 
             GameObject go = new GameObject(name);
+            go.transform.localScale = new Vector3(8.75f, 8.75f, 1f);
+            go.layer = LayerMask.NameToLayer("Player");
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 5;
+            sr.sortingLayerName = "Player";
+            sr.sortingOrder = 0;
 
             var anim = go.AddComponent<Animator>();
             if (controller != null)
@@ -198,15 +228,18 @@ namespace TheLastKnight.EditorTools
 
             var col = go.AddComponent<BoxCollider2D>();
             col.isTrigger = true;
-            col.size = new Vector2(1.8f, 3.2f);
-            col.offset = new Vector2(0f, 1.6f);
+            col.size = new Vector2(0.36f, 0.64f);
+            col.offset = new Vector2(0f, 0.32f);
 
             var spell = go.AddComponent<GroundSpellArea>();
             var serializedSpell = new SerializedObject(spell);
             serializedSpell.FindProperty("_damage").floatValue = 30f;
-            serializedSpell.FindProperty("_delayBeforeDamage").floatValue = 0.45f;
+            serializedSpell.FindProperty("_delayBeforeDamage").floatValue = 0.2f;
             serializedSpell.FindProperty("_damageDuration").floatValue = 0.5f;
             serializedSpell.FindProperty("_totalLifetime").floatValue = 1.4f;
+            serializedSpell.FindProperty("_alignSpriteBottomToSpawn").boolValue = true;
+            serializedSpell.FindProperty("_secondDamageDelay").floatValue = 1.05f;
+            serializedSpell.FindProperty("_secondDamageDuration").floatValue = 0.18f;
             serializedSpell.ApplyModifiedProperties();
 
             PrefabUtility.SaveAsPrefabAsset(go, prefabPath);
@@ -257,9 +290,9 @@ namespace TheLastKnight.EditorTools
             MonsterConfig[] configs = new MonsterConfig[]
             {
                 // Bosses & Elites
-                new MonsterConfig("ArchDemon", 500f, 35f, 5f, 1.8f, 3.8f, 8f, 2.2f),
+                new MonsterConfig("ArchDemon", 500f, 35f, 5f, 1.8f, 3.8f, 8f, 2.2f, scale: 5f),
                 new MonsterConfig("BlueSlime", 35f, 10f, 0f, 1.8f, 3.2f, 6f, 0.05f, scale: 4f),
-                new MonsterConfig("BringerOfDeath", 600f, 40f, 8f, 1.6f, 3.5f, 9f, 2.5f, false, true, null, "BringerOfDeath_Spell"),
+                new MonsterConfig("BringerOfDeath", 600f, 40f, 8f, 1.6f, 3.5f, 9f, 0.05f, false, false, null, "BringerOfDeath_Spell"),
                 new MonsterConfig("Demon", 70f, 15f, 2f, 2.0f, 4.0f, 7f, 1.6f),
                 new MonsterConfig("DemonBoss", 800f, 50f, 10f, 1.5f, 3.6f, 10f, 3.2f),
                 new MonsterConfig("DemonKin", 60f, 12f, 1f, 2.2f, 4.2f, 7f, 1.5f),
@@ -267,8 +300,9 @@ namespace TheLastKnight.EditorTools
                 new MonsterConfig("Fairy", 25f, 8f, 0f, 2.5f, 4.5f, 7f, 1.0f, true),
                 new MonsterConfig("FantasyMushroom", 55f, 12f, 1f, 1.8f, 3.5f, 7f, 1.3f, false, true, "FantasyMushroom_Projectile"),
                 new MonsterConfig("FireWorm", 50f, 14f, 1f, 1.6f, 3.2f, 7f, 1.4f, false, true, "FireWorm_FireBall"),
-                new MonsterConfig("FlyingEye", 35f, 10f, 0f, 2.2f, 4.2f, 7f, 1.2f, true, true, "FlyingEye_Projectile"),
-                new MonsterConfig("ForestMushroom", 50f, 12f, 1f, 1.8f, 3.5f, 6f, 1.3f),
+                // FlyingEye closes in for its basic Attack; the projectile is reserved for EyeBeam.
+                new MonsterConfig("FlyingEye", 35f, 10f, 0f, 2.2f, 4.2f, 7f, 1.2f, true, false),
+                new MonsterConfig("ForestMushroom", 50f, 12f, 1f, 1.8f, 3.5f, 6f, 0.05f),
                 new MonsterConfig("Fox", 40f, 12f, 0f, 3.0f, 5.5f, 7f, 1.2f),
                 new MonsterConfig("Goblin", 45f, 12f, 0f, 2.2f, 4.2f, 7f, 1.3f, false, true, "Goblin_Bomb"),
                 new MonsterConfig("Jinn", 300f, 30f, 4f, 2.0f, 4.0f, 8f, 2.0f, false, true, null, "Jinn_Magic"),
@@ -278,16 +312,16 @@ namespace TheLastKnight.EditorTools
                 new MonsterConfig("Minotaur_2", 140f, 25f, 4f, 1.9f, 4.0f, 7f, 1.8f),
                 new MonsterConfig("Minotaur_3", 160f, 28f, 5f, 1.8f, 3.8f, 7f, 1.8f),
                 new MonsterConfig("MoonstoneKeeper", 350f, 32f, 6f, 2.2f, 4.5f, 8f, 2.2f),
-                new MonsterConfig("Necromancer", 200f, 25f, 3f, 1.8f, 3.8f, 8f, 1.8f),
-                new MonsterConfig("Reaper", 280f, 30f, 5f, 2.2f, 4.5f, 8f, 2.2f),
+                new MonsterConfig("Necromancer", 45f, 12f, 1f, 1.8f, 3.8f, 8f, 0.05f),
+                new MonsterConfig("Reaper", 280f, 30f, 5f, 2.2f, 4.5f, 8f, 0.05f, scale: 7f),
                 new MonsterConfig("Satyr", 110f, 20f, 3f, 2.2f, 4.2f, 7f, 1.6f),
-                new MonsterConfig("ShadowDemonDragon", 900f, 55f, 12f, 1.8f, 3.8f, 10f, 3.5f),
+                new MonsterConfig("ShadowDemonDragon", 900f, 55f, 12f, 1.8f, 3.8f, 10f, 0.05f),
                 new MonsterConfig("Skeleton", 45f, 12f, 1f, 1.8f, 3.5f, 7f, 0.05f, scale: 5f),
                 new MonsterConfig("SkeletonKnight", 220f, 28f, 5f, 2.0f, 4.2f, 7f, 1.8f),
                 new MonsterConfig("Skullwolf", 65f, 18f, 1f, 3.2f, 5.8f, 8f, 1.4f),
-                new MonsterConfig("Small_dragon", 80f, 16f, 2f, 2.2f, 4.2f, 7f, 1.5f, false, true, "SmallDragon_FireBall"),
+                new MonsterConfig("Small_dragon", 80f, 16f, 2f, 2.2f, 4.2f, 7f, 0.05f, false, false, "SmallDragon_FireBall", scale: 5f),
                 new MonsterConfig("Trader_1", 100f, 0f, 0f, 0f, 0f, 0f, 0f), // NPC
-                new MonsterConfig("UndeadExecutioner", 550f, 40f, 7f, 1.6f, 3.6f, 8f, 2.4f)
+                new MonsterConfig("UndeadExecutioner", 550f, 40f, 7f, 1.6f, 3.6f, 8f, 0.05f, scale: 5f)
             };
 
             foreach (var cfg in configs)
@@ -307,7 +341,12 @@ namespace TheLastKnight.EditorTools
 
             // SpriteRenderer
             var sr = root.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 2;
+            sr.sortingOrder = cfg.Name == "FlyingEye" ? 8 : cfg.Name == "BringerOfDeath" ? 0 : 2;
+            if (cfg.Name == "BringerOfDeath")
+            {
+                root.layer = LayerMask.NameToLayer("Player");
+                sr.sortingLayerName = "Player";
+            }
             if (controller != null)
             {
                 AssignFirstSpriteFromController(sr, controller);
@@ -320,16 +359,24 @@ namespace TheLastKnight.EditorTools
                 anim.runtimeAnimatorController = controller;
             }
 
+            if (cfg.Name == "Small_dragon")
+            {
+                SetupSmallDragonFireAttack(root);
+            }
+
             // Rigidbody2D
             var rb = root.AddComponent<Rigidbody2D>();
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            if (cfg.Name == "SkeletonKnight") rb.interpolation = RigidbodyInterpolation2D.Interpolate;
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             rb.gravityScale = cfg.IsFlying ? 0f : 2.5f;
 
             // Collider2D (CapsuleCollider2D)
             var col = root.AddComponent<CapsuleCollider2D>();
             Bounds bounds = sr.bounds;
+            if (cfg.Name == "ArchDemon" && !Mathf.Approximately(cfg.Scale, 0f))
+                bounds.size /= Mathf.Abs(cfg.Scale);
             float colHeight = Mathf.Max(0.6f, bounds.size.y * 0.8f);
             float colWidth = Mathf.Max(0.4f, bounds.size.x * 0.45f);
             col.size = new Vector2(colWidth, colHeight);
@@ -357,38 +404,129 @@ namespace TheLastKnight.EditorTools
             serializedAI.FindProperty("_patrolSpeed").floatValue = cfg.PatrolSpeed;
             serializedAI.FindProperty("_chaseSpeed").floatValue = cfg.ChaseSpeed;
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
-            serializedAI.FindProperty("_meleeRange").floatValue = cfg.MeleeRange;
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" ? 0f : 1.5f;
+                        serializedAI.FindProperty("_bringToFrontWhileAttacking").boolValue = cfg.Name == "BringerOfDeath";
+            serializedAI.FindProperty("_attackSortingOrder").intValue = 1;
+serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "BringerOfDeath";
+            serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" ? 0.05f : cfg.MeleeRange;
+            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight";
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "ArchDemon" || cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_basicAttackDamageDelay").floatValue = cfg.Name == "ArchDemon" ? 7f / 12f : cfg.Name == "BringerOfDeath" ? 5f / 12f : 0f;
+            serializedAI.FindProperty("_canRespawn").boolValue = cfg.Name == "ArchDemon";
+            serializedAI.FindProperty("_maxRespawns").intValue = cfg.Name == "ArchDemon" ? 1 : -1;
+            serializedAI.FindProperty("_respawnsUsed").intValue = 0;
+            serializedAI.FindProperty("_respawnTime").floatValue = cfg.Name == "ArchDemon" ? 0.5f : 30f;
+            serializedAI.FindProperty("_requirePlayerAwayToRespawn").boolValue = cfg.Name != "ArchDemon";
+            serializedAI.FindProperty("_respawnAtDeathPosition").boolValue = cfg.Name == "ArchDemon";
+            serializedAI.FindProperty("_rangedCooldown").floatValue = cfg.Name == "FlyingEye" ? 0f : 3f;
+            serializedAI.FindProperty("_basicParryEveryNAttacks").intValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" ? 4 : cfg.Name == "ShadowDemonDragon" ? 2 : cfg.Name == "Reaper" ? 3 : 0;
+            serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
+            serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
+            serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ForestMushroom" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
+            serializedAI.FindProperty("_allowBasicParryWithSkills").boolValue = cfg.Name == "Small_dragon";
+            serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight";
+            serializedAI.FindProperty("_usePassiveStanceAnimations").boolValue = cfg.Name == "Reaper";
+            serializedAI.FindProperty("_flipSpriteInsteadOfTransformScale").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "SkeletonKnight";
+            serializedAI.FindProperty("_facingFlipDeadZone").floatValue = cfg.Name == "SkeletonKnight" ? 0.12f : cfg.Name == "ArchDemon" ? 0.1f : 0f;
+            serializedAI.FindProperty("_avoidTeleportOnReturn").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "SkeletonKnight";
+            if (cfg.Name == "UndeadExecutioner")
+                serializedAI.FindProperty("_deathDestroyDelay").floatValue = 2.2f;
+            else if (cfg.Name == "ArchDemon")
+                serializedAI.FindProperty("_deathDestroyDelay").floatValue = 0.8f;
             serializedAI.FindProperty("_cycleNonParryableSkills").boolValue = cfg.Name == "BlueSlime" || cfg.Name == "Skeleton";
             serializedAI.FindProperty("_continuousActions").boolValue = cfg.Name == "Skeleton";
+            if (cfg.Name == "SkeletonKnight")
+            {
+                var attackSequence = serializedAI.FindProperty("_basicAttackAnimStates");
+                attackSequence.arraySize = 3;
+                attackSequence.GetArrayElementAtIndex(0).stringValue = "SideSwing";
+                attackSequence.GetArrayElementAtIndex(1).stringValue = "FwdSwing";
+                attackSequence.GetArrayElementAtIndex(2).stringValue = "DownSwing";
+                var damageDelays = serializedAI.FindProperty("_basicAttackDamageStartDelays");
+                damageDelays.arraySize = 3;
+                damageDelays.GetArrayElementAtIndex(0).floatValue = 0.25f;
+                damageDelays.GetArrayElementAtIndex(1).floatValue = 0.125f;
+                damageDelays.GetArrayElementAtIndex(2).floatValue = 0.375f;
+            }
             if (cfg.Name == "Skeleton")
                 serializedAI.FindProperty("_projectileSpawnOffset").vector2Value = new Vector2(0.6f, 1.4f);
             serializedAI.FindProperty("_isFlying").boolValue = cfg.IsFlying;
+            serializedAI.FindProperty("_flyingChaseHeightOffset").floatValue = cfg.Name == "FlyingEye" ? -0.7f : 0f;
+            serializedAI.FindProperty("_flyingIdleHeightOffset").floatValue = cfg.Name == "FlyingEye" ? -0.7f : 0f;
             serializedAI.FindProperty("_hasRangedAttack").boolValue = cfg.HasRanged;
             if (projPrefab != null) serializedAI.FindProperty("_projectilePrefab").objectReferenceValue = projPrefab;
             if (spellPrefab != null) serializedAI.FindProperty("_groundSpellPrefab").objectReferenceValue = spellPrefab;
             serializedAI.ApplyModifiedProperties();
             ConfigureMonsterSkillsAndParry(ai, cfg.Name);
+            if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
+            if (cfg.Name == "UndeadExecutioner")
+            {
+                var effect = root.AddComponent<UndeadExecutionerSummonEffect>();
+                var effectData = new SerializedObject(effect);
+                string spriteDir = "Assets/sprites/Monsters/Undead executioner/Undead executioner puppet/png";
+                AssignSummonFrames(effectData.FindProperty("_appearFrames"), $"{spriteDir}/summonAppear.png");
+                AssignSummonFrames(effectData.FindProperty("_idleFrames"), $"{spriteDir}/summonIdle.png");
+                AssignSummonFrames(effectData.FindProperty("_deathFrames"), $"{spriteDir}/summonDeath.png");
+                effectData.ApplyModifiedPropertiesWithoutUndo();
+            }
 
             // Setup Floating Health Bar Canvas
             CreateHealthBarCanvas(root, stats, colHeight);
-            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton")
+            if (cfg.Name == "FlyingEye")
+            {
+                var healthBar = root.GetComponentInChildren<FloatingHealthBar>();
+                if (healthBar != null)
+                {
+                    float parentScale = Mathf.Max(0.01f, Mathf.Abs(root.transform.lossyScale.x));
+                    float matchingLocalScale = 0.024f / parentScale;
+                    healthBar.transform.localScale = new Vector3(matchingLocalScale, matchingLocalScale, 1f);
+                    healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
+                    var serializedHealthBar = new SerializedObject(healthBar);
+                    serializedHealthBar.FindProperty("_followSprite").objectReferenceValue = sr;
+                    serializedHealthBar.FindProperty("_useVisibleSpriteBounds").boolValue = true;
+                    serializedHealthBar.FindProperty("_followSpriteBounds").boolValue = true;
+                    serializedHealthBar.FindProperty("_headOffset").floatValue = 0.08f;
+                    serializedHealthBar.ApplyModifiedPropertiesWithoutUndo();
+
+                    var receiver = root.GetComponent<ParryReceiver>();
+                    if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
+                    var parry = new SerializedObject(receiver);
+                    parry.FindProperty("_centerSprite").objectReferenceValue = sr;
+                    parry.FindProperty("_useVisibleSpriteBounds").boolValue = true;
+                    parry.ApplyModifiedPropertiesWithoutUndo();
+                }
+            }
+            if (cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath")
             {
                 // Match BlueSlime's world-space UI scale (root 4x, canvas 0.006).
-                float barScale = cfg.Name == "Skeleton" ? 0.0048f : 0.006f;
+                float barScale = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Necromancer" ? 0.0048f : 0.006f;
+                if (cfg.Name == "SkeletonKnight") barScale = 0.0032f;
+                if (cfg.Name == "BringerOfDeath")
+                    barScale = 0.024f / Mathf.Max(0.01f, Mathf.Abs(root.transform.lossyScale.x));
                 var healthBar = root.GetComponentInChildren<FloatingHealthBar>();
                 healthBar.transform.localScale = new Vector3(barScale, barScale, 1f);
-                if (cfg.Name == "Skeleton")
+                if (cfg.Name == "ShadowDemonDragon")
+                    healthBar.transform.localScale = new Vector3(0.024f, 0.024f, 1f);
+                if (cfg.Name == "Reaper")
+                {
+                    float matchingLocalScale = 0.042f / Mathf.Abs(root.transform.lossyScale.x);
+                    healthBar.transform.localScale = new Vector3(matchingLocalScale, matchingLocalScale, 1f);
+                }
+                if (cfg.Name == "SkeletonKnight")
+                    healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(100f, 14f);
+                else if (cfg.Name == "Skeleton" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath")
                     healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(59.1742f, 8.8075f);
                 var bar = new SerializedObject(root.GetComponentInChildren<FloatingHealthBar>());
                 bar.FindProperty("_followSprite").objectReferenceValue = sr;
-                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton";
+                bar.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
+                bar.FindProperty("_followSpriteBounds").boolValue = cfg.Name == "BringerOfDeath";
+                bar.FindProperty("_headGap").floatValue = 0.08f;
+                if (cfg.Name == "BringerOfDeath") bar.FindProperty("_headOffset").floatValue = 0.08f;
                 bar.ApplyModifiedPropertiesWithoutUndo();
                 var receiver = root.GetComponent<ParryReceiver>();
                 if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
                 var parry = new SerializedObject(receiver);
                 parry.FindProperty("_centerSprite").objectReferenceValue = sr;
-                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton";
+                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
                 parry.ApplyModifiedPropertiesWithoutUndo();
                 if (cfg.Name == "Skeleton")
                 {
@@ -399,12 +537,30 @@ namespace TheLastKnight.EditorTools
             }
 
             // Setup Hitbox for damage dealing
-            CreateContactHitbox(root, cfg.Attack, colWidth * 1.1f, colHeight * 1.05f);
+            CreateContactHitbox(root, cfg.Attack, colWidth * (cfg.Name == "Necromancer" ? 1.2f : 1.1f), colHeight * 1.05f);
+            if (cfg.Name == "Reaper")
+                root.GetComponentInChildren<EnemyHitbox2D>().GetComponent<BoxCollider2D>().size = new Vector2(0.52f, 0.63f);
+            if (cfg.Name == "ForestMushroom")
+                root.GetComponentInChildren<EnemyHitbox2D>().GetComponent<BoxCollider2D>().size = new Vector2(0.6f, 0.65f);
+            if (cfg.Name == "BringerOfDeath")
+            {
+                var hitbox = root.GetComponentInChildren<EnemyHitbox2D>();
+                var hitboxCollider = hitbox.GetComponent<BoxCollider2D>();
+                hitboxCollider.size = new Vector2(0.6f, 0.63f);
+                hitbox.transform.localPosition = new Vector3(col.offset.x,
+                    col.offset.y - col.size.y * 0.5f + hitboxCollider.size.y * 0.5f, 0f);
+            }
             if (cfg.Name == "Skeleton")
             {
                 var hitbox = root.GetComponentInChildren<EnemyHitbox2D>();
                 hitbox.GetComponent<BoxCollider2D>().size = new Vector2(0.36f, 0.51f);
                 hitbox.transform.localPosition = new Vector3(0.16f, 0.255f, 0);
+            }
+            if (cfg.Name == "SkeletonKnight")
+            {
+                var hitbox = root.GetComponentInChildren<EnemyHitbox2D>();
+                hitbox.GetComponent<BoxCollider2D>().size = new Vector2(0.95f, colHeight * 1.05f);
+                hitbox.transform.localPosition = new Vector3(0f, colHeight * 0.525f, 0f);
             }
 
             // Special handling for ShadowDemonDragon: Audio Controller
@@ -416,6 +572,52 @@ namespace TheLastKnight.EditorTools
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
             Object.DestroyImmediate(root);
             Debug.Log($"[EnemyPrefabBuilder] Created monster prefab: {cfg.Name}");
+        }
+
+        private static void AssignSummonFrames(SerializedProperty property, string assetPath)
+        {
+            var frames = AssetDatabase.LoadAllAssetsAtPath(assetPath).OfType<Sprite>()
+                .OrderBy(sprite => sprite.name, System.StringComparer.Ordinal).ToArray();
+            property.arraySize = frames.Length;
+            for (int i = 0; i < frames.Length; i++)
+                property.GetArrayElementAtIndex(i).objectReferenceValue = frames[i];
+        }
+
+        private static void SetupSmallDragonFireAttack(GameObject root)
+        {
+            var effect = new GameObject("FireAttack");
+            effect.transform.SetParent(root.transform, false);
+            effect.transform.localPosition = new Vector3(0.46f, 0.08f, -0.02f);
+            effect.transform.localScale = new Vector3(1.75f, 1.75f, 1f);
+
+            var fireRenderer = effect.AddComponent<SpriteRenderer>();
+            fireRenderer.enabled = false;
+            fireRenderer.sortingOrder = 3;
+
+            var fireEffect = effect.AddComponent<SmallDragonFireAttackEffect>();
+
+            var sprites = new Sprite[6];
+            for (int i = 0; i < 5; i++)
+            {
+                sprites[i] = AssetDatabase.LoadAssetAtPath<Sprite>(
+                    $"Assets/sprites/Monsters/craftpix-561178-free-rpg-monster-sprites-pixel-art/PNG/small_dragon/Fire_Attack{i + 1}.png");
+            }
+
+            // Fire_Attack6 is imported as a single Sprite in Unity; use that
+            // full frame instead of an automatically sliced sub-sprite.
+            sprites[5] = AssetDatabase.LoadAssetAtPath<Sprite>(
+                "Assets/sprites/Monsters/craftpix-561178-free-rpg-monster-sprites-pixel-art/PNG/small_dragon/Fire_Attack6.png");
+            if (sprites.Any(sprite => sprite == null)) return;
+
+            var effectData = new SerializedObject(fireEffect);
+            effectData.FindProperty("_renderer").objectReferenceValue = fireRenderer;
+            var frameProperty = effectData.FindProperty("_frames");
+            frameProperty.arraySize = sprites.Length;
+            for (int i = 0; i < sprites.Length; i++)
+                frameProperty.GetArrayElementAtIndex(i).objectReferenceValue = sprites[i];
+            effectData.FindProperty("_duration").floatValue = 2f;
+            effectData.FindProperty("_frameRate").floatValue = 16f;
+            effectData.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void CreateHealthBarCanvas(GameObject parent, EnemyStats stats, float characterHeight)
@@ -547,8 +749,9 @@ namespace TheLastKnight.EditorTools
             public bool IsParryable;
             public string ProjName;
             public string SpellName;
+            public bool RequireLineOfSight;
 
-            public SkillData(string name, string animName, int actionIndex, float mult, float cd, float minR, float maxR, bool parry, string proj = null, string spell = null)
+            public SkillData(string name, string animName, int actionIndex, float mult, float cd, float minR, float maxR, bool parry, string proj = null, string spell = null, bool requireLineOfSight = false)
             {
                 Name = name;
                 AnimName = animName;
@@ -560,6 +763,7 @@ namespace TheLastKnight.EditorTools
                 IsParryable = parry;
                 ProjName = proj;
                 SpellName = spell;
+                RequireLineOfSight = requireLineOfSight;
             }
         }
 
@@ -574,8 +778,18 @@ namespace TheLastKnight.EditorTools
                 cooldown = d.Cooldown,
                 minRange = d.MinRange,
                 maxRange = d.MaxRange,
-                isParryable = d.IsParryable
+                isParryable = d.IsParryable,
+                requireLineOfSight = d.RequireLineOfSight
             };
+            if (d.Name == "FullCombo")
+            {
+                // The 21-frame clip contains three seven-frame swing sections.
+                // Match one damage window to the impact frame in each section
+                // (Animator state speed is 0.8, clip sample rate is 12 fps).
+                s.damageStartDelay = 0.42f;
+                s.damageDuration = 0.18f;
+                s.additionalDamageHitTimes = new[] { 1.15f, 1.88f };
+            }
             if (!string.IsNullOrEmpty(d.ProjName))
             {
                 s.projectilePrefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{ProjectilesOutputDir}/{d.ProjName}.prefab");
@@ -609,7 +823,7 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("AttackWithStun", "AttackWithStun", 1, 1.5f, 6.0f, 0f, 1.6f, true)
+                        new SkillData("AttackWithStun", "AttackWithStun", 1, 1.5f, 5.0f, 0f, 1.6f, true)
                     });
                     break;
 
@@ -638,7 +852,7 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("EyeBeam", "Attack3", -1, 1.5f, 5.0f, 2.5f, 7.5f, true, "FlyingEye_Projectile")
+                        new SkillData("EyeBeam", "Attack3", -1, 1.5f, 5.0f, 0f, 7.0f, true, "FlyingEye_Projectile", requireLineOfSight: true)
                     });
                     break;
 
@@ -702,8 +916,8 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack1";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("SoulBlast", "Attack3", -1, 2.2f, 9.0f, 1.5f, 7.0f, true),
-                        new SkillData("DarkWave", "Attack2", -1, 1.6f, 5.0f, 2.0f, 7.5f, false)
+                        new SkillData("DarkWave", "Attack2", -1, 1.6f, 5.0f, 0f, 0.05f, false),
+                        new SkillData("SoulBlast", "Attack3", -1, 2.2f, 10.0f, 0f, 0.05f, true)
                     });
                     break;
 
@@ -711,9 +925,7 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "FwdSwing";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("DownSwing", "DownSwing", -1, 1.6f, 5.0f, 0f, 2.0f, true),
-                        new SkillData("SideSwing", "SideSwing", -1, 1.3f, 4.0f, 0f, 1.8f, false),
-                        new SkillData("FullCombo", "FullCombo", -1, 2.2f, 9.0f, 0f, 2.2f, false)
+                        new SkillData("FullCombo", "FullCombo", -1, 2.2f, 10.0f, 0f, 0.05f, false)
                     });
                     break;
 
@@ -731,7 +943,7 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("HellfirePillar", "Cast", -1, 2.0f, 8.0f, 1.5f, 8.0f, true, null, "BringerOfDeath_Spell")
+                        new SkillData("HellfirePillar", "Cast", -1, 2.0f, 10.0f, 1.5f, 8.0f, true, null, "BringerOfDeath_Spell")
                     });
                     break;
 
@@ -791,7 +1003,7 @@ namespace TheLastKnight.EditorTools
                     basicAnim = "Attack";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("SmallFireBall", "Attack", -1, 1.3f, 4.0f, 2.5f, 7.0f, false, "SmallDragon_FireBall")
+                        new SkillData("SmallFireBall", "Attack", -1, 1.3f, 5.0f, 0f, 0.05f, true, "SmallDragon_FireBall")
                     });
                     break;
 
@@ -801,7 +1013,7 @@ namespace TheLastKnight.EditorTools
             }
 
             ai.SetSkills(skills);
-            ai.SetBasicAttackConfiguration(basicAnim, 1.0f, name != "Skeleton", 4.0f);
+            ai.SetBasicAttackConfiguration(basicAnim, 1.0f, name != "Skeleton" && name != "UndeadExecutioner" && name != "ForestMushroom", name == "Small_dragon" ? 5.0f : 4.0f);
             ai.SetBoss(isBoss);
             EditorUtility.SetDirty(ai);
         }

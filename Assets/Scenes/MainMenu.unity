@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fb898d9bfad8c146be6c3ae6dc21637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.UI.MainMenuController
+  _backgroundSprite: {fileID: 7802378789160460951, guid: 338696cc3b669e4489f3ec92715b3e1b, type: 3}
 --- !u!4 &971195134
 Transform:
   m_ObjectHideFlags: 0
