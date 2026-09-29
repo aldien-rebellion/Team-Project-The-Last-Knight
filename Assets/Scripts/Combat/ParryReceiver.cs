@@ -16,9 +16,28 @@ namespace TheLastKnight.Combat
         private LineRenderer _target;
         [SerializeField] private SpriteRenderer _centerSprite;
         [SerializeField] private bool _useVisibleSpriteBounds;
+        [SerializeField] private Vector2 _centerLocalOffset;
         public bool IsStaggered => Time.time < _staggerUntil;
         public bool IsWindingUp => _windingUp;
         public float Progress => Mathf.Clamp01((Time.time - _start) / WindupDuration);
+        public SpriteRenderer CenterSprite => _centerSprite;
+
+        public Vector3 GetVisualCenter()
+        {
+            Vector3 center = _centerSprite != null ? _centerSprite.bounds.center : transform.position + Vector3.up * 1.5f;
+            if (_centerSprite != null && _useVisibleSpriteBounds)
+                center = SpriteVisualBounds.GetWorldBounds(_centerSprite).center;
+            if (_centerSprite != null)
+            {
+                Vector2 localOffset = _centerLocalOffset;
+                // FaceDirection can mirror only the SpriteRenderer, leaving the
+                // Transform scale positive. Mirror authored local offsets with it.
+                if (_centerSprite.flipX) localOffset.x = -localOffset.x;
+                if (_centerSprite.flipY) localOffset.y = -localOffset.y;
+                center += _centerSprite.transform.TransformVector(localOffset);
+            }
+            return center;
+        }
 
         public void SetSpriteCenter(SpriteRenderer sprite, bool useVisibleBounds)
         {
@@ -81,9 +100,7 @@ namespace TheLastKnight.Combat
 
         private void DrawRing(LineRenderer ring, float radius)
         {
-            Vector3 center = _centerSprite != null ? _centerSprite.bounds.center : transform.position + Vector3.up * 1.5f;
-            if (_centerSprite != null && _useVisibleSpriteBounds)
-                center = SpriteVisualBounds.GetWorldBounds(_centerSprite).center;
+            Vector3 center = GetVisualCenter();
             for (int i = 0; i < ring.positionCount; i++)
             {
                 float angle = i * Mathf.PI * 2f / ring.positionCount;

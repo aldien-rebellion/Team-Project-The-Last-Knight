@@ -16,6 +16,8 @@ namespace TheLastKnight.Combat
         [SerializeField] private SpriteRenderer _followSprite;
         [SerializeField] private bool _useVisibleSpriteBounds;
         [SerializeField] private float _headGap = 0.08f;
+        [Tooltip("Horizontal head alignment offset in the followed sprite's local space.")]
+        [SerializeField] private float _headHorizontalOffset;
 
         [Header("Animated Head Following")]
         [SerializeField] private bool _followSpriteBounds = false;
@@ -159,7 +161,11 @@ namespace TheLastKnight.Combat
             {
                 Bounds bounds = _useVisibleSpriteBounds ? SpriteVisualBounds.GetWorldBounds(_followSprite) : _followSprite.bounds;
                 float halfHeight = barRect.rect.height * Mathf.Abs(transform.lossyScale.y) * 0.5f;
-                transform.position = new Vector3(bounds.center.x, bounds.max.y + _headGap + halfHeight, transform.position.z);
+                var parryAlignment = GetComponentInParent<ParryReceiver>();
+                float centerX = parryAlignment != null && parryAlignment.CenterSprite == _followSprite
+                    ? parryAlignment.GetVisualCenter().x
+                    : bounds.center.x + GetHeadHorizontalOffsetWorld();
+                transform.position = new Vector3(centerX, bounds.max.y + _headGap + halfHeight, transform.position.z);
             }
             if (_canvas != null) _canvas.enabled = TheLastKnight.Core.GameDifficultyManager.ShowHelpers;
             if (_levelText != null)
@@ -210,7 +216,10 @@ namespace TheLastKnight.Combat
                     if (_useVisibleSpriteBounds && transform is RectTransform visibleBoundsRect)
                         barHalfHeight = visibleBoundsRect.rect.height * Mathf.Abs(transform.lossyScale.y) * 0.5f;
                     Vector3 position = transform.position;
-                    position.x = spriteBounds.center.x;
+                    var parryAlignment = GetComponentInParent<ParryReceiver>();
+                    position.x = parryAlignment != null && parryAlignment.CenterSprite == _followSprite
+                        ? parryAlignment.GetVisualCenter().x
+                        : spriteBounds.center.x + GetHeadHorizontalOffsetWorld();
                     position.y = spriteBounds.max.y + _headOffset + barHalfHeight;
                     transform.position = position;
                     return;
@@ -220,8 +229,28 @@ namespace TheLastKnight.Combat
                 if (_targetSpriteRenderer.flipY) localHeadPoint.y = -localHeadPoint.y;
                 Vector3 headPosition = _targetSpriteRenderer.transform.TransformPoint(localHeadPoint);
                 headPosition += Vector3.up * _headOffset;
+                headPosition += GetHeadHorizontalOffsetVectorWorld();
                 transform.position = new Vector3(headPosition.x, headPosition.y, transform.position.z);
             }
+        }
+
+        private float GetHeadHorizontalOffsetWorld()
+        {
+            return GetHeadHorizontalOffsetVectorWorld().x;
+        }
+
+        private Vector3 GetHeadHorizontalOffsetVectorWorld()
+        {
+            SpriteRenderer offsetReference = _targetSpriteRenderer != null ? _targetSpriteRenderer : _followSprite;
+            if (offsetReference == null)
+            {
+                return Vector3.right * _headHorizontalOffset;
+            }
+
+            // SpriteRenderer.flipX mirrors the artwork around its pivot without
+            // changing the Transform scale, so mirror local-space head offsets too.
+            float spriteDirection = offsetReference.flipX ? -1f : 1f;
+            return offsetReference.transform.TransformVector(Vector3.right * (_headHorizontalOffset * spriteDirection));
         }
 
         private void ResolveTargetStats()
