@@ -79,10 +79,6 @@ namespace TheLastKnight.Core
                 {
                     TheLastKnight.Inventory.InventoryManager.Instance?.InitializeDefaultInventory(Player);
                     Capture();
-                    if (!string.IsNullOrEmpty(State.worldId))
-                    {
-                        SaveSystem.Save(State, out _);
-                    }
                 }
                 if (_checkpoint == null) { Capture(); _checkpoint = State.Copy(); }
                 // The player object can be created after sceneLoaded. Restore its input map only
@@ -208,14 +204,6 @@ namespace TheLastKnight.Core
             if (!SaveSystem.Save(State, out error)) return false;
             _checkpoint = State.Copy();
             return true;
-        }
-
-        /// <summary>Saves progression without resting the player or changing their checkpoint position.</summary>
-        public void SaveProgress()
-        {
-            Capture();
-            if (!string.IsNullOrEmpty(State.worldId) && SaveSystem.Save(State, out _))
-                _checkpoint = State.Copy();
         }
 
         public void Travel(string scene)
