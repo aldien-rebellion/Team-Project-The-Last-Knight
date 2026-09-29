@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -81,8 +81,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1268951153
+  m_SortingLayer: 8
   m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 0}
@@ -106,7 +106,7 @@ Animator:
   m_GameObject: {fileID: 4984914093700333527}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c2858e31a57d4b08a7d6c063fccad590, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -194,7 +194,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.Projectiles.EnemyProjectile
   _speed: 7
+  _impactVisualHoldTime: 0.15
+  _fadeOutAfterImpact: 1
+  _maxTravelDistance: 4.5
+  _hitOverlappingPlayerOnSpawn: 1
   _damage: 10
-  _lifetime: 5
+  _lifetime: 1
   _destroyOnGround: 1
   _knockback: {x: 3, y: 2}
