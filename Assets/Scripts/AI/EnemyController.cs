@@ -117,13 +117,15 @@ namespace TheLastKnight.AI
         [Tooltip("Respawn at the position where this enemy died instead of its original spawn point.")]
         [SerializeField] private bool _respawnAtDeathPosition;
 
-                [Header("Attack Rendering")]
+        [Header("Attack Rendering")]
         [SerializeField] private bool _bringToFrontWhileAttacking;
         [SerializeField] private int _attackSortingOrder = 1;
+        [SerializeField] private string _attackSortingLayerName;
 
 // Components
-                private SpriteRenderer _spriteRenderer;
+        private SpriteRenderer _spriteRenderer;
         private int _defaultSortingOrder;
+        private string _defaultSortingLayerName;
 private Rigidbody2D _rb;
         private Animator _animator;
         private EnemyStats _stats;
@@ -154,6 +156,8 @@ private Rigidbody2D _rb;
         private float _damageUntil;
         private bool _projectileSpawned;
         private bool _wasAirborne;
+        private bool _hurtAnimationPending;
+        private float _hurtAnimationPendingUntil;
         private GameObject _activeSkillProjectile;
         public bool CanDealMeleeDamage => !_stats.IsDead && !_parry.IsStaggered && Time.time < _damageUntil;
         public float CurrentAttackDamage => _stats != null ? _stats.AttackPower * _currentAttackMultiplier : 10f;
@@ -168,7 +172,11 @@ private Rigidbody2D _rb;
         private void Awake()
         {
                         _spriteRenderer = GetComponent<SpriteRenderer>();
-            if (_spriteRenderer != null) _defaultSortingOrder = _spriteRenderer.sortingOrder;
+            if (_spriteRenderer != null)
+            {
+                _defaultSortingOrder = _spriteRenderer.sortingOrder;
+                _defaultSortingLayerName = _spriteRenderer.sortingLayerName;
+            }
 _rb = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _stats = GetComponent<EnemyStats>();
@@ -214,6 +222,7 @@ _rb = GetComponent<Rigidbody2D>();
                 }
                 if (_playAttackStatesDirectly && _availableAnimParams.Contains("ActionIndex"))
                     _animator.SetInteger("ActionIndex", -1);
+
             }
 
             if (_isFlying)
@@ -240,6 +249,23 @@ _rb = GetComponent<Rigidbody2D>();
                 _currentState == EnemyAIState.MeleeAttack || _currentState == EnemyAIState.RangedAttack)
                 return;
 
+            // Animator.Play takes effect on the next Animator evaluation. Do not
+            // reassert locomotion in the same frame that damage requested Hurt.
+            if (_hurtAnimationPending)
+            {
+                if (state.IsName("Hurt") || state.IsName("TakeHit") || state.IsName("Hit"))
+                    _hurtAnimationPending = false;
+                else if (Time.time < _hurtAnimationPendingUntil)
+                    return;
+                else
+                    _hurtAnimationPending = false;
+            }
+
+            // Keep authored one-shot actions in control. Movement-state playback
+            // is reasserted after these clips return to locomotion.
+            if (state.IsName("Attack") || state.IsName("Hurt") || state.IsName("TakeHit") || state.IsName("Death"))
+                return;
+
             if (state.IsName("Hit") && state.normalizedTime < 1f)
                 return;
 
@@ -264,7 +290,8 @@ _rb = GetComponent<Rigidbody2D>();
             if (state.IsName("Land") && state.normalizedTime < 1f)
                 return;
 
-            string movementState = _currentState == EnemyAIState.Chase ? "Run"
+            string movementState = _currentState == EnemyAIState.Chase
+                ? (_animator.HasState(0, Animator.StringToHash("Base Layer.Run")) ? "Run" : "Walk")
                 : (_currentState == EnemyAIState.Patrol || _currentState == EnemyAIState.ReturningToSpawn) ? "Walk"
                 : "Idle";
             PlayMovementState(movementState);
@@ -287,10 +314,13 @@ _rb = GetComponent<Rigidbody2D>();
         private void Start()
         {
             FindPlayer();
+        }
 
+        private void OnEnable()
+        {
+            if (_stats == null) _stats = GetComponent<EnemyStats>();
             if (_stats != null)
             {
-                _stats.OnDamaged += HandleDamaged;
                 _stats.OnDeath += HandleDeath;
             }
         }
@@ -299,13 +329,16 @@ _rb = GetComponent<Rigidbody2D>();
         {
             if (_stats != null)
             {
-                _stats.OnDamaged -= HandleDamaged;
                 _stats.OnDeath -= HandleDeath;
             }
         }
 
         private void OnDisable()
         {
+            if (_stats != null)
+            {
+                _stats.OnDeath -= HandleDeath;
+            }
             StopAttack();
         }
 
@@ -522,9 +555,6 @@ _rb = GetComponent<Rigidbody2D>();
                 PlayStanceAnimation("PassiveIdle");
                 return;
             }
-            SetAnimBool("IsMoving", true);
-            if (_usePassiveStanceAnimations) PlayStanceAnimation("PassiveRunning");
-
             float currentX = transform.position.x;
             float moveDir = _movingRight ? 1f : -1f;
             float centerOriginX = _isBoss ? _startX : _spawnPosition.x;
@@ -539,6 +569,8 @@ _rb = GetComponent<Rigidbody2D>();
                     _movingRight = !_movingRight;
                     if (_usePassiveStanceAnimations) _patrolPauseUntil = Time.time + 0.75f;
                     FaceDirection(_movingRight);
+                    SetHorizontalVelocity(0f);
+                    SetAnimBool("IsMoving", false);
                     return;
                 }
             }
@@ -550,8 +582,13 @@ _rb = GetComponent<Rigidbody2D>();
                 _movingRight = !_movingRight;
                 if (_usePassiveStanceAnimations) _patrolPauseUntil = Time.time + 0.75f;
                 FaceDirection(_movingRight);
+                SetHorizontalVelocity(0f);
+                SetAnimBool("IsMoving", false);
                 return;
             }
+
+            SetAnimBool("IsMoving", true);
+            if (_usePassiveStanceAnimations) PlayStanceAnimation("PassiveRunning");
 
             // Patrol bounds around spawn point
             if (_movingRight)
@@ -1388,17 +1425,24 @@ _rb = GetComponent<Rigidbody2D>();
             transform.localScale = scale;
         }
 
-        private void HandleDamaged(DamageData data)
+        public void NotifyDamaged(DamageData data)
         {
             if (_stats.IsDead) return;
 
             // A cyclic action finishes before the next action or hurt pose can start.
-            if (_continuousActions && _isActionLocked) return;
+            if (_continuousActions && _isActionLocked && !_useMovementAnimationStates) return;
 
-            if (_useMovementAnimationStates && _isActionLocked)
+            // Enemies using authored movement states must stop an in-progress
+            // attack on hit, even if the attack coroutine has not set its lock.
+            if (_useMovementAnimationStates)
                 StopAttack();
 
             _currentState = EnemyAIState.Hurt;
+            if (_useMovementAnimationStates)
+            {
+                _hurtAnimationPending = true;
+                _hurtAnimationPendingUntil = Time.time + 0.5f;
+            }
             // Force the reaction state so damage received during an attack cannot
             // leave the Animator waiting on an interrupted trigger transition.
             if (_useMovementAnimationStates && TryPlayAnimatorState("Hit"))
@@ -1776,6 +1820,11 @@ private Vector3 GetGroundSpellSpawnPosition(GameObject target)
             bool isSlashing = stateInfo.IsName("Attack") || stateInfo.IsName("Attack3") ||
                 (!string.IsNullOrEmpty(_basicAttackAnimState) && stateInfo.IsName(_basicAttackAnimState));
             int targetOrder = isSlashing ? _attackSortingOrder : _defaultSortingOrder;
+            string targetLayer = isSlashing && !string.IsNullOrEmpty(_attackSortingLayerName)
+                ? _attackSortingLayerName
+                : _defaultSortingLayerName;
+            if (_spriteRenderer.sortingLayerName != targetLayer)
+                _spriteRenderer.sortingLayerName = targetLayer;
             if (_spriteRenderer.sortingOrder != targetOrder)
                 _spriteRenderer.sortingOrder = targetOrder;
         }
