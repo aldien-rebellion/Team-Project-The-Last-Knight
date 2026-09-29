@@ -43,9 +43,6 @@ namespace TheLastKnight.UI
         private Image _imgStmFill;
         private TextMeshProUGUI _txtStm;
 
-        // Derived Combat
-        private TextMeshProUGUI _txtDef;
-
         // Gold
         private TextMeshProUGUI _txtGold;
 
@@ -579,6 +576,15 @@ namespace TheLastKnight.UI
             var ltRt = _txtLevel.rectTransform;
             ltRt.anchorMin = Vector2.zero; ltRt.anchorMax = Vector2.one;
             ltRt.offsetMin = ltRt.offsetMax = Vector2.zero;
+            _txtLevel.raycastTarget = true;
+            AddHoverTrigger(_txtLevel.gameObject,
+                () =>
+                {
+                    var player = GetPlayer();
+                    if (player == null) return;
+                    ShowTooltip($"Level {player.Level}", "Defense (DEF)",
+                        $"DEF: {player.Defense:0.##}\nDefense increases with level and reduces incoming damage.");
+                }, HideTooltip);
 
             // 2. Bars: XP, HP, STM
             CreateStatBar(parent, "XP_Bar", ToUI(408, 335), new Vector2(230, 14),
@@ -589,24 +595,6 @@ namespace TheLastKnight.UI
 
             CreateStatBar(parent, "STM_Bar", ToUI(408, 281), new Vector2(230, 14),
                 new Color(0.85f, 0.55f, 0.15f), out _imgStmFill, out _txtStm, "STM: 30/100");
-
-            // DEF display (between stamina and gold)
-            var defGo = new GameObject("Txt_DEF", typeof(RectTransform));
-            defGo.transform.SetParent(parent, false);
-            var defRt = defGo.GetComponent<RectTransform>();
-            defRt.anchoredPosition = ToUI(408, 264);
-            defRt.sizeDelta = new Vector2(230, 14);
-
-            _txtDef = CreateText(defGo.transform, "Label", "DEF: 1", 11, TextAlignmentOptions.MidlineLeft,
-                new Color(0.75f, 0.75f, 0.85f), FontStyles.Normal);
-            var defTxtRt = _txtDef.rectTransform;
-            defTxtRt.anchorMin = Vector2.zero; defTxtRt.anchorMax = Vector2.one;
-            defTxtRt.offsetMin = defTxtRt.offsetMax = Vector2.zero;
-
-            AddHoverTrigger(defGo,
-                () => ShowTooltip("Defense (DEF)", "Level-Based",
-                    $"Reduces incoming damage by a flat amount.\nDEF scales with Level (baseDEF + Level × defPerLevel).\nMinimum 1 damage is always taken."),
-                () => HideTooltip());
 
             // 3. Dynamic Gold Display
             var goldGo = new GameObject("Txt_Gold", typeof(RectTransform));
@@ -1229,10 +1217,6 @@ namespace TheLastKnight.UI
 
             if (_imgStmFill != null) _imgStmFill.fillAmount = stmPct;
             if (_txtStm != null) _txtStm.text = $"STM: {curStm}/{maxStm}";
-
-            // DEF (level-based)
-            float def = player != null ? player.Defense : 1f;
-            if (_txtDef != null) _txtDef.text = $"DEF: {Mathf.CeilToInt(def)}";
 
             // Gold
             if (_txtGold != null) _txtGold.text = $"{gold:N0}";
