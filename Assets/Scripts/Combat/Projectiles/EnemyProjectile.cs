@@ -215,9 +215,12 @@ namespace TheLastKnight.Combat.Projectiles
             if (_rb != null) _rb.linearVelocity = Vector2.zero;
 
             // Play impact / explosion animation if available
-            if (_animator != null && _animator.HasState(0, Animator.StringToHash("Explosion")))
+            int explosionState = Animator.StringToHash("Base Layer.Explosion");
+            int shortExplosionState = Animator.StringToHash("Explosion");
+            bool hasFullExplosionState = _animator != null && _animator.HasState(0, explosionState);
+            if (hasFullExplosionState || (_animator != null && _animator.HasState(0, shortExplosionState)))
             {
-                _animator.Play("Explosion", 0, 0f);
+                _animator.Play(hasFullExplosionState ? explosionState : shortExplosionState, 0, 0f);
                 float explosionDuration = 0.5f;
                 foreach (var clip in _animator.runtimeAnimatorController.animationClips)
                 {
