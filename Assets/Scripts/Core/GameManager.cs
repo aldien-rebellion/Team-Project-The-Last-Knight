@@ -85,6 +85,9 @@ namespace TheLastKnight.Core
                     }
                 }
                 if (_checkpoint == null) { Capture(); _checkpoint = State.Copy(); }
+                // The player object can be created after sceneLoaded. Restore its input map only
+                // after it is bound, otherwise a previously opened UI may leave movement disabled.
+                SetInputBlocked(false);
             }
             GetComponent<TheLastKnight.Environment.DemonRuneManager>()?.RestoreDrops();
             _restorePosition = false;
@@ -131,7 +134,11 @@ namespace TheLastKnight.Core
         public void SetInputBlocked(bool blocked)
         {
             InputBlocked = blocked;
-            foreach (var input in FindObjectsByType<PlayerInputHandler>(FindObjectsSortMode.None)) input.enabled = !blocked;
+            foreach (var input in FindObjectsByType<PlayerInputHandler>(FindObjectsSortMode.None))
+            {
+                input.enabled = !blocked;
+                if (!blocked) input.EnablePlayerActions();
+            }
             foreach (var controller in FindObjectsByType<PlayerController>(FindObjectsSortMode.None))
             {
                 controller.ResetVelocity();
