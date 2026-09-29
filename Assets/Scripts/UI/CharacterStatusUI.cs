@@ -802,21 +802,22 @@ namespace TheLastKnight.UI
             out TextMeshProUGUI valueTxt, out Button btnPlus, out Button btnMax,
             UnityEngine.Events.UnityAction onPlus, UnityEngine.Events.UnityAction onMax)
         {
-            // Value Box (Clean text directly on wood)
+            // Hover covers the baked attribute label and its value, stopping before [+].
             var valGo = new GameObject($"Val_{name}", typeof(RectTransform), typeof(Image));
             valGo.transform.SetParent(parent, false);
             var valImg = valGo.GetComponent<Image>();
             valImg.color = new Color(1f, 1f, 1f, 0.001f);
             valImg.raycastTarget = true;
             var valRt = valGo.GetComponent<RectTransform>();
-            valRt.anchoredPosition = ToUI(655, py);
-            valRt.sizeDelta = new Vector2(46, 22);
+            valRt.anchoredPosition = ToUI(631, py);
+            valRt.sizeDelta = new Vector2(98, 24);
 
             valueTxt = CreateText(valGo.transform, "Label", "10", 16, TextAlignmentOptions.Center,
                 Color.white, FontStyles.Bold);
             var vtRt = valueTxt.rectTransform;
-            vtRt.anchorMin = Vector2.zero; vtRt.anchorMax = Vector2.one;
-            vtRt.offsetMin = vtRt.offsetMax = Vector2.zero;
+            vtRt.anchorMin = new Vector2(0.5f, 0f); vtRt.anchorMax = new Vector2(0.5f, 1f);
+            vtRt.sizeDelta = new Vector2(46, 0);
+            vtRt.anchoredPosition = new Vector2(24, 0);
             AddHoverTrigger(valGo, () => ShowStatTooltip(label), () => HideTooltip());
 
             // [+] Button
@@ -1161,26 +1162,26 @@ namespace TheLastKnight.UI
             {
                 case "STR":
                     float atk = player != null ? player.AttackPower : 15f;
-                    desc = $"Increases Physical Attack Power (ATK).\nCurrent ATK: {atk:F1}";
+                    desc = $"ATK: {atk:F1}\nIncreases physical attack power.";
                     break;
                 case "AGI":
-                    int agi = player != null ? player.AGI : 10;
                     var ctrl = player != null ? player.GetComponent<Player.PlayerController>() : null;
                     float moveSpd = ctrl != null ? ctrl.MoveSpeed : 8f;
                     float atkSpd = player != null ? player.AttackSpeedMultiplier : 1f;
                     bool canDoubleJump = player != null && player.CanDoubleJump;
-                    string djStatus = canDoubleJump ? "<color=green>Unlocked</color>" : $"Unlocks at 250 AGI ({agi}/250)";
-                    desc = $"Increases Attack Speed and Movement Speed.\nAttack Speed: {atkSpd:F2}x | Move Speed: {moveSpd:F1}\nDouble Jump: {djStatus}";
+                    string djStatus = canDoubleJump ? "<color=green>Unlocked</color>" : "Locked";
+                    desc = $"Attack Speed: {atkSpd:F2}x\nMove Speed: {moveSpd:F1}";
+                    if (ctrl != null) desc += $"\nSprint Speed: {ctrl.SprintSpeed:F1}\nDash Speed: {ctrl.DashSpeed:F1}";
+                    desc += $"\nDouble Jump: {djStatus}";
                     break;
                 case "VIT":
                     float maxHp = player != null ? player.MaxHP : 100f;
                     float maxStm = player != null ? player.MaxStamina : 100f;
-                    desc = $"Increases Maximum HP and Maximum Stamina.\nMax HP: {Mathf.CeilToInt(maxHp)} | Max Stamina: {Mathf.CeilToInt(maxStm)}";
+                    desc = $"Max HP: {Mathf.CeilToInt(maxHp)}\nMax Stamina: {Mathf.CeilToInt(maxStm)}\nIncreases health and stamina capacity.";
                     break;
                 case "DEX":
-                    int dex = player != null ? player.DEX : 10;
                     float crit = player != null ? player.CriticalChance : 16.8f;
-                    desc = $"Increases Critical Chance approaching 100% limit (99% at 250 DEX).\nCurrent Critical Rate: {crit:F2}%";
+                    desc = $"Critical Chance: {crit:F2}%\nIncreases the chance of a critical hit.";
                     break;
             }
 
