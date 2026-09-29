@@ -27,7 +27,7 @@ RectTransform:
   m_GameObject: {fileID: 530665149150651604}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.008, y: 0.008, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3365115481975369176}
@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 1.3740001}
-  m_SizeDelta: {x: 100, y: 14}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1210726669547266292
 Canvas:
@@ -80,6 +80,11 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 3812078022914158722}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _followSpriteBounds: 0
+  _headOffset: 0.12
 --- !u!1 &2755897150698279195
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,6 +175,7 @@ GameObject:
   - component: {fileID: 5904520661760787958}
   - component: {fileID: 4357699531093230360}
   - component: {fileID: 8433192401779087340}
+  - component: {fileID: 9010000000000000003}
   m_Layer: 0
   m_Name: Jinn
   m_TagString: Untagged
@@ -187,8 +193,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 958020306039212950}
   - {fileID: 7710659278140729836}
@@ -376,8 +382,13 @@ MonoBehaviour:
   _chaseSpeed: 4
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -386,33 +397,82 @@ MonoBehaviour:
   _groundCheckDistance: 1.2
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
-  _detectionRange: 8
-  _meleeRange: 2
+  _detectionRange: 14
+  _meleeRange: 0.05
   _meleeCooldown: 1.5
-  _hasRangedAttack: 1
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 0
+  _playAttackStatesDirectly: 1
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
+  _useColliderEdgeAttackRanges: 1
+  _disableBasicAttack: 0
+  _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
-  _projectileSpawnOffset: {x: 0.6, y: 0.2}
-  _groundSpellPrefab: {fileID: 4162853233849823958, guid: c8c0a12a25cc5514a8d5a96b9d42df5d, type: 3}
+  _projectileSpawnOffset: {x: 1.53, y: 1.2}
+  _useProjectileSpawnOffset: 1
+  _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0.25
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
-  _basicAttackCanParry: 1
+  _basicAttackCanParry: 0
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 0
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName:
   _skills:
-  - skillName: MagicCast
-    animationName: Attack
+  - skillName: MagicAttack
+    animationName: MagicAttack
     actionIndex: -1
     damageMultiplier: 1.8
     cooldown: 6
-    minRange: 1.5
-    maxRange: 7
-    isParryable: 0
-    projectilePrefab: {fileID: 0}
-    groundSpellPrefab: {fileID: 4162853233849823958, guid: c8c0a12a25cc5514a8d5a96b9d42df5d, type: 3}
+    minRange: 0
+    maxRange: 12
+    isParryable: 1
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.25
+    damageDuration: 0
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    additionalDamageHitTimes: []
+    requireSpriteBoundsOverlap: 0
+    projectilePrefab: {fileID: 4162853233849823958, guid: c8c0a12a25cc5514a8d5a96b9d42df5d, type: 3}
+    requireLineOfSight: 0
+    groundSpellPrefab: {fileID: 0}
+  _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 1
+  _waitForAttackProjectileToFinish: 0
+  _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
+--- !u!114 &9010000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3409032526662768996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 3812078022914158722}
+  _useVisibleSpriteBounds: 1
 --- !u!1 &3797916828909620249
 GameObject:
   m_ObjectHideFlags: 0
