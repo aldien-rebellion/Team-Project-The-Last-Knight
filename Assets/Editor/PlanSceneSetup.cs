@@ -64,14 +64,15 @@ public static class PlanSceneSetup
         if (name == "CityCenter")
         {
             Statue(root.transform, 5, -4.5f, true);
-            float[] xs = { -180, -140, -100, -60, -30, 30, 60, 90, 120, 150 };
+            float[] xs = { -180, -140, -100, -60, -30, 30, 60, 90, 120 };
             for (int i = 0; i < xs.Length; i++) Enemy(root.transform, i % 2 == 0 ? "BlueSlime" : "Skeleton", xs[i], -4.5f);
+            var boss = Enemy(root.transform, "Skeleton", 150, -4.5f, 200, 20);
+            Arena(root.transform, boss, 150, -4.5f, 10, true);
         }
         else if (name == "Church")
         {
             var boss = Enemy(root.transform, "MoonstoneKeeper", 60, -4.5f, 250, 25);
             boss.gameObject.AddComponent<EnemyProgressionReward>().churchKey = true;
-            Arena(root.transform, boss, 60, -4.5f, 10);
             var chest = Prop(root.transform, "Pentagram Chest", "Assets/sprites/Progression/RuneChest.png", 76, 16.75f);
             chest.AddComponent<RuneChest>();
         }
@@ -83,7 +84,7 @@ public static class PlanSceneSetup
             Enemy(root.transform, "Skeleton", -65, -4.5f);
             Enemy(root.transform, "BlueSlime", -20, -4.5f);
             var boss = Enemy(root.transform, "DemonBoss", 40, -4.5f, 350, 28);
-            Arena(root.transform, boss, 40, -4.5f, 11);
+            Arena(root.transform, boss, 40, -4.5f, 11, true);
             Enemy(root.transform, "Skeleton", 85, -4.5f);
         }
         else if (name == "SuburbToForest")
@@ -93,14 +94,14 @@ public static class PlanSceneSetup
             fox.gameObject.AddComponent<EnemyProgressionReward>().runeIndex = 2;
             Enemy(root.transform, "FireWorm", -80, -6.38f);
             Enemy(root.transform, "Fox", -25, -5.6f);
-            Enemy(root.transform, "FireWorm", 30, -6.0f);
+            var boss = Enemy(root.transform, "FireWorm", 30, -6.0f, 300, 25);
+            Arena(root.transform, boss, 30, -6.0f, 10, true);
         }
         else if (name == "DemonCastle")
         {
             Statue(root.transform, -10, -1.85f, false);
             var boss = Enemy(root.transform, "DemonBoss", 25, -1.885f, 600, 35);
             boss.gameObject.AddComponent<EnemyProgressionReward>().finalBoss = true;
-            Arena(root.transform, boss, 25, -1.885f, 9);
         }
         EditorSceneManager.SaveScene(scene);
         return name + " populated: " + root.GetComponentsInChildren<EnemyStats>().Length + " enemies";
@@ -157,24 +158,41 @@ public static class PlanSceneSetup
         return stats;
     }
 
-    private static void Arena(Transform parent, EnemyStats boss, float x, float floor, float halfWidth)
+    private static void Arena(Transform parent, EnemyStats boss, float x, float floor, float halfWidth, bool oneSided = false)
     {
         var go = new GameObject("Boss Arena", typeof(BoxCollider2D));
         go.transform.SetParent(parent, false); go.transform.position = new Vector3(x, floor + 3, 0);
         var area = go.GetComponent<BoxCollider2D>(); area.isTrigger = true; area.size = new Vector2(halfWidth * 2 - 3, 6);
         var arena = go.AddComponent<BossArena>(); arena.boss = boss;
-        arena.barriers = new GameObject[2];
-        for (int i = 0; i < 2; i++)
+        arena.oneSided = oneSided;
+        if (oneSided)
         {
-            var barrier = new GameObject("Red Seal " + i, typeof(BoxCollider2D), typeof(SpriteRenderer));
+            arena.barriers = new GameObject[1];
+            var barrier = new GameObject("Red Seal", typeof(BoxCollider2D), typeof(SpriteRenderer));
             barrier.transform.SetParent(go.transform, false); barrier.layer = 6;
-            barrier.transform.localPosition = new Vector3((i == 0 ? -1 : 1) * halfWidth, 0, 0);
+            barrier.transform.localPosition = new Vector3(halfWidth, 0, 0);
             barrier.GetComponent<BoxCollider2D>().size = new Vector2(0.4f, 10);
             var renderer = barrier.GetComponent<SpriteRenderer>();
             renderer.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
             renderer.drawMode = SpriteDrawMode.Sliced; renderer.size = new Vector2(0.4f, 10);
             renderer.color = new Color(1, 0.12f, 0.15f, 0.75f); renderer.sortingLayerName = "VFX";
-            arena.barriers[i] = barrier;
+            arena.barriers[0] = barrier;
+        }
+        else
+        {
+            arena.barriers = new GameObject[2];
+            for (int i = 0; i < 2; i++)
+            {
+                var barrier = new GameObject("Red Seal " + i, typeof(BoxCollider2D), typeof(SpriteRenderer));
+                barrier.transform.SetParent(go.transform, false); barrier.layer = 6;
+                barrier.transform.localPosition = new Vector3((i == 0 ? -1 : 1) * halfWidth, 0, 0);
+                barrier.GetComponent<BoxCollider2D>().size = new Vector2(0.4f, 10);
+                var renderer = barrier.GetComponent<SpriteRenderer>();
+                renderer.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+                renderer.drawMode = SpriteDrawMode.Sliced; renderer.size = new Vector2(0.4f, 10);
+                renderer.color = new Color(1, 0.12f, 0.15f, 0.75f); renderer.sortingLayerName = "VFX";
+                arena.barriers[i] = barrier;
+            }
         }
     }
 

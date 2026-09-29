@@ -9,6 +9,8 @@ namespace TheLastKnight.Environment
     {
         public EnemyStats boss;
         public GameObject[] barriers;
+        [Tooltip("When true the arena uses only a single forward-facing barrier so the player can retreat.")]
+        public bool oneSided;
         private bool _entered;
         private void Awake()
         {
@@ -20,7 +22,7 @@ namespace TheLastKnight.Environment
         {
             if (_entered || boss == null || boss.IsDead || other.GetComponentInParent<TheLastKnight.Stats.PlayerStats>() == null) return;
             _entered = true;
-            GameManager.Instance.ArenaLocked = true;
+            if (!oneSided) GameManager.Instance.ArenaLocked = true;
             foreach (var barrier in barriers) barrier.SetActive(true);
             TheLastKnight.Audio.AudioManager.Instance?.PlayMusic("Boss");
         }

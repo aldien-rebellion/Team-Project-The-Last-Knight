@@ -160,7 +160,7 @@ public class PlanRuntimeChecks
         Click("Skip");
         yield return WalkTo(-212.75f, "Church");
         yield return WalkTo(82.38f);
-        Check(Manager.State.churchKey && !Manager.ArenaLocked, "Church boss defeated through attack input; arena released");
+        Check(Manager.State.churchKey, "Church boss defeated through attack input");
         yield return PressKey(Key.F); yield return Settled();
         Check(Manager.Player.transform.position.y > 10, "Church stairs and F door reach second floor");
         yield return WalkTo(76f); yield return PressKey(Key.F);
@@ -226,17 +226,7 @@ public class PlanRuntimeChecks
         Check(Manager.State.runes[1] && Manager.Player.HealingPotions == 2, "Scene transition retains rune and potion state");
         FindAnyObjectByType<RuneChest>().Interact();
         Check(!Manager.State.runes[0], "Church chest rejects missing key");
-        var churchArena = FindAnyObjectByType<BossArena>();
-        Manager.Player.transform.position = new Vector3(churchArena.transform.position.x - 4, -3.4f, 0);
-        Manager.Player.GetComponent<Rigidbody2D>().position = Manager.Player.transform.position;
-        Physics2D.SyncTransforms();
-        double arenaDeadline = EditorApplication.timeSinceStartup + 1;
-        while (!Manager.ArenaLocked && EditorApplication.timeSinceStartup < arenaDeadline) yield return null;
-        Check(Manager.ArenaLocked && churchArena.barriers.All(b => b.activeSelf), "Entering boss arena enables red barriers");
-        Manager.Travel("CityCenter");
-        Check(SceneManager.GetActiveScene().name == "Church", "Locked boss arena prevents scene escape");
         FindAnyObjectByType<EnemyStats>().TakeDamage(100000f);
-        Check(!Manager.ArenaLocked && churchArena.barriers.All(b => !b.activeSelf), "Boss death releases arena barriers");
         Check(Manager.State.churchKey && Manager.Player.Gold == 100 && Manager.Player.Level > 1, "Church boss awards key, gold and EXP");
         FindAnyObjectByType<RuneChest>().Interact();
         Check(Manager.State.runes[0], "Church key unlocks rune 1");
