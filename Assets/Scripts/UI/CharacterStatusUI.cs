@@ -361,25 +361,7 @@ namespace TheLastKnight.UI
                 }
                 module.enabled = true;
 
-                if (UnityEngine.InputSystem.InputSystem.actions != null)
-                {
-                    module.actionsAsset = UnityEngine.InputSystem.InputSystem.actions;
-                }
-                else
-                {
-                    module.AssignDefaultActions();
-                }
-
-                // Remapping the actions asset can leave pointer actions disabled
-                // while the module stays enabled. Keep UI input alive when paused.
-                module.point?.action?.Enable();
-                module.leftClick?.action?.Enable();
-                module.rightClick?.action?.Enable();
-                module.middleClick?.action?.Enable();
-                module.scrollWheel?.action?.Enable();
-                module.move?.action?.Enable();
-                module.submit?.action?.Enable();
-                module.cancel?.action?.Enable();
+                UIInputLifetime.Configure(module);
             }
         }
         private Vector2 ToUI(float px, float py)
@@ -554,8 +536,8 @@ namespace TheLastKnight.UI
             var lvlGo = new GameObject("Txt_Level", typeof(RectTransform));
             lvlGo.transform.SetParent(parent, false);
             var lvlRt = lvlGo.GetComponent<RectTransform>();
-            lvlRt.anchoredPosition = ToUI(295, 362);
-            lvlRt.sizeDelta = new Vector2(86, 24);
+            lvlRt.anchoredPosition = ToUI(408, 363);
+            lvlRt.sizeDelta = new Vector2(230, 24);
 
             _txtLevel = CreateText(lvlGo.transform, "Label", "LV.1", 19, TextAlignmentOptions.MidlineLeft,
                 new Color(0.96f, 0.94f, 0.90f), FontStyles.Bold);
@@ -577,8 +559,8 @@ namespace TheLastKnight.UI
             var goldGo = new GameObject("Txt_Gold", typeof(RectTransform));
             goldGo.transform.SetParent(parent, false);
             var goldRt = goldGo.GetComponent<RectTransform>();
-            goldRt.anchoredPosition = ToUI(435, 244);
-            goldRt.sizeDelta = new Vector2(160, 20);
+            goldRt.anchoredPosition = ToUI(456, 250);
+            goldRt.sizeDelta = new Vector2(146, 20);
 
             _txtGold = CreateText(goldGo.transform, "Label", "0", 15, TextAlignmentOptions.MidlineLeft,
                 Color.white, FontStyles.Bold);
@@ -593,7 +575,7 @@ namespace TheLastKnight.UI
                 "Enter a berserk focus, boosting attack power and movement speed for 10 seconds. Hotkey [R].",
                 "Channel the full radiance of the holy blade, unleashing a piercing holy beam across the battlefield. Hotkey [T]."
             };
-            float[] skillXs = { 325f, 415f, 505f };
+            float[] skillXs = { 328f, 418f, 502f };
 
             for (int i = 0; i < 3; i++)
             {
@@ -601,7 +583,7 @@ namespace TheLastKnight.UI
                 var slotGo = new GameObject($"SkillSlot_{i + 1}", typeof(RectTransform), typeof(Image), typeof(Button));
                 slotGo.transform.SetParent(parent, false);
                 var rt = slotGo.GetComponent<RectTransform>();
-                rt.anchoredPosition = ToUI(skillXs[i], 158);
+                rt.anchoredPosition = ToUI(skillXs[i], 173);
                 rt.sizeDelta = new Vector2(54, 54);
 
                 var img = slotGo.GetComponent<Image>();
@@ -784,8 +766,8 @@ namespace TheLastKnight.UI
             var plusGo = new GameObject($"BtnPlus_{name}", typeof(RectTransform), typeof(Image), typeof(Button));
             plusGo.transform.SetParent(parent, false);
             var plusRt = plusGo.GetComponent<RectTransform>();
-            plusRt.anchoredPosition = ToUI(708, py);
-            plusRt.sizeDelta = new Vector2(28, 24);
+            plusRt.anchoredPosition = ToUI(697, py);
+            plusRt.sizeDelta = new Vector2(24, 24);
             var plusImg = plusGo.GetComponent<Image>();
             plusImg.color = new Color(1f, 1f, 1f, 0.01f);
             plusImg.raycastTarget = true;
@@ -798,8 +780,8 @@ namespace TheLastKnight.UI
             var maxGo = new GameObject($"BtnMax_{name}", typeof(RectTransform), typeof(Image), typeof(Button));
             maxGo.transform.SetParent(parent, false);
             var maxRt = maxGo.GetComponent<RectTransform>();
-            maxRt.anchoredPosition = ToUI(752, py);
-            maxRt.sizeDelta = new Vector2(46, 24);
+            maxRt.anchoredPosition = ToUI(738, py);
+            maxRt.sizeDelta = new Vector2(42, 24);
             var maxImg = maxGo.GetComponent<Image>();
             maxImg.color = new Color(1f, 1f, 1f, 0.01f);
             maxImg.raycastTarget = true;

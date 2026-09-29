@@ -675,14 +675,18 @@ namespace TheLastKnight.Player
             }
         }
 
+        private int _drinkingSlot = -1;
+        private TheLastKnight.Inventory.InventoryItemData _drinkingItem;
+
         private void StartDrink()
         {
             var stats = GetComponent<PlayerStats>();
             var qm = TheLastKnight.Core.QuickItemManager.Instance;
-            var activeItem = qm != null ? qm.GetActiveItem() : null;
-
             var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
-            if (inventory == null || !inventory.CanUseQuickSlot(0, stats)) return;
+            int index = qm != null ? qm.GetActiveSlotIndex() : -1;
+            if (inventory == null || !inventory.CanUseQuickSlot(index, stats)) return;
+            _drinkingSlot = index;
+            _drinkingItem = inventory.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, index);
             CurrentState = PlayerState.Drinking;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("drink");
             _drinkTimer = _drinkDuration;
@@ -724,17 +728,13 @@ namespace TheLastKnight.Player
         private void EndDrink()
         {
             var stats = GetComponent<PlayerStats>();
-            var qm = TheLastKnight.Core.QuickItemManager.Instance;
-            var activeItem = qm != null ? qm.GetActiveItem() : null;
-
-            if (activeItem != null && activeItem.id != "potion_heal")
-            {
-                qm.UseSlot(0, stats);
-            }
-            else
-            {
-                stats.CompletePotionDrink();
-            }
+            var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
+            // Consume the stack selected at the start, not a replacement moved during the animation.
+            if (inventory != null && _drinkingItem != null &&
+                ReferenceEquals(inventory.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, _drinkingSlot), _drinkingItem))
+                inventory.UseQuickSlot(_drinkingSlot, stats);
+            _drinkingSlot = -1;
+            _drinkingItem = null;
             if (_kinematicController.IsGrounded)
             {
                 float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;

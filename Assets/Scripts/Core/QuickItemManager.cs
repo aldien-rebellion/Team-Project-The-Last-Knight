@@ -91,7 +91,13 @@ namespace TheLastKnight.Core
         }
 
         public QuickItemSlotData GetSlot(int index) => index >= 0 && index < MaxSlots ? _slots[index] : null;
-        public QuickItemSlotData GetActiveItem() => _slots[0];
+        public int GetActiveSlotIndex()
+        {
+            for (int i = 0; i < MaxSlots; i++)
+                if (_slots[i] != null && _slots[i].count > 0) return i;
+            return -1;
+        }
+        public QuickItemSlotData GetActiveItem() => GetSlot(GetActiveSlotIndex());
         public bool UseSlot(int index, PlayerStats player) =>
             TheLastKnight.Inventory.InventoryManager.Instance?.UseQuickSlot(index, player) ?? false;
     }

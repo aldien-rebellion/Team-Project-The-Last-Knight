@@ -85,10 +85,7 @@ namespace TheLastKnight.Environment
             {
                 uiModule = es.gameObject.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
             }
-            if (InputSystem.actions != null)
-            {
-                uiModule.actionsAsset = InputSystem.actions;
-            }
+            TheLastKnight.UI.UIInputLifetime.Configure(uiModule);
 #else
             var standalone = es.GetComponent<UnityEngine.EventSystems.StandaloneInputModule>();
             if (standalone == null)

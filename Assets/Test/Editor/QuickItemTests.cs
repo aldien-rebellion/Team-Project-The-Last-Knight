@@ -226,6 +226,37 @@ namespace TheLastKnight.Tests
             Assert.That(Count(Held), Is.EqualTo(3));
         }
         [Test]
+        public void QuickPriority_SkipsEmptySlots_AndPotionCompletionConsumesDisplayedStack()
+        {
+            var playerObject = new GameObject("Test_QuickPriorityPlayer");
+            playerObject.SetActive(false);
+            try
+            {
+                var player = playerObject.AddComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                var type = player.GetType();
+                type.GetField("<MaxHP>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(player, 500f);
+                type.GetField("_currentHP", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(player, 50f);
+                for (int i = 0; i < 5; i++) Call(_inventory, "SetSlot", Quick, i, null);
+                Set(Quick, 4, "potion_heal", 2);
+                Assert.That(Call(_quick, "GetActiveSlotIndex"), Is.EqualTo(4));
+                Assert.That(Field(Call(_quick, "GetActiveItem"), "id"), Is.EqualTo("potion_heal"));
+                Assert.That(Call(player, "CompletePotionDrink"), Is.EqualTo(true));
+                Assert.That(Count(Slot(Quick, 4)), Is.EqualTo(1));
+                Set(Quick, 0, "potion_heal", 1);
+                Assert.That(Call(_quick, "GetActiveSlotIndex"), Is.EqualTo(0));
+                Assert.That(Call(player, "CompletePotionDrink"), Is.EqualTo(true));
+                int next = (int)Call(_quick, "GetActiveSlotIndex");
+                Assert.That(next, Is.GreaterThan(0), "Must skip the empty slots after the first stack runs out");
+                Assert.That(Call(player, "CompletePotionDrink"), Is.EqualTo(true));
+                Assert.That(Call(_quick, "GetActiveSlotIndex"), Is.EqualTo(-1));
+                Assert.That(Call(_quick, "GetActiveItem"), Is.Null);
+                Assert.That(Call(player, "CompletePotionDrink"), Is.EqualTo(false));
+                Assert.That(type.GetProperty("CurrentHP").GetValue(player), Is.EqualTo(200f));
+            }
+            finally { UnityEngine.Object.DestroyImmediate(playerObject); }
+        }
+
+        [Test]
         public void Consumption_UpdatesInventoryHudAndStats_WithoutUnintendedEffects()
         {
             var playerObject = new GameObject("Test_ItemPlayer");

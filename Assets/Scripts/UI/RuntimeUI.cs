@@ -92,19 +92,7 @@ namespace TheLastKnight.UI
                 }
                 module.enabled = true;
 
-                if (UnityEngine.InputSystem.InputSystem.actions != null)
-                {
-                    module.actionsAsset = UnityEngine.InputSystem.InputSystem.actions;
-                    var uiMap = UnityEngine.InputSystem.InputSystem.actions.FindActionMap("UI");
-                    if (uiMap != null && !uiMap.enabled)
-                    {
-                        uiMap.Enable();
-                    }
-                }
-                else
-                {
-                    module.AssignDefaultActions();
-                }
+                UIInputLifetime.Configure(module);
             }
         }
 

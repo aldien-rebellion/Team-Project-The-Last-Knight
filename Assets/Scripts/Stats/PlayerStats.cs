@@ -48,8 +48,9 @@ namespace TheLastKnight.Stats
         public bool CompletePotionDrink()
         {
             var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
-            var item = inventory?.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, 0);
-            return item != null && item.id == "potion_heal" && inventory.UseQuickSlot(0, this);
+            int index = TheLastKnight.Core.QuickItemManager.Instance?.GetActiveSlotIndex() ?? -1;
+            var item = inventory?.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, index);
+            return item != null && item.id == "potion_heal" && inventory.UseQuickSlot(index, this);
         }
         public void SyncHealingPotions(int amount)
         {
