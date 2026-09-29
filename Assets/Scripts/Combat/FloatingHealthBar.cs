@@ -29,6 +29,9 @@ namespace TheLastKnight.Combat
         private Text _levelText;
         private Text _healthPercentText;
         private SpriteRenderer _targetSpriteRenderer;
+        private bool _temporarilyHidden;
+
+        public void SetTemporarilyHidden(bool hidden) => _temporarilyHidden = hidden;
 
         private void Awake()
         {
@@ -167,7 +170,7 @@ namespace TheLastKnight.Combat
                     : bounds.center.x + GetHeadHorizontalOffsetWorld();
                 transform.position = new Vector3(centerX, bounds.max.y + _headGap + halfHeight, transform.position.z);
             }
-            if (_canvas != null) _canvas.enabled = TheLastKnight.Core.GameDifficultyManager.ShowHelpers;
+            if (_canvas != null) _canvas.enabled = !_temporarilyHidden && TheLastKnight.Core.GameDifficultyManager.ShowHelpers;
             if (_levelText != null)
             {
                 _levelText.enabled = TheLastKnight.Core.GameDifficultyManager.ShowEnemyLevel;

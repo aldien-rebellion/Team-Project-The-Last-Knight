@@ -75,6 +75,7 @@ namespace TheLastKnight.AI
         [SerializeField] private string[] _basicAttackAnimStates = new string[0];
         [Tooltip("Delay from the attack animation start to the visible damage frame.")]
         [SerializeField, Min(0f)] private float _basicAttackDamageDelay;
+        [SerializeField, Min(0f)] private float _basicAttackActionDuration;
         [Tooltip("Per-animation delay from attack animation start to the damage frame; indices match Basic Attack Anim States.")]
         [SerializeField] private float[] _basicAttackDamageStartDelays = new float[0];
         private int _nextBasicAttackAnimIndex;
@@ -157,6 +158,7 @@ private Rigidbody2D _rb;
         private int _basicMeleeOpportunityCount;
         private float _currentAttackMultiplier = 1.0f;
         private bool _isActionLocked = false;
+        private bool _holdingFireballRain;
         private bool _weaponDrawn;
         private float _patrolPauseUntil;
         private ParryReceiver _parry;
@@ -167,6 +169,7 @@ private Rigidbody2D _rb;
         private bool _hurtAnimationPending;
         private float _hurtAnimationPendingUntil;
         private GameObject _activeSkillProjectile;
+        private bool _skillSpriteHidden;
         public bool CanDealMeleeDamage => !_stats.IsDead && !_parry.IsStaggered && Time.time < _damageUntil;
         public float CurrentAttackDamage => _stats != null ? _stats.AttackPower * _currentAttackMultiplier : 10f;
         public float CurrentAttackMultiplier => _currentAttackMultiplier;
@@ -478,8 +481,11 @@ _rb = GetComponent<Rigidbody2D>();
                 ? GetReadySkill(attackDistance) : null;
             if (readySkill != null)
             {
-                bool isContactSkill = readySkill.projectilePrefab == null && readySkill.groundSpellPrefab == null;
-                if ((!_requireCloseRangeForContactSkills || !isContactSkill || attackDistance <= _meleeRange || isTouching)
+                bool isContactSkill = readySkill.projectilePrefab == null && readySkill.groundSpellPrefab == null
+                    && !readySkill.summonFireballRain;
+                if ((!_requireCloseRangeForContactSkills || !isContactSkill || readySkill.approachPlayerWhileHidden
+                    || readySkill.teleportToPlayerAfterPreparation
+                    || attackDistance <= _meleeRange || isTouching)
                     && (!_disableBasicAttack || CanReachPlayerWithSkill(readySkill) || isTouching))
                 {
                     FaceTarget(_player.transform.position);
@@ -874,7 +880,9 @@ _rb = GetComponent<Rigidbody2D>();
             if (ranged) SpawnProjectile();
             yield return new WaitForSeconds(damageWindow);
             _damageUntil = 0f;
-            float remainingAnimationTime = GetAnimationDuration(_basicAttackAnimState, 0.35f)
+            float basicActionDuration = _basicAttackActionDuration > 0f
+                ? _basicAttackActionDuration : GetAnimationDuration(_basicAttackAnimState, 0.35f);
+            float remainingAnimationTime = basicActionDuration
                 - damageWindow - damageStartDelay;
             if (remainingAnimationTime > 0f)
             {
@@ -907,7 +915,6 @@ _rb = GetComponent<Rigidbody2D>();
             SetAnimBool("IsChasing", false);
             if (_useMovementAnimationStates) PlayMovementState("Idle");
 
-            skill.nextReadyTime = Time.time + skill.cooldown;
             if (_cycleNonParryableSkills && !skill.isParryable)
                 _nextCyclicSkill = (System.Array.IndexOf(_skills, skill) + 1) % _skills.Length;
             _currentAttackMultiplier = skill.damageMultiplier;
@@ -940,7 +947,7 @@ _rb = GetComponent<Rigidbody2D>();
                     yield break;
                 }
             }
-            else if (!_continuousActions && !_isBoss)
+            else if (!_continuousActions && !_isBoss && !skill.skipAnticipation)
             {
                 yield return new WaitForSeconds(0.15f);
                 if (_stats.IsDead || _parry.IsStaggered)
@@ -954,16 +961,152 @@ _rb = GetComponent<Rigidbody2D>();
                 && (_animator.HasState(0, Animator.StringToHash(skill.animationName))
                     || _animator.HasState(0, Animator.StringToHash("Base Layer." + skill.animationName)));
 
+            if (!string.IsNullOrEmpty(skill.preparationAnimationName))
+            {
+                SetSkillHealthBarsHidden(skill.hideHealthBarDuringSkill);
+                PlayAnimationAction(skill.preparationAnimationName);
+                float preparationDuration = skill.preparationDurationOverride > 0f
+                    ? skill.preparationDurationOverride
+                    : GetAnimationDuration(skill.preparationAnimationName, 0.5f);
+                if (skill.preparationDamageDelay >= 0f && skill.preparationDamageDelay < preparationDuration)
+                {
+                    yield return new WaitForSeconds(skill.preparationDamageDelay);
+                    if (_stats.IsDead || _parry.IsStaggered)
+                    {
+                        SetSkillHealthBarsHidden(false);
+                        _isActionLocked = false;
+                        yield break;
+                    }
+                    foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
+                    {
+                        hitbox.BeginAttack();
+                    }
+                    _damageUntil = Time.time + 0.18f;
+                    foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
+                        hitbox.DealDamageToOverlaps();
+                    yield return new WaitForSeconds(preparationDuration - skill.preparationDamageDelay);
+                    _damageUntil = 0f;
+                }
+                else
+                {
+                    yield return new WaitForSeconds(preparationDuration);
+                }
+                if (_stats.IsDead || _parry.IsStaggered)
+                {
+                    SetSkillHealthBarsHidden(false);
+                    _isActionLocked = false;
+                    yield break;
+                }
+            }
+
+            if (skill.teleportToPlayerAfterPreparation)
+            {
+                SetSkillSpriteHidden(true);
+                bool reachedPlayer = TeleportBesidePlayer();
+                SetSkillSpriteHidden(false);
+                if (!reachedPlayer)
+                {
+                    SetSkillHealthBarsHidden(false);
+                    _currentAttackMultiplier = _basicAttackMultiplier;
+                    _isActionLocked = false;
+                    yield break;
+                }
+                FaceTarget(_player.transform.position);
+            }
+
+            if (skill.approachPlayerWhileHidden && _player != null)
+            {
+                SetSkillSpriteHidden(true);
+                float stopAt = Time.time + Mathf.Max(0f, skill.hiddenApproachTimeout);
+                while (Time.time < stopAt && _player != null && !_stats.IsDead
+                    && !_parry.IsStaggered && GetAttackDistance() > _meleeRange)
+                {
+                    ChasePlayer();
+                    yield return new WaitForFixedUpdate();
+                }
+                _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
+                SetAnimBool("IsMoving", false);
+                SetAnimBool("IsChasing", false);
+                SetSkillSpriteHidden(false);
+                if (_stats.IsDead || _parry.IsStaggered)
+                {
+                    SetSkillHealthBarsHidden(false);
+                    _isActionLocked = false;
+                    yield break;
+                }
+                _currentState = EnemyAIState.Skill;
+                FaceTarget(_player.transform.position);
+            }
+
+            if (!string.IsNullOrEmpty(skill.reappearanceAnimationName))
+            {
+                PlayAnimationAction(skill.reappearanceAnimationName);
+                yield return new WaitForSeconds(skill.reappearanceDurationOverride > 0f
+                    ? skill.reappearanceDurationOverride
+                    : GetAnimationDuration(skill.reappearanceAnimationName, 0.5f));
+                if (_stats.IsDead || _parry.IsStaggered)
+                {
+                    SetSkillHealthBarsHidden(false);
+                    _isActionLocked = false;
+                    yield break;
+                }
+                if (skill.approachPlayerWhileHidden)
+                {
+                    float catchUpUntil = Time.time + Mathf.Min(1.5f, Mathf.Max(0f, skill.hiddenApproachTimeout));
+                    if (_player != null && GetAttackDistance() > _meleeRange)
+                        PlayMovementState("Run");
+                    while (Time.time < catchUpUntil && _player != null && GetAttackDistance() > _meleeRange)
+                    {
+                        ChasePlayer();
+                        yield return new WaitForFixedUpdate();
+                    }
+                    _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
+                    SetAnimBool("IsMoving", false);
+                    SetAnimBool("IsChasing", false);
+                    if (_player == null || GetAttackDistance() > _meleeRange)
+                    {
+                        SetSkillHealthBarsHidden(false);
+                        _currentAttackMultiplier = _basicAttackMultiplier;
+                        _isActionLocked = false;
+                        yield break;
+                    }
+                    _currentState = EnemyAIState.Skill;
+                    FaceTarget(_player.transform.position);
+                }
+            }
+
             if (skill.guardDuration > 0f)
             {
                 if (waitForAnimation && _cycleNonParryableSkills)
                     _animator.Play(skill.animationName, 0, 0f);
                 else
                     PlayAnimationAction(skill.animationName, skill.actionIndex);
-                yield return new WaitForSeconds(skill.guardDuration);
-                if (waitForAnimation) _animator.Play("Idle", 0, 0f);
+                if (skill.summonFireballRain)
+                {
+                    _holdingFireballRain = true;
+                    Coroutine rainRoutine = null;
+                    var rain = GetComponent<TheLastKnight.Combat.FoxFireballRain>();
+                    if (!_stats.IsDead && (_parry == null || !_parry.IsStaggered) && rain != null)
+                        rainRoutine = StartCoroutine(rain.CastRoutine(_player,
+                            _stats.AttackPower * skill.damageMultiplier));
+                    yield return new WaitForSeconds(skill.guardDuration);
+                    if (rainRoutine != null) yield return rainRoutine;
+                    _holdingFireballRain = false;
+                }
+                else
+                {
+                    yield return new WaitForSeconds(skill.guardDuration);
+                }
+                if (skill.summonFireballRain)
+                {
+                    _animator.Play("Idle", 0, 0f);
+                    _currentState = EnemyAIState.Idle;
+                }
+                else if (waitForAnimation) _animator.Play("Idle", 0, 0f);
                 if (_waitForAttackAnimationToFinish) yield return null;
                 _currentAttackMultiplier = _basicAttackMultiplier;
+                skill.nextReadyTime = Time.time + skill.cooldown;
+                SetSkillHealthBarsHidden(false);
                 _isActionLocked = false;
                 yield break;
             }
@@ -989,6 +1132,7 @@ _rb = GetComponent<Rigidbody2D>();
             }
             if (_stats.IsDead || _parry.IsStaggered)
             {
+                SetSkillHealthBarsHidden(false);
                 _isActionLocked = false;
                 yield break;
             }
@@ -1047,6 +1191,7 @@ _rb = GetComponent<Rigidbody2D>();
                     if (_stats.IsDead || _parry.IsStaggered)
                     {
                         _damageUntil = 0f;
+                        SetSkillHealthBarsHidden(false);
                         _isActionLocked = false;
                         yield break;
                     }
@@ -1086,7 +1231,9 @@ _rb = GetComponent<Rigidbody2D>();
                 SpawnCustomProjectile(skill.projectilePrefab, skill.damageMultiplier);
             }
 
-            float remainingAnimationTime = GetAnimationDuration(skill.animationName, elapsedAnimationTime) - elapsedAnimationTime;
+            float actionDuration = skill.actionDurationOverride > 0f
+                ? skill.actionDurationOverride : GetAnimationDuration(skill.animationName, elapsedAnimationTime);
+            float remainingAnimationTime = actionDuration - elapsedAnimationTime;
             if (remainingAnimationTime > 0f)
             {
                 yield return new WaitForSeconds(remainingAnimationTime);
@@ -1104,7 +1251,62 @@ _rb = GetComponent<Rigidbody2D>();
             if (_continuousActions && waitForAnimation) _animator.Play("Idle", 0, 0f);
             if (_waitForAttackAnimationToFinish) yield return null;
             _currentAttackMultiplier = _basicAttackMultiplier;
+            skill.nextReadyTime = Time.time + skill.cooldown;
+            SetSkillHealthBarsHidden(false);
             _isActionLocked = false;
+        }
+
+        private void SetSkillHealthBarsHidden(bool hidden)
+        {
+            foreach (var bar in GetComponentsInChildren<FloatingHealthBar>(true))
+                bar.SetTemporarilyHidden(hidden);
+        }
+
+        private void SetSkillSpriteHidden(bool hidden)
+        {
+            if (_spriteRenderer == null) return;
+            if (hidden)
+            {
+                _spriteRenderer.enabled = false;
+                _skillSpriteHidden = true;
+            }
+            else if (_skillSpriteHidden)
+            {
+                _spriteRenderer.enabled = true;
+                _skillSpriteHidden = false;
+            }
+        }
+
+        private bool TeleportBesidePlayer()
+        {
+            if (_player == null || _rb == null || _colliders == null) return false;
+            Collider2D ownBody = null;
+            foreach (var collider in _colliders)
+                if (collider != null && collider.enabled && !collider.isTrigger)
+                {
+                    ownBody = collider;
+                    break;
+                }
+            if (ownBody == null) return false;
+
+            foreach (var target in _player.GetComponentsInChildren<Collider2D>())
+            {
+                if (target == null || !target.enabled || target.isTrigger) continue;
+                // Choose either side on every ambush so the fox can strike from
+                // in front of or behind the player, regardless of its old position.
+                bool approachFromLeft = Random.value < 0.5f;
+                float edgeGap = Mathf.Min(0.03f, _meleeRange * 0.5f);
+                float x = approachFromLeft
+                    ? target.bounds.min.x - edgeGap - (ownBody.bounds.max.x - transform.position.x)
+                    : target.bounds.max.x + edgeGap + (transform.position.x - ownBody.bounds.min.x);
+                float y = target.bounds.min.y - (ownBody.bounds.min.y - transform.position.y);
+                _rb.linearVelocity = Vector2.zero;
+                transform.position = new Vector3(x, y, transform.position.z);
+                _rb.position = new Vector2(x, y);
+                Physics2D.SyncTransforms();
+                return GetAttackDistance() <= _meleeRange;
+            }
+            return false;
         }
 
         private static void PlaySkillVisualEffect(GameObject effect)
@@ -1392,6 +1594,9 @@ _rb = GetComponent<Rigidbody2D>();
         private void StopAttack()
         {
             StopAllCoroutines();
+            _holdingFireballRain = false;
+            SetSkillSpriteHidden(false);
+            SetSkillHealthBarsHidden(false);
             _smallDragonFireEffect?.Stop();
             _parry?.FinishWindup();
             _damageUntil = 0f;
@@ -1574,6 +1779,7 @@ _rb = GetComponent<Rigidbody2D>();
         public void NotifyDamaged(DamageData data)
         {
             if (_stats.IsDead) return;
+            if (_holdingFireballRain) return;
 
             // A cyclic action finishes before the next action or hurt pose can start.
             bool shouldInterruptAttack = _interruptAttackOnDamage || _useMovementAnimationStates;

@@ -16,6 +16,36 @@ namespace TheLastKnight.Combat
         [Tooltip("Animator trigger or state name (e.g. Attack3, Skill1, Summon, Dash).")]
         public string animationName = "Attack3";
 
+        [Tooltip("Optional animation played before the damaging animation (for example, Disappear before Appear).")]
+        public string preparationAnimationName;
+
+        [Tooltip("Optional shorter playback time for the preparation animation.")]
+        [Min(0f)] public float preparationDurationOverride;
+
+        [Tooltip("Optional animation played after a hidden approach and before the damaging attack.")]
+        public string reappearanceAnimationName;
+
+        [Tooltip("Optional shorter playback time for the reappearance animation.")]
+        [Min(0f)] public float reappearanceDurationOverride;
+
+        [Tooltip("Optional total duration of the damaging animation.")]
+        [Min(0f)] public float actionDurationOverride;
+
+        public bool skipAnticipation;
+        public bool teleportToPlayerAfterPreparation;
+
+        [Tooltip("Seconds into the preparation animation to strike; negative disables its hit.")]
+        public float preparationDamageDelay = -1f;
+
+        [Tooltip("Hide this enemy's health bar and level for the full animation sequence.")]
+        public bool hideHealthBarDuringSkill;
+
+        [Tooltip("After the preparation animation, chase the player unseen before the damaging animation.")]
+        public bool approachPlayerWhileHidden;
+
+        [Tooltip("Maximum seconds spent approaching while hidden before reappearing.")]
+        [Min(0f)] public float hiddenApproachTimeout = 3f;
+
         [Tooltip("Optional ActionIndex if used in Animator Controller (-1 = ignore).")]
         public int actionIndex = -1;
 
@@ -64,6 +94,9 @@ namespace TheLastKnight.Combat
 
         [Tooltip("Only use this skill when there is a clear line of sight to the player.")]
         public bool requireLineOfSight;
+
+        [Tooltip("After the held howl animation, summon fireballs from above around the Fox.")]
+        public bool summonFireballRain;
 
         [Tooltip("Optional ground spell prefab for area skills (e.g. BringerOfDeath_Spell, Jinn_Magic).")]
         public GameObject groundSpellPrefab;
