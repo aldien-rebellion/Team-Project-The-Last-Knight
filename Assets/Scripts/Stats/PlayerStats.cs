@@ -88,6 +88,11 @@ namespace TheLastKnight.Stats
         public float LastDamageTime => _lastDamageTime;
         public void SetLastDamageTimeForTesting(float time) => _lastDamageTime = time;
 
+        private float _lastStaminaSpendTime = -100f;
+        public const float StaminaRegenDelay = 1.0f; // 1 second delay after spending stamina before regen starts
+        public float LastStaminaSpendTime => _lastStaminaSpendTime;
+        public void SetLastStaminaSpendTimeForTesting(float time) => _lastStaminaSpendTime = time;
+
         public void SetRegenAura(Object source, bool active)
         {
             if (active) _regenAuras.Add(source); else _regenAuras.Remove(source);
@@ -97,6 +102,10 @@ namespace TheLastKnight.Stats
         {
             if (amount < 0 || _currentStamina < amount || IsDead) return false;
             _currentStamina -= amount;
+            if (amount > 0)
+            {
+                _lastStaminaSpendTime = Time.time;
+            }
             return true;
         }
 
@@ -106,11 +115,19 @@ namespace TheLastKnight.Stats
             _regenAuras.RemoveWhere(source => source == null);
             if (_playerController.CurrentState == PlayerState.Idle || _playerController.CurrentState == PlayerState.Walking)
             {
-                _currentStamina = Mathf.Min(MaxStamina, _currentStamina + (_regenAuras.Count > 0 ? 40f : 20f)
-                    * TheLastKnight.Core.GameDifficultyManager.Regeneration * Time.deltaTime);
-
+                RegenerateStamina(Time.deltaTime);
                 RegenerateHP(Time.deltaTime);
             }
+        }
+
+        public void RegenerateStamina(float deltaTime)
+        {
+            if (IsDead || _playerController == null) return;
+            if (_playerController.CurrentState != PlayerState.Idle && _playerController.CurrentState != PlayerState.Walking) return;
+            if (Time.time - _lastStaminaSpendTime < StaminaRegenDelay || _currentStamina >= MaxStamina) return;
+
+            float regenRate = (_regenAuras.Count > 0 ? 40f : 20f) * TheLastKnight.Core.GameDifficultyManager.Regeneration;
+            _currentStamina = Mathf.Min(MaxStamina, _currentStamina + regenRate * deltaTime);
         }
 
         public void RegenerateHP(float deltaTime)
@@ -124,7 +141,7 @@ namespace TheLastKnight.Stats
         }
 
         public void Heal(float amount) => _currentHP = Mathf.Min(MaxHP, _currentHP + Mathf.Max(0, amount));
-        public void Rest() { _currentHP = MaxHP; _currentStamina = MaxStamina; _lastDamageTime = -100f; }
+        public void Rest() { _currentHP = MaxHP; _currentStamina = MaxStamina; _lastDamageTime = -100f; _lastStaminaSpendTime = -100f; }
 
         // Derived calculations (cached for other systems to query)
         [CreateProperty]

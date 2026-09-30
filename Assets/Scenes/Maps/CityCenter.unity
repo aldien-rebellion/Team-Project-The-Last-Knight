@@ -169,11 +169,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3622548920129109940, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
       propertyPath: _expReward
-      value: 27
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3622548920129109940, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
       propertyPath: _goldReward
-      value: 30
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 6306785311533167210, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
       propertyPath: m_Name
@@ -65696,7 +65696,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _expReward
-      value: 28
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _maxHealth
@@ -65704,7 +65704,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _goldReward
-      value: 29
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _useLevelScaling

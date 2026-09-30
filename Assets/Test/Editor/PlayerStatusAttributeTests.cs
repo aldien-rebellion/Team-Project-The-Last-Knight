@@ -368,6 +368,31 @@ namespace TheLastKnight.Tests
             Assert.That(moveSpdLowered, Is.LessThan(moveSpd250));
             Assert.That(sprintSpdLowered, Is.LessThan(sprintSpd250));
         }
+
+        [Test]
+        public void StaminaRegen_DelaysAfterSpendingStamina()
+        {
+            var spendMethod = _stats.GetType().GetMethod("TrySpendStamina");
+            var regenMethod = _stats.GetType().GetMethod("RegenerateStamina");
+            var setLastSpendTime = _stats.GetType().GetMethod("SetLastStaminaSpendTimeForTesting");
+
+            // Spend stamina
+            spendMethod.Invoke(_stats, new object[] { 40f });
+            float stmAfterSpend = (float)GetProp(_stats, "CurrentStamina");
+            Assert.That(stmAfterSpend, Is.EqualTo(60f).Within(0.01f));
+
+            // While within delay (e.g. 0.2s elapsed), regen should not happen
+            setLastSpendTime.Invoke(_stats, new object[] { Time.time - 0.2f });
+            regenMethod.Invoke(_stats, new object[] { 0.5f });
+            float stmDuringDelay = (float)GetProp(_stats, "CurrentStamina");
+            Assert.That(stmDuringDelay, Is.EqualTo(60f).Within(0.01f), "Stamina must not regenerate during delay period");
+
+            // After delay has passed (e.g. 2.0s elapsed > StaminaRegenDelay), regen should proceed
+            setLastSpendTime.Invoke(_stats, new object[] { Time.time - 2.0f });
+            regenMethod.Invoke(_stats, new object[] { 0.5f });
+            float stmAfterDelay = (float)GetProp(_stats, "CurrentStamina");
+            Assert.That(stmAfterDelay, Is.GreaterThan(60f), "Stamina must regenerate after delay period");
+        }
     }
 }
 
