@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using TheLastKnight.Inventory;
+using TheLastKnight.Input;
 using TheLastKnight.Stats;
 
 namespace TheLastKnight.Player
@@ -47,8 +48,11 @@ namespace TheLastKnight.Player
 
         private void Update()
         {
-            var keyboard = Keyboard.current;
-            if (keyboard != null && keyboard.f3Key.isPressed && keyboard.gKey.wasPressedThisFrame)
+            var actions = InputSystem.actions;
+            var toggleAction = actions != null ? actions.FindAction("AdminModeKey") : null;
+            var modifierAction = actions != null ? actions.FindAction("AdminModeModifier") : null;
+            if (toggleAction != null && modifierAction != null &&
+                toggleAction.WasPressedThisFrame() && modifierAction.IsPressed())
                 _isOpen = !_isOpen;
 
             var stats = GetComponent<PlayerStats>();
@@ -68,7 +72,9 @@ namespace TheLastKnight.Player
             {
                 _rowStyle = new GUIStyle(GUI.skin.label) { wordWrap = true };
             }
-            _windowRect = GUI.Window(731942, _windowRect, DrawWindow, "PLAYER ADMIN  |  F3 + G");
+            string modifier = KeyRebindManager.GetCurrentBindingDisplay("AdminModeModifier", 0);
+            string key = KeyRebindManager.GetCurrentBindingDisplay("AdminModeKey", 0);
+            _windowRect = GUI.Window(731942, _windowRect, DrawWindow, "PLAYER ADMIN  |  " + modifier + " + " + key);
         }
 
         private void DrawWindow(int id)

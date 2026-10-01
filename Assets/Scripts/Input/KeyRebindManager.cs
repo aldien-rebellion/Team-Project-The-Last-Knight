@@ -44,7 +44,9 @@ namespace TheLastKnight.Input
                 new RebindableActionInfo("UseSkill", 0, "ACTION_SKILL"),
                 new RebindableActionInfo("UseBuff", 0, "ACTION_BUFF"),
                 new RebindableActionInfo("UseExcalibur", 0, "ACTION_EXCALIBUR"),
-                new RebindableActionInfo("Interact", 0, "ACTION_INTERACT")
+                new RebindableActionInfo("Interact", 0, "ACTION_INTERACT"),
+                new RebindableActionInfo("AdminModeModifier", 0, "ACTION_ADMIN_MODIFIER"),
+                new RebindableActionInfo("AdminModeKey", 0, "ACTION_ADMIN_KEY")
             };
         }
 
