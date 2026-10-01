@@ -28,7 +28,8 @@ namespace TheLastKnight.UI
         private GameObject _sceneTitlePanel;
         private Action _complete;
         private int _openedFrame;
-        private bool _ending, _rolling, _cutscenePlaying;
+        private bool _ending, _rolling, _cutscenePlaying, _isDialogueHidden;
+        private Text _hideButtonText;
         private float _elapsed;
         private float _sceneTitleElapsed;
         private RectTransform _credits, _creditsViewport;
@@ -48,7 +49,7 @@ namespace TheLastKnight.UI
                 if (canvas != null && canvas.name.StartsWith("ฉากที่", StringComparison.Ordinal))
                     Destroy(canvas.gameObject);
             }
-            _ending = _rolling = _cutscenePlaying = false; _elapsed = 0f;
+            _ending = _rolling = _cutscenePlaying = _isDialogueHidden = false; _elapsed = 0f;
             _lines = PrepareLines(lines); _index = 0; _complete = complete; _openedFrame = Time.frameCount; _history.Clear();
             GameManager.Instance.SetInputBlocked(true); Time.timeScale = 0f;
             SetHudVisible(false);
@@ -70,6 +71,15 @@ namespace TheLastKnight.UI
 
             var backdrop = CreatePanel(_panel.transform, "Backdrop", new Color(0f, 0f, 0f, 0.08f), Vector2.zero, Vector2.one);
             backdrop.GetComponent<Image>().raycastTarget = true;
+            var backdropButton = backdrop.AddComponent<Button>();
+            backdropButton.transition = Selectable.Transition.None;
+            backdropButton.onClick.AddListener(() =>
+            {
+                if (_isDialogueHidden)
+                {
+                    ToggleHideDialogue();
+                }
+            });
 
             var backgroundObject = new GameObject("Story Background", typeof(RectTransform), typeof(Image));
             backgroundObject.transform.SetParent(backdrop.transform, false);
@@ -81,9 +91,10 @@ namespace TheLastKnight.UI
             _storyBackground = backgroundObject.GetComponent<Image>();
             _storyBackground.raycastTarget = false;
 
-            _menuPanel = CreatePanel(backdrop.transform, "Story Menu", new Color(0.02f, 0.025f, 0.035f, 0.55f), new Vector2(0.79f, 0.925f), new Vector2(0.985f, 0.985f), true);
-            CreateTopMenuButton(_menuPanel.transform, "SKIP", 0.05f, 0.47f, Finish);
-            CreateTopMenuButton(_menuPanel.transform, "LOG", 0.53f, 0.95f, ToggleLog);
+            _menuPanel = CreatePanel(backdrop.transform, "Story Menu", new Color(0.02f, 0.025f, 0.035f, 0.55f), new Vector2(0.68f, 0.925f), new Vector2(0.985f, 0.985f), true);
+            CreateTopMenuButton(_menuPanel.transform, "SKIP", 0.04f, 0.32f, Finish);
+            CreateTopMenuButton(_menuPanel.transform, "LOG", 0.36f, 0.64f, ToggleLog);
+            _hideButtonText = CreateTopMenuButton(_menuPanel.transform, "HIDE", 0.68f, 0.96f, ToggleHideDialogue);
 
             _dialoguePanel = CreatePanel(backdrop.transform, "Dialogue Box", new Color(0.015f, 0.015f, 0.02f, 0.88f), new Vector2(0.015f, 0.045f), new Vector2(0.985f, 0.045f + DialogueHeight), true);
             var dialogueRect = _dialoguePanel.GetComponent<RectTransform>();
@@ -223,7 +234,7 @@ namespace TheLastKnight.UI
             }
         }
 
-        private void CreateTopMenuButton(Transform parent, string label, float left, float right, UnityAction action)
+        private Text CreateTopMenuButton(Transform parent, string label, float left, float right, UnityAction action)
         {
             var button = new GameObject(label, typeof(RectTransform), typeof(Image), typeof(Button));
             button.transform.SetParent(parent, false);
@@ -233,7 +244,7 @@ namespace TheLastKnight.UI
             var image = button.GetComponent<Image>();
             image.color = new Color(0f, 0f, 0f, 0f);
             var uiButton = button.GetComponent<Button>();
-            var text = CreateText(button.transform, label, 14, new Color(0.88f, 0.88f, 0.9f), TextAnchor.MiddleLeft, Vector2.zero, Vector2.one);
+            var text = CreateText(button.transform, label, 14, new Color(0.88f, 0.88f, 0.9f), TextAnchor.MiddleCenter, Vector2.zero, Vector2.one);
             uiButton.targetGraphic = text;
             var colors = uiButton.colors;
             colors.normalColor = new Color(0.72f, 0.72f, 0.75f, 1f);
@@ -241,6 +252,7 @@ namespace TheLastKnight.UI
             colors.pressedColor = new Color(0.7f, 0.62f, 0.4f, 1f);
             uiButton.colors = colors;
             uiButton.onClick.AddListener(action);
+            return text;
         }
 
         private void SetLine(int index)
@@ -320,12 +332,13 @@ namespace TheLastKnight.UI
             Destroy(_sceneTitlePanel);
             _sceneTitlePanel = null;
             _menuPanel.SetActive(true);
-            _dialoguePanel.SetActive(true);
+            _dialoguePanel.SetActive(!_isDialogueHidden);
         }
 
         private void ToggleLog()
         {
             if (_logPanel != null) { Destroy(_logPanel); _logPanel = null; return; }
+            if (_isDialogueHidden) ToggleHideDialogue();
             var backdrop = _panel.transform.Find("Backdrop");
             _logPanel = CreatePanel(backdrop, "Story Log", new Color(0.01f, 0.01f, 0.02f, 0.96f), new Vector2(0.18f, 0.12f), new Vector2(0.82f, 0.88f), true);
             CreateText(_logPanel.transform, "LOG", 28, new Color(0.94f, 0.88f, 0.7f), TextAnchor.UpperCenter, new Vector2(0.05f, 0.88f), new Vector2(0.95f, 0.98f));
@@ -388,6 +401,20 @@ namespace TheLastKnight.UI
             close.GetComponent<Image>().color = new Color(0.14f, 0.14f, 0.18f, 1f);
             close.GetComponent<Button>().onClick.AddListener(ToggleLog);
             CreateText(close.transform, "Close", 16, Color.white, TextAnchor.MiddleCenter, Vector2.zero, Vector2.one);
+        }
+
+        private void ToggleHideDialogue()
+        {
+            if (_cutscenePlaying || _panel == null || _dialoguePanel == null) return;
+            if (_sceneTitlePanel != null) return;
+            if (_logPanel != null) { Destroy(_logPanel); _logPanel = null; }
+
+            _isDialogueHidden = !_isDialogueHidden;
+            _dialoguePanel.SetActive(!_isDialogueHidden);
+            if (_hideButtonText != null)
+            {
+                _hideButtonText.text = _isDialogueHidden ? "SHOW" : "HIDE";
+            }
         }
 
         private void SetHudVisible(bool visible)
@@ -602,6 +629,25 @@ namespace TheLastKnight.UI
                 else if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame) Advance();
                 return;
             }
+            if (_isDialogueHidden)
+            {
+                if ((Keyboard.current != null && (Keyboard.current.spaceKey.wasPressedThisFrame || Keyboard.current.hKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)) ||
+                    (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame))
+                {
+                    ToggleHideDialogue();
+                }
+                return;
+            }
+            if (Keyboard.current != null && Keyboard.current.hKey.wasPressedThisFrame)
+            {
+                ToggleHideDialogue();
+                return;
+            }
+            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+            {
+                ToggleHideDialogue();
+                return;
+            }
             if (_ending)
             {
                 _elapsed += Time.unscaledDeltaTime;
@@ -617,6 +663,11 @@ namespace TheLastKnight.UI
         private void Advance()
         {
             if (_cutscenePlaying) return;
+            if (_isDialogueHidden)
+            {
+                ToggleHideDialogue();
+                return;
+            }
             _openedFrame = Time.frameCount;
             _elapsed = 0f;
             if (_sceneTitlePanel != null) HideSceneTitle();
@@ -813,6 +864,8 @@ namespace TheLastKnight.UI
             if (_backgroundTransition != null) { StopCoroutine(_backgroundTransition); _backgroundTransition = null; }
             if (_logPanel != null) Destroy(_logPanel);
             Destroy(_panel); _panel = _logPanel = null; Time.timeScale = 1f;
+            _isDialogueHidden = false;
+            _hideButtonText = null;
             SetHudVisible(true);
             GameManager.Instance.SetInputBlocked(false);
             if (!_ending && _currentStoryScene > 0)
