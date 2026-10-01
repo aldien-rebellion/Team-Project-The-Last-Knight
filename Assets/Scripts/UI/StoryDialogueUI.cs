@@ -65,7 +65,6 @@ namespace TheLastKnight.UI
             skip.SetParent(backdrop, false);
             skip.anchorMin = new Vector2(0.8f, 0.06f); skip.anchorMax = new Vector2(0.95f, 0.12f);
             skip.offsetMin = skip.offsetMax = Vector2.zero;
-            TheLastKnight.Audio.AudioManager.Instance?.PlaySceneMusic("CityCenter");
         }
 
         private void RollCredits()

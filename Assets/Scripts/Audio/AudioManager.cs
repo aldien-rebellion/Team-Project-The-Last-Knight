@@ -36,8 +36,19 @@ namespace TheLastKnight.Audio
         }
 
         private void SceneChanged(Scene scene, LoadSceneMode mode) => PlaySceneMusic(scene.name);
-        public void PlaySceneMusic(string sceneName) => PlayMusic(sceneName == "Church" ? "Church" :
-            sceneName == "SuburbToForest" ? "Forest" : sceneName.Contains("Castle") ? "Castle" : "Town");
+        public void PlaySceneMusic(string sceneName)
+        {
+            string musicId = sceneName switch
+            {
+                "CityCenter" => "Town",
+                "OutdoorMarket" => "Market",
+                "SuburbToForest" => "Forest",
+                "Church" => "Church",
+                "DemonCastle" or "DemonCastleEntrance" => "Castle",
+                _ => null
+            };
+            if (musicId != null) PlayMusic(musicId);
+        }
 
         public void PlaySfx(string id)
         {
@@ -48,12 +59,31 @@ namespace TheLastKnight.Audio
         public void PlayMusic(string id)
         {
             var clip = _catalog != null ? _catalog.Find(id) : null;
+            // An unset track (such as the not-yet-authored boss music) must not
+            // fade out the current map's music.
+            if (clip == null) return;
             if (clip == _bgmA.clip) return;
             if (_fade != null) StopCoroutine(_fade);
             var previous = _bgmA; _bgmA = _bgmB; _bgmB = previous;
             _bgmA.clip = clip; _bgmA.volume = 0f;
             if (clip != null) _bgmA.Play();
             _fade = StartCoroutine(CrossFade());
+        }
+
+        public void StopMusic()
+        {
+            if (_fade != null)
+            {
+                StopCoroutine(_fade);
+                _fade = null;
+            }
+
+            _bgmA.Stop();
+            _bgmB.Stop();
+            _bgmA.clip = null;
+            _bgmB.clip = null;
+            _blend = 1f;
+            ApplyVolumes();
         }
 
         private IEnumerator CrossFade()

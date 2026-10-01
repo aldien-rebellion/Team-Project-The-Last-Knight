@@ -92,7 +92,7 @@ namespace TheLastKnight.Environment
             if (!oneSided) GameManager.Instance.ArenaLocked = true;
             foreach (var barrier in barriers) barrier.SetActive(true);
             TheLastKnight.UI.BossHealthBarUI.Show(boss);
-            TheLastKnight.Audio.AudioManager.Instance?.PlayMusic("Boss");
+            TheLastKnight.Audio.AudioManager.Instance?.StopMusic();
         }
         private void Update()
         {
@@ -135,7 +135,10 @@ namespace TheLastKnight.Environment
             TheLastKnight.UI.BossHealthBarUI.Hide();
             // Only arenas which actually remove a Red Seal announce that a new route opened.
             if (barriers != null && barriers.Length > 0) TheLastKnight.UI.AreaUnlockNoticeUI.Show();
-            TheLastKnight.Audio.AudioManager.Instance?.PlaySceneMusic(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            bool isFinalBoss = (GameManager.Instance != null && GameManager.Instance.State.victory)
+                || (boss != null && boss.GetComponent<EnemyProgressionReward>()?.finalBoss == true);
+            if (!isFinalBoss)
+                TheLastKnight.Audio.AudioManager.Instance?.PlaySceneMusic(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
 
         private string DefeatId => string.IsNullOrWhiteSpace(defeatId)
