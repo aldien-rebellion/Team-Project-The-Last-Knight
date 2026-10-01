@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Audio.AudioCatalog
   clips:
   - id: Town
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 5ff3cccfbc0148542b184c6d92209e71, type: 3}
+  - id: Market
+    clip: {fileID: 8300000, guid: 33197980b7de53c4fafd555e9e8bdccf, type: 3}
   - id: Forest
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: ec77810ce859a774c8bde2bee379b7d9, type: 3}
   - id: Church
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: dea513065b2e116428443358721de177, type: 3}
   - id: Castle
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: c8f4d7d2cfbf9e840a34763b13b5edd8, type: 3}
   - id: Boss
     clip: {fileID: 0}
   - id: slash

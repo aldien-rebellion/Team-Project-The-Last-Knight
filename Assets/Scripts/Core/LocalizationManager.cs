@@ -110,7 +110,9 @@ namespace TheLastKnight.Core
             { "ACTION_SKILL", "Skill: Carnage Burst" },
             { "ACTION_BUFF", "Skill: Iron Will" },
             { "ACTION_EXCALIBUR", "Skill: Excalibur" },
-            { "ACTION_INTERACT", "Interact" }
+            { "ACTION_INTERACT", "Interact" },
+            { "ACTION_ADMIN_MODIFIER", "Admin Mode Modifier" },
+            { "ACTION_ADMIN_KEY", "Admin Mode Key" }
         };
 
         private static readonly Dictionary<string, string> ThTexts = new Dictionary<string, string>
@@ -186,7 +188,9 @@ namespace TheLastKnight.Core
             { "ACTION_SKILL", "สกิล: Carnage Burst" },
             { "ACTION_BUFF", "สกิล: Iron Will" },
             { "ACTION_EXCALIBUR", "สกิล: Excalibur" },
-            { "ACTION_INTERACT", "โต้ตอบ" }
+            { "ACTION_INTERACT", "โต้ตอบ" },
+            { "ACTION_ADMIN_MODIFIER", "ปุ่มเสริมโหมดแอดมิน" },
+            { "ACTION_ADMIN_KEY", "ปุ่มเปิดโหมดแอดมิน" }
         };
 
         public static string Get(string key)

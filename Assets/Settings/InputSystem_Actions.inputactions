@@ -140,6 +140,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "AdminModeKey",
+                    "type": "Button",
+                    "id": "cb18bf6f-b178-4bcc-9b99-2b4aee71b986",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AdminModeModifier",
+                    "type": "Button",
+                    "id": "e64f8d1c-9a21-4e41-8bf8-b359ee03ebc3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -635,6 +653,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "UseDrink",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "740b4a59-6910-4bd5-9036-8e97c584e9dd",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "AdminModeKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ad03cd9e-17b7-4f21-8e75-153b0a9b0d78",
+                    "path": "<Keyboard>/f3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "AdminModeModifier",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
