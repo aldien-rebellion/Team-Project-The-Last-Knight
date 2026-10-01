@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: AudioCatalog
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Audio.AudioCatalog
   clips:
+  - id: MainMenu
+    clip: {fileID: 8300000, guid: c9d1799960d01614eb18e822d1837a23, type: 3}
   - id: Town
     clip: {fileID: 8300000, guid: 5ff3cccfbc0148542b184c6d92209e71, type: 3}
   - id: Market
@@ -46,6 +48,6 @@ MonoBehaviour:
   - id: parry
     clip: {fileID: 0}
   - id: click
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: fbd018e76c7b7ca4d84174b16dcfd81f, type: 3}
   - id: rune
     clip: {fileID: 0}

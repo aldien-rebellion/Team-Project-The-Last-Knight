@@ -40,6 +40,7 @@ namespace TheLastKnight.Audio
         {
             string musicId = sceneName switch
             {
+                "MainMenu" => "MainMenu",
                 "CityCenter" => "Town",
                 "OutdoorMarket" => "Market",
                 "SuburbToForest" => "Forest",
@@ -53,7 +54,7 @@ namespace TheLastKnight.Audio
         public void PlaySfx(string id)
         {
             var clip = _catalog != null ? _catalog.Find(id) : null;
-            if (clip != null) _sfx.PlayOneShot(clip);
+            if (clip != null) _sfx.PlayOneShot(clip, id == "click" ? 0.5f : 1f);
         }
 
         public void PlayMusic(string id)
