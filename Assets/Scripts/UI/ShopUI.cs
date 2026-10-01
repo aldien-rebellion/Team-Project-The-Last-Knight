@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
@@ -8,6 +9,7 @@ namespace TheLastKnight.UI
 {
     public class ShopUI : MonoBehaviour
     {
+        public event Action Closed;
         private GameObject _panel;
         public bool IsOpen => _panel != null;
         private Text _balance, _message;
@@ -69,9 +71,12 @@ namespace TheLastKnight.UI
 
         public void Close()
         {
+            bool wasOpen = _panel != null;
             if (_panel != null) Destroy(_panel);
+            _panel = null;
             Time.timeScale = 1f;
             GameManager.Instance.SetInputBlocked(false);
+            if (wasOpen) Closed?.Invoke();
         }
     }
 }

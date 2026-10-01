@@ -10,9 +10,18 @@ namespace TheLastKnight.Environment
         private static readonly List<WorldInteractable> Active = new List<WorldInteractable>();
         public float interactionRange = 2.5f;
         public string prompt = "F  Interact";
+        protected float promptHeight = 2f;
         private TextMesh _prompt;
         protected virtual void OnEnable() { Active.Add(this); }
-        protected virtual void OnDisable() { Active.Remove(this); }
+        protected virtual void OnDisable()
+        {
+            Active.Remove(this);
+            if (_prompt != null) _prompt.gameObject.SetActive(false);
+        }
+        protected virtual void OnDestroy()
+        {
+            if (_prompt != null) Destroy(_prompt.gameObject);
+        }
         private void Update()
         {
             var manager = GameManager.Instance;
@@ -28,13 +37,21 @@ namespace TheLastKnight.Environment
             bool selected = closest == this && !manager.InputBlocked && !manager.Player.IsDead;
             if (_prompt == null)
             {
+                for (int i = transform.childCount - 1; i >= 0; i--)
+                {
+                    var child = transform.GetChild(i);
+                    if (child.name == "Interaction prompt") Destroy(child.gameObject);
+                }
                 var go = new GameObject("Interaction prompt");
-                go.transform.SetParent(transform, false); go.transform.localPosition = Vector3.up * 2f;
                 _prompt = go.AddComponent<TextMesh>(); _prompt.fontSize = 40; _prompt.characterSize = 0.055f;
                 _prompt.anchor = TextAnchor.MiddleCenter;
                 go.GetComponent<MeshRenderer>().sortingOrder = 110;
                 go.GetComponent<MeshRenderer>().sortingLayerName = "InGame_UI";
             }
+            // Use a world-space offset from the interactable pivot. Sprite bounds
+            // include transparent padding in some sheets and can place labels too high.
+            float promptY = transform.position.y + promptHeight;
+            _prompt.transform.position = new Vector3(transform.position.x, promptY, transform.position.z);
             _prompt.gameObject.SetActive(selected);
             _prompt.text = prompt;
             if (selected && Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame) Interact();
