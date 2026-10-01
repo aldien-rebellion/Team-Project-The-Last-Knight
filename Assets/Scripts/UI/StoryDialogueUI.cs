@@ -28,7 +28,7 @@ namespace TheLastKnight.UI
         private GameObject _sceneTitlePanel;
         private Action _complete;
         private int _openedFrame;
-        private bool _ending, _rolling;
+        private bool _ending, _rolling, _cutscenePlaying;
         private float _elapsed;
         private float _sceneTitleElapsed;
         private RectTransform _credits, _creditsViewport;
@@ -48,7 +48,7 @@ namespace TheLastKnight.UI
                 if (canvas != null && canvas.name.StartsWith("ฉากที่", StringComparison.Ordinal))
                     Destroy(canvas.gameObject);
             }
-            _ending = _rolling = false; _elapsed = 0f;
+            _ending = _rolling = _cutscenePlaying = false; _elapsed = 0f;
             _lines = PrepareLines(lines); _index = 0; _complete = complete; _openedFrame = Time.frameCount; _history.Clear();
             GameManager.Instance.SetInputBlocked(true); Time.timeScale = 0f;
             SetHudVisible(false);
@@ -251,8 +251,19 @@ namespace TheLastKnight.UI
                 if (_history.Count > 0) _history.Add(string.Empty);
                 _history.Add("<color=#E8D8A8><b>" + line + "</b></color>");
                 var sceneMatch = Regex.Match(line, @"^ฉากที่\s*(\d+)");
-                if (sceneMatch.Success && int.TryParse(sceneMatch.Groups[1].Value, out _currentStoryScene))
+                if (sceneMatch.Success && int.TryParse(sceneMatch.Groups[1].Value, out int nextScene))
                 {
+                    if (_currentStoryScene == 6 && nextScene == 7)
+                    {
+                        var captured = CaptureSceneView();
+                        if (captured != null && _storyBackground != null)
+                        {
+                            _storyBackground.sprite = captured;
+                            _storyBackground.enabled = true;
+                            _storyBackground.color = Color.white;
+                        }
+                    }
+                    _currentStoryScene = nextScene;
                     UpdateStorySceneMusic();
                     UpdateStorySceneBackground();
                 }
@@ -387,6 +398,9 @@ namespace TheLastKnight.UI
                 document.rootVisualElement.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
+        private Material _blurMaterial;
+        private Coroutine _backgroundTransition;
+
         private void UpdateStorySceneBackground()
         {
             string resourceName;
@@ -402,8 +416,99 @@ namespace TheLastKnight.UI
                 default: resourceName = null; break;
             }
 
-            _storyBackground.sprite = string.IsNullOrEmpty(resourceName) ? null : Resources.Load<Sprite>(resourceName);
-            _storyBackground.enabled = _storyBackground.sprite != null;
+            var nextSprite = string.IsNullOrEmpty(resourceName) ? null : Resources.Load<Sprite>(resourceName);
+            TransitionToBackground(nextSprite);
+        }
+
+        private void TransitionToBackground(Sprite newSprite)
+        {
+            if (_storyBackground == null) return;
+            if (_backgroundTransition != null) StopCoroutine(_backgroundTransition);
+            _backgroundTransition = StartCoroutine(TransitionBackgroundRoutine(newSprite));
+        }
+
+        private System.Collections.IEnumerator TransitionBackgroundRoutine(Sprite newSprite)
+        {
+            if (_blurMaterial == null)
+            {
+                var shader = Shader.Find("Custom/FastBoxBlur");
+                if (shader != null) _blurMaterial = new Material(shader);
+            }
+
+            if (_blurMaterial != null)
+            {
+                _storyBackground.material = _blurMaterial;
+            }
+
+            // If there was no previous image
+            if (_storyBackground.sprite == null)
+            {
+                _storyBackground.sprite = newSprite;
+                _storyBackground.enabled = newSprite != null;
+                if (newSprite != null && _blurMaterial != null)
+                {
+                    float t = 0f;
+                    while (t < 0.4f)
+                    {
+                        t += Time.unscaledDeltaTime;
+                        _blurMaterial.SetFloat("_BlurSize", Mathf.Lerp(12f, 0f, t / 0.4f));
+                        yield return null;
+                    }
+                    _blurMaterial.SetFloat("_BlurSize", 0f);
+                }
+                yield break;
+            }
+
+            // Phase 1: Fast Box Blur out current image (~0.4s)
+            if (_blurMaterial != null)
+            {
+                float t = 0f;
+                while (t < 0.4f)
+                {
+                    t += Time.unscaledDeltaTime;
+                    _blurMaterial.SetFloat("_BlurSize", Mathf.Lerp(0f, 14f, t / 0.4f));
+                    yield return null;
+                }
+                _blurMaterial.SetFloat("_BlurSize", 14f);
+            }
+
+            // Phase 2: 1-second pause/interval while blurred
+            float waitTimer = 0f;
+            bool swapped = false;
+            while (waitTimer < 1.0f)
+            {
+                waitTimer += Time.unscaledDeltaTime;
+                if (!swapped && waitTimer >= 0.5f)
+                {
+                    swapped = true;
+                    _storyBackground.sprite = newSprite;
+                    _storyBackground.enabled = newSprite != null;
+                }
+                yield return null;
+            }
+
+            if (!swapped)
+            {
+                _storyBackground.sprite = newSprite;
+                _storyBackground.enabled = newSprite != null;
+            }
+
+            // Phase 3: Fast Box Blur in new image (~0.4s down to 0)
+            if (newSprite != null && _blurMaterial != null)
+            {
+                float t = 0f;
+                while (t < 0.4f)
+                {
+                    t += Time.unscaledDeltaTime;
+                    _blurMaterial.SetFloat("_BlurSize", Mathf.Lerp(14f, 0f, t / 0.4f));
+                    yield return null;
+                }
+                _blurMaterial.SetFloat("_BlurSize", 0f);
+            }
+            else if (_blurMaterial != null)
+            {
+                _blurMaterial.SetFloat("_BlurSize", 0f);
+            }
         }
 
         public void Intro() => Show("ฉากที่ 1 — วันแรกใต้ธงแห่งโบอา", new[] {
@@ -489,7 +594,7 @@ namespace TheLastKnight.UI
         }
         private void Update()
         {
-            if (_panel == null || Time.frameCount <= _openedFrame + 1) return;
+            if (_panel == null || Time.frameCount <= _openedFrame + 1 || _cutscenePlaying) return;
             if (_sceneTitlePanel != null)
             {
                 _sceneTitleElapsed += Time.unscaledDeltaTime;
@@ -511,10 +616,191 @@ namespace TheLastKnight.UI
         }
         private void Advance()
         {
+            if (_cutscenePlaying) return;
             _openedFrame = Time.frameCount;
             _elapsed = 0f;
             if (_sceneTitlePanel != null) HideSceneTitle();
             if (_rolling) { Finish(); return; }
+
+            // Check if current line is the end of the quote:
+            // "ตัวเอก\n\n“ในนามของอัศวินแห่งโบอา… ข้าจะจบสงครามนี้”"
+            if (_index >= 0 && _index < _lines.Length && _lines[_index].Contains("ข้าจะจบสงครามนี้"))
+            {
+                StartCoroutine(PlayWarriorSkill4Cutscene());
+                return;
+            }
+
+            if (++_index >= _lines.Length)
+            {
+                if (_ending) RollCredits();
+                else if (_currentStoryScene == 5)
+                {
+                    StartCoroutine(TransitionScene5ToGameplayRoutine());
+                }
+                else Finish();
+            }
+            else SetLine(_index);
+        }
+
+        private Sprite CaptureSceneView()
+        {
+            var cam = UnityEngine.Camera.main;
+            if (cam == null) return null;
+
+            int width = Screen.width > 0 ? Screen.width : 1280;
+            int height = Screen.height > 0 ? Screen.height : 720;
+            var rt = RenderTexture.GetTemporary(width, height, 24);
+            var prev = cam.targetTexture;
+            cam.targetTexture = rt;
+            cam.Render();
+            cam.targetTexture = prev;
+
+            RenderTexture.active = rt;
+            var tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+            RenderTexture.active = null;
+            RenderTexture.ReleaseTemporary(rt);
+
+            return Sprite.Create(tex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f));
+        }
+
+        private System.Collections.IEnumerator TransitionScene5ToGameplayRoutine()
+        {
+            _cutscenePlaying = true;
+            if (_dialoguePanel != null) _dialoguePanel.SetActive(false);
+            if (_menuPanel != null) _menuPanel.SetActive(false);
+
+            if (_blurMaterial == null)
+            {
+                var shader = Shader.Find("Custom/FastBoxBlur");
+                if (shader != null) _blurMaterial = new Material(shader);
+            }
+            if (_blurMaterial != null && _storyBackground != null)
+            {
+                _storyBackground.material = _blurMaterial;
+            }
+
+            // Phase 1: Fast Box Blur out Scene 5 image (~0.4s)
+            float t = 0f;
+            while (t < 0.4f)
+            {
+                t += Time.unscaledDeltaTime;
+                if (_blurMaterial != null) _blurMaterial.SetFloat("_BlurSize", Mathf.Lerp(0f, 15f, t / 0.4f));
+                yield return null;
+            }
+            if (_blurMaterial != null) _blurMaterial.SetFloat("_BlurSize", 15f);
+
+            // Phase 2: 1-second pause/interval while blurred
+            float waitTimer = 0f;
+            while (waitTimer < 1.0f)
+            {
+                waitTimer += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            // Phase 3: Fade out blurred image to reveal gameplay (~0.5s)
+            float fadeTimer = 0f;
+            var startColor = _storyBackground != null ? _storyBackground.color : Color.white;
+            while (fadeTimer < 0.5f)
+            {
+                fadeTimer += Time.unscaledDeltaTime;
+                float progress = fadeTimer / 0.5f;
+                if (_storyBackground != null)
+                {
+                    _storyBackground.color = new Color(startColor.r, startColor.g, startColor.b, 1f - progress);
+                }
+                if (_blurMaterial != null)
+                {
+                    _blurMaterial.SetFloat("_BlurSize", Mathf.Lerp(15f, 0f, progress));
+                }
+                yield return null;
+            }
+
+            _cutscenePlaying = false;
+            Finish();
+        }
+
+        private System.Collections.IEnumerator PlayWarriorSkill4Cutscene()
+        {
+            _cutscenePlaying = true;
+            if (_dialoguePanel != null) _dialoguePanel.SetActive(false);
+            if (_menuPanel != null) _menuPanel.SetActive(false);
+
+            var redGate = FindAnyObjectByType<TheLastKnight.Environment.RedGate>();
+            Vector3 targetPos = redGate != null 
+                ? redGate.transform.position + new Vector3(0f, 2.2f, 0f) 
+                : new Vector3(46f, 1.6f, 0f);
+
+            var cam = UnityEngine.Camera.main;
+            Vector3 camOrigin = cam != null ? cam.transform.position : Vector3.zero;
+            if (cam != null && redGate != null)
+            {
+                cam.transform.position = new Vector3(targetPos.x, targetPos.y, camOrigin.z);
+            }
+
+            // 1. Pause after dialogue closes before unleashing skill (anticipation)
+            float pauseIntro = 0.8f;
+            while (pauseIntro > 0f) { pauseIntro -= Time.unscaledDeltaTime; yield return null; }
+
+            // 2. Play upside-down WarriorSkill4 animation
+            var prefab = Resources.Load<GameObject>("WarriorSkill4_Effect");
+            GameObject effect = null;
+            if (prefab != null)
+            {
+                effect = Instantiate(prefab, targetPos, Quaternion.identity);
+                effect.transform.localScale = new Vector3(2.25f, 2.25f, 1f);
+            }
+
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("excalibur");
+
+            // Wait for full slash animation to complete (~0.6s)
+            float slashTimer = 0.6f;
+            while (slashTimer > 0f) { slashTimer -= Time.unscaledDeltaTime; yield return null; }
+
+            // 3. Pause between skill finish and gate breaking
+            float pauseBetween = 0.65f;
+            while (pauseBetween > 0f) { pauseBetween -= Time.unscaledDeltaTime; yield return null; }
+
+            // 4. Red Gate breaks and crumbles!
+            if (redGate != null)
+            {
+                redGate.BreakGate();
+            }
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_death");
+
+            // Camera shake during destruction
+            float shakeTimer = 0f;
+            while (shakeTimer < 0.35f)
+            {
+                shakeTimer += Time.unscaledDeltaTime;
+                if (cam != null)
+                {
+                    cam.transform.position = new Vector3(targetPos.x, targetPos.y, camOrigin.z) + (Vector3)(UnityEngine.Random.insideUnitCircle * 0.4f);
+                }
+                yield return null;
+            }
+            if (cam != null)
+            {
+                cam.transform.position = new Vector3(targetPos.x, targetPos.y, camOrigin.z);
+            }
+
+            if (effect != null) Destroy(effect);
+
+            // Wait for broken animation and rubble to settle
+            float settleTimer = 0.8f;
+            while (settleTimer > 0f) { settleTimer -= Time.unscaledDeltaTime; yield return null; }
+
+            // 5. Calm pause after gate is destroyed before narrative text appears
+            float pauseAfter = 1.2f;
+            while (pauseAfter > 0f) { pauseAfter -= Time.unscaledDeltaTime; yield return null; }
+
+            if (_dialoguePanel != null) _dialoguePanel.SetActive(true);
+            if (_menuPanel != null) _menuPanel.SetActive(true);
+            _cutscenePlaying = false;
+            _openedFrame = Time.frameCount;
+            _elapsed = 0f;
+
             if (++_index >= _lines.Length)
             {
                 if (_ending) RollCredits(); else Finish();
@@ -524,6 +810,7 @@ namespace TheLastKnight.UI
         private void Finish()
         {
             if (_panel == null) return;
+            if (_backgroundTransition != null) { StopCoroutine(_backgroundTransition); _backgroundTransition = null; }
             if (_logPanel != null) Destroy(_logPanel);
             Destroy(_panel); _panel = _logPanel = null; Time.timeScale = 1f;
             SetHudVisible(true);

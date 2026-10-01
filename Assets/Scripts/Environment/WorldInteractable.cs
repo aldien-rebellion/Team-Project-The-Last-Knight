@@ -37,7 +37,7 @@ namespace TheLastKnight.Environment
             }
             _prompt.gameObject.SetActive(selected);
             _prompt.text = prompt;
-            bool fPressed = (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame) || UnityEngine.Input.GetKeyDown(KeyCode.F);
+            bool fPressed = Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame;
             if (selected && fPressed) Interact();
         }
         public abstract void Interact();
