@@ -279,9 +279,17 @@ public class PlanRuntimeChecks
             yield return null;
         yield return Settled();
         Check(SceneManager.GetActiveScene().name == "DemonCastle", "Four socketed runes open the castle");
-        var finalBoss = FindObjectsByType<EnemyProgressionReward>(FindObjectsSortMode.None).First(e => e.finalBoss);
-        finalBoss.GetComponent<EnemyStats>().TakeDamage(100000f);
-        Check(Manager.State.victory && GameObject.Find("A KINGDOM REBORN") != null && Manager.InputBlocked, "Final boss death opens victory story");
+        var volcanox = FindObjectsByType<EnemyStats>(FindObjectsSortMode.None).FirstOrDefault(e => e.gameObject.name.Contains("Volcanox"));
+        if (volcanox != null) volcanox.TakeDamage(100000f);
+        yield return Settled();
+        Check(!Manager.State.victory, "Defeating Volcanox does not trigger victory ending");
+        var redGate = FindObjectsByType<TheLastKnight.Environment.RedGate>(FindObjectsSortMode.None).FirstOrDefault();
+        if (redGate != null)
+        {
+            redGate.Interact();
+            yield return new WaitForSeconds(1.2f);
+        }
+        Check(Manager.State.victory && Manager.InputBlocked, "Destroying red gate triggers victory story");
         Click("Skip"); yield return Settled();
         Check(SceneManager.GetActiveScene().name == "MainMenu", "Ending returns to Main Menu");
         yield return AudioChecks();

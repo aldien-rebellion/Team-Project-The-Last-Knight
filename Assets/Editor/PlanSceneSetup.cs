@@ -101,8 +101,14 @@ public static class PlanSceneSetup
         {
             Statue(root.transform, -10, -1.85f, false);
             var boss = Enemy(root.transform, "Volcanox", 25, -1.885f, 900, 40);
-            boss.gameObject.AddComponent<EnemyProgressionReward>().finalBoss = true;
             Arena(root.transform, boss, 25, -1.885f, 16, false);
+            var redGatePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/RedGate.prefab");
+            if (redGatePrefab != null)
+            {
+                var rg = (GameObject)PrefabUtility.InstantiatePrefab(redGatePrefab, root.transform);
+                rg.name = "RedGate";
+                rg.transform.position = new Vector3(46f, -0.54f, 0f);
+            }
         }
         EditorSceneManager.SaveScene(scene);
         return name + " populated: " + root.GetComponentsInChildren<EnemyStats>().Length + " enemies";
@@ -114,7 +120,7 @@ public static class PlanSceneSetup
         ApplyBossProgression("CityCenter", "MechaStoneGolem", 150f, -4.5f, 750f, 45f, 10f, true, -1, false);
         ApplyBossProgression("OutdoorMarket", "DemonBoss", 40f, -4.5f, 800f, 50f, 11f, true, -1, false);
         ApplyBossProgression("SuburbToForest", "Fox", 30f, -6f, 450f, 32f, 10f, true, 2, false);
-        ApplyBossProgression("DemonCastle", "Volcanox", 25f, -1.885f, 900f, 40f, 16f, false, -1, true);
+        ApplyBossProgression("DemonCastle", "Volcanox", 25f, -1.885f, 900f, 40f, 16f, false, -1, false);
         RemoveRedSeals("Church");
         AssetDatabase.SaveAssets();
     }
@@ -143,6 +149,16 @@ public static class PlanSceneSetup
             reward.finalBoss = finalBoss;
         }
         Arena(root.transform, boss, x, floor, arenaHalfWidth, oneSided);
+        if (sceneName == "DemonCastle")
+        {
+            var redGatePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/RedGate.prefab");
+            if (redGatePrefab != null && GameObject.Find("RedGate") == null)
+            {
+                var rg = (GameObject)PrefabUtility.InstantiatePrefab(redGatePrefab, root.transform);
+                rg.name = "RedGate";
+                rg.transform.position = new Vector3(46f, -0.54f, 0f);
+            }
+        }
         EditorSceneManager.SaveScene(scene);
     }
 
