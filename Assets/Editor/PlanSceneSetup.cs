@@ -79,6 +79,8 @@ public static class PlanSceneSetup
         else if (name == "OutdoorMarket")
         {
             var trader = Prop(root.transform, "The Shadow Market", "Assets/sprites/Monsters/Free-City-Trader-Character-Sprite-Sheets-Pixel-Art/Trader_1/Idle.png", -105, -4.5f);
+            trader.AddComponent<Animator>().runtimeAnimatorController =
+                AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Animations/Enemies/Trader_1/Trader_1Controller.controller");
             trader.AddComponent<ShadowMarketNPC>();
             Statue(root.transform, -112, -4.5f, false);
             Enemy(root.transform, "Skeleton", -65, -4.5f);
@@ -182,7 +184,7 @@ public static class PlanSceneSetup
         if (sprite == null) throw new System.InvalidOperationException("Sprite missing: " + path);
         var renderer = go.GetComponent<SpriteRenderer>(); renderer.sprite = sprite;
         renderer.sortingLayerName = "Interactable_Back";
-        float height = name == "The Shadow Market" ? 2.1f : sprite.bounds.size.y;
+        float height = name == "The Shadow Market" ? 4.5f : sprite.bounds.size.y;
         if (name == "The Shadow Market") go.transform.localScale = Vector3.one * (height / sprite.bounds.size.y);
         go.transform.position = new Vector3(x, floor - renderer.bounds.min.y + 0.03f, 0);
         return go;
