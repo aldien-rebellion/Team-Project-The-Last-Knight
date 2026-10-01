@@ -1,8 +1,15 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Globalization;
+using System.Text;
 using TheLastKnight.Core;
+using UIDocument = UnityEngine.UIElements.UIDocument;
+using DisplayStyle = UnityEngine.UIElements.DisplayStyle;
 
 namespace TheLastKnight.UI
 {
@@ -12,76 +19,470 @@ namespace TheLastKnight.UI
         private string[] _lines;
         private int _index;
         private Text _body;
+        private Text _speaker;
+        private Text _continueHint;
+        private Image _storyBackground;
+        private GameObject _speakerPlate;
+        private GameObject _menuPanel;
+        private GameObject _dialoguePanel;
+        private GameObject _sceneTitlePanel;
         private Action _complete;
         private int _openedFrame;
         private bool _ending, _rolling;
         private float _elapsed;
-        private Transform _content;
+        private float _sceneTitleElapsed;
         private RectTransform _credits, _creditsViewport;
+        private readonly List<string> _history = new List<string>();
+        private GameObject _logPanel;
+        private HUDController _hud;
+        private int _currentStoryScene;
+        private const float DialogueHeight = 0.255f;
+        private static readonly string[] ThaiFontNames = { "Leelawadee UI", "Tahoma", "Arial" };
+        private static Font _storyFont;
+        private static Sprite _roundedPanelSprite;
         public void Show(string title, string[] lines, Action complete = null)
         {
             if (_panel != null) Destroy(_panel);
+            foreach (var canvas in FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (canvas != null && canvas.name.StartsWith("ฉากที่", StringComparison.Ordinal))
+                    Destroy(canvas.gameObject);
+            }
             _ending = _rolling = false; _elapsed = 0f;
-            _lines = lines; _index = 0; _complete = complete; _openedFrame = Time.frameCount;
+            _lines = PrepareLines(lines); _index = 0; _complete = complete; _openedFrame = Time.frameCount; _history.Clear();
             GameManager.Instance.SetInputBlocked(true); Time.timeScale = 0f;
-            _panel = RuntimeUI.Panel(title, out var content);
-            _content = content;
-            _panel.transform.Find("Backdrop").GetComponent<Image>().color = new Color(0.025f, 0.035f, 0.065f, 0.72f);
-            _body = RuntimeUI.Label(content, lines[0], 25);
-            RuntimeUI.Button(content, "Continue  •  Space / Click", Advance);
-            RuntimeUI.Button(content, "Skip", Finish);
+            SetHudVisible(false);
+            BuildVisualNovelLayout(title);
+            SetLine(0);
         }
-        public void Intro() => Show("THE KINGDOM OF MOA", new[] {
-            "Moa once rang with bells and market songs. Then the demon king broke its gates, and the kingdom fell silent.",
-            "Arthur, the last knight, returns to the people he could not protect. Four scattered runes hold the path to the demon castle.",
-            "Seek the Moonstone Keeper in the church, rest by Medusa, bargain in the Shadow Market, and follow the fox into the forest. Keep your oath." });
+
+        private void BuildVisualNovelLayout(string title)
+        {
+            RuntimeUI.EnsureEventSystem();
+            _panel = new GameObject(title, typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+            var canvas = _panel.GetComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 300;
+            var scaler = _panel.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1280, 720);
+            scaler.matchWidthOrHeight = 0.5f;
+
+            var backdrop = CreatePanel(_panel.transform, "Backdrop", new Color(0f, 0f, 0f, 0.08f), Vector2.zero, Vector2.one);
+            backdrop.GetComponent<Image>().raycastTarget = true;
+
+            var backgroundObject = new GameObject("Story Background", typeof(RectTransform), typeof(Image));
+            backgroundObject.transform.SetParent(backdrop.transform, false);
+            backgroundObject.transform.SetAsFirstSibling();
+            var backgroundRect = backgroundObject.GetComponent<RectTransform>();
+            backgroundRect.anchorMin = Vector2.zero;
+            backgroundRect.anchorMax = Vector2.one;
+            backgroundRect.offsetMin = backgroundRect.offsetMax = Vector2.zero;
+            _storyBackground = backgroundObject.GetComponent<Image>();
+            _storyBackground.raycastTarget = false;
+
+            _menuPanel = CreatePanel(backdrop.transform, "Story Menu", new Color(0.02f, 0.025f, 0.035f, 0.55f), new Vector2(0.79f, 0.925f), new Vector2(0.985f, 0.985f), true);
+            CreateTopMenuButton(_menuPanel.transform, "SKIP", 0.05f, 0.47f, Finish);
+            CreateTopMenuButton(_menuPanel.transform, "LOG", 0.53f, 0.95f, ToggleLog);
+
+            _dialoguePanel = CreatePanel(backdrop.transform, "Dialogue Box", new Color(0.015f, 0.015f, 0.02f, 0.88f), new Vector2(0.015f, 0.045f), new Vector2(0.985f, 0.045f + DialogueHeight), true);
+            var dialogueRect = _dialoguePanel.GetComponent<RectTransform>();
+            dialogueRect.offsetMax = new Vector2(0f, 0f);
+            var continueButton = _dialoguePanel.AddComponent<Button>();
+            continueButton.targetGraphic = _dialoguePanel.GetComponent<Image>();
+            continueButton.onClick.AddListener(Advance);
+
+            _speakerPlate = CreatePanel(_dialoguePanel.transform, "Speaker", new Color(0.035f, 0.035f, 0.05f, 0.96f), new Vector2(0f, 1f), new Vector2(0.30f, 1.22f), true);
+            _speaker = CreateText(_speakerPlate.transform, "", 21, new Color(0.94f, 0.88f, 0.7f), TextAnchor.MiddleCenter, Vector2.zero, Vector2.one);
+            _body = CreateText(_dialoguePanel.transform, "", 24, new Color(0.95f, 0.95f, 0.95f), TextAnchor.UpperLeft, new Vector2(0.045f, 0.18f), new Vector2(0.955f, 0.80f));
+            _body.horizontalOverflow = HorizontalWrapMode.Wrap;
+            _body.verticalOverflow = VerticalWrapMode.Truncate;
+            _body.resizeTextForBestFit = true;
+            _body.resizeTextMinSize = 16;
+            _body.resizeTextMaxSize = 24;
+            _continueHint = CreateText(_dialoguePanel.transform, "Click / Space to continue", 14, new Color(0.75f, 0.75f, 0.78f), TextAnchor.MiddleRight, new Vector2(0.65f, 0.04f), new Vector2(0.95f, 0.18f));
+        }
+
+        private static string[] PrepareLines(string[] source)
+        {
+            var prepared = new List<string>();
+            foreach (string sourceLine in source)
+            {
+                if (sourceLine.StartsWith("ฉากที่", StringComparison.Ordinal))
+                {
+                    prepared.Add(sourceLine);
+                    continue;
+                }
+
+                int divider = sourceLine.IndexOf("\n\n", StringComparison.Ordinal);
+                string speaker = divider >= 0 ? sourceLine.Substring(0, divider) : "บทบรรยาย";
+                string content = divider >= 0 ? sourceLine.Substring(divider + 2) : sourceLine;
+                content = Regex.Replace(content, @"\n(?:[ \t]*\n)+", " ");
+                content = Regex.Replace(content, @"\s+", " ").Trim();
+                content = content.Replace("—", "-").Replace("…", "...").Replace("|", ",").Replace("◆", "");
+
+                foreach (string page in SplitTextPages(content, 120))
+                    prepared.Add(speaker + "\n\n" + page);
+            }
+            return prepared.ToArray();
+        }
+
+        private static IEnumerable<string> SplitTextPages(string text, int maxElements)
+        {
+            if (string.IsNullOrWhiteSpace(text)) yield break;
+            var words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var page = new StringBuilder();
+            foreach (string word in words)
+            {
+                string addition = page.Length == 0 ? word : " " + word;
+                if (new StringInfo(page.ToString()).LengthInTextElements + new StringInfo(addition).LengthInTextElements <= maxElements)
+                {
+                    page.Append(addition);
+                    continue;
+                }
+
+                if (page.Length > 0)
+                {
+                    yield return page.ToString();
+                    page.Length = 0;
+                }
+
+                var elementEnumerator = StringInfo.GetTextElementEnumerator(word);
+                while (elementEnumerator.MoveNext())
+                {
+                    string element = elementEnumerator.GetTextElement();
+                    if (new StringInfo(page.ToString()).LengthInTextElements >= maxElements)
+                    {
+                        yield return page.ToString();
+                        page.Length = 0;
+                    }
+                    page.Append(element);
+                }
+            }
+
+            if (page.Length > 0) yield return page.ToString();
+        }
+
+        private static GameObject CreatePanel(Transform parent, string name, Color color, Vector2 anchorMin, Vector2 anchorMax, bool rounded = false)
+        {
+            var panel = new GameObject(name, typeof(RectTransform), typeof(Image));
+            panel.transform.SetParent(parent, false);
+            var rect = panel.GetComponent<RectTransform>();
+            rect.anchorMin = anchorMin; rect.anchorMax = anchorMax; rect.offsetMin = rect.offsetMax = Vector2.zero;
+            var image = panel.GetComponent<Image>();
+            image.color = color;
+            if (rounded)
+            {
+                image.sprite = RoundedPanelSprite;
+                image.type = Image.Type.Sliced;
+            }
+            return panel;
+        }
+
+        private static Sprite RoundedPanelSprite
+        {
+            get
+            {
+                if (_roundedPanelSprite != null) return _roundedPanelSprite;
+
+                const int size = 32;
+                const float radius = 6f;
+                var texture = new Texture2D(size, size, TextureFormat.RGBA32, false) { hideFlags = HideFlags.DontSave };
+                for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                {
+                    float cornerX = x < radius ? radius : x > size - 1 - radius ? size - 1 - radius : x;
+                    float cornerY = y < radius ? radius : y > size - 1 - radius ? size - 1 - radius : y;
+                    float distance = Vector2.Distance(new Vector2(x, y), new Vector2(cornerX, cornerY));
+                    texture.SetPixel(x, y, distance > radius ? Color.clear : Color.white);
+                }
+                texture.Apply();
+                _roundedPanelSprite = Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(radius, radius, radius, radius));
+                _roundedPanelSprite.hideFlags = HideFlags.DontSave;
+                return _roundedPanelSprite;
+            }
+        }
+
+        private static Text CreateText(Transform parent, string value, int size, Color color, TextAnchor alignment, Vector2 anchorMin, Vector2 anchorMax)
+        {
+            var label = new GameObject("Text", typeof(RectTransform), typeof(Text)).GetComponent<Text>();
+            label.transform.SetParent(parent, false);
+            var rect = label.rectTransform;
+            rect.anchorMin = anchorMin; rect.anchorMax = anchorMax; rect.offsetMin = rect.offsetMax = Vector2.zero;
+            label.font = StoryFont; label.text = value; label.fontSize = size; label.color = color; label.alignment = alignment; label.raycastTarget = false;
+            return label;
+        }
+
+        private static Font StoryFont
+        {
+            get
+            {
+                if (_storyFont == null)
+                    _storyFont = Font.CreateDynamicFontFromOSFont(ThaiFontNames, 24);
+                return _storyFont != null ? _storyFont : RuntimeUI.Font;
+            }
+        }
+
+        private void CreateTopMenuButton(Transform parent, string label, float left, float right, UnityAction action)
+        {
+            var button = new GameObject(label, typeof(RectTransform), typeof(Image), typeof(Button));
+            button.transform.SetParent(parent, false);
+            var rect = button.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(left, 0.12f); rect.anchorMax = new Vector2(right, 0.88f);
+            rect.offsetMin = rect.offsetMax = Vector2.zero;
+            var image = button.GetComponent<Image>();
+            image.color = new Color(0f, 0f, 0f, 0f);
+            var uiButton = button.GetComponent<Button>();
+            var text = CreateText(button.transform, label, 14, new Color(0.88f, 0.88f, 0.9f), TextAnchor.MiddleLeft, Vector2.zero, Vector2.one);
+            uiButton.targetGraphic = text;
+            var colors = uiButton.colors;
+            colors.normalColor = new Color(0.72f, 0.72f, 0.75f, 1f);
+            colors.highlightedColor = new Color(1f, 0.9f, 0.58f, 1f);
+            colors.pressedColor = new Color(0.7f, 0.62f, 0.4f, 1f);
+            uiButton.colors = colors;
+            uiButton.onClick.AddListener(action);
+        }
+
+        private void SetLine(int index)
+        {
+            string line = _lines[index];
+            if (line.StartsWith("ฉากที่", StringComparison.Ordinal))
+            {
+                if (_history.Count > 0) _history.Add(string.Empty);
+                _history.Add("<color=#E8D8A8><b>" + line + "</b></color>");
+                var sceneMatch = Regex.Match(line, @"^ฉากที่\s*(\d+)");
+                if (sceneMatch.Success && int.TryParse(sceneMatch.Groups[1].Value, out _currentStoryScene))
+                {
+                    UpdateStorySceneMusic();
+                    UpdateStorySceneBackground();
+                }
+                ShowSceneTitle(line);
+                return;
+            }
+
+            int divider = line.IndexOf("\n\n", StringComparison.Ordinal);
+            string speaker = divider >= 0 ? line.Substring(0, divider) : "บทบรรยาย";
+            string dialogue = divider >= 0 ? line.Substring(divider + 2) : line;
+            dialogue = Regex.Replace(dialogue, @"\n(?:[ \t]*\n)+", "\n").Trim();
+            dialogue = dialogue.Replace("—", "-").Replace("…", "...").Replace("|", ",").Replace("◆", "");
+            bool narration = speaker.StartsWith("บทบรรยาย", StringComparison.Ordinal);
+            if (narration)
+                speaker = "Arthur Reuven";
+            else if (speaker.StartsWith("ตัวเอก", StringComparison.Ordinal))
+                speaker = "Arthur Reuven";
+            else
+                speaker = Regex.Replace(speaker.Replace("—", " ").Replace("◆", ""), @"\s+", " ").Trim();
+            _speaker.text = speaker;
+            _speakerPlate.SetActive(!narration);
+            _body.text = dialogue;
+            _history.Add(speaker + "\n" + dialogue);
+        }
+
+        private void UpdateStorySceneMusic()
+        {
+            if (_currentStoryScene == 1 || _currentStoryScene == 6)
+                TheLastKnight.Audio.AudioManager.Instance?.PlayMusic("StarfallDreams");
+            else if (_currentStoryScene == 7)
+                TheLastKnight.Audio.AudioManager.Instance?.PlayMusic("HollowVale");
+        }
+
+        private void ShowSceneTitle(string line)
+        {
+            int split = line.IndexOf('—');
+            string chapter = split >= 0 ? line.Substring(0, split).Trim() : line.Trim();
+            string sceneName = split >= 0 ? line.Substring(split + 1).Trim() : string.Empty;
+            _menuPanel.SetActive(false);
+            _dialoguePanel.SetActive(false);
+            _sceneTitlePanel = CreatePanel(_panel.transform.Find("Backdrop"), "Scene Title", new Color(0f, 0f, 0f, 0.42f), Vector2.zero, Vector2.one);
+            var card = CreatePanel(_sceneTitlePanel.transform, "Scene Title Card", new Color(0.015f, 0.015f, 0.02f, 0.86f), new Vector2(0.16f, 0.39f), new Vector2(0.84f, 0.61f), true);
+            string text = string.IsNullOrEmpty(sceneName) ? chapter : chapter + "\n" + sceneName;
+            var title = CreateText(card.transform, text, 38, new Color(0.96f, 0.91f, 0.78f), TextAnchor.MiddleCenter, new Vector2(0.05f, 0.05f), new Vector2(0.95f, 0.95f));
+            title.resizeTextForBestFit = true;
+            title.resizeTextMinSize = 26;
+            title.resizeTextMaxSize = 38;
+            _sceneTitleElapsed = 0f;
+        }
+
+        private void HideSceneTitle()
+        {
+            if (_sceneTitlePanel == null) return;
+            Destroy(_sceneTitlePanel);
+            _sceneTitlePanel = null;
+            _menuPanel.SetActive(true);
+            _dialoguePanel.SetActive(true);
+        }
+
+        private void ToggleLog()
+        {
+            if (_logPanel != null) { Destroy(_logPanel); _logPanel = null; return; }
+            var backdrop = _panel.transform.Find("Backdrop");
+            _logPanel = CreatePanel(backdrop, "Story Log", new Color(0.01f, 0.01f, 0.02f, 0.96f), new Vector2(0.18f, 0.12f), new Vector2(0.82f, 0.88f), true);
+            CreateText(_logPanel.transform, "LOG", 28, new Color(0.94f, 0.88f, 0.7f), TextAnchor.UpperCenter, new Vector2(0.05f, 0.88f), new Vector2(0.95f, 0.98f));
+            var viewport = CreatePanel(_logPanel.transform, "Log Viewport", new Color(0f, 0f, 0f, 0f), new Vector2(0.055f, 0.13f), new Vector2(0.91f, 0.85f), true);
+            viewport.GetComponent<Image>().raycastTarget = true;
+            viewport.AddComponent<RectMask2D>();
+
+            var content = new GameObject("Log Content", typeof(RectTransform));
+            content.transform.SetParent(viewport.transform, false);
+            var contentRect = content.GetComponent<RectTransform>();
+            contentRect.anchorMin = new Vector2(0f, 1f);
+            contentRect.anchorMax = new Vector2(1f, 1f);
+            contentRect.pivot = new Vector2(0.5f, 1f);
+            contentRect.offsetMin = new Vector2(8f, 0f);
+            contentRect.offsetMax = new Vector2(-8f, 0f);
+            var contentLayout = content.AddComponent<VerticalLayoutGroup>();
+            contentLayout.padding = new RectOffset(4, 4, 8, 8);
+            contentLayout.spacing = 12f;
+            contentLayout.childAlignment = TextAnchor.UpperLeft;
+            contentLayout.childControlWidth = true;
+            contentLayout.childControlHeight = true;
+            contentLayout.childForceExpandWidth = true;
+            contentLayout.childForceExpandHeight = false;
+            var contentFitter = content.AddComponent<ContentSizeFitter>();
+            contentFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            contentFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            var log = CreateText(content.transform, string.Join("\n", _history), 18, Color.white, TextAnchor.UpperLeft, Vector2.zero, Vector2.one);
+            log.horizontalOverflow = HorizontalWrapMode.Wrap;
+            log.verticalOverflow = VerticalWrapMode.Overflow;
+            log.supportRichText = true;
+
+            var scrollbarObject = new GameObject("Log Scrollbar", typeof(RectTransform), typeof(Image), typeof(Scrollbar));
+            scrollbarObject.transform.SetParent(_logPanel.transform, false);
+            var scrollbarRect = scrollbarObject.GetComponent<RectTransform>();
+            scrollbarRect.anchorMin = new Vector2(0.93f, 0.14f);
+            scrollbarRect.anchorMax = new Vector2(0.95f, 0.84f);
+            scrollbarRect.offsetMin = scrollbarRect.offsetMax = Vector2.zero;
+            scrollbarObject.GetComponent<Image>().color = new Color(0.25f, 0.23f, 0.2f, 0.75f);
+            var handle = CreatePanel(scrollbarObject.transform, "Handle", new Color(0.85f, 0.78f, 0.62f, 0.9f), Vector2.zero, Vector2.one, true);
+            var scrollbar = scrollbarObject.GetComponent<Scrollbar>();
+            scrollbar.direction = Scrollbar.Direction.BottomToTop;
+            scrollbar.handleRect = handle.GetComponent<RectTransform>();
+            scrollbar.targetGraphic = handle.GetComponent<Image>();
+
+            var scrollRect = _logPanel.AddComponent<ScrollRect>();
+            scrollRect.viewport = viewport.GetComponent<RectTransform>();
+            scrollRect.content = contentRect;
+            scrollRect.vertical = true;
+            scrollRect.horizontal = false;
+            scrollRect.movementType = ScrollRect.MovementType.Clamped;
+            scrollRect.scrollSensitivity = 30f;
+            scrollRect.verticalScrollbar = scrollbar;
+            scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+            scrollRect.verticalNormalizedPosition = 1f;
+            var close = new GameObject("Close", typeof(RectTransform), typeof(Image), typeof(Button));
+            close.transform.SetParent(_logPanel.transform, false);
+            var closeRect = close.GetComponent<RectTransform>();
+            closeRect.anchorMin = new Vector2(0.75f, 0.02f); closeRect.anchorMax = new Vector2(0.93f, 0.10f); closeRect.offsetMin = closeRect.offsetMax = Vector2.zero;
+            close.GetComponent<Image>().color = new Color(0.14f, 0.14f, 0.18f, 1f);
+            close.GetComponent<Button>().onClick.AddListener(ToggleLog);
+            CreateText(close.transform, "Close", 16, Color.white, TextAnchor.MiddleCenter, Vector2.zero, Vector2.one);
+        }
+
+        private void SetHudVisible(bool visible)
+        {
+            if (_hud == null) _hud = FindAnyObjectByType<HUDController>(FindObjectsInactive.Include);
+            var document = _hud != null ? _hud.GetComponent<UIDocument>() : null;
+            if (document != null && document.rootVisualElement != null)
+                document.rootVisualElement.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        private void UpdateStorySceneBackground()
+        {
+            string resourceName;
+            switch (_currentStoryScene)
+            {
+                case 1: resourceName = "Scene 1 — The First Day Under Boa’s Banner"; break;
+                case 2: resourceName = "Scene 2 — The Oath at the Border"; break;
+                case 3: resourceName = "Scene 3 — The Rift from Beyond"; break;
+                case 4: resourceName = "main menu background"; break;
+                case 5: resourceName = "Scene 5 — The Survivor"; break;
+                case 6: resourceName = null; break; // Keep the current game view visible during the final battle.
+                case 7: resourceName = "RebuiltMoa"; break;
+                default: resourceName = null; break;
+            }
+
+            _storyBackground.sprite = string.IsNullOrEmpty(resourceName) ? null : Resources.Load<Sprite>(resourceName);
+            _storyBackground.enabled = _storyBackground.sprite != null;
+        }
+
+        public void Intro() => Show("ฉากที่ 1 — วันแรกใต้ธงแห่งโบอา", new[] {
+            "ฉากที่ 1 — วันแรกใต้ธงแห่งโบอา",
+            "สถานที่: ลานฝึกปราสาทโบอา, เวลา: ยามเช้า",
+            "บทบรรยาย — ตัวเอก\n\nข้าเคยคิดว่าอัศวินต้องไม่หวาดกลัว\nแต่ในวันแรกที่ก้าวเข้าปราสาทโบอา ข้ากลับเป็นเพียงเด็กหนุ่มคนหนึ่ง ท่ามกลางนักรบผู้ผ่านสมรภูมิมานับครั้งไม่ถ้วน",
+            "อัศวินผู้ฝึกสอน\n\n“ที่นี่ไม่มีใครสนใจว่าเจ้ามาจากไหน มีเพียงสิ่งที่เจ้าทำในสนามรบเท่านั้นที่พิสูจน์ตัวเจ้า”",
+            "ตัวเอก\n\n“ครับ”",
+            "อัศวินผู้ฝึกสอน\n\n“ฝึกให้หนัก อย่าทำให้ตราอัศวินต้องมัวหมอง”",
+            "บทบรรยาย — ตัวเอก\n\nวันนั้น ข้าสาบานว่าจะใช้ดาบปกป้องโบอา\nข้าเชื่อว่าอาณาจักรจะไม่มีวันล่มสลาย ตราบใดที่ยังมีอัศวินยืนหยัด\nข้าไม่รู้เลยว่า วันหนึ่งคำสาบานนั้นจะเป็นสิ่งเดียวที่เหลืออยู่",
+            "ฉากที่ 2 — คำสาบาน ณ ชายแดน",
+            "สถานที่: ป้อมปราการชายแดน, เวลาผ่านไปหลายปี",
+            "บทบรรยาย — ตัวเอก\n\nหลายปีผ่านไป ข้ากลายเป็นหัวหน้าหน่วยอัศวิน และถูกส่งไปประจำชายแดนทางเหนือ\nเบื้องหน้าข้าคือเหล่าอัศวินหน้าใหม่ ผู้ยังมีความฝันเหมือนข้าในวันแรก",
+            "ตัวเอก — กล่าวต่อหน้าอัศวินหน้าใหม่\n\n“อัศวินแห่งโบอา จงเงยหน้าขึ้น”\n\n“เมื่อความกลัวบอกให้พวกเจ้าหนี จงมองคนที่ยืนอยู่ข้างหลัง”\n\n“ดาบของอัศวินมีไว้ปกป้องผู้ที่ปกป้องตัวเองไม่ได้”",
+            "อัศวินหน้าใหม่\n\n“เพื่อโบอา! เพื่อประชาชน! เพื่อเกียรติแห่งอัศวิน!”",
+            "บทบรรยาย — ตัวเอก\n\nเสียงของพวกเขาก้องไปทั่วป้อมปราการ\nข้ายิ้ม โดยไม่รู้ว่าสงครามที่กำลังมาถึงจะพรากพวกเขาไป\nและข้าจะรักษาคำพูดของตัวเองไว้ไม่ได้ทั้งหมด",
+            "ฉากที่ 3 — รอยแยกจากอีกฟากหนึ่ง",
+            "สถานที่: ชายแดนทางเหนือ, เวลา: กลางคืน",
+            "บทบรรยาย — ตัวเอก\n\nคืนนั้น ท้องฟ้าฉีกออกเป็นรอยแผล\nแสงสีแดงสาดลงบนผืนดิน พร้อมเสียงคำรามจากอีกฟากของความมืด",
+            "อัศวินยามเฝ้าป้อม\n\n“ท่านหัวหน้า! นั่นคืออะไร?!”",
+            "ตัวเอก\n\n“ส่งสัญญาณเตือนภัย เรียกทุกคนขึ้นกำแพง!”",
+            "อัศวินอีกคน\n\n“มีบางอย่างออกมาจากรอยแยก!”",
+            "บทบรรยาย — ตัวเอก\n\nข้าเห็นเงาร่างแรกตกลงมาจากท้องฟ้า ตามด้วยอีกสิบ ร้อย และนับไม่ถ้วน\nปีศาจจากอีกมิติหลั่งไหลเข้าสู่โลก ข้าได้ยินสัญญาณเตือนภัยถูกส่งไปยังเมืองหลวง",
+            "ตัวเอก\n\n“ตั้งแนวป้องกัน!”",
+            "บทบรรยาย — ตัวเอก\n\nข้าชักดาบ ยังเชื่อว่าเราจะหยุดพวกมันได้\nข้าคืออัศวินแห่งโบอา และนี่คือดินแดนที่ข้าสาบานว่าจะปกป้อง",
+            "ฉากที่ 4 — วันที่กำแพงพังทลาย",
+            "สถานที่: ป้อมชายแดนและเส้นทางสู่เมืองหลวง",
+            "บทบรรยาย — ตัวเอก\n\nการต่อสู้เริ่มก่อนรุ่งสาง\nอัศวินของข้าสู้จนหมดแรง แต่ทุกครั้งที่ศัตรูล้มลง ตัวใหม่ก็ข้ามร่างของมันเข้ามา\nนี่ไม่ใช่กองทัพ แต่เป็นคลื่นที่ไม่มีวันสิ้นสุด",
+            "อัศวินหน้าใหม่\n\n“พวกมันทะลวงประตูชั้นนอกแล้ว!”",
+            "ตัวเอก\n\n“ถอยไปประตูชั้นใน พาผู้บาดเจ็บออกไป!”",
+            "อัศวินหน้าใหม่\n\n“แล้วท่านล่ะครับ?!”",
+            "ตัวเอก\n\n“นั่นคือคำสั่ง”",
+            "บทบรรยาย\n\nคำสั่งของข้าหยุดความตายไม่ได้\nอัศวินที่เคยยืนเคียงข้างข้าล้มลง ธงโบอาถูกไฟเผา และกำแพงพังทลาย\nเราสู้จนถึงที่สุด แต่ความกล้าหาญไม่อาจหยุดศัตรูที่ไร้ขอบเขต",
+            "อัศวินผู้บาดเจ็บ\n\n“ท่านต้องไป… ไม่อย่างนั้นจะไม่มีใครบอกพวกเขาว่าเกิดอะไรขึ้น”",
+            "ตัวเอก\n\n“ยังมีคนต้องช่วย…”",
+            "อัศวินผู้บาดเจ็บ\n\n“ได้โปรด… ไปเถอะครับ”",
+            "บทบรรยาย — ตัวเอก\n\nมือข้าสั่นอยู่บนด้ามดาบ\nข้าเคยสัญญาว่าจะปกป้องทุกคน แต่วันนั้นข้าทำได้เพียงหนีจากสนามรบ\nข้าได้ยินเสียงระฆังดังอยู่เบื้องหลัง ก่อนที่มันจะเงียบลงตลอดกาล",
+            "ฉากที่ 5 — ผู้รอดชีวิต",
+            "สถานที่: ซากป่าหลังแนวรบ, หลายวันหลังการพ่ายแพ้",
+            "บทบรรยาย — ตัวเอก\n\nข้าตื่นขึ้นท่ามกลางควันและกลิ่นเลือด\nเกราะแตกหัก แขนแทบขยับไม่ได้ ทุกลมหายใจเต็มไปด้วยความเจ็บปวด\nสิ่งเดียวที่รู้คือ ข้ายังมีชีวิตอยู่",
+            "ตัวเอก — พึมพำ\n\n“ทำไม… ข้าถึงรอด”",
+            "บทบรรยาย — ตัวเอก\n\nข้านึกถึงเหล่าอัศวินหน้าใหม่ พวกเขาเชื่อในคำพูดของข้า เชื่อว่าข้าจะพาพวกเขากลับบ้าน",
+            "บทบรรยาย — ตัวเอก\n\nข้าอยากวางดาบ แล้วปล่อยให้ความมืดกลืนกิน\nแต่ตราอัศวินที่แตกร้าวยังอยู่ข้างกาย\nข้านึกถึงคำพูดที่เคยให้ไว้: ดาบมีไว้ปกป้องผู้ที่ปกป้องตัวเองไม่ได้",
+            "ตัวเอก\n\n“ถ้ายังมีคนรอความช่วยเหลือ… ข้าจะไม่ยอมแพ้”",
+            "บทบรรยาย — ตัวเอก\n\nข้ารู้ว่าประตูมิติยังเปิดอยู่ และปีศาจจะไม่หยุดตราบใดที่มันยังคงอยู่\nข้าช่วยคนที่ตายไปแล้วไม่ได้ แต่อาจยังช่วยคนที่เหลืออยู่",
+            "บทบรรยาย — ตัวเอก\n\nข้าหยิบดาบบิ่นหักขึ้นมา แล้วเดินออกจากซากป่าเพียงลำพัง"
+        });
         public void Ending()
         {
-            Show("A KINGDOM REBORN", new[] {
-                "The demon falls. Dawn reaches Moa, and the long work of rebuilding begins.",
-                "Seasons pass. The bells return, homes rise, and the market fills with voices. Arthur watches over the kingdom he kept his oath to protect."
+            Show("ฉากที่ 6 — อัศวินคนสุดท้าย", new[] {
+                "ฉากที่ 6 — อัศวินคนสุดท้าย",
+                "สถานที่: ใจกลางรอยแยกมิติ, การต่อสู้ครั้งสุดท้าย",
+                "บทบรรยาย — ตัวเอก\n\nเส้นทางสู่รอยแยกเต็มไปด้วยซากเมือง ธงที่ไหม้เกรียม และดาบของผู้ที่ไม่มีวันกลับมา\nไม่มีเสียงตอบรับ ไม่มีทหารให้สั่งการ\nเหลือเพียงดาบในมือกับรอยแยกที่กำลังฉีกโลก",
+                "บทบรรยาย — ตัวเอก\n\nข้าเข้าใจแล้วว่ารอยแยกไม่ใช่แค่ประตู แต่มันคือบาดแผลที่เชื่อมโลกของเราเข้ากับดินแดนปีศาจ\nข้าเห็นมันกำลังขยายตัว หากปล่อยไว้ จะไม่เหลือสิ่งใดให้ปกป้อง",
+                "ตัวเอก\n\n“นี่คือต้นเหตุ…”\n\n“ข้าจะไม่ยอมให้เจ้าเอาสิ่งที่เหลือไปอีก”",
+                "ตัวเอก\n\n“ในนามของอัศวินแห่งโบอา… ข้าจะจบสงครามนี้”",
+                "บทบรรยาย — ตัวเอก\n\nข้าเห็นรอยแยกหดตัว แสงสีแดงดับลง และปีศาจสลายไปพร้อมพลังที่หล่อเลี้ยงพวกมัน\nท้องฟ้าค่อย ๆ กลับคืนสู่สภาพเดิม หลายเดือนต่อมา โลกก็สงบลงเป็นครั้งแรก",
+                "ตัวเอก — เสียงแผ่วเบา\n\n“จบแล้วสินะ”",
+                "บทบรรยาย — ตัวเอก\n\nข้าทรุดลง ดาบหลุดจากมือ\nข้าไม่รู้ว่าจะรอดถึงวันพรุ่งนี้หรือไม่\nแต่ไม่มีปีศาจผ่านประตูนั้นมาได้อีก\nแค่นั้นก็เพียงพอแล้ว",
+                "ฉากที่ 7 — รุ่งอรุณของอาณาจักร",
+                "สถานที่: เมืองหลวงของโบอา, หลายเดือนต่อมา",
+                "บทบรรยาย — ตัวเอก\n\nหลายเดือนต่อมา ข้าเดินไปยังเนินเขาที่มองเห็นอาณาจักรทั้งเมือง เสื้อคลุมสีแดงขาดวิ่นปลิวไปตามสายลม แสงอาทิตย์ยามเช้าส่องกระทบหลังคาที่กำลังสร้างขึ้นใหม่\n\nราชาปีศาจพ่ายแพ้ รอยแยกประตูมิติถูกปิดลง แสงอรุณสาดส่องมายังโบอา และงานฟื้นฟูอันยาวนานก็เริ่มต้นขึ้น\n\nโบอาไม่อาจกลับไปเป็นเหมือนวันวาน ผู้ที่จากไปจะไม่มีวันหวนคืน และบาดแผลจากสงครามจะยังคงอยู่ในความทรงจำของผู้รอดชีวิต\n\nแต่ในดินแดนที่ครั้งหนึ่งเคยเต็มไปด้วยเสียงกรีดร้อง บัดนี้ข้าได้ยินเสียงค้อนของช่างก่อสร้าง เสียงหัวเราะของเด็ก ๆ และเสียงระฆังที่ต้อนรับวันใหม่\n\nฤดูกาลผันผ่าน เสียงระฆังกลับมาดังอีกครั้ง บ้านเรือนค่อย ๆ ถูกสร้างขึ้นใหม่ ตลาดกลับมาเต็มไปด้วยเสียงผู้คน ข้าเฝ้ามองอาณาจักรที่เคยให้คำสัตย์ว่าจะปกป้อง",
+                "ตัวเอก — บทพูดสุดท้าย\n\n“ข้าขอโทษที่ไม่อาจพาพวกเจ้าทุกคนกลับบ้านได้...”\n\n“แต่ข้าสัญญาไว้แล้ว ว่าจะปกป้องผู้คนที่ยังเหลืออยู่”\n\n“และตราบใดที่ยังมีใครต้องการความช่วยเหลือ... ข้าก็จะยังคงเป็นอัศวิน”"
             }, () => GameManager.Instance.Load("MainMenu", false));
             _ending = true;
-            _panel.GetComponent<Canvas>().sortingOrder = 300;
-            _body.GetComponent<LayoutElement>().preferredHeight = 175;
-            _content.GetComponentInChildren<Text>().fontSize = 32;
-            var backdrop = _panel.transform.Find("Backdrop");
-            backdrop.GetComponent<Image>().color = Color.black;
-            var art = new GameObject("Rebuilt Moa", typeof(RectTransform), typeof(RawImage), typeof(AspectRatioFitter));
-            art.transform.SetParent(backdrop, false); art.transform.SetAsFirstSibling();
-            var texture = Resources.Load<Texture2D>("RebuiltMoa");
-            art.GetComponent<RawImage>().texture = texture;
-            art.GetComponent<RawImage>().raycastTarget = false;
-            var fit = art.GetComponent<AspectRatioFitter>();
-            fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-            fit.aspectRatio = texture != null ? (float)texture.width / texture.height : 16f / 9f;
-            var rect = _content.GetComponent<RectTransform>();
-            rect.anchorMin = new Vector2(0.55f, 0.2f); rect.anchorMax = new Vector2(0.95f, 0.84f);
-            var shade = _content.gameObject.AddComponent<Image>();
-            shade.color = new Color(0.025f, 0.035f, 0.065f, 0.85f);
-            var layout = _content.GetComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(24, 24, 24, 24);
-            var skip = _content.Find("Skip").GetComponent<RectTransform>();
-            skip.SetParent(backdrop, false);
-            skip.anchorMin = new Vector2(0.8f, 0.06f); skip.anchorMax = new Vector2(0.95f, 0.12f);
-            skip.offsetMin = skip.offsetMax = Vector2.zero;
-            TheLastKnight.Audio.AudioManager.Instance?.PlaySceneMusic("CityCenter");
         }
 
         private void RollCredits()
         {
-            _rolling = true; _elapsed = 0f; _content.gameObject.SetActive(false);
-            var viewport = new GameObject("Rolling Credits", typeof(RectTransform), typeof(Image), typeof(RectMask2D));
-            viewport.transform.SetParent(_panel.transform.Find("Backdrop"), false);
-            viewport.GetComponent<Image>().color = new Color(0.025f, 0.035f, 0.065f, 0.85f);
+            _rolling = true; _elapsed = 0f;
+            _speaker.transform.parent.gameObject.SetActive(false);
+            _body.transform.parent.gameObject.SetActive(false);
+            var viewport = CreatePanel(_panel.transform.Find("Backdrop"), "Rolling Credits", new Color(0.01f, 0.01f, 0.02f, 0.92f), new Vector2(0.25f, 0.12f), new Vector2(0.75f, 0.88f));
+            viewport.AddComponent<RectMask2D>();
             _creditsViewport = viewport.GetComponent<RectTransform>();
-            _creditsViewport.anchorMin = new Vector2(0.55f, 0.2f); _creditsViewport.anchorMax = new Vector2(0.95f, 0.84f);
-            _creditsViewport.offsetMin = _creditsViewport.offsetMax = Vector2.zero;
-            var text = RuntimeUI.Label(viewport.transform,
-                "THE LAST KNIGHT\n\nA KINGDOM REBORN\n\n\nCreated by\nThe Last Knight team\n\n\nArthur's oath endures.\nMoa's story continues.\n\n\nThank you for playing.", 28);
+            var text = CreateText(viewport.transform,
+                "THE LAST KNIGHT\n\nBOA\n\n\nCreated by\nThe Last Knight team\n\n\nAn oath endures.\nBoa's story continues.\n\n\nThank you for playing.", 28, Color.white, TextAnchor.UpperCenter, new Vector2(0.05f, 0f), new Vector2(0.95f, 1f));
             text.lineSpacing = 1.2f;
             _credits = text.rectTransform;
-            _credits.anchorMin = new Vector2(0, 0); _credits.anchorMax = new Vector2(1, 0);
             _credits.pivot = new Vector2(0.5f, 0);
             _credits.sizeDelta = new Vector2(-40, 680);
             _credits.anchoredPosition = new Vector2(0, -680);
@@ -89,6 +490,13 @@ namespace TheLastKnight.UI
         private void Update()
         {
             if (_panel == null || Time.frameCount <= _openedFrame + 1) return;
+            if (_sceneTitlePanel != null)
+            {
+                _sceneTitleElapsed += Time.unscaledDeltaTime;
+                if (_sceneTitleElapsed >= 2.2f) Advance();
+                else if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame) Advance();
+                return;
+            }
             if (_ending)
             {
                 _elapsed += Time.unscaledDeltaTime;
@@ -100,25 +508,28 @@ namespace TheLastKnight.UI
                 else if (_elapsed >= 9f) { Advance(); return; }
             }
             if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame) Advance();
-            else if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame
-                && (UnityEngine.EventSystems.EventSystem.current == null || !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())) Advance();
         }
         private void Advance()
         {
             _openedFrame = Time.frameCount;
             _elapsed = 0f;
+            if (_sceneTitlePanel != null) HideSceneTitle();
             if (_rolling) { Finish(); return; }
             if (++_index >= _lines.Length)
             {
                 if (_ending) RollCredits(); else Finish();
             }
-            else _body.text = _lines[_index];
+            else SetLine(_index);
         }
         private void Finish()
         {
             if (_panel == null) return;
-            Destroy(_panel); _panel = null; Time.timeScale = 1f;
+            if (_logPanel != null) Destroy(_logPanel);
+            Destroy(_panel); _panel = _logPanel = null; Time.timeScale = 1f;
+            SetHudVisible(true);
             GameManager.Instance.SetInputBlocked(false);
+            if (!_ending && _currentStoryScene > 0)
+                TheLastKnight.Audio.AudioManager.Instance?.PlaySceneMusic(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             _complete?.Invoke();
         }
     }

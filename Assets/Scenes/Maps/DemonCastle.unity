@@ -38171,47 +38171,24 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6892458311987200993, guid: 889928b1c337fc3498ef73ddb1cd91af, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 646144578}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 889928b1c337fc3498ef73ddb1cd91af, type: 3}
 --- !u!114 &646144575 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8731672789709561378, guid: 889928b1c337fc3498ef73ddb1cd91af, type: 3}
   m_PrefabInstance: {fileID: 646144574}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646144576}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
---- !u!1 &646144576 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6892458311987200993, guid: 889928b1c337fc3498ef73ddb1cd91af, type: 3}
-  m_PrefabInstance: {fileID: 646144574}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &646144577 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6307038127986653888, guid: 889928b1c337fc3498ef73ddb1cd91af, type: 3}
   m_PrefabInstance: {fileID: 646144574}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &646144578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646144576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63d76cb0ee0d9b94da7179c077f2c966, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.EnemyProgressionReward
-  churchKey: 0
-  runeIndex: -1
-  finalBoss: 1
 --- !u!1 &654761259
 GameObject:
   m_ObjectHideFlags: 0
@@ -58965,9 +58942,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.BossArena
   boss: {fileID: 646144575}
+  bossObjectName: 
   barriers:
   - {fileID: 1266526204}
   - {fileID: 1825911311}
+  defeatId: 
   oneSided: 0
 --- !u!61 &1180070497
 BoxCollider2D:
@@ -107455,6 +107434,72 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
   m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_ActionId: 44b200b1-1557-4083-816c-b22cbdf77ddf
+--- !u!1001 &1894883783
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2046640056}
+    m_Modifications:
+    - target: {fileID: 3324968214395141665, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: _requiredBoss
+      value: 
+      objectReference: {fileID: 646144575}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 46
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7822563770358945667, guid: e42b3267c15508546b0543db6af55846, type: 3}
+      propertyPath: m_Name
+      value: RedGate
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e42b3267c15508546b0543db6af55846, type: 3}
+--- !u!4 &1894883784 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6650686643564401775, guid: e42b3267c15508546b0543db6af55846, type: 3}
+  m_PrefabInstance: {fileID: 1894883783}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1898396224
 GameObject:
   m_ObjectHideFlags: 0
@@ -119196,6 +119241,7 @@ Transform:
   - {fileID: 1411597673}
   - {fileID: 646144577}
   - {fileID: 1180070495}
+  - {fileID: 1894883784}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2050335855
