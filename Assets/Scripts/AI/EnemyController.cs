@@ -166,6 +166,7 @@ private Rigidbody2D _rb;
         private ArchDemonAudioController _archDemonAudio;
         private DemonAudioController _demonAudio;
         private FantasyMushroomAudioController _fantasyMushroomAudio;
+        private FireWormAudioController _fireWormAudio;
         private DragonSfxController _dragonSfx;
         private float _damageUntil;
         private bool _projectileSpawned;
@@ -203,6 +204,7 @@ _rb = GetComponent<Rigidbody2D>();
             _archDemonAudio = GetComponent<ArchDemonAudioController>();
             _demonAudio = GetComponent<DemonAudioController>();
             _fantasyMushroomAudio = GetComponent<FantasyMushroomAudioController>();
+            _fireWormAudio = GetComponent<FireWormAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
@@ -1730,6 +1732,7 @@ _rb = GetComponent<Rigidbody2D>();
                 }
                 projectileScript.Initialize(fireDir, power, gameObject, landingPoint);
                 _fantasyMushroomAudio?.PlaySporeShot();
+                _fireWormAudio?.PlayFireballLaunch();
             }
         }
 

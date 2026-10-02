@@ -157,6 +157,12 @@ namespace TheLastKnight.EditorTools
                     AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงก้อนแตก.WAV");
                 serializedProj.FindProperty("_impactAudioVolume").floatValue = 1f;
             }
+            else if (name == "FireWorm_FireBall")
+            {
+                serializedProj.FindProperty("_impactAudioClip").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงก้อนแตก.WAV");
+                serializedProj.FindProperty("_impactAudioVolume").floatValue = 1f;
+            }
             serializedProj.ApplyModifiedProperties();
 
             PrefabUtility.SaveAsPrefabAsset(go, prefabPath);
@@ -466,6 +472,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (spellPrefab != null) serializedAI.FindProperty("_groundSpellPrefab").objectReferenceValue = spellPrefab;
             serializedAI.ApplyModifiedProperties();
             ConfigureMonsterSkillsAndParry(ai, cfg.Name);
+            if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
             if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
             if (cfg.Name == "UndeadExecutioner")
             {
@@ -613,6 +620,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             {
                 SetupFantasyMushroomAudio(root);
             }
+            else if (cfg.Name == "FireWorm")
+            {
+                SetupFireWormAudio(root);
+            }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
             Object.DestroyImmediate(root);
@@ -758,6 +769,55 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงยิง.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Fantasy Mushroom SFX clips successfully!");
+        }
+
+        private static void SetupFireWormAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var fireWormAudio = root.AddComponent<FireWormAudioController>();
+            fireWormAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ปล่อยลูกไฟ.wav"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Fire Worm SFX clips successfully!");
+        }
+
+        private static void SetupFireWormParry(GameObject root, SpriteRenderer spriteRenderer)
+        {
+            var receiver = root.GetComponent<ParryReceiver>();
+            if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
+
+            var parry = new SerializedObject(receiver);
+            parry.FindProperty("_centerSprite").objectReferenceValue = spriteRenderer;
+            parry.FindProperty("_useVisibleSpriteBounds").boolValue = true;
+            parry.FindProperty("_centerLocalOffset").vector2Value = Vector2.zero;
+
+            string[] stunFramePaths =
+            {
+                "Assets/sprites/effect/Stun/Stun_1.png",
+                "Assets/sprites/effect/Stun/Stun_2.png",
+                "Assets/sprites/effect/Stun/Stun_3.png",
+                "Assets/sprites/effect/Stun/Stun_4.png",
+                "Assets/sprites/effect/Stun/Stun_5.png"
+            };
+            var stunFrames = parry.FindProperty("_stunEffectFrames");
+            stunFrames.arraySize = stunFramePaths.Length;
+            for (int i = 0; i < stunFramePaths.Length; i++)
+            {
+                stunFrames.GetArrayElementAtIndex(i).objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<Texture2D>(stunFramePaths[i]);
+            }
+
+            parry.FindProperty("_stunEffectDuration").floatValue = 2f;
+            parry.FindProperty("_stunEffectHeadXFraction").floatValue = 0.15f;
+            parry.FindProperty("_stunEffectHeadYFraction").floatValue = 0.1f;
+            parry.FindProperty("_stunEffectHeadYOffset").floatValue = 0.08f;
+            parry.FindProperty("_stunEffectWorldScale").floatValue = 0.5f;
+            parry.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void AssignFirstSpriteFromController(SpriteRenderer sr, RuntimeAnimatorController controller)
