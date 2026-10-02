@@ -250,6 +250,8 @@ GameObject:
   - component: {fileID: 3627429482634873419}
   - component: {fileID: 3808974237342669305}
   - component: {fileID: 6633631750662538358}
+  - component: {fileID: 8844037711200554112}
+  - component: {fileID: 7156238347901141932}
   m_Layer: 0
   m_Name: ArchDemon
   m_TagString: Untagged
@@ -509,6 +511,46 @@ MonoBehaviour:
   _respawnTime: 0.5
   _requirePlayerAwayToRespawn: 0
   _respawnAtDeathPosition: 1
+--- !u!114 &8844037711200554112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5409589368266035541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b81bf34e7f64eacb9827f10418c602d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.ArchDemonAudioController
+  _basicAttackClip: {fileID: 8300000, guid: 3a2d3649b959df147b78614b022201b9, type: 3}
+  _resurrectionClip: {fileID: 8300000, guid: 41513875810968a4894b5e0af0feb976, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!114 &7156238347901141932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5409589368266035541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 1437028101314134755}
+  _useVisibleSpriteBounds: 1
+  _centerLocalOffset: {x: 0, y: 0}
+  _stunEffectFrames:
+  - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
+  - {fileID: 2800000, guid: f9d72ddb787e9a142bf7fc9974eb9b0d, type: 3}
+  - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
+  - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
+  - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0
+  _stunEffectHeadYFraction: 0.3
+  _stunEffectWorldScale: 0.5
 --- !u!1 &6751255952629736916
 GameObject:
   m_ObjectHideFlags: 0
