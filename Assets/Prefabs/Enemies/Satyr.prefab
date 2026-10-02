@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1945214658715938163}
   - component: {fileID: 7931093501954400539}
   - component: {fileID: 2028784599983360218}
+  - component: {fileID: 9010000000000000001}
   m_Layer: 0
   m_Name: Satyr
   m_TagString: Untagged
@@ -32,8 +33,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3613217444870711513}
   - {fileID: 6652042913163310022}
@@ -221,8 +222,13 @@ MonoBehaviour:
   _chaseSpeed: 4.2
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -232,52 +238,165 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 7
-  _meleeRange: 1.6
+  _meleeRange: 0.05
   _meleeCooldown: 1.5
+  _useColliderEdgeAttackDistance: 1
+  _requireCloseRangeForContactSkills: 1
+  _playAttackStatesDirectly: 0
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
+  _useColliderEdgeAttackRanges: 1
+  _disableBasicAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack1
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0
+  _basicAttackActionDuration: 0
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
+  _basicParryEveryNAttacks: 0
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills:
   - skillName: Dropkick
     animationName: Skill1
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 1.8
     cooldown: 7
     minRange: 0
     maxRange: 2.2
     isParryable: 1
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    additionalDamageHitTimes: []
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   - skillName: Slash2
     animationName: Attack2
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 1.4
     cooldown: 4
     minRange: 0
     maxRange: 1.8
     isParryable: 0
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    additionalDamageHitTimes: []
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   - skillName: NatureCast
     animationName: Cast
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 2
     cooldown: 9
     minRange: 2.5
     maxRange: 7
     isParryable: 0
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    additionalDamageHitTimes: []
+    requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
+  _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 0
+  _waitForAttackProjectileToFinish: 0
+  _interruptAttackOnDamage: 0
+  _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
+  _attackSortingLayerName: 
+--- !u!114 &9010000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650700729064546569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 2844143900155942529}
+  _useVisibleSpriteBounds: 1
+  _centerLocalOffset: {x: 0, y: 0}
+  _stunEffectFrames: []
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0
+  _stunEffectHeadYFraction: 0
+  _stunEffectHeadYOffset: 0
+  _stunEffectWorldScale: 0.5
 --- !u!1 &4549858075668376642
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +424,7 @@ Transform:
   m_GameObject: {fileID: 4549858075668376642}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.315, z: 0}
+  m_LocalPosition: {x: 0.105, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -355,7 +474,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.44000003, y: 0.63}
+  m_Size: {x: 0.55, y: 0.3}
   m_EdgeRadius: 0
 --- !u!114 &2815647233630779866
 MonoBehaviour:
@@ -402,7 +521,7 @@ RectTransform:
   m_GameObject: {fileID: 6201285575721642435}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
+  m_LocalScale: {x: 0.0048, y: 0.0048, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9141032888361235488}
@@ -411,8 +530,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.95000005}
-  m_SizeDelta: {x: 100, y: 14}
+  m_AnchoredPosition: {x: 0.075, y: 0.5712}
+  m_SizeDelta: {x: 59.1742, y: 8.8075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8377306522708389599
 Canvas:
@@ -455,6 +574,12 @@ MonoBehaviour:
   _canvas: {fileID: 0}
   _autoHideOnDeath: 1
   _maintainWorldScale: 1
+  _followSprite: {fileID: 2844143900155942529}
+  _useVisibleSpriteBounds: 1
+  _headGap: 0.08
+  _headHorizontalOffset: 0
+  _followSpriteBounds: 1
+  _headOffset: 0.12
 --- !u!1 &8377878203006158295
 GameObject:
   m_ObjectHideFlags: 0

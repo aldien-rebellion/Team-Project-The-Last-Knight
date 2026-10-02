@@ -60,7 +60,9 @@
 
 .hp-value-text {
     position: absolute;
-    width: 100%;
+    left: 26px;
+    right: 4px;
+    width: auto;
     height: 100%;
     top: 0;
     bottom: 0;
