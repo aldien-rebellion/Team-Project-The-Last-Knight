@@ -163,6 +163,7 @@ private Rigidbody2D _rb;
         private float _patrolPauseUntil;
         private ParryReceiver _parry;
         private SmallDragonFireAttackEffect _smallDragonFireEffect;
+        private ArchDemonAudioController _archDemonAudio;
         private float _damageUntil;
         private bool _projectileSpawned;
         private bool _wasAirborne;
@@ -196,6 +197,7 @@ _rb = GetComponent<Rigidbody2D>();
             if (_useColliderEdgeAttackRanges)
                 _parry.SetSpriteCenter(GetComponent<SpriteRenderer>(), true);
             _smallDragonFireEffect = GetComponentInChildren<SmallDragonFireAttackEffect>(true);
+            _archDemonAudio = GetComponent<ArchDemonAudioController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
             _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
@@ -848,6 +850,8 @@ _rb = GetComponent<Rigidbody2D>();
                 dragonAudio.PlayAttackAnimation();
             else
                 PlayAnimationAction(_basicAttackAnimState);
+            if (!ranged)
+                _archDemonAudio?.PlayBasicAttack();
             _smallDragonFireEffect?.Play();
             float damageStartDelay = ranged ? 0f : Mathf.Max(
                 _basicAttackDamageDelay,
@@ -1964,6 +1968,7 @@ _rb = GetComponent<Rigidbody2D>();
 
             // 5. Restore at the death location when this monster uses a revival life.
             Vector3 respawnPosition = _respawnAtDeathPosition ? _deathPosition : _spawnPosition;
+            _archDemonAudio?.PlayResurrection();
             transform.position = respawnPosition;
             transform.rotation = _spawnRotation;
             _startX = respawnPosition.x;
