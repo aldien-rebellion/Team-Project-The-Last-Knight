@@ -196,5 +196,7 @@ MonoBehaviour:
   _speed: 9
   _damage: 10
   _lifetime: 5
+  _impactAudioClip: {fileID: 8300000, guid: 6e70dc4d8425a774389b5e93d37058e6, type: 3}
+  _impactAudioVolume: 1
   _destroyOnGround: 1
   _knockback: {x: 3, y: 2}

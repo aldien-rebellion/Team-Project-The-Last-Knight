@@ -167,6 +167,7 @@ private Rigidbody2D _rb;
         private DemonAudioController _demonAudio;
         private FantasyMushroomAudioController _fantasyMushroomAudio;
         private FireWormAudioController _fireWormAudio;
+        private FlyingEyeAudioController _flyingEyeAudio;
         private DragonSfxController _dragonSfx;
         private float _damageUntil;
         private bool _projectileSpawned;
@@ -205,6 +206,7 @@ _rb = GetComponent<Rigidbody2D>();
             _demonAudio = GetComponent<DemonAudioController>();
             _fantasyMushroomAudio = GetComponent<FantasyMushroomAudioController>();
             _fireWormAudio = GetComponent<FireWormAudioController>();
+            _flyingEyeAudio = GetComponent<FlyingEyeAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
@@ -882,7 +884,10 @@ _rb = GetComponent<Rigidbody2D>();
                 yield break;
             }
             if (!ranged)
+            {
                 _fantasyMushroomAudio?.PlayBasicAttack();
+                _flyingEyeAudio?.PlayBite();
+            }
             // A new basic swing is a new hit window. Reset each hitbox's per-target
             // cooldown so SideSwing, FwdSwing, and DownSwing can all damage in sequence.
             foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
@@ -1733,6 +1738,7 @@ _rb = GetComponent<Rigidbody2D>();
                 projectileScript.Initialize(fireDir, power, gameObject, landingPoint);
                 _fantasyMushroomAudio?.PlaySporeShot();
                 _fireWormAudio?.PlayFireballLaunch();
+                _flyingEyeAudio?.PlayEyeBeam();
             }
         }
 

@@ -348,6 +348,8 @@ GameObject:
   - component: {fileID: 1689999212813470605}
   - component: {fileID: 512073509840440937}
   - component: {fileID: 3580031524077212841}
+  - component: {fileID: 913000000000000001}
+  - component: {fileID: 913000000000000002}
   m_Layer: 10
   m_Name: FlyingEye
   m_TagString: Untagged
@@ -620,3 +622,61 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 5084235207900419806}
   _useVisibleSpriteBounds: 1
+  _centerLocalOffset: {x: 0, y: 0}
+  _stunEffectFrames:
+  - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
+  - {fileID: 2800000, guid: f9d72ddb787e9a142bf7fc9974eb9b0d, type: 3}
+  - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
+  - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
+  - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0
+  _stunEffectHeadYFraction: 0
+  _stunEffectHeadYOffset: 0.25
+  _stunEffectWorldScale: 0.5
+--- !u!82 &913000000000000001
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8505987167863995191}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 2
+  MaxDistance: 20
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+--- !u!114 &913000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8505987167863995191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a85f069d2f154b73a030238249b8c10e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.FlyingEyeAudioController
+  _biteClip: {fileID: 8300000, guid: a29029daae673b04a93b6a5a5a0ef96a, type: 3}
+  _eyeBeamClip: {fileID: 8300000, guid: f4841b35d1f5ec5409bb98e5430b65b4, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+  _biteVolume: 1
+  _eyeBeamVolume: 1
+  _hitVolume: 0.9
