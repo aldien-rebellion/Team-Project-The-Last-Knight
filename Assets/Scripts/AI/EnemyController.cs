@@ -164,6 +164,7 @@ private Rigidbody2D _rb;
         private ParryReceiver _parry;
         private SmallDragonFireAttackEffect _smallDragonFireEffect;
         private ArchDemonAudioController _archDemonAudio;
+        private DemonAudioController _demonAudio;
         private float _damageUntil;
         private bool _projectileSpawned;
         private bool _wasAirborne;
@@ -198,6 +199,7 @@ _rb = GetComponent<Rigidbody2D>();
                 _parry.SetSpriteCenter(GetComponent<SpriteRenderer>(), true);
             _smallDragonFireEffect = GetComponentInChildren<SmallDragonFireAttackEffect>(true);
             _archDemonAudio = GetComponent<ArchDemonAudioController>();
+            _demonAudio = GetComponent<DemonAudioController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
             _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
@@ -851,7 +853,10 @@ _rb = GetComponent<Rigidbody2D>();
             else
                 PlayAnimationAction(_basicAttackAnimState);
             if (!ranged)
+            {
                 _archDemonAudio?.PlayBasicAttack();
+                _demonAudio?.PlayBasicAttack();
+            }
             _smallDragonFireEffect?.Play();
             float damageStartDelay = ranged ? 0f : Mathf.Max(
                 _basicAttackDamageDelay,
