@@ -174,6 +174,7 @@ private Rigidbody2D _rb;
         private FoxAudioController _foxAudio;
         private GoblinAudioController _goblinAudio;
         private LizardAudioController _lizardAudio;
+        private MinotaurAudioController _minotaurAudio;
         private DragonSfxController _dragonSfx;
         private MechaStoneGolemAudioController _mechaStoneGolemAudio;
         private float _damageUntil;
@@ -219,6 +220,7 @@ _rb = GetComponent<Rigidbody2D>();
             _foxAudio = GetComponent<FoxAudioController>();
             _goblinAudio = GetComponent<GoblinAudioController>();
             _lizardAudio = GetComponent<LizardAudioController>();
+            _minotaurAudio = GetComponent<MinotaurAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
             _mechaStoneGolemAudio = GetComponent<MechaStoneGolemAudioController>();
             _colliders = GetComponentsInChildren<Collider2D>();
@@ -900,6 +902,7 @@ _rb = GetComponent<Rigidbody2D>();
                 _dragonSfx?.PlayBite();
                 _archDemonAudio?.PlayBasicAttack();
                 _demonAudio?.PlayBasicAttack();
+                _minotaurAudio?.PlayBasicAttack();
             }
             _smallDragonFireEffect?.Play();
             float damageStartDelay = ranged ? 0f : Mathf.Max(
