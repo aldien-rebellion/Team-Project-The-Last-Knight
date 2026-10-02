@@ -494,7 +494,8 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "FlyingEye") SetupFlyingEyeParry(root, sr);
             if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
             if (cfg.Name == "Jinn") SetupJinnParry(root, sr);
-            if (cfg.Name == "Goblin") SetupStandardParryStunEffect(root, sr);
+            if (cfg.Name == "Goblin" || cfg.Name == "Minotaur_1")
+                SetupStandardParryStunEffect(root, sr);
             if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
             if (cfg.Name == "UndeadExecutioner")
             {
@@ -671,6 +672,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             {
                 SetupStandardParryStunEffect(root, sr, 3f);
                 SetupMechaStoneGolemAudio(root);
+            }
+            else if (cfg.Name == "Minotaur_1")
+            {
+                SetupMinotaurAudio(root);
             }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
@@ -997,6 +1002,21 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงแทง.WAV"),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Lizard SFX clips successfully!");
+        }
+
+        private static void SetupMinotaurAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var minotaurAudio = root.AddComponent<MinotaurAudioController>();
+            minotaurAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ดาบใหญ่ผ่าอากาศ.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Minotaur_1 SFX clips successfully!");
         }
 
         private static void SetupMechaStoneGolemAudio(GameObject root)
