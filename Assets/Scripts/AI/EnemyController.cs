@@ -1219,6 +1219,7 @@ _rb = GetComponent<Rigidbody2D>();
             if (skill.groundSpellPrefab != null && _player != null)
             {
                 Vector3 spellPos = new Vector3(_player.transform.position.x, _player.transform.position.y, 0f);
+                _archDemonAudio?.PlaySkillSound();
                 var spellObj = Instantiate(skill.groundSpellPrefab, spellPos, Quaternion.identity);
                 var spellArea = spellObj.GetComponent<GroundSpellArea>();
                 if (spellArea != null && _stats != null)

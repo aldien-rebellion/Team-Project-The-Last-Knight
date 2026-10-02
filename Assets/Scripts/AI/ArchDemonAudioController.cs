@@ -6,7 +6,9 @@ namespace TheLastKnight.AI
     [RequireComponent(typeof(AudioSource))]
     public sealed class ArchDemonAudioController : MonoBehaviour
     {
+        
         [SerializeField] private AudioClip _basicAttackClip;
+        [SerializeField] private AudioClip _skillClip;
         [SerializeField] private AudioClip _resurrectionClip;
         [SerializeField] private AudioClip _hitClip;
 
@@ -33,6 +35,9 @@ namespace TheLastKnight.AI
         }
 
         public void PlayBasicAttack() => PlayOneShot(_basicAttackClip);
+
+        public void PlaySkillSound() => PlayOneShot(_skillClip);
+
 
         public void PlayResurrection() => PlayOneShot(_resurrectionClip);
 

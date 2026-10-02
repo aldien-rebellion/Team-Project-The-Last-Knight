@@ -263,6 +263,8 @@ GameObject:
   - component: {fileID: 3554818860070388528}
   - component: {fileID: 8950396428505929908}
   - component: {fileID: 9010000000000000002}
+  - component: {fileID: 7281166579852136324}
+  - component: {fileID: 1771249242447158998}
   m_Layer: 9
   m_Name: BringerOfDeath
   m_TagString: Untagged
@@ -504,15 +506,29 @@ MonoBehaviour:
   _basicAttackAnimState: Attack
   _basicAttackAnimStates: []
   _basicAttackDamageDelay: 0.4166667
+  _basicAttackActionDuration: 0
   _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
   _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 4
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills:
   - skillName: HellfirePillar
     animationName: Cast
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 2
     cooldown: 10
@@ -529,8 +545,12 @@ MonoBehaviour:
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
     requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 4469011341799646039, guid: c229eed2ab8ebee4b96d99c2f838a6d7, type: 3}
   _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 0
+  _waitForAttackProjectileToFinish: 0
+  _interruptAttackOnDamage: 0
   _continuousActions: 0
   _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
@@ -542,6 +562,7 @@ MonoBehaviour:
   _respawnAtDeathPosition: 0
   _bringToFrontWhileAttacking: 1
   _attackSortingOrder: 1
+  _attackSortingLayerName: 
 --- !u!114 &9010000000000000002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -556,6 +577,131 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 8424317837142993542}
   _useVisibleSpriteBounds: 1
+  _centerLocalOffset: {x: 0, y: 0}
+  _stunEffectFrames:
+  - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
+  - {fileID: 2800000, guid: f9d72ddb787e9a142bf7fc9974eb9b0d, type: 3}
+  - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
+  - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
+  - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0
+  _stunEffectHeadYFraction: 0
+  _stunEffectHeadYOffset: 0.25
+  _stunEffectWorldScale: 0.5
+--- !u!82 &7281166579852136324
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7106126184130273626}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.8
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1771249242447158998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7106126184130273626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b81bf34e7f64eacb9827f10418c602d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.ArchDemonAudioController
+  _basicAttackClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _skillClip: {fileID: 8300000, guid: 3a2d3649b959df147b78614b022201b9, type: 3}
+  _resurrectionClip: {fileID: 0}
+  _hitClip: {fileID: 0}
 --- !u!1 &8344078601126805837
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,5 +785,6 @@ MonoBehaviour:
   _followSprite: {fileID: 8424317837142993542}
   _useVisibleSpriteBounds: 1
   _headGap: 0.08
+  _headHorizontalOffset: 0
   _followSpriteBounds: 1
   _headOffset: 0.08
