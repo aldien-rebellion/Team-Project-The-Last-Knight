@@ -151,6 +151,12 @@ namespace TheLastKnight.EditorTools
             var serializedProj = new SerializedObject(proj);
             serializedProj.FindProperty("_speed").floatValue = speed;
             serializedProj.FindProperty("_damage").floatValue = damage;
+            if (name == "FantasyMushroom_Projectile")
+            {
+                serializedProj.FindProperty("_impactAudioClip").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงก้อนแตก.WAV");
+                serializedProj.FindProperty("_impactAudioVolume").floatValue = 1f;
+            }
             serializedProj.ApplyModifiedProperties();
 
             PrefabUtility.SaveAsPrefabAsset(go, prefabPath);
@@ -537,8 +543,31 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
                 var parry = new SerializedObject(receiver);
                 parry.FindProperty("_centerSprite").objectReferenceValue = sr;
-                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon";
+                parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon" || cfg.Name == "FantasyMushroom";
                 parry.FindProperty("_centerLocalOffset").vector2Value = cfg.Name == "Demon" ? new Vector2(-0.08f, 0f) : Vector2.zero;
+                if (cfg.Name == "FantasyMushroom")
+                {
+                    string[] stunFramePaths =
+                    {
+                        "Assets/sprites/effect/stun/Stun_1.png",
+                        "Assets/sprites/effect/stun/Stun_2.png",
+                        "Assets/sprites/effect/stun/Stun_3.png",
+                        "Assets/sprites/effect/stun/Stun_4.png",
+                        "Assets/sprites/effect/stun/Stun_5.png"
+                    };
+                    var stunFrames = parry.FindProperty("_stunEffectFrames");
+                    stunFrames.arraySize = stunFramePaths.Length;
+                    for (int i = 0; i < stunFramePaths.Length; i++)
+                    {
+                        stunFrames.GetArrayElementAtIndex(i).objectReferenceValue =
+                            AssetDatabase.LoadAssetAtPath<Texture2D>(stunFramePaths[i]);
+                    }
+                    parry.FindProperty("_stunEffectDuration").floatValue = 2f;
+                    parry.FindProperty("_stunEffectHeadXFraction").floatValue = 0f;
+                    parry.FindProperty("_stunEffectHeadYFraction").floatValue = 0f;
+                    parry.FindProperty("_stunEffectHeadYOffset").floatValue = 0.1f;
+                    parry.FindProperty("_stunEffectWorldScale").floatValue = 0.5f;
+                }
                 parry.ApplyModifiedPropertiesWithoutUndo();
                 if (cfg.Name == "Skeleton")
                 {
@@ -579,6 +608,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "ShadowDemonDragon")
             {
                 SetupDragonAudio(root);
+            }
+            else if (cfg.Name == "FantasyMushroom")
+            {
+                SetupFantasyMushroomAudio(root);
             }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
@@ -709,6 +742,22 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
 
             dragonAudio.SetClips(idle, footstep, attack, hit, death, deathFall);
             Debug.Log("[EnemyPrefabBuilder] Connected Shadow Demon Dragon SFX clips successfully!");
+        }
+
+        private static void SetupFantasyMushroomAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var mushroomAudio = root.AddComponent<FantasyMushroomAudioController>();
+            mushroomAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงแทง.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงยิง.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Fantasy Mushroom SFX clips successfully!");
         }
 
         private static void AssignFirstSpriteFromController(SpriteRenderer sr, RuntimeAnimatorController controller)

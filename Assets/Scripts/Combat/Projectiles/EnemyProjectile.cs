@@ -14,6 +14,8 @@ namespace TheLastKnight.Combat.Projectiles
         [SerializeField] private bool _fadeOutAfterImpact;
         [SerializeField, Min(0f)] private float _maxTravelDistance;
         [SerializeField] private bool _hitOverlappingPlayerOnSpawn;
+        [SerializeField] private AudioClip _impactAudioClip;
+        [SerializeField, Range(0f, 1f)] private float _impactAudioVolume = 1f;
         [SerializeField, Min(0f)] private float _continuousDamageInterval;
         [SerializeField] private bool _destroyOnGround = true;
         [SerializeField] private Vector2 _knockback = new Vector2(3f, 2f);
@@ -255,6 +257,15 @@ namespace TheLastKnight.Combat.Projectiles
             if (_collider != null) _collider.enabled = false;
             if (_rb != null) _rb.linearVelocity = Vector2.zero;
 
+            if (_impactAudioClip != null)
+            {
+                var audioSource = GetComponent<AudioSource>();
+                if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.playOnAwake = false;
+                audioSource.spatialBlend = 0f;
+                audioSource.PlayOneShot(_impactAudioClip, _impactAudioVolume);
+            }
+
             if (_lobToTarget && _explosionRadius > 0f)
             {
                 foreach (var victim in Physics2D.OverlapCircleAll(transform.position, _explosionRadius))
@@ -283,11 +294,13 @@ namespace TheLastKnight.Combat.Projectiles
                         break;
                     }
                 }
-                Destroy(gameObject, explosionDuration);
+                Destroy(gameObject, Mathf.Max(explosionDuration,
+                    _impactAudioClip != null ? _impactAudioClip.length : 0f));
             }
             else
             {
-                Destroy(gameObject, _impactVisualHoldTime);
+                Destroy(gameObject, Mathf.Max(_impactVisualHoldTime,
+                    _impactAudioClip != null ? _impactAudioClip.length : 0f));
             }
         }
     }
