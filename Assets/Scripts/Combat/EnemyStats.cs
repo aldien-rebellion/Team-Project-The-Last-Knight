@@ -139,8 +139,10 @@ namespace TheLastKnight.Combat
 
             var dragonSfx = GetComponent<TheLastKnight.AI.DragonSfxController>();
             var jinnSfx = GetComponent<TheLastKnight.AI.JinnAudioController>();
+            var moonstoneKeeperSfx = GetComponent<TheLastKnight.AI.MoonstoneKeeperAudioController>();
             bool hasSpecificHitSound = (dragonSfx != null && dragonSfx.isActiveAndEnabled)
                 || (jinnSfx != null && jinnSfx.isActiveAndEnabled)
+                || (attackingPlayer != null && moonstoneKeeperSfx != null && moonstoneKeeperSfx.isActiveAndEnabled)
                 || (GetComponent<TheLastKnight.AI.MechaStoneGolemAudioController>() is { isActiveAndEnabled: true });
             if (!hasSpecificHitSound)
                 TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");

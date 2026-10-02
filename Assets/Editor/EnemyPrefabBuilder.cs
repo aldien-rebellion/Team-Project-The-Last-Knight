@@ -647,6 +647,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             {
                 SetupFireWormAudio(root);
             }
+            else if (cfg.Name == "MoonstoneKeeper")
+            {
+                SetupMoonstoneKeeperAudio(root);
+            }
             else if (cfg.Name == "ForestMushroom")
             {
                 SetupForestMushroomAudio(root);
@@ -1020,6 +1024,21 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>(basicAttackClipPath),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Minotaur SFX clips successfully!");
+        }
+
+        private static void SetupMoonstoneKeeperAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 24f;
+
+            var moonstoneAudio = root.AddComponent<MoonstoneKeeperAudioController>();
+            moonstoneAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ดาบใหญ่ผ่าอากาศ.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Moonstone Keeper SFX clips successfully!");
         }
 
         private static void SetupMechaStoneGolemAudio(GameObject root)

@@ -175,6 +175,7 @@ private Rigidbody2D _rb;
         private GoblinAudioController _goblinAudio;
         private LizardAudioController _lizardAudio;
         private MinotaurAudioController _minotaurAudio;
+        private MoonstoneKeeperAudioController _moonstoneKeeperAudio;
         private DragonSfxController _dragonSfx;
         private MechaStoneGolemAudioController _mechaStoneGolemAudio;
         private float _damageUntil;
@@ -221,6 +222,7 @@ _rb = GetComponent<Rigidbody2D>();
             _goblinAudio = GetComponent<GoblinAudioController>();
             _lizardAudio = GetComponent<LizardAudioController>();
             _minotaurAudio = GetComponent<MinotaurAudioController>();
+            _moonstoneKeeperAudio = GetComponent<MoonstoneKeeperAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
             _mechaStoneGolemAudio = GetComponent<MechaStoneGolemAudioController>();
             _colliders = GetComponentsInChildren<Collider2D>();
@@ -894,7 +896,10 @@ _rb = GetComponent<Rigidbody2D>();
             if (dragonAudio != null && !ranged)
                 dragonAudio.PlayAttackAnimation();
             else
+            {
                 PlayAnimationAction(_basicAttackAnimState);
+                if (!ranged) _moonstoneKeeperAudio?.PlaySwordSwing();
+            }
             if (!ranged)
             {
                 _jinnAudio?.PlayCloseAttack();
@@ -1185,6 +1190,7 @@ _rb = GetComponent<Rigidbody2D>();
                 _animator.Play(skill.animationName, 0, 0f);
             else
                 PlayAnimationAction(skill.animationName, skill.actionIndex);
+            _moonstoneKeeperAudio?.PlaySwordSwing();
             if (skill.skillName == "ParryBite")
                 _foxAudio?.PlayBite();
             if (skill.skillName == "FireBreath")
