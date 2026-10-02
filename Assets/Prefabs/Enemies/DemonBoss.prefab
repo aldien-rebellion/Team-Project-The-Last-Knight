@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5899830651727604593}
   - component: {fileID: 1958324888215232931}
   - component: {fileID: 7356394897853624703}
+  - component: {fileID: 9020000000000000000}
   - component: {fileID: 9010000000000000002}
   m_Layer: 0
   m_Name: DemonBoss
@@ -354,6 +355,22 @@ MonoBehaviour:
   _centerSprite: {fileID: 4803261529313453536}
   _useVisibleSpriteBounds: 1
   _centerLocalOffset: {x: 0, y: 0}
+--- !u!114 &9020000000000000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2162868096805359234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b54256f4fcb42b5b03258f650efb949, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.DemonBossAudioController
+  _attackClip: {fileID: 8300000, guid: 1b5360df786674f45add5196e803266b, type: 3}
+  _roarClip: {fileID: 8300000, guid: e0c79a0c82c30b841b0eb3d9cac72c25, type: 3}
+  _footstepClip: {fileID: 8300000, guid: 80cf83038e96c32468e73ecef7d8c3ab, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
 --- !u!1 &2397213924959086363
 GameObject:
   m_ObjectHideFlags: 0
