@@ -138,7 +138,10 @@ namespace TheLastKnight.Combat
             }
 
             var dragonSfx = GetComponent<TheLastKnight.AI.DragonSfxController>();
-            if (dragonSfx == null || !dragonSfx.isActiveAndEnabled)
+            var jinnSfx = GetComponent<TheLastKnight.AI.JinnAudioController>();
+            bool hasSpecificHitSound = (dragonSfx != null && dragonSfx.isActiveAndEnabled)
+                || (jinnSfx != null && jinnSfx.isActiveAndEnabled);
+            if (!hasSpecificHitSound)
                 TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
             CurrentHealth = Mathf.Max(0f, CurrentHealth - actualDamage);
 

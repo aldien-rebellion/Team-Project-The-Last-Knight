@@ -176,6 +176,8 @@ GameObject:
   - component: {fileID: 4357699531093230360}
   - component: {fileID: 8433192401779087340}
   - component: {fileID: 9010000000000000003}
+  - component: {fileID: 9100000000000000007}
+  - component: {fileID: 9100000000000000008}
   m_Layer: 0
   m_Name: Jinn
   m_TagString: Untagged
@@ -473,6 +475,129 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 3812078022914158722}
   _useVisibleSpriteBounds: 1
+  _stunEffectFrames:
+  - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
+  - {fileID: 2800000, guid: f9d72ddb787e9a142bf7fc9974eb9b0d, type: 3}
+  - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
+  - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
+  - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0
+  _stunEffectHeadYFraction: 0
+  _stunEffectHeadYOffset: 0.25
+  _stunEffectWorldScale: 0.5
+--- !u!82 &9100000000000000007
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3409032526662768996}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 2
+  MaxDistance: 20
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &9100000000000000008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3409032526662768996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36b5e2b6ed8f4a2f9b3f43c8c8a7d109, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.JinnAudioController
+  _closeAttackClip: {fileID: 8300000, guid: f616773988a5af04a8a0f52dd1256d63, type: 3}
+  _windAttackClip: {fileID: 8300000, guid: 5a46c6b8a77fabc44b1a90d658fd67ac, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
 --- !u!1 &3797916828909620249
 GameObject:
   m_ObjectHideFlags: 0

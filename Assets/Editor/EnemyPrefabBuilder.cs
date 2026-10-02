@@ -198,6 +198,12 @@ namespace TheLastKnight.EditorTools
             serializedSpell.FindProperty("_delayBeforeDamage").floatValue = delay;
             serializedSpell.FindProperty("_damageDuration").floatValue = activeDuration;
             serializedSpell.FindProperty("_totalLifetime").floatValue = lifetime;
+            if (name == "Jinn_Magic")
+            {
+                serializedSpell.FindProperty("_impactAudioClip").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงลมโดน.WAV");
+                serializedSpell.FindProperty("_impactAudioVolume").floatValue = 1f;
+            }
             serializedSpell.ApplyModifiedProperties();
 
             PrefabUtility.SaveAsPrefabAsset(go, prefabPath);
@@ -475,6 +481,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "FlyingEye") SetupFlyingEyeAudio(root);
             if (cfg.Name == "FlyingEye") SetupFlyingEyeParry(root, sr);
             if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
+            if (cfg.Name == "Jinn") SetupJinnParry(root, sr);
             if (cfg.Name == "Goblin") SetupGoblinParry(root, sr);
             if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
             if (cfg.Name == "UndeadExecutioner")
@@ -638,6 +645,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             else if (cfg.Name == "Goblin")
             {
                 SetupGoblinAudio(root);
+            }
+            else if (cfg.Name == "Jinn")
+            {
+                SetupJinnAudio(root);
             }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
@@ -864,6 +875,56 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ปล่อยลูกไฟ.wav"),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Fire Worm SFX clips successfully!");
+        }
+
+        private static void SetupJinnAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var jinnAudio = root.AddComponent<JinnAudioController>();
+            jinnAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงยิงน้ำ.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงลม.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Jinn SFX clips successfully!");
+        }
+
+        private static void SetupJinnParry(GameObject root, SpriteRenderer spriteRenderer)
+        {
+            var receiver = root.GetComponent<ParryReceiver>();
+            if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
+
+            var parry = new SerializedObject(receiver);
+            parry.FindProperty("_centerSprite").objectReferenceValue = spriteRenderer;
+            parry.FindProperty("_useVisibleSpriteBounds").boolValue = true;
+            parry.FindProperty("_centerLocalOffset").vector2Value = Vector2.zero;
+
+            string[] stunFramePaths =
+            {
+                "Assets/sprites/effect/Stun/Stun_1.png",
+                "Assets/sprites/effect/Stun/Stun_2.png",
+                "Assets/sprites/effect/Stun/Stun_3.png",
+                "Assets/sprites/effect/Stun/Stun_4.png",
+                "Assets/sprites/effect/Stun/Stun_5.png"
+            };
+            var stunFrames = parry.FindProperty("_stunEffectFrames");
+            stunFrames.arraySize = stunFramePaths.Length;
+            for (int i = 0; i < stunFramePaths.Length; i++)
+            {
+                stunFrames.GetArrayElementAtIndex(i).objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<Texture2D>(stunFramePaths[i]);
+            }
+
+            parry.FindProperty("_stunEffectDuration").floatValue = 2f;
+            parry.FindProperty("_stunEffectHeadXFraction").floatValue = 0f;
+            parry.FindProperty("_stunEffectHeadYFraction").floatValue = 0f;
+            parry.FindProperty("_stunEffectHeadYOffset").floatValue = 0.25f;
+            parry.FindProperty("_stunEffectWorldScale").floatValue = 0.5f;
+            parry.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void SetupFoxAudio(GameObject root)
