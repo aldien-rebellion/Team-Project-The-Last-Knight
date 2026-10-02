@@ -482,7 +482,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "FlyingEye") SetupFlyingEyeParry(root, sr);
             if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
             if (cfg.Name == "Jinn") SetupJinnParry(root, sr);
-            if (cfg.Name == "Goblin") SetupGoblinParry(root, sr);
+            if (cfg.Name == "Goblin") SetupStandardParryStunEffect(root, sr);
             if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
             if (cfg.Name == "UndeadExecutioner")
             {
@@ -649,6 +649,11 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             else if (cfg.Name == "Jinn")
             {
                 SetupJinnAudio(root);
+            }
+            else if (cfg.Name == "Lizard")
+            {
+                SetupLizardAudio(root);
+                SetupStandardParryStunEffect(root, sr);
             }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
@@ -962,6 +967,21 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             Debug.Log("[EnemyPrefabBuilder] Connected Goblin SFX clips successfully!");
         }
 
+        private static void SetupLizardAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var lizardAudio = root.AddComponent<LizardAudioController>();
+            lizardAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงแทง.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Lizard SFX clips successfully!");
+        }
+
         private static void SetupFireWormParry(GameObject root, SpriteRenderer spriteRenderer)
         {
             var receiver = root.GetComponent<ParryReceiver>();
@@ -996,7 +1016,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             parry.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void SetupGoblinParry(GameObject root, SpriteRenderer spriteRenderer)
+        private static void SetupStandardParryStunEffect(GameObject root, SpriteRenderer spriteRenderer)
         {
             var receiver = root.GetComponent<ParryReceiver>();
             if (receiver == null) receiver = root.AddComponent<ParryReceiver>();

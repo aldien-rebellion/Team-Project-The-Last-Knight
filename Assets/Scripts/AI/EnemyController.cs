@@ -172,6 +172,7 @@ private Rigidbody2D _rb;
         private FlyingEyeAudioController _flyingEyeAudio;
         private FoxAudioController _foxAudio;
         private GoblinAudioController _goblinAudio;
+        private LizardAudioController _lizardAudio;
         private DragonSfxController _dragonSfx;
         private float _damageUntil;
         private bool _projectileSpawned;
@@ -215,6 +216,7 @@ _rb = GetComponent<Rigidbody2D>();
             _flyingEyeAudio = GetComponent<FlyingEyeAudioController>();
             _foxAudio = GetComponent<FoxAudioController>();
             _goblinAudio = GetComponent<GoblinAudioController>();
+            _lizardAudio = GetComponent<LizardAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
@@ -896,6 +898,7 @@ _rb = GetComponent<Rigidbody2D>();
             if (!ranged)
             {
                 _goblinAudio?.PlayBasicAttack();
+                _lizardAudio?.PlayBasicAttack();
                 _fantasyMushroomAudio?.PlayBasicAttack();
                 _forestMushroomAudio?.PlayBasicAttack();
                 _flyingEyeAudio?.PlayBite();
