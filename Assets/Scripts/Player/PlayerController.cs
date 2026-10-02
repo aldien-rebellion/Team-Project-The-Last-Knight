@@ -190,6 +190,10 @@ namespace TheLastKnight.Player
         // Jump & Coyote Timers
         private float _jumpBufferCounter = -1f;
         private float _coyoteTimeCounter = -1f;
+        [SerializeField, Tooltip("Time in seconds to disable one-way platforms when dropping down.")]
+        private float _platformDropDuration = 0.15f;
+        private float _platformDropTimer = 0f;
+        private Collider2D _droppedPlatform;
 
         // Movement variables
         private Vector2 _velocity;
@@ -279,6 +283,26 @@ namespace TheLastKnight.Player
             if (_dashCooldownTimer > 0f)
             {
                 _dashCooldownTimer -= Time.deltaTime;
+            }
+
+            // Update One-Way Platform Pass-Through (Down+A or Down+D) & Drop Timer (Down+Space)
+            bool isDownMoveHeld = _inputHandler != null && _inputHandler.MoveInput.y < -0.5f && Mathf.Abs(_inputHandler.MoveInput.x) > 0.1f;
+            if (_platformDropTimer > 0f)
+            {
+                _platformDropTimer -= Time.deltaTime;
+                if (_platformDropTimer <= 0f)
+                {
+                    _droppedPlatform = null;
+                    if (_kinematicController != null)
+                    {
+                        _kinematicController.IgnoredOneWayPlatform = null;
+                    }
+                }
+            }
+
+            if (_kinematicController != null)
+            {
+                _kinematicController.IgnoreOneWayPlatforms = isDownMoveHeld;
             }
 
             // Update Attack Cooldown
@@ -1150,13 +1174,28 @@ namespace TheLastKnight.Player
                 _velocity.y = Mathf.Max(_velocity.y, -_maxFallSpeed);
             }
 
-            // Jump mechanics (Coyote Time + Jump Buffering + Double Jump)
+            // Jump mechanics (Coyote Time + Jump Buffering + Double Jump + Platform Drop Down)
             bool jumpRequested = _jumpBufferCounter > 0f;
             bool canJump = _coyoteTimeCounter > 0f;
+            bool isDownPressed = _inputHandler != null && _inputHandler.MoveInput.y < -0.5f;
 
             if (jumpRequested)
             {
-                if (canJump)
+                Collider2D standingPlat = GetStandingOneWayPlatform();
+                if (isDownPressed && _kinematicController.IsGrounded && standingPlat != null)
+                {
+                    _platformDropTimer = _platformDropDuration;
+                    _droppedPlatform = standingPlat;
+                    if (_kinematicController != null)
+                    {
+                        _kinematicController.IgnoredOneWayPlatform = standingPlat;
+                    }
+                    _velocity.y = -2.5f;
+                    _jumpBufferCounter = -1f;
+                    _coyoteTimeCounter = -1f;
+                    CurrentState = PlayerState.Falling;
+                }
+                else if (canJump)
                 {
                     TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
                     _velocity.y = JumpForce;
@@ -1187,6 +1226,16 @@ namespace TheLastKnight.Player
 
             // Move the controller
             _kinematicController.Move(_velocity, Time.deltaTime);
+
+            if (_kinematicController.HitCeiling && _velocity.y > 0f)
+            {
+                _velocity.y = 0f;
+            }
+
+            if (_kinematicController.IsGrounded && _velocity.y < 0f)
+            {
+                _velocity.y = 0f;
+            }
 
             // Update States based on grounded status and movement
             if (_kinematicController.IsGrounded)
@@ -1384,6 +1433,28 @@ namespace TheLastKnight.Player
                 }
                 _ignoredEnemyColliders.Clear();
             }
+        }
+
+        private Collider2D GetStandingOneWayPlatform()
+        {
+            if (_playerCollider == null) _playerCollider = GetComponent<Collider2D>();
+            if (_playerCollider == null) return null;
+            Vector2 boxCenter = new Vector2(_playerCollider.bounds.center.x, _playerCollider.bounds.min.y);
+            Vector2 boxSize = new Vector2(_playerCollider.bounds.size.x * 0.9f, 0.1f);
+            RaycastHit2D[] hits = Physics2D.BoxCastAll(boxCenter, boxSize, 0f, Vector2.down, 0.25f);
+            foreach (var h in hits)
+            {
+                if (h.collider != null && h.collider != _playerCollider && KinematicCharacterController2D.IsOneWayPlatform(h.collider))
+                {
+                    return h.collider;
+                }
+            }
+            return null;
+        }
+
+        private bool IsStandingOnOneWayPlatform()
+        {
+            return GetStandingOneWayPlatform() != null;
         }
 
         private void OnDrawGizmosSelected()
