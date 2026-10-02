@@ -624,6 +624,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             {
                 SetupForestMushroomAudio(root);
             }
+            else if (cfg.Name == "Fox")
+            {
+                SetupFoxAudio(root);
+            }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
             Object.DestroyImmediate(root);
@@ -849,6 +853,25 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ปล่อยลูกไฟ.wav"),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Fire Worm SFX clips successfully!");
+        }
+
+        private static void SetupFoxAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var foxAudio = root.AddComponent<FoxAudioController>();
+            foxAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงกัด.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงหมาหอน.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ปล่อยลูกไฟ.wav"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงก้อนแตก.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงหมาป่าหายตัว.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Fox SFX clips successfully!");
         }
 
         private static void SetupFireWormParry(GameObject root, SpriteRenderer spriteRenderer)

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TheLastKnight.AI;
 using TheLastKnight.Stats;
 
 namespace TheLastKnight.Combat
@@ -15,6 +16,12 @@ namespace TheLastKnight.Combat
         [SerializeField, Min(0.1f)] private float _rainDuration = 4f;
         [SerializeField, Min(0.01f)] private float _spawnInterval = 0.08f;
         private int _activeDrops;
+        private FoxAudioController _foxAudio;
+
+        private void Awake()
+        {
+            _foxAudio = GetComponent<FoxAudioController>();
+        }
 
         public IEnumerator CastRoutine(GameObject target, float damage)
         {
@@ -34,6 +41,7 @@ namespace TheLastKnight.Combat
             while (Time.time <= lastSpawnTime)
             {
                 float offsetX = Random.Range(-_spreadRadius, _spreadRadius);
+                _foxAudio?.PlayFireballLaunch();
                 _activeDrops++;
                 StartCoroutine(Drop(new Vector2(center.x + offsetX, center.y), Mathf.Max(1f, damage)));
                 yield return new WaitForSeconds(_spawnInterval);
@@ -63,6 +71,7 @@ namespace TheLastKnight.Combat
             }
 
             fireball.transform.position = landing;
+            _foxAudio?.PlayFireballImpact();
             foreach (var hit in Physics2D.OverlapCircleAll(landing, _impactRadius))
             {
                 var player = hit.GetComponentInParent<PlayerStats>();

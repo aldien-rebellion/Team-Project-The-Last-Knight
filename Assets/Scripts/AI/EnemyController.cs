@@ -169,6 +169,7 @@ private Rigidbody2D _rb;
         private ForestMushroomAudioController _forestMushroomAudio;
         private FireWormAudioController _fireWormAudio;
         private FlyingEyeAudioController _flyingEyeAudio;
+        private FoxAudioController _foxAudio;
         private DragonSfxController _dragonSfx;
         private float _damageUntil;
         private bool _projectileSpawned;
@@ -209,6 +210,7 @@ _rb = GetComponent<Rigidbody2D>();
             _forestMushroomAudio = GetComponent<ForestMushroomAudioController>();
             _fireWormAudio = GetComponent<FireWormAudioController>();
             _flyingEyeAudio = GetComponent<FlyingEyeAudioController>();
+            _foxAudio = GetComponent<FoxAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
@@ -864,6 +866,7 @@ _rb = GetComponent<Rigidbody2D>();
                 PlayAnimationAction(_basicAttackAnimState);
             if (!ranged)
             {
+                _foxAudio?.PlayBite();
                 _dragonSfx?.PlayBite();
                 _archDemonAudio?.PlayBasicAttack();
                 _demonAudio?.PlayBasicAttack();
@@ -989,6 +992,8 @@ _rb = GetComponent<Rigidbody2D>();
 
             if (!string.IsNullOrEmpty(skill.preparationAnimationName))
             {
+                if (skill.skillName == "VanishingStrike")
+                    _foxAudio?.PlayVanish();
                 SetSkillHealthBarsHidden(skill.hideHealthBarDuringSkill);
                 PlayAnimationAction(skill.preparationAnimationName);
                 float preparationDuration = skill.preparationDurationOverride > 0f
@@ -1103,6 +1108,8 @@ _rb = GetComponent<Rigidbody2D>();
 
             if (skill.guardDuration > 0f)
             {
+                if (skill.summonFireballRain)
+                    _foxAudio?.PlayHowl();
                 if (waitForAnimation && _cycleNonParryableSkills)
                     _animator.Play(skill.animationName, 0, 0f);
                 else
@@ -1141,6 +1148,8 @@ _rb = GetComponent<Rigidbody2D>();
                 _animator.Play(skill.animationName, 0, 0f);
             else
                 PlayAnimationAction(skill.animationName, skill.actionIndex);
+            if (skill.skillName == "ParryBite")
+                _foxAudio?.PlayBite();
             if (skill.skillName == "FireBreath")
                 _dragonSfx?.PlayFireBreath();
             _smallDragonFireEffect?.Play();
