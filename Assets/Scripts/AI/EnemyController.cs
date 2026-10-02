@@ -164,6 +164,7 @@ private Rigidbody2D _rb;
         private ParryReceiver _parry;
         private SmallDragonFireAttackEffect _smallDragonFireEffect;
         private ArchDemonAudioController _archDemonAudio;
+        private JinnAudioController _jinnAudio;
         private DemonAudioController _demonAudio;
         private FantasyMushroomAudioController _fantasyMushroomAudio;
         private ForestMushroomAudioController _forestMushroomAudio;
@@ -206,6 +207,7 @@ _rb = GetComponent<Rigidbody2D>();
                 _parry.SetSpriteCenter(GetComponent<SpriteRenderer>(), true);
             _smallDragonFireEffect = GetComponentInChildren<SmallDragonFireAttackEffect>(true);
             _archDemonAudio = GetComponent<ArchDemonAudioController>();
+            _jinnAudio = GetComponent<JinnAudioController>();
             _demonAudio = GetComponent<DemonAudioController>();
             _fantasyMushroomAudio = GetComponent<FantasyMushroomAudioController>();
             _forestMushroomAudio = GetComponent<ForestMushroomAudioController>();
@@ -868,6 +870,7 @@ _rb = GetComponent<Rigidbody2D>();
                 PlayAnimationAction(_basicAttackAnimState);
             if (!ranged)
             {
+                _jinnAudio?.PlayCloseAttack();
                 _foxAudio?.PlayBite();
                 _dragonSfx?.PlayBite();
                 _archDemonAudio?.PlayBasicAttack();
@@ -1258,6 +1261,7 @@ _rb = GetComponent<Rigidbody2D>();
             if (skill.groundSpellPrefab != null && _player != null)
             {
                 Vector3 spellPos = new Vector3(_player.transform.position.x, _player.transform.position.y, 0f);
+                _jinnAudio?.PlayWindAttack();
                 _archDemonAudio?.PlaySkillSound();
                 var spellObj = Instantiate(skill.groundSpellPrefab, spellPos, Quaternion.identity);
                 var spellArea = spellObj.GetComponent<GroundSpellArea>();
@@ -1272,6 +1276,7 @@ _rb = GetComponent<Rigidbody2D>();
             }
             else if (skill.projectilePrefab != null)
             {
+                _jinnAudio?.PlayWindAttack();
                 SpawnCustomProjectile(skill.projectilePrefab, skill.damageMultiplier);
             }
 

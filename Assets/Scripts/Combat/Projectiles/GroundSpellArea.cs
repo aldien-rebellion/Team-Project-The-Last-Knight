@@ -19,10 +19,14 @@ namespace TheLastKnight.Combat.Projectiles
         [SerializeField] private float _totalLifetime = 1.3f;
         [SerializeField] private bool _alignSpriteBottomToSpawn;
         [SerializeField] private DamageType _damageType = DamageType.DarkMagic;
+        [SerializeField] private AudioClip _impactAudioClip;
+        [SerializeField, Range(0f, 1f)] private float _impactAudioVolume = 1f;
 
         private Collider2D _hitCollider;
         private SpriteRenderer _visualRenderer;
         private float _groundY;
+        private float _spawnTime;
+        private bool _impactAudioPlayed;
         
         private bool _canDealDamage = false;
         private readonly HashSet<GameObject> _hitEntities = new HashSet<GameObject>();
@@ -37,13 +41,15 @@ namespace TheLastKnight.Combat.Projectiles
             _hitCollider = GetComponent<Collider2D>();
             _visualRenderer = GetComponent<SpriteRenderer>();
             _groundY = transform.position.y;
+            _spawnTime = Time.time;
 
             _hitCollider.isTrigger = true;
             _hitCollider.enabled = false;
             AlignSpriteBottomToGround();
 
             StartCoroutine(SpellRoutine());
-            Destroy(gameObject, _totalLifetime);
+            if (_impactAudioClip == null)
+                Destroy(gameObject, _totalLifetime);
         }
 
 private IEnumerator SpellRoutine()
@@ -56,19 +62,26 @@ private IEnumerator SpellRoutine()
             _canDealDamage = false;
             _hitCollider.enabled = false;
 
-            if (_secondDamageDelay < 0f)
-                yield break;
+            if (_secondDamageDelay >= 0f)
+            {
+                float waitUntilSecondHit = _secondDamageDelay - (_delayBeforeDamage + _damageDuration);
+                if (waitUntilSecondHit > 0f)
+                    yield return new WaitForSeconds(waitUntilSecondHit);
 
-            float waitUntilSecondHit = _secondDamageDelay - (_delayBeforeDamage + _damageDuration);
-            if (waitUntilSecondHit > 0f)
-                yield return new WaitForSeconds(waitUntilSecondHit);
+                _hitEntities.Clear();
+                _canDealDamage = true;
+                _hitCollider.enabled = true;
+                yield return new WaitForSeconds(_secondDamageDuration);
+                _canDealDamage = false;
+                _hitCollider.enabled = false;
+            }
 
-            _hitEntities.Clear();
-            _canDealDamage = true;
-            _hitCollider.enabled = true;
-            yield return new WaitForSeconds(_secondDamageDuration);
-            _canDealDamage = false;
-            _hitCollider.enabled = false;
+            if (_impactAudioClip != null)
+            {
+                PlayImpactAudio();
+                float lifetimeRemaining = Mathf.Max(0f, _totalLifetime - (Time.time - _spawnTime));
+                Destroy(gameObject, Mathf.Max(lifetimeRemaining, _impactAudioClip.length));
+            }
         }
 
         private void OnTriggerStay2D(Collider2D other)
@@ -84,6 +97,7 @@ private IEnumerator SpellRoutine()
                 if (_hitEntities.Contains(victim)) return;
 
                 _hitEntities.Add(victim);
+                PlayImpactAudio();
 
                 if (playerStats != null)
                 {
@@ -102,6 +116,18 @@ private IEnumerator SpellRoutine()
                     }
                 }
             }
+        }
+
+        private void PlayImpactAudio()
+        {
+            if (_impactAudioPlayed || _impactAudioClip == null) return;
+
+            _impactAudioPlayed = true;
+            var audioSource = GetComponent<AudioSource>();
+            if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
+            audioSource.PlayOneShot(_impactAudioClip, _impactAudioVolume);
         }
     
 

@@ -210,6 +210,8 @@ MonoBehaviour:
   _fadeOutAfterImpact: 0
   _maxTravelDistance: 14
   _hitOverlappingPlayerOnSpawn: 1
+  _impactAudioClip: {fileID: 8300000, guid: 6e78d67fafe1fdb4fa94836bd1e3a67a, type: 3}
+  _impactAudioVolume: 1
   _continuousDamageInterval: 0
   _destroyOnGround: 1
   _knockback: {x: 3, y: 2}
