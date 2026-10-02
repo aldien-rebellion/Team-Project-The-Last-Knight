@@ -452,6 +452,7 @@ GameObject:
   m_Component:
   - component: {fileID: 14963781}
   - component: {fileID: 14963782}
+  - component: {fileID: 14963783}
   m_Layer: 0
   m_Name: F3_BlackSanctum_SoulPlatform
   m_TagString: Untagged
@@ -520,6 +521,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5.227853, y: 1.0498447}
   m_EdgeRadius: 0
+--- !u!251 &14963783
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14963780}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &17651497
 GameObject:
   m_ObjectHideFlags: 0
@@ -11071,6 +11091,7 @@ GameObject:
   m_Component:
   - component: {fileID: 108198567}
   - component: {fileID: 108198568}
+  - component: {fileID: 108198569}
   m_Layer: 0
   m_Name: F3_GrandHall_UpperShelf (2)
   m_TagString: Untagged
@@ -11139,6 +11160,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5.5097046, y: 0.6877346}
   m_EdgeRadius: 0
+--- !u!251 &108198569
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108198566}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &113029599
 GameObject:
   m_ObjectHideFlags: 0
@@ -12078,7 +12118,7 @@ Transform:
   - {fileID: 32009951}
   - {fileID: 1676550229}
   - {fileID: 9235979}
-  - {fileID: 1339367972}
+  - {fileID: 1050549099}
   - {fileID: 1193033156}
   - {fileID: 866300956}
   - {fileID: 253006707}
@@ -24732,6 +24772,7 @@ GameObject:
   m_Component:
   - component: {fileID: 362246284}
   - component: {fileID: 362246285}
+  - component: {fileID: 362246286}
   m_Layer: 0
   m_Name: F2_GreenBastion_Platform_Left
   m_TagString: Untagged
@@ -24800,6 +24841,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 9.823094, y: 0.79999924}
   m_EdgeRadius: 0
+--- !u!251 &362246286
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362246283}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &364381627
 GameObject:
   m_ObjectHideFlags: 0
@@ -24866,7 +24926,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 7.22195, y: -2.9482853}
+  m_Offset: {x: 7.22195, y: -3.7175152}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -24876,7 +24936,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.0560999, y: 6.3965707}
+  m_Size: {x: 1.0560999, y: 7.9350305}
   m_EdgeRadius: 0
 --- !u!1 &388477451
 GameObject:
@@ -27110,6 +27170,7 @@ GameObject:
   m_Component:
   - component: {fileID: 541556900}
   - component: {fileID: 541556901}
+  - component: {fileID: 541556902}
   m_Layer: 0
   m_Name: F2_GreenFortress_HangingPlatform (2)
   m_TagString: Untagged
@@ -27178,6 +27239,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2.8351822, y: 0.63581336}
   m_EdgeRadius: 0
+--- !u!251 &541556902
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541556899}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &571331182
 GameObject:
   m_ObjectHideFlags: 0
@@ -44938,6 +45018,7 @@ GameObject:
   m_Component:
   - component: {fileID: 799725356}
   - component: {fileID: 799725357}
+  - component: {fileID: 799725358}
   m_Layer: 0
   m_Name: F3_BlackSanctum_SoulPlatform (4)
   m_TagString: Untagged
@@ -45006,6 +45087,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 3.2420616, y: 1.0498447}
   m_EdgeRadius: 0
+--- !u!251 &799725358
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799725355}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &807614007
 GameObject:
   m_ObjectHideFlags: 0
@@ -52076,6 +52176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 958890450}
   - component: {fileID: 958890451}
+  - component: {fileID: 958890452}
   m_Layer: 0
   m_Name: F2_GreenFortress_HangingPlatform (1)
   m_TagString: Untagged
@@ -52144,6 +52245,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2.8351822, y: 0.63581336}
   m_EdgeRadius: 0
+--- !u!251 &958890452
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958890449}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &964465535
 GameObject:
   m_ObjectHideFlags: 0
@@ -52773,6 +52893,84 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 2.7746048, y: 1.5671387}
+  m_EdgeRadius: 0
+--- !u!1 &1050549098
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1050549099}
+  - component: {fileID: 1050549100}
+  m_Layer: 0
+  m_Name: F2_GreenCorridor_WallPlatform (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1050549099
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050549098}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -88.37, y: 28.14, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 205852801}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1050549100
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050549098}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.04604721, y: -0.077477455}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 7.018425, y: 0.8549557}
   m_EdgeRadius: 0
 --- !u!1 &1069829746
 GameObject:
@@ -80304,84 +80502,6 @@ MonoBehaviour:
           rid: -2
         m_Provider2DCache:
           rid: -2
---- !u!1 &1339367971
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1339367972}
-  - component: {fileID: 1339367973}
-  m_Layer: 0
-  m_Name: F2_GreenCorridor_WallPlatform
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1339367972
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1339367971}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -88.37, y: 28.14, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 205852801}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1339367973
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1339367971}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -0.04604721, y: -0.077477455}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 7.018425, y: 0.8549557}
-  m_EdgeRadius: 0
 --- !u!1 &1344711665
 GameObject:
   m_ObjectHideFlags: 0
@@ -83764,6 +83884,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1633262848}
   - component: {fileID: 1633262849}
+  - component: {fileID: 1633262850}
   m_Layer: 0
   m_Name: F1_TowerShaft_Ledge1
   m_TagString: Untagged
@@ -83832,6 +83953,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5.5150576, y: 0.7161647}
   m_EdgeRadius: 0
+--- !u!251 &1633262850
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1633262847}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &1637321030
 GameObject:
   m_ObjectHideFlags: 0
@@ -89905,6 +90045,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1698115470}
   - component: {fileID: 1698115471}
+  - component: {fileID: 1698115472}
   m_Layer: 0
   m_Name: F1_TowerShaft_Ledge1 (1)
   m_TagString: Untagged
@@ -89973,6 +90114,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5.5150576, y: 0.7161647}
   m_EdgeRadius: 0
+--- !u!251 &1698115472
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698115469}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &1700716035
 GameObject:
   m_ObjectHideFlags: 0
@@ -100199,6 +100359,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1737952677}
   - component: {fileID: 1737952678}
+  - component: {fileID: 1737952679}
   m_Layer: 0
   m_Name: F3_BlackSanctum_SoulPlatform (3)
   m_TagString: Untagged
@@ -100267,6 +100428,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 3.2420616, y: 1.0498447}
   m_EdgeRadius: 0
+--- !u!251 &1737952679
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737952676}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &1755462766
 GameObject:
   m_ObjectHideFlags: 0
@@ -105634,6 +105814,7 @@ MonoBehaviour:
   _baseDashDuration: 0.2
   _dashCooldown: 0.5
   _dashIFrameDuration: 0.15
+  _platformDropDuration: 0.3
   _attackSize: {x: 2.2, y: 2}
   _attackOffset: {x: 1.1, y: 0}
   _attackLayers:
@@ -105712,10 +105893,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Physics.KinematicCharacterController2D
   _skinWidth: 0.015
-  _maxSlopeAngle: 45
+  _maxSlopeAngle: 55
+  _stepOffset: 0.25
   _obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294965247
 --- !u!50 &1794657367
 Rigidbody2D:
   serializedVersion: 5
@@ -105724,9 +105906,9 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1794657359}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
@@ -118984,6 +119166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2038843211}
   - component: {fileID: 2038843212}
+  - component: {fileID: 2038843213}
   m_Layer: 0
   m_Name: F3_BlackSanctum_SoulPlatform (2)
   m_TagString: Untagged
@@ -119052,6 +119235,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.9992771, y: 1.0498447}
   m_EdgeRadius: 0
+--- !u!251 &2038843213
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038843210}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &2044823917
 GameObject:
   m_ObjectHideFlags: 0
@@ -119267,6 +119469,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2052488686}
   - component: {fileID: 2052488687}
+  - component: {fileID: 2052488688}
   m_Layer: 0
   m_Name: F2_GreenFortress_HangingPlatform (3)
   m_TagString: Untagged
@@ -119323,7 +119526,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -4.3276615, y: -0.05008602}
+  m_Offset: {x: -3.5584304, y: -0.05008602}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -119333,8 +119536,27 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 5.541706, y: 0.6998272}
+  m_Size: {x: 7.0801682, y: 0.6998272}
   m_EdgeRadius: 0
+--- !u!251 &2052488688
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052488685}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &2056591140
 GameObject:
   m_ObjectHideFlags: 0
@@ -124472,6 +124694,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2092463613}
   - component: {fileID: 2092463614}
+  - component: {fileID: 2092463615}
   m_Layer: 0
   m_Name: F3_BlackSanctum_SoulPlatform (1)
   m_TagString: Untagged
@@ -124540,6 +124763,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5.227853, y: 1.0498447}
   m_EdgeRadius: 0
+--- !u!251 &2092463615
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2092463612}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &2094177718
 GameObject:
   m_ObjectHideFlags: 0
@@ -125128,6 +125370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2133915018}
   - component: {fileID: 2133915019}
+  - component: {fileID: 2133915020}
   m_Layer: 0
   m_Name: F2_GreenFortress_Ramp (4)
   m_TagString: Untagged
@@ -125193,6 +125436,25 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
+--- !u!251 &2133915020
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133915017}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &2146242452
 GameObject:
   m_ObjectHideFlags: 0

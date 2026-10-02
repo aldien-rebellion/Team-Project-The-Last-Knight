@@ -60133,6 +60133,7 @@ GameObject:
   - component: {fileID: 1376417277}
   - component: {fileID: 1376417276}
   - component: {fileID: 1376417275}
+  - component: {fileID: 1376417279}
   m_Layer: 0
   m_Name: Ground (6)
   m_TagString: Untagged
@@ -60252,12 +60253,31 @@ Transform:
   m_GameObject: {fileID: 1376417274}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.5365553, w: 0.8438652}
-  m_LocalPosition: {x: 72.419815, y: -1.9598905, z: 0}
+  m_LocalPosition: {x: 72.52587, y: -2.1862807, z: 0}
   m_LocalScale: {x: 0.49810743, y: 13.2492285, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -64.899}
+--- !u!251 &1376417279
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376417274}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &1407693274
 GameObject:
   m_ObjectHideFlags: 0
@@ -80623,6 +80643,7 @@ MonoBehaviour:
   _baseDashDuration: 0.2
   _dashCooldown: 0.5
   _dashIFrameDuration: 0.15
+  _platformDropDuration: 0.15
   _attackSize: {x: 2.2, y: 2}
   _attackOffset: {x: 1.1, y: 0}
   _attackLayers:
@@ -80702,6 +80723,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Physics.KinematicCharacterController2D
   _skinWidth: 0.015
   _maxSlopeAngle: 45
+  _stepOffset: 0.25
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 0
@@ -101192,7 +101214,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65901a2a38d8f064db9c92bd151c2bf9, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.BossArena
   boss: {fileID: 0}
   bossObjectName: MoonstoneKeeper
@@ -101237,10 +101259,12 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   m_Size: {x: 18, y: 8}
   m_EdgeRadius: 0
 --- !u!1660057539 &9223372036854775807
