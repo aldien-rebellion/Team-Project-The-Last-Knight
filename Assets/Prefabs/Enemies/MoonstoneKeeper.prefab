@@ -560,7 +560,7 @@ MonoBehaviour:
   _flipSpriteInsteadOfTransformScale: 0
   _facingFlipDeadZone: 0
   _avoidTeleportOnReturn: 0
-  _isBoss: 0
+  _isBoss: 1
   _leashRangeMultiplier: 2
   _groundLayer:
     serializedVersion: 2
@@ -568,9 +568,9 @@ MonoBehaviour:
   _groundCheckDistance: 1.2
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
-  _detectionRange: 8
+  _detectionRange: 20
   _meleeRange: 0.05
-  _meleeCooldown: 1
+  _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 1
   _playAttackStatesDirectly: 1
@@ -599,8 +599,26 @@ MonoBehaviour:
     damageMultiplier: 1.8
     cooldown: 3
     minRange: 0
-    maxRange: 0.05
+    maxRange: 20
     isParryable: 1
+    initialDelay: 0
+    guardDuration: 0
+    damageStartDelay: 0.4
+    damageDuration: 0.4
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    requireSpriteBoundsOverlap: 0
+    projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
+    groundSpellPrefab: {fileID: 0}
+  - skillName: DashThrust
+    animationName: Dash
+    actionIndex: -1
+    damageMultiplier: 1.3
+    cooldown: 5
+    minRange: 3
+    maxRange: 6.5
+    isParryable: 0
     initialDelay: 0
     guardDuration: 0
     damageStartDelay: 0.4

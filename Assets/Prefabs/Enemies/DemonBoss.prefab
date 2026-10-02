@@ -238,7 +238,7 @@ MonoBehaviour:
   _groundCheckDistance: 1.2
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
-  _detectionRange: 10
+  _detectionRange: 20
   _meleeRange: 0.05
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1

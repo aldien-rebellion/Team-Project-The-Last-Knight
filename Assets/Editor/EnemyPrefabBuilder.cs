@@ -422,7 +422,7 @@ private static void BuildBringerOfDeathSpell()
 serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "BringerOfDeath";
             serializedAI.FindProperty("_meleeRange").floatValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "Demon" ? 0.05f : cfg.MeleeRange;
             serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Demon";
-            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "ArchDemon" || cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
+            serializedAI.FindProperty("_meleeCooldown").floatValue = cfg.Name == "Small_dragon" ? 5f : cfg.Name == "MoonstoneKeeper" || cfg.Name == "ArchDemon" || cfg.Name == "BlueSlime" || cfg.Name == "Skeleton" || cfg.Name == "FlyingEye" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon" ? 0f : cfg.Name == "UndeadExecutioner" ? 1f : 1.5f;
             serializedAI.FindProperty("_basicAttackDamageDelay").floatValue = cfg.Name == "ArchDemon" ? 7f / 12f : cfg.Name == "BringerOfDeath" ? 5f / 12f : 0f;
             serializedAI.FindProperty("_canRespawn").boolValue = cfg.Name == "ArchDemon";
             serializedAI.FindProperty("_maxRespawns").intValue = cfg.Name == "ArchDemon" ? 1 : -1;
@@ -436,7 +436,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon";
             serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ForestMushroom" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
             serializedAI.FindProperty("_allowBasicParryWithSkills").boolValue = cfg.Name == "Small_dragon";
-            serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight";
+            serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "MoonstoneKeeper" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight";
             serializedAI.FindProperty("_usePassiveStanceAnimations").boolValue = cfg.Name == "Reaper";
             serializedAI.FindProperty("_useMovementAnimationStates").boolValue = cfg.Name == "Demon";
             serializedAI.FindProperty("_flipSpriteInsteadOfTransformScale").boolValue = cfg.Name == "Demon";
@@ -1147,7 +1147,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                     basicAnim = "Attack1";
                     skills = BuildSkillArray(new SkillData[]
                     {
-                        new SkillData("GroundSlam", "Attack2", -1, 1.8f, 6.0f, 0f, 2.2f, true),
+                    new SkillData("GroundSlam", "Attack2", -1, 1.8f, 3.0f, 0f, 20.0f, true),
                         new SkillData("DashThrust", "Dash", -1, 1.3f, 5.0f, 3.0f, 6.5f, false)
                     });
                     break;

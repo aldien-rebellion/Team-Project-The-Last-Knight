@@ -26,7 +26,7 @@ MonoBehaviour:
   - id: Castle
     clip: {fileID: 8300000, guid: c8f4d7d2cfbf9e840a34763b13b5edd8, type: 3}
   - id: Boss
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 71987b442ac2834428dc8fff1d0cf741, type: 3}
   - id: slash
     clip: {fileID: 0}
   - id: jump

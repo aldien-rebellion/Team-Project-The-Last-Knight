@@ -31,6 +31,7 @@ namespace TheLastKnight.AI
         [Tooltip("If true, this monster is considered a Boss and will not leash/return to spawn or reset HP when player runs far away.")]
         [SerializeField] private bool _isBoss = false;
         public bool IsBoss => _isBoss;
+        public float DetectionRange => _detectionRange;
         [Tooltip("Multiplier of detection range used as the leash boundary from spawn point (default: 2.0x).")]
         [SerializeField] private float _leashRangeMultiplier = 2.0f;
 
@@ -41,7 +42,7 @@ namespace TheLastKnight.AI
         [SerializeField] private float _ledgeForwardOffset = 0.5f;
 
         [Header("Combat Ranges")]
-        [SerializeField] private float _detectionRange = 7f;
+        [SerializeField, Min(0f)] private float _detectionRange = 7f;
         [SerializeField] private float _meleeRange = 1.4f;
         [SerializeField] private float _meleeCooldown = 1.5f;
         [Tooltip("Measure attack range between the nearest edges of the enemy and player solid colliders.")]
@@ -415,7 +416,10 @@ _rb = GetComponent<Rigidbody2D>();
                 return;
             }
 
-            if (_player == null)
+            // Keep resolving the player while active. Scene transitions and
+            // runtime player replacement can leave a stale/null reference;
+            // waiting until damage arrives makes the enemy appear asleep.
+            if (_player == null || !_player.activeInHierarchy)
             {
                 FindPlayer();
                 if (_player == null)
@@ -524,7 +528,8 @@ _rb = GetComponent<Rigidbody2D>();
                     }
                 }
             }
-            else if (!_disableBasicAttack && (meleeDistance <= _meleeRange || isTouching) && withinDetectionRange && Time.time >= _nextMeleeTime)
+            else if (!_disableBasicAttack && (meleeDistance <= _meleeRange || isTouching)
+                && withinDetectionRange && Time.time >= _nextMeleeTime)
             {
                 FaceTarget(_player.transform.position);
                 PerformMeleeAttack();
@@ -540,6 +545,15 @@ _rb = GetComponent<Rigidbody2D>();
             {
                 FaceTarget(_player.transform.position);
                 PerformRangedAttack();
+            }
+            else if (withinDetectionRange && _playAttackStatesDirectly && readySkill == null
+                && _skills != null && _skills.Length > 0 && !_disableBasicAttack
+                && Time.time >= _nextMeleeTime)
+            {
+                // Keep this boss applying pressure with its basic attack while
+                // its special moves are cooling down.
+                FaceTarget(_player.transform.position);
+                PerformMeleeAttack();
             }
             else if (withinDetectionRange)
             {
@@ -784,6 +798,13 @@ _rb = GetComponent<Rigidbody2D>();
             if (_useMovementAnimationStates) PlayMovementState("Idle");
             _nextMeleeTime = Time.time + _meleeCooldown;
             _currentAttackMultiplier = _basicAttackMultiplier;
+
+            // A new basic swing is a new hit window. Clear the per-target
+            // cooldown so repeated swings can damage the same player.
+            foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
+            {
+                hitbox.BeginAttack();
+            }
 
             if (_basicAttackAnimStates != null && _basicAttackAnimStates.Length > 0)
             {
