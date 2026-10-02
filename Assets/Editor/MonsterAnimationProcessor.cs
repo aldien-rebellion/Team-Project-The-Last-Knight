@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.Animations;
+using UnityEditor.U2D.Sprites;
 using UnityEngine;
 
 namespace TheLastKnight.EditorTools
