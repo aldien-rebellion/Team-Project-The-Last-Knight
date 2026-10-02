@@ -62,7 +62,7 @@ namespace TheLastKnight.Combat
         public void ApplyLevelScaling()
         {
             _level = Mathf.Max(1, _level);
-            _maxHealth = _level * 100f;
+            _maxHealth = _level * 75f;
             _attackPower = _level * 10f;
             _defense = _level * 1f;
 
@@ -236,10 +236,9 @@ namespace TheLastKnight.Combat
             var player = FindAnyObjectByType<TheLastKnight.Stats.PlayerStats>();
             if (player != null)
             {
-                if (_useLevelScaling)
-                {
-                    RollRewards();
-                }
+                // Roll on each death so repeated enemy spawns do not always grant
+                // the same serialized reward values.
+                RollRewards();
 
                 int finalExp = _expReward;
                 // Level Difference EXP Penalty when Player Lv > Monster Lv + 5, 10
