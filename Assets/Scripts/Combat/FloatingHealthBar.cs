@@ -165,9 +165,10 @@ namespace TheLastKnight.Combat
                 Bounds bounds = _useVisibleSpriteBounds ? SpriteVisualBounds.GetWorldBounds(_followSprite) : _followSprite.bounds;
                 float halfHeight = barRect.rect.height * Mathf.Abs(transform.lossyScale.y) * 0.5f;
                 var parryAlignment = GetComponentInParent<ParryReceiver>();
-                float centerX = parryAlignment != null && parryAlignment.CenterSprite == _followSprite
+                float alignmentCenterX = parryAlignment != null && parryAlignment.CenterSprite == _followSprite
                     ? parryAlignment.GetVisualCenter().x
-                    : bounds.center.x + GetHeadHorizontalOffsetWorld();
+                    : bounds.center.x;
+                float centerX = alignmentCenterX + GetHeadHorizontalOffsetWorld();
                 transform.position = new Vector3(centerX, bounds.max.y + _headGap + halfHeight, transform.position.z);
             }
             if (_canvas != null) _canvas.enabled = !_temporarilyHidden && TheLastKnight.Core.GameDifficultyManager.ShowHelpers;
@@ -220,9 +221,10 @@ namespace TheLastKnight.Combat
                         barHalfHeight = visibleBoundsRect.rect.height * Mathf.Abs(transform.lossyScale.y) * 0.5f;
                     Vector3 position = transform.position;
                     var parryAlignment = GetComponentInParent<ParryReceiver>();
-                    position.x = parryAlignment != null && parryAlignment.CenterSprite == _followSprite
+                    float alignmentCenterX = parryAlignment != null && parryAlignment.CenterSprite == _followSprite
                         ? parryAlignment.GetVisualCenter().x
-                        : spriteBounds.center.x + GetHeadHorizontalOffsetWorld();
+                        : spriteBounds.center.x;
+                    position.x = alignmentCenterX + GetHeadHorizontalOffsetWorld();
                     position.y = spriteBounds.max.y + _headOffset + barHalfHeight;
                     transform.position = position;
                     return;
