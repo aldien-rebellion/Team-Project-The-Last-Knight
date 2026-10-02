@@ -157,6 +157,18 @@ namespace TheLastKnight.EditorTools
                     AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ระเบิด.wav");
                 serializedProj.FindProperty("_impactAudioVolume").floatValue = 1f;
             }
+            else if (name == "Golem_ArmProjectile")
+            {
+                serializedProj.FindProperty("_impactAudioClip").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงก้อนแตก.WAV");
+                serializedProj.FindProperty("_impactAudioVolume").floatValue = 1f;
+            }
+            else if (name == "Golem_Laser")
+            {
+                serializedProj.FindProperty("_beamStartAudioClip").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงเลเซอร์.WAV");
+                serializedProj.FindProperty("_beamStartAudioVolume").floatValue = 1f;
+            }
             else if (name == "FantasyMushroom_Projectile" || name == "FireWorm_FireBall" || name == "FlyingEye_Projectile")
             {
                 serializedProj.FindProperty("_impactAudioClip").objectReferenceValue =
@@ -655,6 +667,11 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 SetupLizardAudio(root);
                 SetupStandardParryStunEffect(root, sr);
             }
+            else if (cfg.Name == "MechaStoneGolem")
+            {
+                SetupStandardParryStunEffect(root, sr, 3f);
+                SetupMechaStoneGolemAudio(root);
+            }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
             Object.DestroyImmediate(root);
@@ -982,6 +999,25 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             Debug.Log("[EnemyPrefabBuilder] Connected Lizard SFX clips successfully!");
         }
 
+        private static void SetupMechaStoneGolemAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 24f;
+
+            var golemAudio = root.AddComponent<MechaStoneGolemAudioController>();
+            golemAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงชกหรือฟาด.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงลมโดน.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงก้อนเลเซอร์.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/คลิกเมนูต่าง.ogg"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/คลิกเมนูต่าง.ogg"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Mecha Stone Golem SFX clips successfully!");
+        }
+
         private static void SetupFireWormParry(GameObject root, SpriteRenderer spriteRenderer)
         {
             var receiver = root.GetComponent<ParryReceiver>();
@@ -1016,7 +1052,8 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             parry.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void SetupStandardParryStunEffect(GameObject root, SpriteRenderer spriteRenderer)
+        private static void SetupStandardParryStunEffect(GameObject root, SpriteRenderer spriteRenderer,
+            float stunDuration = 2f)
         {
             var receiver = root.GetComponent<ParryReceiver>();
             if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
@@ -1042,7 +1079,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                     AssetDatabase.LoadAssetAtPath<Texture2D>(stunFramePaths[i]);
             }
 
-            parry.FindProperty("_stunEffectDuration").floatValue = 2f;
+            parry.FindProperty("_stunEffectDuration").floatValue = stunDuration;
             parry.FindProperty("_stunEffectHeadXFraction").floatValue = 0f;
             parry.FindProperty("_stunEffectHeadYFraction").floatValue = 0f;
             parry.FindProperty("_stunEffectHeadYOffset").floatValue = 0.25f;
