@@ -165,6 +165,7 @@ private Rigidbody2D _rb;
         private SmallDragonFireAttackEffect _smallDragonFireEffect;
         private ArchDemonAudioController _archDemonAudio;
         private DemonAudioController _demonAudio;
+        private DragonSfxController _dragonSfx;
         private float _damageUntil;
         private bool _projectileSpawned;
         private bool _wasAirborne;
@@ -200,6 +201,7 @@ _rb = GetComponent<Rigidbody2D>();
             _smallDragonFireEffect = GetComponentInChildren<SmallDragonFireAttackEffect>(true);
             _archDemonAudio = GetComponent<ArchDemonAudioController>();
             _demonAudio = GetComponent<DemonAudioController>();
+            _dragonSfx = GetComponent<DragonSfxController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
             _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
@@ -854,6 +856,7 @@ _rb = GetComponent<Rigidbody2D>();
                 PlayAnimationAction(_basicAttackAnimState);
             if (!ranged)
             {
+                _dragonSfx?.PlayBite();
                 _archDemonAudio?.PlayBasicAttack();
                 _demonAudio?.PlayBasicAttack();
             }
@@ -1124,6 +1127,8 @@ _rb = GetComponent<Rigidbody2D>();
                 _animator.Play(skill.animationName, 0, 0f);
             else
                 PlayAnimationAction(skill.animationName, skill.actionIndex);
+            if (skill.skillName == "FireBreath")
+                _dragonSfx?.PlayFireBreath();
             _smallDragonFireEffect?.Play();
             if (skill.animationName == "Summon")
                 GetComponent<TheLastKnight.Combat.UndeadExecutionerSummonEffect>()?.Play(_player);

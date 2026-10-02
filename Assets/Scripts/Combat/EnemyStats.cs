@@ -137,7 +137,9 @@ namespace TheLastKnight.Combat
                     critical ? Color.yellow : Color.white);
             }
 
-            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
+            var dragonSfx = GetComponent<TheLastKnight.AI.DragonSfxController>();
+            if (dragonSfx == null || !dragonSfx.isActiveAndEnabled)
+                TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
             CurrentHealth = Mathf.Max(0f, CurrentHealth - actualDamage);
 
             OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
