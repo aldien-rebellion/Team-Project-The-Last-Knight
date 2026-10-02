@@ -140,7 +140,8 @@ namespace TheLastKnight.Combat
             var dragonSfx = GetComponent<TheLastKnight.AI.DragonSfxController>();
             var jinnSfx = GetComponent<TheLastKnight.AI.JinnAudioController>();
             bool hasSpecificHitSound = (dragonSfx != null && dragonSfx.isActiveAndEnabled)
-                || (jinnSfx != null && jinnSfx.isActiveAndEnabled);
+                || (jinnSfx != null && jinnSfx.isActiveAndEnabled)
+                || (GetComponent<TheLastKnight.AI.MechaStoneGolemAudioController>() is { isActiveAndEnabled: true });
             if (!hasSpecificHitSound)
                 TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
             CurrentHealth = Mathf.Max(0f, CurrentHealth - actualDamage);
@@ -182,11 +183,15 @@ namespace TheLastKnight.Combat
         public void ApplyStatus(StatusEffect effect, float duration)
         {
             if (IsDead) return;
+            bool enteringStun = effect == StatusEffect.Stunned && _currentStatus != StatusEffect.Stunned;
             _currentStatus = effect;
             _statusTimer = duration;
 
             if (effect == StatusEffect.Stunned)
             {
+                if (enteringStun)
+                    GetComponent<TheLastKnight.AI.MechaStoneGolemAudioController>()?.PlayStunned();
+
                 GetComponent<TheLastKnight.AI.EnemyController>()?.CancelAttack();
                 GetComponent<SlimeController>()?.CancelAttack();
                 var rb = GetComponent<Rigidbody2D>();

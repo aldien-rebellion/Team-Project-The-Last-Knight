@@ -175,6 +175,7 @@ private Rigidbody2D _rb;
         private GoblinAudioController _goblinAudio;
         private LizardAudioController _lizardAudio;
         private DragonSfxController _dragonSfx;
+        private MechaStoneGolemAudioController _mechaStoneGolemAudio;
         private float _damageUntil;
         private bool _projectileSpawned;
         private bool _wasAirborne;
@@ -219,6 +220,7 @@ _rb = GetComponent<Rigidbody2D>();
             _goblinAudio = GetComponent<GoblinAudioController>();
             _lizardAudio = GetComponent<LizardAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
+            _mechaStoneGolemAudio = GetComponent<MechaStoneGolemAudioController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
             _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
@@ -1144,6 +1146,8 @@ _rb = GetComponent<Rigidbody2D>();
                     _animator.Play(skill.animationName, 0, 0f);
                 else
                     PlayAnimationAction(skill.animationName, skill.actionIndex);
+                if (skill.skillName == "StoneShield")
+                    _mechaStoneGolemAudio?.PlayShieldCast();
                 if (skill.summonFireballRain)
                 {
                     _holdingFireballRain = true;
@@ -1300,6 +1304,10 @@ _rb = GetComponent<Rigidbody2D>();
             }
             else if (skill.projectilePrefab != null)
             {
+                if (skill.skillName == "RocketPunch")
+                    _mechaStoneGolemAudio?.PlayRocketPunch();
+                else if (skill.skillName == "LaserBeam")
+                    _mechaStoneGolemAudio?.PlayLaserOrb();
                 _jinnAudio?.PlayWindAttack();
                 SpawnCustomProjectile(skill.projectilePrefab, skill.damageMultiplier);
             }

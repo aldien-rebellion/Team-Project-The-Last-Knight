@@ -16,6 +16,8 @@ namespace TheLastKnight.Combat.Projectiles
         [SerializeField] private bool _hitOverlappingPlayerOnSpawn;
         [SerializeField] private AudioClip _impactAudioClip;
         [SerializeField, Range(0f, 1f)] private float _impactAudioVolume = 1f;
+        [SerializeField] private AudioClip _beamStartAudioClip;
+        [SerializeField, Range(0f, 1f)] private float _beamStartAudioVolume = 1f;
         [SerializeField, Min(0f)] private float _continuousDamageInterval;
         [SerializeField] private bool _destroyOnGround = true;
         [SerializeField] private Vector2 _knockback = new Vector2(3f, 2f);
@@ -248,6 +250,11 @@ namespace TheLastKnight.Combat.Projectiles
             }
         }
 
+        public void PlayBeamExpansion()
+        {
+            PlayAudioClip(_beamStartAudioClip, _beamStartAudioVolume);
+        }
+
         private void TriggerImpact()
         {
             if (_hasImpacted) return;
@@ -259,11 +266,7 @@ namespace TheLastKnight.Combat.Projectiles
 
             if (_impactAudioClip != null)
             {
-                var audioSource = GetComponent<AudioSource>();
-                if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
-                audioSource.playOnAwake = false;
-                audioSource.spatialBlend = 0f;
-                audioSource.PlayOneShot(_impactAudioClip, _impactAudioVolume);
+                PlayAudioClip(_impactAudioClip, _impactAudioVolume);
             }
 
             if (_lobToTarget && _explosionRadius > 0f)
@@ -302,6 +305,17 @@ namespace TheLastKnight.Combat.Projectiles
                 Destroy(gameObject, Mathf.Max(_impactVisualHoldTime,
                     _impactAudioClip != null ? _impactAudioClip.length : 0f));
             }
+        }
+
+        private void PlayAudioClip(AudioClip clip, float volume)
+        {
+            if (clip == null) return;
+
+            var audioSource = GetComponent<AudioSource>();
+            if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
+            audioSource.PlayOneShot(clip, volume);
         }
     }
 }

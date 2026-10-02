@@ -207,8 +207,17 @@ MonoBehaviour:
   _damage: 25
   _lifetime: 5
   _impactVisualHoldTime: 1
-  _maxTravelDistance: 8
   _fadeOutAfterImpact: 1
+  _maxTravelDistance: 8
   _hitOverlappingPlayerOnSpawn: 1
+  _impactAudioClip: {fileID: 8300000, guid: 6e70dc4d8425a774389b5e93d37058e6, type: 3}
+  _impactAudioVolume: 1
+  _beamStartAudioClip: {fileID: 0}
+  _beamStartAudioVolume: 1
+  _continuousDamageInterval: 0
   _destroyOnGround: 0
   _knockback: {x: 3, y: 2}
+  _lobToTarget: 0
+  _lobFlightTime: 0.9
+  _lobArcHeight: 2
+  _explosionRadius: 1.25
