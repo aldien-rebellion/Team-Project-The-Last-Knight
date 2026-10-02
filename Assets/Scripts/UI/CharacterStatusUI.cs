@@ -64,6 +64,8 @@ namespace TheLastKnight.UI
         private TextMeshProUGUI _txtTooltipSubtitle;
         private TextMeshProUGUI _txtTooltipDesc;
         private TextMeshProUGUI _txtTooltipHint;
+        private string _currentHoveredStat;
+        private string _currentHoveredPrefix;
 
         // Slots
         private readonly List<TheLastKnight.Inventory.InventorySlotUI> _gridSlotUIs = new List<TheLastKnight.Inventory.InventorySlotUI>();
@@ -982,39 +984,54 @@ namespace TheLastKnight.UI
         {
             if (_tooltipBox == null) return;
 
-            if (_txtTooltipTitle != null) _txtTooltipTitle.text = title ?? "";
+            bool changed = false;
+            string newTitle = title ?? "";
+            if (_txtTooltipTitle != null && _txtTooltipTitle.text != newTitle)
+            {
+                _txtTooltipTitle.text = newTitle;
+                changed = true;
+            }
 
             if (_txtTooltipSubtitle != null)
             {
                 bool hasSub = !string.IsNullOrEmpty(subtitle);
-                _txtTooltipSubtitle.gameObject.SetActive(hasSub);
-                if (hasSub) _txtTooltipSubtitle.text = subtitle;
+                if (_txtTooltipSubtitle.gameObject.activeSelf != hasSub) { _txtTooltipSubtitle.gameObject.SetActive(hasSub); changed = true; }
+                if (hasSub && _txtTooltipSubtitle.text != subtitle) { _txtTooltipSubtitle.text = subtitle; changed = true; }
             }
 
             if (_txtTooltipDesc != null)
             {
                 bool hasDesc = !string.IsNullOrEmpty(description);
-                _txtTooltipDesc.gameObject.SetActive(hasDesc);
-                if (hasDesc) _txtTooltipDesc.text = description;
+                if (_txtTooltipDesc.gameObject.activeSelf != hasDesc) { _txtTooltipDesc.gameObject.SetActive(hasDesc); changed = true; }
+                if (hasDesc && _txtTooltipDesc.text != description) { _txtTooltipDesc.text = description; changed = true; }
             }
 
             if (_txtTooltipHint != null)
             {
                 bool hasHint = !string.IsNullOrEmpty(hint);
-                _txtTooltipHint.gameObject.SetActive(hasHint);
-                if (hasHint) _txtTooltipHint.text = hint;
+                if (_txtTooltipHint.gameObject.activeSelf != hasHint) { _txtTooltipHint.gameObject.SetActive(hasHint); changed = true; }
+                if (hasHint && _txtTooltipHint.text != hint) { _txtTooltipHint.text = hint; changed = true; }
             }
 
-            _tooltipBox.SetActive(true);
+            if (!_tooltipBox.activeSelf)
+            {
+                _tooltipBox.SetActive(true);
+                changed = true;
+            }
             _tooltipBox.transform.SetAsLastSibling();
 
-            var rt = _tooltipBox.GetComponent<RectTransform>();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
+            if (changed)
+            {
+                var rt = _tooltipBox.GetComponent<RectTransform>();
+                LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
+            }
             UpdateTooltipPosition();
         }
 
         public void HideTooltip()
         {
+            _currentHoveredStat = null;
+            _currentHoveredPrefix = null;
             if (_tooltipBox != null && _tooltipBox.activeSelf)
             {
                 _tooltipBox.SetActive(false);
@@ -1108,23 +1125,49 @@ namespace TheLastKnight.UI
             }
         }
 
+        public static string FormatStatNumber(float value)
+        {
+            return (Mathf.Abs(value - Mathf.Round(value)) < 0.05f)
+                ? $"{Mathf.RoundToInt(value)}"
+                : $"{value:F1}";
+        }
+
+        public static string FormatStatWithBonus(float baseValue, float totalValue)
+        {
+            float diff = totalValue - baseValue;
+            string baseStr = FormatStatNumber(baseValue);
+            if (diff > 0.05f)
+            {
+                return $"{baseStr}(+{FormatStatNumber(diff)})";
+            }
+            else if (diff < -0.05f)
+            {
+                return $"{baseStr}({FormatStatNumber(diff)})";
+            }
+            return baseStr;
+        }
+
         private void ShowStatTooltip(string statName, string prefix = null)
         {
+            _currentHoveredStat = statName;
+            _currentHoveredPrefix = prefix;
             var player = GetPlayer();
             string desc = "";
             switch (statName.ToUpper())
             {
                 case "STR":
-                    float atk = player != null ? player.AttackPower : 15f;
-                    desc = $"ATK: {atk:F1}\nIncreases physical attack power.";
+                    float baseAtk = player != null ? player.BaseAttackPower : 15f;
+                    float totalAtk = player != null ? player.AttackPower : 15f;
+                    desc = $"ATK: {FormatStatWithBonus(baseAtk, totalAtk)}\nIncreases physical attack power.";
                     break;
                 case "AGI":
                     var ctrl = player != null ? player.GetComponent<Player.PlayerController>() : null;
+                    float baseMoveSpd = ctrl != null ? ctrl.BaseMoveSpeed : 8f;
                     float moveSpd = ctrl != null ? ctrl.MoveSpeed : 8f;
                     float atkSpd = player != null ? player.AttackSpeedMultiplier : 1f;
                     bool canDoubleJump = player != null && player.CanDoubleJump;
                     string djStatus = canDoubleJump ? "<color=green>Unlocked</color>" : "Locked";
-                    desc = $"Attack Speed: {atkSpd:F2}x\nMove Speed: {moveSpd:F1}";
+                    desc = $"Attack Speed: {atkSpd:F2}x\nMove Speed: {FormatStatWithBonus(baseMoveSpd, moveSpd)}";
                     if (ctrl != null) desc += $"\nSprint Speed: {ctrl.SprintSpeed:F1}\nDash Speed: {ctrl.DashSpeed:F1}";
                     desc += $"\nDouble Jump: {djStatus}";
                     break;
@@ -1221,6 +1264,11 @@ namespace TheLastKnight.UI
                     var item = inv.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, i);
                     _quickSlotUIs[i].UpdateDisplay(item);
                 }
+            }
+
+            if (_isOpen && _currentHoveredStat != null && _tooltipBox != null && _tooltipBox.activeSelf)
+            {
+                ShowStatTooltip(_currentHoveredStat, _currentHoveredPrefix);
             }
         }
 

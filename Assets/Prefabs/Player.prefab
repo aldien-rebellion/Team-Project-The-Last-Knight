@@ -126,6 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Physics.KinematicCharacterController2D
   _skinWidth: 0.015
   _maxSlopeAngle: 45
+  _stepOffset: 0.25
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 0
@@ -205,7 +206,7 @@ MonoBehaviour:
   _animator: {fileID: 0}
   _attackDuration: 0.25
   _attackCooldown: 0.35
-  _skillDuration: 0.5
+  _skillDuration: 0.4
   _skillCooldown: 5
   _skillDamageMultiplier: 2
   _skillAttackRadius: 2.2
@@ -213,11 +214,11 @@ MonoBehaviour:
   _skillAttackOffset: {x: 0, y: 0.5}
   _skillKnockbackForce: {x: 6, y: 2.5}
   _skillPushDistance: 1.2
-  _buffDuration: 5
-  _buffCooldown: 10
+  _buffDuration: 0.6
+  _buffCooldown: 30
   _excaliburDuration: 3.8
-  _excaliburCooldown: 15
-  _excaliburDamageMultiplier: 5
+  _excaliburCooldown: 50
+  _excaliburDamageMultiplier: 7.92
   _excaliburHitSize: {x: 24, y: 4.2}
   _excaliburHitOffset: {x: 12, y: 1.47}
   _excaliburDamageDelay: 3.3
@@ -242,6 +243,7 @@ MonoBehaviour:
   _baseDashDuration: 0.2
   _dashCooldown: 0.5
   _dashIFrameDuration: 0.15
+  _platformDropDuration: 0.15
   _attackSize: {x: 2.2, y: 2}
   _attackOffset: {x: 1.1, y: 0}
   _attackLayers:

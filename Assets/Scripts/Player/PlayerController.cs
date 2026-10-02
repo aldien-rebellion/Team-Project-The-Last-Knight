@@ -60,7 +60,7 @@ namespace TheLastKnight.Player
         [SerializeField, Tooltip("Buff skill duration.")]
         private float _buffDuration = 0.6f;
         [SerializeField, Tooltip("Cooldown between Skill 2 (Buff) uses.")]
-        private float _buffCooldown = 1.0f;
+        private float _buffCooldown = 30.0f;
 
         [Header("Skill 3 Settings (Excalibur - Key T)")]
         [SerializeField, Tooltip("Excalibur skill duration.")]
@@ -231,6 +231,10 @@ namespace TheLastKnight.Player
         // Hurt State Variables
         private float _hurtTimer = 0f;
 
+        // Action Cancellation Tracking
+        private float _actionDurationTimer = 0f;
+        private float _actionInitialMoveX = 0f;
+
         private void Awake()
         {
             _kinematicController = GetComponent<KinematicCharacterController2D>();
@@ -356,9 +360,16 @@ namespace TheLastKnight.Player
                 _coyoteTimeCounter -= Time.deltaTime;
             }
 
-            // Jump buffer update
+            // Jump buffer update and Jump Cancel
             if (_inputHandler != null && _inputHandler.JumpTriggered)
             {
+                if (CurrentState != PlayerState.Attacking)
+                {
+                    if (IsCancellableState(CurrentState))
+                    {
+                        CancelCurrentAction();
+                    }
+                }
                 _jumpBufferCounter = _jumpBufferTime;
             }
             else
@@ -366,45 +377,114 @@ namespace TheLastKnight.Player
                 _jumpBufferCounter -= Time.deltaTime;
             }
 
-            bool isBusy = CurrentState == PlayerState.Hurt || CurrentState == PlayerState.Attacking || CurrentState == PlayerState.UsingSkill || CurrentState == PlayerState.Buffing || CurrentState == PlayerState.Excalibur || CurrentState == PlayerState.Dashing || CurrentState == PlayerState.Drinking;
-
-            // Check for Attack Trigger
-            if (_inputHandler != null && _inputHandler.AttackTriggered && !isBusy && _attackCooldownTimer <= 0f)
+            // Check for Attack Trigger (Cannot be performed during Attack; cancels other actions)
+            if (_inputHandler != null && _inputHandler.AttackTriggered && _attackCooldownTimer <= 0f)
             {
-                StartAttack();
-            }
-
-            // Check for Skill Trigger (Carnage Burst - Key E)
-            else if (_inputHandler != null && _inputHandler.UseSkillTriggered && !isBusy && _skillCooldownTimer <= 0f)
-            {
-                StartSkill();
-            }
-
-            // Check for Buff Trigger (Key R)
-            else if (_inputHandler != null && _inputHandler.UseBuffTriggered && !isBusy && _buffCooldownTimer <= 0f)
-            {
-                StartBuff();
-            }
-
-            // Check for Excalibur Trigger (Key T)
-            else if (_inputHandler != null && _inputHandler.UseExcaliburTriggered && !isBusy && _excaliburCooldownTimer <= 0f)
-            {
-                StartExcalibur();
-            }
-
-            // Check for Drink Trigger (Key Q)
-            else if (_inputHandler != null && _inputHandler.UseDrinkTriggered && !isBusy && _drinkCooldownTimer <= 0f)
-            {
-                StartDrink();
-            }
-
-            // Check for Dash Trigger
-            else if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f && !isBusy)
-            {
-                bool canDash = _kinematicController.IsGrounded || !_hasDashedInAir;
-                if (canDash)
+                if (CurrentState != PlayerState.Attacking)
                 {
-                    StartDash();
+                    if (stats == null || stats.CurrentStamina >= 15f)
+                    {
+                        if (IsCancellableState(CurrentState))
+                        {
+                            CancelCurrentAction();
+                        }
+                        StartAttack();
+                    }
+                    else
+                    {
+                        stats?.NotifyInsufficientStamina();
+                    }
+                }
+            }
+            // Check for Skill Trigger (Carnage Burst - Key E)
+            else if (_inputHandler != null && _inputHandler.UseSkillTriggered && _skillCooldownTimer <= 0f)
+            {
+                if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill)
+                {
+                    if (stats == null || stats.CurrentStamina >= 25f)
+                    {
+                        if (IsCancellableState(CurrentState))
+                        {
+                            CancelCurrentAction();
+                        }
+                        StartSkill();
+                    }
+                    else
+                    {
+                        stats?.NotifyInsufficientStamina();
+                    }
+                }
+            }
+            // Check for Buff Trigger (Key R)
+            else if (_inputHandler != null && _inputHandler.UseBuffTriggered && _buffCooldownTimer <= 0f)
+            {
+                if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.Buffing)
+                {
+                    if (IsCancellableState(CurrentState))
+                    {
+                        CancelCurrentAction();
+                    }
+                    StartBuff();
+                }
+            }
+            // Check for Excalibur Trigger (Key T)
+            else if (_inputHandler != null && _inputHandler.UseExcaliburTriggered && _excaliburCooldownTimer <= 0f)
+            {
+                if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.Excalibur)
+                {
+                    if (stats == null || stats.CurrentStamina >= 50f)
+                    {
+                        if (IsCancellableState(CurrentState))
+                        {
+                            CancelCurrentAction();
+                        }
+                        StartExcalibur();
+                    }
+                    else
+                    {
+                        stats?.NotifyInsufficientStamina();
+                    }
+                }
+            }
+            // Check for Drink Trigger (Key Q)
+            else if (_inputHandler != null && _inputHandler.UseDrinkTriggered && _drinkCooldownTimer <= 0f)
+            {
+                if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.Drinking)
+                {
+                    var qm = TheLastKnight.Core.QuickItemManager.Instance;
+                    var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
+                    int index = qm != null ? qm.GetActiveSlotIndex() : -1;
+                    if (inventory != null && inventory.CanUseQuickSlot(index, stats))
+                    {
+                        if (IsCancellableState(CurrentState))
+                        {
+                            CancelCurrentAction();
+                        }
+                        StartDrink();
+                    }
+                }
+            }
+            // Check for Dash Trigger
+            else if (_inputHandler != null && _inputHandler.DashTriggered && _dashCooldownTimer <= 0f)
+            {
+                if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.Dashing)
+                {
+                    bool canDash = _kinematicController.IsGrounded || !_hasDashedInAir;
+                    if (canDash)
+                    {
+                        if (stats == null || stats.CurrentStamina >= 20f)
+                        {
+                            if (IsCancellableState(CurrentState))
+                            {
+                                CancelCurrentAction();
+                            }
+                            StartDash();
+                        }
+                        else
+                        {
+                            stats?.NotifyInsufficientStamina();
+                        }
+                    }
                 }
             }
 
@@ -640,6 +720,8 @@ namespace TheLastKnight.Player
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("skill");
             _skillTimer = _skillDuration;
             _skillCooldownTimer = _skillDuration + _skillCooldown;
+            _actionDurationTimer = 0f;
+            _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
@@ -654,6 +736,19 @@ namespace TheLastKnight.Player
         {
             ApplySkillHits();
             _skillTimer -= Time.deltaTime;
+            _actionDurationTimer += Time.deltaTime;
+
+            if (_inputHandler != null && Mathf.Abs(_inputHandler.MoveInput.x) > 0.1f)
+            {
+                bool newMovementInput = Mathf.Abs(_actionInitialMoveX) < 0.1f ||
+                                        Mathf.Sign(_inputHandler.MoveInput.x) != Mathf.Sign(_actionInitialMoveX) ||
+                                        _actionDurationTimer >= 0.12f;
+                if (newMovementInput)
+                {
+                    CancelCurrentAction();
+                    return;
+                }
+            }
 
             if (!_kinematicController.IsGrounded)
             {
@@ -678,18 +773,7 @@ namespace TheLastKnight.Player
         private void EndSkill()
         {
             _skillTargets.Clear();
-            if (_kinematicController.IsGrounded)
-            {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
-                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
-                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
-                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
-                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
-            }
-            else
-            {
-                CurrentState = PlayerState.Falling;
-            }
+            TransitionToMovementState();
         }
 
         public void ApplySkillHits()
@@ -745,11 +829,99 @@ namespace TheLastKnight.Player
             }
         }
 
+        /// <summary>
+        /// Checks whether the specified state can be cancelled by player action.
+        /// Attack is strictly NOT cancellable. Hurt is cancellable.
+        /// </summary>
+        public bool IsCancellableState(PlayerState state)
+        {
+            return state == PlayerState.UsingSkill ||
+                   state == PlayerState.Buffing ||
+                   state == PlayerState.Excalibur ||
+                   state == PlayerState.Drinking ||
+                   state == PlayerState.Dashing ||
+                   state == PlayerState.Hurt;
+        }
+
+        public bool CanCancelCurrentAnimation => IsCancellableState(CurrentState);
+
+        private void TransitionToMovementState()
+        {
+            if (_kinematicController.IsGrounded)
+            {
+                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
+                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
+                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
+                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
+            }
+            else
+            {
+                CurrentState = PlayerState.Falling;
+            }
+        }
+
+        /// <summary>
+        /// Cancels the current cancellable action/animation cleanly.
+        /// Attack cannot be cancelled.
+        /// </summary>
+        public void CancelCurrentAction()
+        {
+            if (CurrentState == PlayerState.Excalibur)
+            {
+                CancelExcalibur();
+            }
+            else if (CurrentState == PlayerState.UsingSkill)
+            {
+                _skillTimer = 0f;
+                _skillTargets.Clear();
+                TransitionToMovementState();
+            }
+            else if (CurrentState == PlayerState.Buffing)
+            {
+                _buffTimer = 0f;
+                var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
+                if (stats != null)
+                {
+                    stats.RemoveSkill2Buff();
+                }
+                TransitionToMovementState();
+            }
+            else if (CurrentState == PlayerState.Drinking)
+            {
+                _drinkTimer = 0f;
+                _drinkingSlot = -1;
+                _drinkingItem = null;
+                TransitionToMovementState();
+            }
+            else if (CurrentState == PlayerState.Dashing)
+            {
+                EndDash();
+            }
+            else if (CurrentState == PlayerState.Hurt)
+            {
+                _hurtTimer = 0f;
+                TransitionToMovementState();
+            }
+
+            if (_animator != null && _animator.runtimeAnimatorController != null)
+            {
+                if (CurrentState == PlayerState.Idle)
+                {
+                    _animator.Play("Idle", 0, 0f);
+                }
+            }
+        }
+
         private void StartBuff()
         {
             CurrentState = PlayerState.Buffing;
             _buffTimer = _buffDuration;
-            _buffCooldownTimer = _buffDuration + _buffCooldown;
+            _buffCooldownTimer = _buffCooldown;
+            _actionDurationTimer = 0f;
+            _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
+
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("skill");
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
@@ -763,6 +935,19 @@ namespace TheLastKnight.Player
         private void UpdateBuff()
         {
             _buffTimer -= Time.deltaTime;
+            _actionDurationTimer += Time.deltaTime;
+
+            if (_inputHandler != null && Mathf.Abs(_inputHandler.MoveInput.x) > 0.1f)
+            {
+                bool newMovementInput = Mathf.Abs(_actionInitialMoveX) < 0.1f ||
+                                        Mathf.Sign(_inputHandler.MoveInput.x) != Mathf.Sign(_actionInitialMoveX) ||
+                                        _actionDurationTimer >= 0.12f;
+                if (newMovementInput)
+                {
+                    CancelCurrentAction();
+                    return;
+                }
+            }
 
             if (!_kinematicController.IsGrounded)
             {
@@ -786,18 +971,12 @@ namespace TheLastKnight.Player
 
         private void EndBuff()
         {
-            if (_kinematicController.IsGrounded)
+            var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
+            if (stats != null)
             {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
-                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
-                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
-                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
-                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
+                stats.ApplySkill2Buff();
             }
-            else
-            {
-                CurrentState = PlayerState.Falling;
-            }
+            TransitionToMovementState();
         }
 
         private void StartExcalibur()
@@ -808,6 +987,8 @@ namespace TheLastKnight.Player
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("excalibur");
             _excaliburTimer = _excaliburDuration;
             _excaliburCooldownTimer = _excaliburDuration + _excaliburCooldown;
+            _actionDurationTimer = 0f;
+            _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
@@ -825,6 +1006,20 @@ namespace TheLastKnight.Player
 
         private void UpdateExcalibur()
         {
+            _actionDurationTimer += Time.deltaTime;
+
+            if (_inputHandler != null && Mathf.Abs(_inputHandler.MoveInput.x) > 0.1f)
+            {
+                bool newMovementInput = Mathf.Abs(_actionInitialMoveX) < 0.1f ||
+                                        Mathf.Sign(_inputHandler.MoveInput.x) != Mathf.Sign(_actionInitialMoveX) ||
+                                        _actionDurationTimer >= 0.12f;
+                if (newMovementInput)
+                {
+                    CancelCurrentAction();
+                    return;
+                }
+            }
+
             // Apply beam damage during the beam release window
             if (_excaliburTimer <= (_excaliburDuration - _excaliburDamageDelay))
             {
@@ -856,18 +1051,7 @@ namespace TheLastKnight.Player
         private void EndExcalibur()
         {
             _excaliburTargets.Clear();
-            if (_kinematicController.IsGrounded)
-            {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
-                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
-                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
-                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
-                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
-            }
-            else
-            {
-                CurrentState = PlayerState.Falling;
-            }
+            TransitionToMovementState();
         }
 
         private int _drinkingSlot = -1;
@@ -893,18 +1077,7 @@ namespace TheLastKnight.Player
                 if (vfx != null) vfx.CancelUltimateAttack();
             }
 
-            if (_kinematicController.IsGrounded)
-            {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
-                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
-                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
-                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
-                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
-            }
-            else
-            {
-                CurrentState = PlayerState.Falling;
-            }
+            TransitionToMovementState();
         }
 
         public void ApplyExcaliburHits()
@@ -956,6 +1129,8 @@ namespace TheLastKnight.Player
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("drink");
             _drinkTimer = _drinkDuration;
             _drinkCooldownTimer = _drinkDuration + _drinkCooldown;
+            _actionDurationTimer = 0f;
+            _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
@@ -969,6 +1144,19 @@ namespace TheLastKnight.Player
         private void UpdateDrink()
         {
             _drinkTimer -= Time.deltaTime;
+            _actionDurationTimer += Time.deltaTime;
+
+            if (_inputHandler != null && Mathf.Abs(_inputHandler.MoveInput.x) > 0.1f)
+            {
+                bool newMovementInput = Mathf.Abs(_actionInitialMoveX) < 0.1f ||
+                                        Mathf.Sign(_inputHandler.MoveInput.x) != Mathf.Sign(_actionInitialMoveX) ||
+                                        _actionDurationTimer >= 0.12f;
+                if (newMovementInput)
+                {
+                    CancelCurrentAction();
+                    return;
+                }
+            }
 
             if (!_kinematicController.IsGrounded)
             {
@@ -1000,18 +1188,7 @@ namespace TheLastKnight.Player
                 inventory.UseQuickSlot(_drinkingSlot, stats);
             _drinkingSlot = -1;
             _drinkingItem = null;
-            if (_kinematicController.IsGrounded)
-            {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
-                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
-                float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
-                _velocity = new Vector2(moveInputX * currentSpeed, 0f);
-                CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
-            }
-            else
-            {
-                CurrentState = PlayerState.Falling;
-            }
+            TransitionToMovementState();
         }
 
         /// <summary>
@@ -1026,9 +1203,27 @@ namespace TheLastKnight.Player
                 return;
             }
 
+            if (CurrentState == PlayerState.Buffing)
+            {
+                _buffTimer = 0f;
+                var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
+                if (stats != null)
+                {
+                    stats.RemoveSkill2Buff();
+                }
+            }
+            else if (CurrentState == PlayerState.Drinking)
+            {
+                _drinkTimer = 0f;
+                _drinkingSlot = -1;
+                _drinkingItem = null;
+            }
+
             CurrentState = PlayerState.Hurt;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("hurt");
             _hurtTimer = _hurtFrame1Duration + _hurtFrame2Duration;
+            _actionDurationTimer = 0f;
+            _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
@@ -1049,20 +1244,30 @@ namespace TheLastKnight.Player
             }
             else if (CurrentState == PlayerState.UsingSkill)
             {
-                EndSkill();
+                _skillTimer = 0f;
+                _skillTargets.Clear();
             }
             else if (CurrentState == PlayerState.Buffing)
             {
-                EndBuff();
+                _buffTimer = 0f;
+                var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
+                if (stats != null)
+                {
+                    stats.RemoveSkill2Buff();
+                }
             }
             else if (CurrentState == PlayerState.Drinking)
             {
-                EndDrink();
+                _drinkTimer = 0f;
+                _drinkingSlot = -1;
+                _drinkingItem = null;
             }
 
             CurrentState = PlayerState.Hurt;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("hurt");
             _hurtTimer = Mathf.Max(duration, _hurtFrame1Duration + _hurtFrame2Duration);
+            _actionDurationTimer = 0f;
+            _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
@@ -1082,6 +1287,19 @@ namespace TheLastKnight.Player
         private void UpdateHurt()
         {
             _hurtTimer -= Time.deltaTime;
+            _actionDurationTimer += Time.deltaTime;
+
+            if (_inputHandler != null && Mathf.Abs(_inputHandler.MoveInput.x) > 0.1f)
+            {
+                bool newMovementInput = Mathf.Abs(_actionInitialMoveX) < 0.1f ||
+                                        Mathf.Sign(_inputHandler.MoveInput.x) != Mathf.Sign(_actionInitialMoveX) ||
+                                        _actionDurationTimer >= 0.08f;
+                if (newMovementInput)
+                {
+                    CancelCurrentAction();
+                    return;
+                }
+            }
 
             if (!_kinematicController.IsGrounded)
             {
@@ -1197,24 +1415,32 @@ namespace TheLastKnight.Player
                 }
                 else if (canJump)
                 {
-                    TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
-                    _velocity.y = JumpForce;
+                    var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
+                    if (stats == null || stats.TrySpendStamina(15f))
+                    {
+                        TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
+                        _velocity.y = JumpForce;
+                        _coyoteTimeCounter = -1f;
+                        _hasDoubleJumped = false;
+                        CurrentState = PlayerState.Jumping;
+                    }
                     _jumpBufferCounter = -1f;
-                    _coyoteTimeCounter = -1f;
-                    _hasDoubleJumped = false;
-                    CurrentState = PlayerState.Jumping;
                 }
                 else if (CanDoubleJump && !_hasDoubleJumped)
                 {
-                    TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
-                    _velocity.y = JumpForce;
-                    _jumpBufferCounter = -1f;
-                    _hasDoubleJumped = true;
-                    CurrentState = PlayerState.Jumping;
-                    if (_animator != null && _animator.runtimeAnimatorController != null)
+                    var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
+                    if (stats == null || stats.TrySpendStamina(15f))
                     {
-                        _animator.Play("Jump", 0, 0f);
+                        TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
+                        _velocity.y = JumpForce;
+                        _hasDoubleJumped = true;
+                        CurrentState = PlayerState.Jumping;
+                        if (_animator != null && _animator.runtimeAnimatorController != null)
+                        {
+                            _animator.Play("Jump", 0, 0f);
+                        }
                     }
+                    _jumpBufferCounter = -1f;
                 }
             }
 

@@ -207,7 +207,7 @@ namespace TheLastKnight.Tests
 
             // Verify damage reduction: 20 raw damage → after DEF(5) → 15 actual damage taken
             float hpBefore = (float)GetProp(_stats, "CurrentHP");
-            _stats.GetType().GetMethod("TakeDamage").Invoke(_stats, new object[] { 20f });
+            _stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(_stats, new object[] { 20f });
             float hpAfter = (float)GetProp(_stats, "CurrentHP");
             float damageTaken = hpBefore - hpAfter;
 
@@ -227,7 +227,7 @@ namespace TheLastKnight.Tests
 
             // 5 raw damage → after DEF(100) → should be clamped to 1
             float hpBefore = (float)GetProp(_stats, "CurrentHP");
-            _stats.GetType().GetMethod("TakeDamage").Invoke(_stats, new object[] { 5f });
+            _stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(_stats, new object[] { 5f });
             float hpAfter = (float)GetProp(_stats, "CurrentHP");
             float damageTaken = hpBefore - hpAfter;
 
@@ -392,6 +392,436 @@ namespace TheLastKnight.Tests
             regenMethod.Invoke(_stats, new object[] { 0.5f });
             float stmAfterDelay = (float)GetProp(_stats, "CurrentStamina");
             Assert.That(stmAfterDelay, Is.GreaterThan(60f), "Stamina must regenerate after delay period");
+        }
+
+        [Test]
+        public void Jump_Consumes15Stamina_AndFailsWhenInsufficientStamina()
+        {
+            // Set stamina to 10 (< 15)
+            SetField(_stats, "_currentStamina", 10f);
+
+            // Grounded jump setup
+            SetField(_controller, "_jumpBufferCounter", 0.15f);
+            SetField(_controller, "_coyoteTimeCounter", 0.15f);
+            SetField(_controller, "_velocity", Vector2.zero);
+
+            Invoke(_controller, "UpdateNormalMovement");
+
+            // Jump failed due to lack of stamina: velocity.y is not JumpForce and state is not Jumping
+            Vector2 velAfter = (Vector2)GetField(_controller, "_velocity");
+            float jumpForce = (float)GetProp(_controller, "JumpForce");
+            Assert.That(velAfter.y, Is.LessThan(jumpForce), "Jump must fail when stamina < 15");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.Not.EqualTo("Jumping"));
+            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(10f).Within(0.01f));
+
+            // Set stamina to 20 (>= 15)
+            SetField(_stats, "_currentStamina", 20f);
+            SetField(_controller, "_jumpBufferCounter", 0.15f);
+            SetField(_controller, "_coyoteTimeCounter", 0.15f);
+
+            Invoke(_controller, "UpdateNormalMovement");
+
+            velAfter = (Vector2)GetField(_controller, "_velocity");
+            jumpForce = (float)GetProp(_controller, "JumpForce");
+            Assert.That(velAfter.y, Is.EqualTo(jumpForce).Within(0.1f), "Jump should succeed when stamina >= 15");
+            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(5f).Within(0.01f), "Jump must consume 15 stamina");
+        }
+
+        [Test]
+        public void DoubleJump_Consumes15Stamina_AndFailsWhenInsufficientStamina()
+        {
+            // Unlock double jump
+            SetField(_stats, "_agility", 250);
+            _stats.GetType().GetMethod("RecalculateStats", new[] { typeof(bool) })?.Invoke(_stats, new object[] { false });
+
+            // Set stamina to 10 (< 15)
+            SetField(_stats, "_currentStamina", 10f);
+
+            // In air setup
+            SetField(_controller, "_velocity", new Vector2(0, -10f));
+            SetField(_controller, "_jumpBufferCounter", 0.15f);
+            SetField(_controller, "_coyoteTimeCounter", -1f);
+            SetField(_controller, "_hasDoubleJumped", false);
+
+            Invoke(_controller, "UpdateNormalMovement");
+
+            Assert.IsFalse((bool)GetProp(_controller, "HasDoubleJumped"), "Double jump must not occur when stamina < 15");
+            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(10f).Within(0.01f));
+
+            // Set stamina to 15 (>= 15)
+            SetField(_stats, "_currentStamina", 15f);
+            SetField(_controller, "_jumpBufferCounter", 0.15f);
+
+            Invoke(_controller, "UpdateNormalMovement");
+
+            Assert.IsTrue((bool)GetProp(_controller, "HasDoubleJumped"), "Double jump must succeed when stamina >= 15");
+            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(0f).Within(0.01f), "Double jump must consume 15 stamina");
+        }
+
+        [Test]
+        public void StaminaRegen_RatesMatchRequirements_Normal10Percent_Aura20Percent()
+        {
+            var regenMethod = _stats.GetType().GetMethod("RegenerateStamina");
+            var setLastSpendTime = _stats.GetType().GetMethod("SetLastStaminaSpendTimeForTesting");
+            var setRegenAura = _stats.GetType().GetMethod("SetRegenAura");
+
+            // Max stamina is 100
+            float maxStamina = (float)GetProp(_stats, "MaxStamina");
+            Assert.That(maxStamina, Is.EqualTo(100f).Within(0.01f));
+
+            // Set stamina to 0
+            SetField(_stats, "_currentStamina", 0f);
+            setLastSpendTime.Invoke(_stats, new object[] { Time.time - 2.0f });
+
+            // 1. Normal regen (no aura): 10% per second -> 10 stamina in 1 sec
+            setRegenAura.Invoke(_stats, new object[] { _stats, false });
+            regenMethod.Invoke(_stats, new object[] { 1.0f });
+            float stmNormal = (float)GetProp(_stats, "CurrentStamina");
+            Assert.That(stmNormal, Is.EqualTo(10f).Within(0.01f), "Normal stamina regen should be 10% of MaxStamina per second");
+
+            // 2. Regen Aura: 20% per second -> 20 stamina in 1 sec
+            setRegenAura.Invoke(_stats, new object[] { _stats, true });
+            regenMethod.Invoke(_stats, new object[] { 1.0f });
+            float stmAura = (float)GetProp(_stats, "CurrentStamina");
+            Assert.That(stmAura, Is.EqualTo(30f).Within(0.01f), "Regen Aura stamina regen should be 20% of MaxStamina per second");
+        }
+
+        [Test]
+        public void HPRegen_MedusaAura_CappedAt70PercentMaxHP_AndRequiresAura()
+        {
+            var regenHPMethod = _stats.GetType().GetMethod("RegenerateHP");
+            var setLastDamageTime = _stats.GetType().GetMethod("SetLastDamageTimeForTesting");
+            var setRegenAura = _stats.GetType().GetMethod("SetRegenAura");
+
+            float maxHP = (float)GetProp(_stats, "MaxHP");
+            Assert.That(maxHP, Is.EqualTo(100f).Within(0.01f));
+
+            // Set HP to 50%
+            SetField(_stats, "_currentHP", 50f);
+            setLastDamageTime.Invoke(_stats, new object[] { Time.time - 10.0f });
+
+            // 1. Without Regen Aura: HP must not regenerate
+            setRegenAura.Invoke(_stats, new object[] { _stats, false });
+            regenHPMethod.Invoke(_stats, new object[] { 1.0f });
+            Assert.That((float)GetProp(_stats, "CurrentHP"), Is.EqualTo(50f).Within(0.01f), "HP must not regenerate outside Medusa Aura");
+
+            // 2. With Regen Aura: HP regenerates
+            setRegenAura.Invoke(_stats, new object[] { _stats, true });
+            regenHPMethod.Invoke(_stats, new object[] { 1.0f });
+            Assert.That((float)GetProp(_stats, "CurrentHP"), Is.GreaterThan(50f), "HP should regenerate in Medusa Aura");
+
+            // 3. Clamping: HP cannot regenerate past 70% MaxHP (70 HP)
+            regenHPMethod.Invoke(_stats, new object[] { 1000f });
+            Assert.That((float)GetProp(_stats, "CurrentHP"), Is.EqualTo(70f).Within(0.01f), "HP regen in Medusa Aura must cap at 70% of MaxHP");
+        }
+
+        [Test]
+        public void Skill2Buff_IncreasesAttackPowerBy22Percent_For15Seconds()
+        {
+            float baseAtk = (float)GetProp(_stats, "AttackPower");
+            Assert.That(baseAtk, Is.GreaterThan(0f));
+
+            // Apply Skill 2 buff
+            _stats.GetType().GetMethod("ApplySkill2Buff").Invoke(_stats, null);
+            float buffedAtk = (float)GetProp(_stats, "AttackPower");
+            float expectedBuffedAtk = baseAtk * 1.22f;
+            Assert.That(buffedAtk, Is.EqualTo(expectedBuffedAtk).Within(0.01f), "Skill 2 must buff ATK by 22%");
+
+            // Check duration (15 seconds)
+            var fiBuffExpires = _stats.GetType().GetField("_skill2BuffExpiresAt", BindingFlags.Instance | BindingFlags.NonPublic);
+            float expiresAt = (float)fiBuffExpires.GetValue(_stats);
+            Assert.That(expiresAt - Time.time, Is.EqualTo(15f).Within(0.1f), "Skill 2 buff duration must be 15 seconds");
+
+            // Fast forward past 15 seconds -> buff should expire
+            _stats.GetType().GetMethod("SetSkill2BuffExpiresAtForTesting").Invoke(_stats, new object[] { Time.time - 1f });
+            float expiredAtk = (float)GetProp(_stats, "AttackPower");
+            Assert.That(expiredAtk, Is.EqualTo(baseAtk).Within(0.01f), "ATK should return to base after buff expires");
+        }
+
+        [Test]
+        public void Skill2_StartBuff_AppliesBuff_AndSets30SecondCooldown()
+        {
+            float baseAtk = (float)GetProp(_stats, "AttackPower");
+
+            // Cast Buff skill
+            Invoke(_controller, "StartBuff");
+
+            // Verify state
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Buffing"));
+
+            // Verify 30s cooldown
+            float cdTimer = (float)GetField(_controller, "_buffCooldownTimer");
+            Assert.That(cdTimer, Is.EqualTo(30f).Within(0.1f), "StartBuff must set a 30-second cooldown");
+
+            // Buff channel completes
+            Invoke(_controller, "EndBuff");
+
+            // Verify buff applied
+            float buffedAtk = (float)GetProp(_stats, "AttackPower");
+            Assert.That(buffedAtk, Is.EqualTo(baseAtk * 1.22f).Within(0.01f), "Completing Buff must apply +22% ATK buff");
+        }
+
+        [Test]
+        public void TemporaryBuff_FormattedInParentheses_ShowsPermanentAndBonus()
+        {
+            var uiType = RuntimeType("TheLastKnight.UI.CharacterStatusUI");
+            var formatMethod = uiType.GetMethod("FormatStatWithBonus", BindingFlags.Public | BindingFlags.Static);
+
+            // 1. Base 15, Total 18.3 (with 22% buff) -> 15(+3.3)
+            string result1 = (string)formatMethod.Invoke(null, new object[] { 15f, 18.3f });
+            Assert.That(result1, Is.EqualTo("15(+3.3)"), "Buffed stat must display 15(+3.3) where 15 is permanent and 3.3 is bonus");
+
+            // 2. Base 15, Total 15 (no buff) -> 15
+            string result2 = (string)formatMethod.Invoke(null, new object[] { 15f, 15f });
+            Assert.That(result2, Is.EqualTo("15"), "Unbuffed stat must display permanent value without parentheses");
+
+            // 3. Base 16.5, Total 20.13 (STR 11 + 22% buff) -> 16.5(+3.6)
+            string result3 = (string)formatMethod.Invoke(null, new object[] { 16.5f, 20.13f });
+            Assert.That(result3, Is.EqualTo("16.5(+3.6)"));
+
+            // 4. Verify BaseAttackPower on PlayerStats
+            float baseAtk = (float)GetProp(_stats, "BaseAttackPower");
+            float currentAtk = (float)GetProp(_stats, "AttackPower");
+            Assert.That(baseAtk, Is.EqualTo(15f).Within(0.01f));
+            Assert.That(currentAtk, Is.EqualTo(15f).Within(0.01f));
+
+            // Apply Skill 2 buff
+            _stats.GetType().GetMethod("ApplySkill2Buff").Invoke(_stats, null);
+            float buffedAtk = (float)GetProp(_stats, "AttackPower");
+            float permanentAtk = (float)GetProp(_stats, "BaseAttackPower");
+            Assert.That(permanentAtk, Is.EqualTo(15f).Within(0.01f));
+            Assert.That(buffedAtk, Is.EqualTo(18.3f).Within(0.01f));
+
+            string formattedFromStats = (string)formatMethod.Invoke(null, new object[] { permanentAtk, buffedAtk });
+            Assert.That(formattedFromStats, Is.EqualTo("15(+3.3)"));
+        }
+
+        [Test]
+        public void LevelUp_Grants10StatPointsPerLevel()
+        {
+            int initialPoints = (int)GetProp(_stats, "StatPoints");
+            int initialLevel = (int)GetProp(_stats, "Level");
+            int expNeeded = (int)GetProp(_stats, "EXPNeeded");
+
+            // Add enough EXP to trigger level up
+            var addExpMethod = _stats.GetType().GetMethod("AddEXP");
+            addExpMethod.Invoke(_stats, new object[] { expNeeded });
+
+            int newLevel = (int)GetProp(_stats, "Level");
+            int newPoints = (int)GetProp(_stats, "StatPoints");
+
+            Assert.That(newLevel, Is.EqualTo(initialLevel + 1), "Level must increase by 1");
+            Assert.That(newPoints, Is.EqualTo(initialPoints + 10), "Leveling up must grant exactly 10 stat points");
+        }
+
+        [Test]
+        public void AnimationCancel_CanCancelSkills_IntoDashJumpAndAttack()
+        {
+            // 1. Start Buff (Skill 2)
+            Invoke(_controller, "StartBuff");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Buffing"));
+            Assert.IsTrue((bool)GetProp(_controller, "CanCancelCurrentAnimation"), "Buffing must be cancellable");
+
+            // Cancel Buff into Dash
+            SetField(_controller, "_dashCooldownTimer", 0f);
+            SetField(_stats, "_currentStamina", 50f);
+            Invoke(_controller, "CancelCurrentAction");
+            Invoke(_controller, "StartDash");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Dashing"));
+
+            // 2. Start Skill (Skill 1)
+            SetField(_stats, "_currentStamina", 50f);
+            Invoke(_controller, "StartSkill");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("UsingSkill"));
+            Assert.IsTrue((bool)GetProp(_controller, "CanCancelCurrentAnimation"), "Skill must be cancellable");
+
+            // Cancel Skill into Attack
+            Invoke(_controller, "CancelCurrentAction");
+            Invoke(_controller, "StartAttack");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Attacking"));
+        }
+
+        [Test]
+        public void AnimationCancel_AttackAnimation_CannotBeCancelled()
+        {
+            // Start Attack
+            SetField(_stats, "_currentStamina", 50f);
+            Invoke(_controller, "StartAttack");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Attacking"));
+
+            // Verify CanCancelCurrentAnimation is FALSE for Attack
+            Assert.IsFalse((bool)GetProp(_controller, "CanCancelCurrentAnimation"), "Attack animation MUST NOT be cancellable");
+
+            var isCancellableMethod = _controller.GetType().GetMethod("IsCancellableState");
+            var playerStateType = RuntimeType("TheLastKnight.Player.PlayerState");
+            object attackingState = Enum.Parse(playerStateType, "Attacking");
+            bool isAttackingCancellable = (bool)isCancellableMethod.Invoke(_controller, new object[] { attackingState });
+            Assert.IsFalse(isAttackingCancellable, "Attacking state must not be cancellable");
+
+            // Calling CancelCurrentAction while attacking does nothing to the attacking state
+            Invoke(_controller, "CancelCurrentAction");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Attacking"), "Attack must remain active and cannot be cancelled");
+        }
+
+        [Test]
+        public void AnimationCancel_HurtAnimation_CanBeCancelled_IntoDashAndAttack()
+        {
+            // Enter Hurt state
+            Invoke(_controller, "OnTakeDamage");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Hurt"));
+            Assert.IsTrue((bool)GetProp(_controller, "CanCancelCurrentAnimation"), "Hurt state must be cancellable");
+
+            var isCancellableMethod = _controller.GetType().GetMethod("IsCancellableState");
+            var playerStateType = RuntimeType("TheLastKnight.Player.PlayerState");
+            object hurtState = Enum.Parse(playerStateType, "Hurt");
+            bool isHurtCancellable = (bool)isCancellableMethod.Invoke(_controller, new object[] { hurtState });
+            Assert.IsTrue(isHurtCancellable, "Hurt state must be cancellable via IsCancellableState");
+
+            // Cancel Hurt into Dash
+            SetField(_controller, "_dashCooldownTimer", 0f);
+            SetField(_stats, "_currentStamina", 50f);
+            Invoke(_controller, "CancelCurrentAction");
+            Invoke(_controller, "StartDash");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Dashing"));
+
+            // End dash before re-entering Hurt
+            Invoke(_controller, "EndDash");
+
+            // Re-enter Hurt
+            Invoke(_controller, "OnTakeDamage");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Hurt"));
+
+            // Cancel Hurt into Attack
+            SetField(_stats, "_currentStamina", 50f);
+            Invoke(_controller, "CancelCurrentAction");
+            Invoke(_controller, "StartAttack");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Attacking"));
+        }
+
+        [Test]
+        public void AnimationCancel_BuffCancelled_DoesNotApplyAttackBonus()
+        {
+            float baseAtk = (float)GetProp(_stats, "BaseAttackPower");
+            Assert.IsFalse((bool)GetProp(_stats, "HasSkill2Buff"));
+
+            // Start Buff
+            Invoke(_controller, "StartBuff");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Buffing"));
+            // While buffing before completion, buff is not yet applied
+            Assert.IsFalse((bool)GetProp(_stats, "HasSkill2Buff"), "Buff should not apply immediately upon cast");
+
+            // Cancel Buff early (e.g. dash or attack)
+            Invoke(_controller, "CancelCurrentAction");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.Not.EqualTo("Buffing"));
+            Assert.IsFalse((bool)GetProp(_stats, "HasSkill2Buff"), "Buff must NOT be applied when cancelled early");
+            Assert.That((float)GetProp(_stats, "AttackPower"), Is.EqualTo(baseAtk).Within(0.001f));
+
+            // Now test natural completion: StartBuff and call EndBuff
+            Invoke(_controller, "StartBuff");
+            Invoke(_controller, "EndBuff");
+            Assert.IsTrue((bool)GetProp(_stats, "HasSkill2Buff"), "Buff must be applied upon successful completion");
+            Assert.That((float)GetProp(_stats, "AttackPower"), Is.EqualTo(baseAtk * 1.22f).Within(0.01f));
+        }
+
+        [Test]
+        public void AnimationCancel_ExcaliburCancelled_ClearsTargetsAndStopsAction()
+        {
+            SetField(_stats, "_currentStamina", 100f);
+            Invoke(_controller, "StartExcalibur");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Excalibur"));
+            Assert.IsTrue((bool)GetProp(_controller, "CanCancelCurrentAnimation"), "Excalibur must be cancellable");
+
+            // Cancel Excalibur early
+            Invoke(_controller, "CancelCurrentAction");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.Not.EqualTo("Excalibur"));
+            float excaliburTimer = (float)GetField(_controller, "_excaliburTimer");
+            Assert.That(excaliburTimer, Is.EqualTo(0f), "Excalibur timer must be reset to 0 upon cancel");
+        }
+
+        [Test]
+        public void AnimationCancel_DrinkCancelled_DoesNotConsumeItem()
+        {
+            // Set state to Drinking
+            var playerStateType = RuntimeType("TheLastKnight.Player.PlayerState");
+            object drinkingState = Enum.Parse(playerStateType, "Drinking");
+            _controller.GetType().GetProperty("CurrentState")?.SetValue(_controller, drinkingState);
+            SetField(_controller, "_drinkingSlot", 0);
+            SetField(_controller, "_drinkTimer", 1.0f);
+
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Drinking"));
+            Assert.IsTrue((bool)GetProp(_controller, "CanCancelCurrentAnimation"), "Drinking must be cancellable");
+
+            // Cancel Drink
+            Invoke(_controller, "CancelCurrentAction");
+            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.Not.EqualTo("Drinking"));
+            Assert.That((int)GetField(_controller, "_drinkingSlot"), Is.EqualTo(-1), "Drinking slot must be reset without consuming");
+            Assert.That((float)GetField(_controller, "_drinkTimer"), Is.EqualTo(0f), "Drinking timer must be reset");
+        }
+
+        [Test]
+        public void InsufficientStamina_FiresEvent_WhenActionCannotBePerformed()
+        {
+            // Set stamina to 0
+            SetField(_stats, "_currentStamina", 0f);
+            var resetCooldownMethod = _stats.GetType().GetMethod("ResetInsufficientStaminaCooldownForTesting");
+            resetCooldownMethod?.Invoke(_stats, null);
+
+            bool instanceEventFired = false;
+            bool globalEventFired = false;
+
+            var statsType = _stats.GetType();
+            var instanceEvent = statsType.GetEvent("OnInsufficientStamina");
+            var globalEvent = statsType.GetEvent("OnInsufficientStaminaGlobal");
+
+            Action onInstance = () => instanceEventFired = true;
+            Action onGlobal = () => globalEventFired = true;
+
+            instanceEvent.AddEventHandler(_stats, onInstance);
+            globalEvent.AddEventHandler(null, onGlobal);
+
+            try
+            {
+                // Attempt to spend 15 stamina when at 0
+                var trySpendMethod = statsType.GetMethod("TrySpendStamina", new[] { typeof(float) });
+                bool success = (bool)trySpendMethod.Invoke(_stats, new object[] { 15f });
+
+                Assert.IsFalse(success, "TrySpendStamina must fail when stamina is 0");
+                Assert.IsTrue(instanceEventFired, "OnInsufficientStamina must be fired when an action fails due to stamina");
+                Assert.IsTrue(globalEventFired, "OnInsufficientStaminaGlobal must be fired when an action fails due to stamina");
+            }
+            finally
+            {
+                instanceEvent.RemoveEventHandler(_stats, onInstance);
+                globalEvent.RemoveEventHandler(null, onGlobal);
+            }
+        }
+
+        [Test]
+        public void InsufficientStamina_HUD_AppliesRedBorderAndShakeOnWarning()
+        {
+            var hudType = RuntimeType("TheLastKnight.UI.HUDController");
+            var hudGo = new GameObject("TestHUD");
+            var hud = hudGo.AddComponent(hudType);
+            var staminaBar = new UnityEngine.UIElements.VisualElement();
+            staminaBar.name = "StaminaBar";
+
+            var staminaBarField = hudType.GetField("_staminaBar", BindingFlags.NonPublic | BindingFlags.Instance);
+            staminaBarField.SetValue(hud, staminaBar);
+
+            // Trigger warning
+            hudType.GetMethod("TriggerStaminaWarning").Invoke(hud, null);
+
+            Assert.IsTrue(staminaBar.ClassListContains("stamina-bar-warning"), "StaminaBar must have stamina-bar-warning class when warning triggered");
+            Assert.That(staminaBar.style.borderTopWidth.value, Is.EqualTo(2f), "StaminaBar border width must increase to 2px");
+            Assert.That(staminaBar.style.borderTopColor.value.r, Is.GreaterThan(0.8f), "StaminaBar border color must be red");
+
+            // Reset effect
+            hudType.GetMethod("ResetStaminaBarEffect").Invoke(hud, null);
+
+            Assert.IsFalse(staminaBar.ClassListContains("stamina-bar-warning"), "StaminaBar must remove stamina-bar-warning class upon reset");
+            Assert.That(staminaBar.transform.position, Is.EqualTo(Vector3.zero), "StaminaBar position must return to 0");
+
+            GameObject.DestroyImmediate(hudGo);
         }
     }
 }
