@@ -194,9 +194,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.Projectiles.EnemyProjectile
   _speed: 7
-  _hitOverlappingPlayerOnSpawn: 0
   _damage: 15
   _lifetime: 5
+  _impactVisualHoldTime: 0
+  _fadeOutAfterImpact: 0
+  _maxTravelDistance: 0
+  _hitOverlappingPlayerOnSpawn: 0
+  _impactAudioClip: {fileID: 8300000, guid: cf83db2766e8857409544691a941cd80, type: 3}
+  _impactAudioVolume: 1
+  _continuousDamageInterval: 0
   _destroyOnGround: 1
   _knockback: {x: 3, y: 2}
   _lobToTarget: 1

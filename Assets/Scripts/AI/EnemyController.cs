@@ -170,6 +170,7 @@ private Rigidbody2D _rb;
         private FireWormAudioController _fireWormAudio;
         private FlyingEyeAudioController _flyingEyeAudio;
         private FoxAudioController _foxAudio;
+        private GoblinAudioController _goblinAudio;
         private DragonSfxController _dragonSfx;
         private float _damageUntil;
         private bool _projectileSpawned;
@@ -211,6 +212,7 @@ _rb = GetComponent<Rigidbody2D>();
             _fireWormAudio = GetComponent<FireWormAudioController>();
             _flyingEyeAudio = GetComponent<FlyingEyeAudioController>();
             _foxAudio = GetComponent<FoxAudioController>();
+            _goblinAudio = GetComponent<GoblinAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
@@ -890,6 +892,7 @@ _rb = GetComponent<Rigidbody2D>();
             }
             if (!ranged)
             {
+                _goblinAudio?.PlayBasicAttack();
                 _fantasyMushroomAudio?.PlayBasicAttack();
                 _forestMushroomAudio?.PlayBasicAttack();
                 _flyingEyeAudio?.PlayBite();
@@ -1717,6 +1720,7 @@ _rb = GetComponent<Rigidbody2D>();
             Vector3 spawnPos = GetProjectileSpawnPosition(dirX);
 
             GameObject proj = Instantiate(prefab, spawnPos, Quaternion.identity);
+            _goblinAudio?.PlayBombThrow();
             if (_continuousActions || _waitForAttackProjectileToFinish) _activeSkillProjectile = proj;
             Vector3 scale = proj.transform.localScale;
             scale.x = Mathf.Abs(scale.x) * dirX;

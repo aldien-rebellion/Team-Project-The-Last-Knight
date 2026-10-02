@@ -151,7 +151,13 @@ namespace TheLastKnight.EditorTools
             var serializedProj = new SerializedObject(proj);
             serializedProj.FindProperty("_speed").floatValue = speed;
             serializedProj.FindProperty("_damage").floatValue = damage;
-            if (name == "FantasyMushroom_Projectile" || name == "FireWorm_FireBall" || name == "FlyingEye_Projectile")
+            if (name == "Goblin_Bomb")
+            {
+                serializedProj.FindProperty("_impactAudioClip").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ระเบิด.wav");
+                serializedProj.FindProperty("_impactAudioVolume").floatValue = 1f;
+            }
+            else if (name == "FantasyMushroom_Projectile" || name == "FireWorm_FireBall" || name == "FlyingEye_Projectile")
             {
                 serializedProj.FindProperty("_impactAudioClip").objectReferenceValue =
                     AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงก้อนแตก.WAV");
@@ -469,6 +475,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "FlyingEye") SetupFlyingEyeAudio(root);
             if (cfg.Name == "FlyingEye") SetupFlyingEyeParry(root, sr);
             if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
+            if (cfg.Name == "Goblin") SetupGoblinParry(root, sr);
             if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
             if (cfg.Name == "UndeadExecutioner")
             {
@@ -627,6 +634,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             else if (cfg.Name == "Fox")
             {
                 SetupFoxAudio(root);
+            }
+            else if (cfg.Name == "Goblin")
+            {
+                SetupGoblinAudio(root);
             }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
@@ -874,6 +885,22 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             Debug.Log("[EnemyPrefabBuilder] Connected Fox SFX clips successfully!");
         }
 
+        private static void SetupGoblinAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var goblinAudio = root.AddComponent<GoblinAudioController>();
+            goblinAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ฟันดาบ.wav"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงขว้าง.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Goblin SFX clips successfully!");
+        }
+
         private static void SetupFireWormParry(GameObject root, SpriteRenderer spriteRenderer)
         {
             var receiver = root.GetComponent<ParryReceiver>();
@@ -904,6 +931,40 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             parry.FindProperty("_stunEffectHeadXFraction").floatValue = 0.15f;
             parry.FindProperty("_stunEffectHeadYFraction").floatValue = 0.1f;
             parry.FindProperty("_stunEffectHeadYOffset").floatValue = 0.08f;
+            parry.FindProperty("_stunEffectWorldScale").floatValue = 0.5f;
+            parry.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void SetupGoblinParry(GameObject root, SpriteRenderer spriteRenderer)
+        {
+            var receiver = root.GetComponent<ParryReceiver>();
+            if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
+
+            var parry = new SerializedObject(receiver);
+            parry.FindProperty("_centerSprite").objectReferenceValue = spriteRenderer;
+            parry.FindProperty("_useVisibleSpriteBounds").boolValue = true;
+            parry.FindProperty("_centerLocalOffset").vector2Value = Vector2.zero;
+
+            string[] stunFramePaths =
+            {
+                "Assets/sprites/effect/Stun/Stun_1.png",
+                "Assets/sprites/effect/Stun/Stun_2.png",
+                "Assets/sprites/effect/Stun/Stun_3.png",
+                "Assets/sprites/effect/Stun/Stun_4.png",
+                "Assets/sprites/effect/Stun/Stun_5.png"
+            };
+            var stunFrames = parry.FindProperty("_stunEffectFrames");
+            stunFrames.arraySize = stunFramePaths.Length;
+            for (int i = 0; i < stunFramePaths.Length; i++)
+            {
+                stunFrames.GetArrayElementAtIndex(i).objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<Texture2D>(stunFramePaths[i]);
+            }
+
+            parry.FindProperty("_stunEffectDuration").floatValue = 2f;
+            parry.FindProperty("_stunEffectHeadXFraction").floatValue = 0f;
+            parry.FindProperty("_stunEffectHeadYFraction").floatValue = 0f;
+            parry.FindProperty("_stunEffectHeadYOffset").floatValue = 0.25f;
             parry.FindProperty("_stunEffectWorldScale").floatValue = 0.5f;
             parry.ApplyModifiedPropertiesWithoutUndo();
         }
