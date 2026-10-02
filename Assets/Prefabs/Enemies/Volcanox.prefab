@@ -374,7 +374,7 @@ MonoBehaviour:
   _isFlying: 0
   _avoidLedges: 1
   _initialFacingRight: 1
-  _isBoss: 0
+  _isBoss: 1
   _leashRangeMultiplier: 2
   _groundLayer:
     serializedVersion: 2
@@ -382,7 +382,7 @@ MonoBehaviour:
   _groundCheckDistance: 1.2
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
-  _detectionRange: 8
+  _detectionRange: 20
   _meleeRange: 2.2
   _meleeCooldown: 10
   _disableBasicAttack: 1

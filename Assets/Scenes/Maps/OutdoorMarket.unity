@@ -30382,8 +30382,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.BossArena
   boss: {fileID: 1722072841}
+  bossObjectName: 
   barriers:
   - {fileID: 200225266}
+  defeatId: 
   oneSided: 1
 --- !u!61 &572685768
 BoxCollider2D:
@@ -66017,28 +66019,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!95 &2026100201
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425830087}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1011663e080766f43a5f8d2f125310ee, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage:
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1483487589
 GameObject:
   m_ObjectHideFlags: 0
@@ -100740,11 +100720,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 916139951085218544, guid: 39adc13395418aa42acbaa7a1b3d4ae5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 40
+      value: 39.87
       objectReference: {fileID: 0}
     - target: {fileID: 916139951085218544, guid: 39adc13395418aa42acbaa7a1b3d4ae5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.42
+      value: -1.94
       objectReference: {fileID: 0}
     - target: {fileID: 916139951085218544, guid: 39adc13395418aa42acbaa7a1b3d4ae5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -100966,6 +100946,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2026100201
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425830087}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1011663e080766f43a5f8d2f125310ee, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &2139790261
 PrefabInstance:
   m_ObjectHideFlags: 0

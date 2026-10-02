@@ -17,6 +17,7 @@ namespace TheLastKnight.Environment
         [Tooltip("When true the arena uses only a single forward-facing barrier so the player can retreat.")]
         public bool oneSided;
         private bool _entered;
+        private bool _bossMusicPlaying;
         private BoxCollider2D _area;
 
         private void Awake()
@@ -91,8 +92,9 @@ namespace TheLastKnight.Environment
             _entered = true;
             if (!oneSided) GameManager.Instance.ArenaLocked = true;
             foreach (var barrier in barriers) barrier.SetActive(true);
-            TheLastKnight.UI.BossHealthBarUI.Show(boss);
-            TheLastKnight.Audio.AudioManager.Instance?.StopMusic();
+            bool inBossSight = IsPlayerInBossSight();
+            if (inBossSight) TheLastKnight.UI.BossHealthBarUI.Show(boss);
+            UpdateBossMusic(inBossSight);
         }
         private void Update()
         {
@@ -114,8 +116,46 @@ namespace TheLastKnight.Environment
                 return;
             }
             TryEnterArenaFromPlayerPosition();
-            if (_entered && boss != null && !boss.IsDead && !TheLastKnight.UI.BossHealthBarUI.IsShowing)
-                TheLastKnight.UI.BossHealthBarUI.Show(boss);
+            if (_entered && boss != null && !boss.IsDead)
+            {
+                bool inBossSight = IsPlayerInBossSight();
+                UpdateBossMusic(inBossSight);
+                if (inBossSight)
+                {
+                    if (!TheLastKnight.UI.BossHealthBarUI.IsShowing)
+                        TheLastKnight.UI.BossHealthBarUI.Show(boss);
+                }
+                else
+                {
+                    TheLastKnight.UI.BossHealthBarUI.Hide();
+                }
+            }
+        }
+
+        private bool IsPlayerInBossSight()
+        {
+            var enemyController = boss != null ? boss.GetComponent<TheLastKnight.AI.EnemyController>() : null;
+            var player = GameManager.Instance != null ? GameManager.Instance.Player : null;
+            if (enemyController == null || player == null) return false;
+
+            return Vector2.Distance(boss.transform.position, player.transform.position)
+                <= enemyController.DetectionRange;
+        }
+
+        private void UpdateBossMusic(bool inBossSight)
+        {
+            SetBossMusic(inBossSight);
+        }
+
+        private void SetBossMusic(bool active)
+        {
+            if (_bossMusicPlaying == active) return;
+            _bossMusicPlaying = active;
+            var audioManager = TheLastKnight.Audio.AudioManager.Instance;
+            if (active)
+                audioManager?.PlayMusic("Boss");
+            else
+                audioManager?.PlaySceneMusic(SceneManager.GetActiveScene().name);
         }
 
         // This is the final fallback: a registered area boss always reveals its HUD
@@ -123,7 +163,8 @@ namespace TheLastKnight.Environment
         private void ShowBossHealth(DamageData damage)
         {
             if (HasBeenDefeated()) return;
-            if (boss != null && !boss.IsDead && !TheLastKnight.UI.BossHealthBarUI.IsShowing)
+            if (boss != null && !boss.IsDead && IsPlayerInBossSight()
+                && !TheLastKnight.UI.BossHealthBarUI.IsShowing)
                 TheLastKnight.UI.BossHealthBarUI.Show(boss);
         }
 
