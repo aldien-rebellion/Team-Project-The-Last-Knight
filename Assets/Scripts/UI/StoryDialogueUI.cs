@@ -90,6 +90,9 @@ namespace TheLastKnight.UI
             backgroundRect.offsetMin = backgroundRect.offsetMax = Vector2.zero;
             _storyBackground = backgroundObject.GetComponent<Image>();
             _storyBackground.raycastTarget = false;
+            // A dialogue without a story-scene image should leave gameplay visible.
+            // A null-sprite Image otherwise renders as a solid white full-screen panel.
+            _storyBackground.enabled = false;
 
             _menuPanel = CreatePanel(backdrop.transform, "Story Menu", new Color(0.02f, 0.025f, 0.035f, 0.55f), new Vector2(0.68f, 0.925f), new Vector2(0.985f, 0.985f), true);
             CreateTopMenuButton(_menuPanel.transform, "SKIP", 0.04f, 0.32f, Finish);
