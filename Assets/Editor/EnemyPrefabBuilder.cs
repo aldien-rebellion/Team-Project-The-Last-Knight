@@ -494,7 +494,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "FlyingEye") SetupFlyingEyeParry(root, sr);
             if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
             if (cfg.Name == "Jinn") SetupJinnParry(root, sr);
-            if (cfg.Name == "Goblin" || cfg.Name == "Minotaur_1")
+            if (cfg.Name == "Goblin" || cfg.Name == "Minotaur_1" || cfg.Name == "Minotaur_3")
                 SetupStandardParryStunEffect(root, sr);
             if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
             if (cfg.Name == "UndeadExecutioner")
@@ -673,9 +673,12 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 SetupStandardParryStunEffect(root, sr, 3f);
                 SetupMechaStoneGolemAudio(root);
             }
-            else if (cfg.Name == "Minotaur_1")
+            else if (cfg.Name == "Minotaur_1" || cfg.Name == "Minotaur_3")
             {
-                SetupMinotaurAudio(root);
+                string attackClipPath = cfg.Name == "Minotaur_3"
+                    ? "Assets/Sound/เสียงแทง.WAV"
+                    : "Assets/Sound/ดาบใหญ่ผ่าอากาศ.WAV";
+                SetupMinotaurAudio(root, attackClipPath);
             }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
@@ -1004,7 +1007,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             Debug.Log("[EnemyPrefabBuilder] Connected Lizard SFX clips successfully!");
         }
 
-        private static void SetupMinotaurAudio(GameObject root)
+        private static void SetupMinotaurAudio(GameObject root, string basicAttackClipPath)
         {
             var audioSource = root.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
@@ -1014,9 +1017,9 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
 
             var minotaurAudio = root.AddComponent<MinotaurAudioController>();
             minotaurAudio.SetClips(
-                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ดาบใหญ่ผ่าอากาศ.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>(basicAttackClipPath),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
-            Debug.Log("[EnemyPrefabBuilder] Connected Minotaur_1 SFX clips successfully!");
+            Debug.Log("[EnemyPrefabBuilder] Connected Minotaur SFX clips successfully!");
         }
 
         private static void SetupMechaStoneGolemAudio(GameObject root)
