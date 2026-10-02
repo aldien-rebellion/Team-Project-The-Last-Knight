@@ -532,13 +532,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
-  _level: 1
-  _useLevelScaling: 0
-  _maxHealth: 350
-  _defense: 6
-  _attackPower: 32
-  _goldReward: 8
-  _expReward: 15
+  _level: 40
+  _useLevelScaling: 1
+  _maxHealth: 3000
+  _defense: 40
+  _attackPower: 400
+  _goldReward: 1189
+  _expReward: 852
   _currentStatus: 0
 --- !u!114 &8789570380798454756
 MonoBehaviour:
@@ -554,7 +554,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
   _patrolSpeed: 2.2
   _chaseSpeed: 4.5
-  _patrolDistance: 3
+  _patrolDistance: 4
   _isFlying: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
@@ -591,7 +591,7 @@ MonoBehaviour:
   _basicAttackAnimState: Attack1
   _basicAttackAnimStates: []
   _basicAttackDamageDelay: 0
-  _basicAttackActionDuration: 0
+  _basicAttackActionDuration: 1
   _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 0
@@ -599,13 +599,13 @@ MonoBehaviour:
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 0
   _basicGuardEveryNAttacks: 0
-  _basicGuardSkillName:
+  _basicGuardSkillName: 
   _skills:
   - skillName: GroundSlam
     animationName: Attack2
-    preparationAnimationName:
+    preparationAnimationName: 
     preparationDurationOverride: 0
-    reappearanceAnimationName:
+    reappearanceAnimationName: 
     reappearanceDurationOverride: 0
     actionDurationOverride: 0
     skipAnticipation: 0
@@ -634,9 +634,9 @@ MonoBehaviour:
     groundSpellPrefab: {fileID: 0}
   - skillName: DashThrust
     animationName: Dash
-    preparationAnimationName:
+    preparationAnimationName: 
     preparationDurationOverride: 0
-    reappearanceAnimationName:
+    reappearanceAnimationName: 
     reappearanceDurationOverride: 0
     actionDurationOverride: 0
     skipAnticipation: 0
@@ -678,7 +678,7 @@ MonoBehaviour:
   _respawnAtDeathPosition: 0
   _bringToFrontWhileAttacking: 0
   _attackSortingOrder: 1
-  _attackSortingLayerName:
+  _attackSortingLayerName: 
 --- !u!82 &8911677789252977848
 AudioSource:
   m_ObjectHideFlags: 0
@@ -786,7 +786,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 575704ea389fb7c4490d3f20a9eab73a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.MoonstoneKeeperAudioController
   _swordSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
   _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}

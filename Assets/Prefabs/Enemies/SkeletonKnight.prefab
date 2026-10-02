@@ -272,13 +272,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
-  _level: 1
-  _useLevelScaling: 0
-  _maxHealth: 220
-  _defense: 5
-  _attackPower: 28
-  _goldReward: 8
-  _expReward: 15
+  _level: 32
+  _useLevelScaling: 1
+  _maxHealth: 2400
+  _defense: 32
+  _attackPower: 320
+  _goldReward: 955
+  _expReward: 905
   _currentStatus: 0
 --- !u!114 &4631645671950882567
 MonoBehaviour:
@@ -292,9 +292,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a223c0ce5d98f3a4c88422488ea4ea4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
-  _patrolSpeed: 2
+  _patrolSpeed: 3
   _chaseSpeed: 4.2
-  _patrolDistance: 3
+  _patrolDistance: 5
   _isFlying: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
@@ -317,6 +317,8 @@ MonoBehaviour:
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 1
   _playAttackStatesDirectly: 1
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
   _disableBasicAttack: 0
   _hasRangedAttack: 0
@@ -324,12 +326,15 @@ MonoBehaviour:
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: FwdSwing
   _basicAttackAnimStates:
   - SideSwing
   - FwdSwing
   - DownSwing
+  _basicAttackDamageDelay: 0
+  _basicAttackActionDuration: 0
   _basicAttackDamageStartDelays:
   - 0.25
   - 0.125
@@ -339,9 +344,22 @@ MonoBehaviour:
   _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 4
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills:
   - skillName: FullCombo
     animationName: FullCombo
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 2.2
     cooldown: 10
@@ -360,12 +378,24 @@ MonoBehaviour:
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
     requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 0
+  _waitForAttackProjectileToFinish: 0
+  _interruptAttackOnDamage: 0
   _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
+  _attackSortingLayerName: 
 --- !u!1 &6384791484603017950
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,6 +576,7 @@ MonoBehaviour:
   _followSprite: {fileID: 4063701607689567845}
   _useVisibleSpriteBounds: 1
   _headGap: 0.08
+  _headHorizontalOffset: 0
   _followSpriteBounds: 0
   _headOffset: 0.12
 --- !u!1 &7017123548103669277
