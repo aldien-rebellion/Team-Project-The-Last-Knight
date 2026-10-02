@@ -620,6 +620,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             {
                 SetupFireWormAudio(root);
             }
+            else if (cfg.Name == "ForestMushroom")
+            {
+                SetupForestMushroomAudio(root);
+            }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
             Object.DestroyImmediate(root);
@@ -765,6 +769,21 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงยิง.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Fantasy Mushroom SFX clips successfully!");
+        }
+
+        private static void SetupForestMushroomAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var mushroomAudio = root.AddComponent<ForestMushroomAudioController>();
+            mushroomAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงก้อนแตก.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Forest Mushroom SFX clips successfully!");
         }
 
         private static void SetupFlyingEyeAudio(GameObject root)

@@ -166,6 +166,7 @@ private Rigidbody2D _rb;
         private ArchDemonAudioController _archDemonAudio;
         private DemonAudioController _demonAudio;
         private FantasyMushroomAudioController _fantasyMushroomAudio;
+        private ForestMushroomAudioController _forestMushroomAudio;
         private FireWormAudioController _fireWormAudio;
         private FlyingEyeAudioController _flyingEyeAudio;
         private DragonSfxController _dragonSfx;
@@ -205,6 +206,7 @@ _rb = GetComponent<Rigidbody2D>();
             _archDemonAudio = GetComponent<ArchDemonAudioController>();
             _demonAudio = GetComponent<DemonAudioController>();
             _fantasyMushroomAudio = GetComponent<FantasyMushroomAudioController>();
+            _forestMushroomAudio = GetComponent<ForestMushroomAudioController>();
             _fireWormAudio = GetComponent<FireWormAudioController>();
             _flyingEyeAudio = GetComponent<FlyingEyeAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
@@ -886,6 +888,7 @@ _rb = GetComponent<Rigidbody2D>();
             if (!ranged)
             {
                 _fantasyMushroomAudio?.PlayBasicAttack();
+                _forestMushroomAudio?.PlayBasicAttack();
                 _flyingEyeAudio?.PlayBite();
             }
             // A new basic swing is a new hit window. Reset each hitbox's per-target
@@ -1161,6 +1164,9 @@ _rb = GetComponent<Rigidbody2D>();
                 _isActionLocked = false;
                 yield break;
             }
+
+            if (skill.skillName == "AttackWithStun" || skill.animationName == "AttackWithStun")
+                _forestMushroomAudio?.PlayAttackWithStun();
 
             // Every attack window gets a fresh per-attack hit gate. Otherwise
             // the hitbox's 0.8s victim cooldown can suppress the next skill.
