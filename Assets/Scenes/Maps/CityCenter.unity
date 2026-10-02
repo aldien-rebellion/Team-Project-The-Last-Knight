@@ -81321,7 +81321,7 @@ MonoBehaviour:
   _skillKnockbackForce: {x: 10, y: 3}
   _skillPushDistance: 2
   _buffDuration: 0.6
-  _buffCooldown: 1
+  _buffCooldown: 30
   _excaliburDuration: 3.8
   _excaliburCooldown: 1
   _excaliburDamageMultiplier: 5

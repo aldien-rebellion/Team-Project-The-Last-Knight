@@ -31,6 +31,11 @@
     justify-content: center;
 }
 
+.stamina-bar-warning {
+    border-width: 2px;
+    border-color: rgb(255, 45, 45);
+}
+
 .bar-fill {
     position: absolute;
     top: 0;

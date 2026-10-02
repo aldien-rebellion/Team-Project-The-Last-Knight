@@ -213,8 +213,8 @@ MonoBehaviour:
   _skillAttackOffset: {x: 0, y: 0.5}
   _skillKnockbackForce: {x: 6, y: 2.5}
   _skillPushDistance: 1.2
-  _buffDuration: 5
-  _buffCooldown: 10
+  _buffDuration: 0.6
+  _buffCooldown: 30
   _excaliburDuration: 3.8
   _excaliburCooldown: 15
   _excaliburDamageMultiplier: 5

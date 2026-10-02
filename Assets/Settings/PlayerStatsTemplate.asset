@@ -17,8 +17,8 @@ MonoBehaviour:
   baseDEF: 0
   defPerLevel: 1
   hpPerVIT: 10
-  baseStamina: 100
-  staminaPerVIT: 1
+  baseStamina: 150
+  staminaPerVIT: 1.5
   dexLimitTarget: 250
   targetCritAtCap: 99
   critChancePerDEX: 0.5
@@ -31,5 +31,6 @@ MonoBehaviour:
   baseVIT: 10
   baseDEX: 10
   baseAGI: 10
+  statPointsPerLevel: 10
   baseExpNeeded: 100
   expGrowthMultiplier: 1.25

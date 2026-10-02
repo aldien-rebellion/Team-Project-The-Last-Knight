@@ -36,7 +36,7 @@ namespace TheLastKnight.Tests
                 Invoke(controller, "Awake");
                 Invoke(stats, "Awake");
                 float before = Read(stats, "CurrentHP");
-                stats.GetType().GetMethod("TakeDamage").Invoke(stats, new object[] { 10f });
+                stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(stats, new object[] { 10f });
                 Assert.That(before - Read(stats, "CurrentHP"), Is.EqualTo(incoming).Within(0.001f));
 
                 enemy = new GameObject("Difficulty target", typeof(BoxCollider2D));
@@ -83,7 +83,8 @@ namespace TheLastKnight.Tests
                 Invoke(stats, "Awake");
 
                 float maxHP = Read(stats, "MaxHP");
-                stats.GetType().GetMethod("TakeDamage").Invoke(stats, new object[] { 20f });
+                stats.GetType().GetMethod("SetRegenAura").Invoke(stats, new object[] { stats, true });
+                stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(stats, new object[] { 50f });
                 float hpAfterDamage = Read(stats, "CurrentHP");
 
                 var stateProp = controller.GetType().GetProperty("CurrentState");
@@ -102,9 +103,9 @@ namespace TheLastKnight.Tests
                 float expectedGain = maxHP * expectedRate;
                 Assert.That(Read(stats, "CurrentHP"), Is.EqualTo(hpAfterDamage + expectedGain).Within(0.001f));
 
-                // Large deltaTime clamps to MaxHP
+                // Large deltaTime clamps to 70% MaxHP in Regen Aura
                 stats.GetType().GetMethod("RegenerateHP").Invoke(stats, new object[] { 1000f });
-                Assert.That(Read(stats, "CurrentHP"), Is.EqualTo(maxHP).Within(0.001f));
+                Assert.That(Read(stats, "CurrentHP"), Is.EqualTo(maxHP * 0.70f).Within(0.001f));
             }
             finally
             {
@@ -129,7 +130,8 @@ namespace TheLastKnight.Tests
                 Invoke(controller, "Awake");
                 Invoke(stats, "Awake");
 
-                stats.GetType().GetMethod("TakeDamage").Invoke(stats, new object[] { 20f });
+                stats.GetType().GetMethod("SetRegenAura").Invoke(stats, new object[] { stats, true });
+                stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(stats, new object[] { 50f });
                 stats.GetType().GetMethod("SetLastDamageTimeForTesting").Invoke(stats, new object[] { Time.time - 5.1f });
                 float hpBefore = Read(stats, "CurrentHP");
 

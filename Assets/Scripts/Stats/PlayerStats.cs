@@ -85,11 +85,14 @@ namespace TheLastKnight.Stats
         private float _lastDamageTime = -100f;
         public const float HPRegenDelay = 5f;
         public const float BaseHPRegenRate = 0.02f; // 2% of MaxHP per second
+        public const float MaxAuraHPPercent = 0.70f; // Regen Aura (Medusa) caps HP regen at 70% of MaxHP
         public float LastDamageTime => _lastDamageTime;
         public void SetLastDamageTimeForTesting(float time) => _lastDamageTime = time;
 
         private float _lastStaminaSpendTime = -100f;
         public const float StaminaRegenDelay = 1.0f; // 1 second delay after spending stamina before regen starts
+        public const float BaseStaminaRegenPercent = 0.10f; // 10% of MaxStamina per second
+        public const float AuraStaminaRegenPercent = 0.20f; // 20% of MaxStamina per second
         public float LastStaminaSpendTime => _lastStaminaSpendTime;
         public void SetLastStaminaSpendTimeForTesting(float time) => _lastStaminaSpendTime = time;
 
@@ -97,10 +100,33 @@ namespace TheLastKnight.Stats
         {
             if (active) _regenAuras.Add(source); else _regenAuras.Remove(source);
         }
+        public bool HasRegenAura => _regenAuras.Count > 0;
+
+        public static event System.Action OnInsufficientStaminaGlobal;
+        public event System.Action OnInsufficientStamina;
+        private float _lastInsufficientStaminaTime = -100f;
+        public const float InsufficientStaminaCooldown = 0.25f;
+
+        public void NotifyInsufficientStamina()
+        {
+            if (Time.time - _lastInsufficientStaminaTime < InsufficientStaminaCooldown) return;
+            _lastInsufficientStaminaTime = Time.time;
+            OnInsufficientStamina?.Invoke();
+            OnInsufficientStaminaGlobal?.Invoke();
+        }
+
+        public void ResetInsufficientStaminaCooldownForTesting() => _lastInsufficientStaminaTime = -100f;
 
         public bool TrySpendStamina(float amount)
         {
-            if (amount < 0 || _currentStamina < amount || IsDead) return false;
+            if (amount < 0 || _currentStamina < amount || IsDead)
+            {
+                if (amount > 0 && _currentStamina < amount && !IsDead)
+                {
+                    NotifyInsufficientStamina();
+                }
+                return false;
+            }
             _currentStamina -= amount;
             if (amount > 0)
             {
@@ -126,7 +152,8 @@ namespace TheLastKnight.Stats
             if (_playerController.CurrentState != PlayerState.Idle && _playerController.CurrentState != PlayerState.Walking) return;
             if (Time.time - _lastStaminaSpendTime < StaminaRegenDelay || _currentStamina >= MaxStamina) return;
 
-            float regenRate = (_regenAuras.Count > 0 ? 40f : 20f) * TheLastKnight.Core.GameDifficultyManager.Regeneration;
+            float regenPercent = _regenAuras.Count > 0 ? AuraStaminaRegenPercent : BaseStaminaRegenPercent;
+            float regenRate = MaxStamina * regenPercent * TheLastKnight.Core.GameDifficultyManager.Regeneration;
             _currentStamina = Mathf.Min(MaxStamina, _currentStamina + regenRate * deltaTime);
         }
 
@@ -134,10 +161,12 @@ namespace TheLastKnight.Stats
         {
             if (IsDead || _playerController == null) return;
             if (_playerController.CurrentState != PlayerState.Idle && _playerController.CurrentState != PlayerState.Walking) return;
-            if (Time.time - _lastDamageTime < HPRegenDelay || _currentHP >= MaxHP) return;
+            if (_regenAuras.Count == 0) return;
+            float maxRegenHP = MaxHP * MaxAuraHPPercent;
+            if (Time.time - _lastDamageTime < HPRegenDelay || _currentHP >= maxRegenHP) return;
 
             float regenRate = BaseHPRegenRate * TheLastKnight.Core.GameDifficultyManager.Regeneration;
-            _currentHP = Mathf.Min(MaxHP, _currentHP + MaxHP * regenRate * deltaTime);
+            _currentHP = Mathf.Min(maxRegenHP, _currentHP + MaxHP * regenRate * deltaTime);
         }
 
         public void Heal(float amount) => _currentHP = Mathf.Min(MaxHP, _currentHP + Mathf.Max(0, amount));
@@ -169,12 +198,29 @@ namespace TheLastKnight.Stats
         [CreateProperty]
         public float AttackPower
         {
-            get => _baseAttackPower * (Time.time < _mightExpiresAt ? 1.25f : 1f);
+            get
+            {
+                float bonus = 0f;
+                if (Time.time < _mightExpiresAt) bonus += 0.25f;
+                if (Time.time < _skill2BuffExpiresAt) bonus += 0.22f;
+                return _baseAttackPower * (1f + bonus);
+            }
             private set => _baseAttackPower = value;
         }
+        [CreateProperty]
+        public float BaseAttackPower => _baseAttackPower;
         private float _baseAttackPower;
         private float _mightExpiresAt;
         public void ApplyMightBuff() => _mightExpiresAt = Time.time + 30f;
+
+        private float _skill2BuffExpiresAt;
+        public const float Skill2BuffMultiplier = 0.22f; // +22% ATK
+        public const float Skill2BuffDuration = 15f; // 15 seconds
+        public void ApplySkill2Buff() => _skill2BuffExpiresAt = Time.time + Skill2BuffDuration;
+        public void RemoveSkill2Buff() => _skill2BuffExpiresAt = 0f;
+        public bool HasSkill2Buff => Time.time < _skill2BuffExpiresAt;
+        public float Skill2BuffRemaining => Mathf.Max(0f, _skill2BuffExpiresAt - Time.time);
+        public void SetSkill2BuffExpiresAtForTesting(float time) => _skill2BuffExpiresAt = time;
         [CreateProperty]
         public float CriticalChance { get; private set; }
         [CreateProperty]
@@ -316,11 +362,16 @@ namespace TheLastKnight.Stats
             }
         }
 
+        public const int DefaultStatPointsPerLevel = 10;
+
         private void LevelUp()
         {
             _currentEXP -= EXPNeeded;
             _currentLevel++;
-            _availableStatPoints += 5; // Grant 5 stat upgrade points per level
+            int pointsGained = (_statsTemplate != null && _statsTemplate.statPointsPerLevel > 0)
+                ? _statsTemplate.statPointsPerLevel
+                : DefaultStatPointsPerLevel;
+            _availableStatPoints += pointsGained; // Grant 10 stat upgrade points per level
 
             RecalculateStats();
             

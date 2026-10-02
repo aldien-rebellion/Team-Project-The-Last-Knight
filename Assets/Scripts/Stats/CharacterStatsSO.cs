@@ -74,7 +74,9 @@ namespace TheLastKnight.Stats
             return Mathf.Clamp(crit, 0f, 100f);
         }
 
-        [Header("Level-up EXP Formula")]
+        [Header("Level-up Formula")]
+        [Tooltip("Number of stat upgrade points granted per level-up (default: 10).")]
+        public int statPointsPerLevel = 10;
         public int baseExpNeeded = 100;
         public float expGrowthMultiplier = 1.25f;
 
