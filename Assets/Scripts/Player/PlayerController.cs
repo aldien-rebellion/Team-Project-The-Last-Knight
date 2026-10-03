@@ -174,6 +174,21 @@ namespace TheLastKnight.Player
         public float ExcaliburDamageDelay { get => _excaliburDamageDelay; set => _excaliburDamageDelay = value; }
         public float ExcaliburStunDuration { get => _excaliburStunDuration; set => _excaliburStunDuration = value; }
 
+        public float SkillCooldownTimer { get => _skillCooldownTimer; set => _skillCooldownTimer = value; }
+        public float BuffCooldownTimer { get => _buffCooldownTimer; set => _buffCooldownTimer = value; }
+        public float ExcaliburCooldownTimer { get => _excaliburCooldownTimer; set => _excaliburCooldownTimer = value; }
+
+        public float SkillDuration => _skillDuration;
+        public float BuffDuration => _buffDuration;
+        public float ExcaliburDuration => _excaliburDuration;
+        public float SkillMaxCooldown => _skillCooldown;
+        public float BuffMaxCooldown => _buffCooldown;
+        public float ExcaliburMaxCooldown => _excaliburCooldown;
+
+        public float SkillCooldownNormalized => SkillMaxCooldown > 0.001f ? Mathf.Clamp01(_skillCooldownTimer / SkillMaxCooldown) : 0f;
+        public float BuffCooldownNormalized => BuffMaxCooldown > 0.001f ? Mathf.Clamp01(_buffCooldownTimer / BuffMaxCooldown) : 0f;
+        public float ExcaliburCooldownNormalized => ExcaliburMaxCooldown > 0.001f ? Mathf.Clamp01(_excaliburCooldownTimer / ExcaliburMaxCooldown) : 0f;
+
         // State Machine
         public PlayerState CurrentState { get; private set; } = PlayerState.Idle;
 
@@ -719,7 +734,7 @@ namespace TheLastKnight.Player
             CurrentState = PlayerState.UsingSkill;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("skill");
             _skillTimer = _skillDuration;
-            _skillCooldownTimer = _skillDuration + _skillCooldown;
+            _skillCooldownTimer = _skillCooldown;
             _actionDurationTimer = 0f;
             _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
 
@@ -986,7 +1001,7 @@ namespace TheLastKnight.Player
             CurrentState = PlayerState.Excalibur;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("excalibur");
             _excaliburTimer = _excaliburDuration;
-            _excaliburCooldownTimer = _excaliburDuration + _excaliburCooldown;
+            _excaliburCooldownTimer = _excaliburCooldown;
             _actionDurationTimer = 0f;
             _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
 

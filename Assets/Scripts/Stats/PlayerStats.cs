@@ -211,7 +211,13 @@ namespace TheLastKnight.Stats
         public float BaseAttackPower => _baseAttackPower;
         private float _baseAttackPower;
         private float _mightExpiresAt;
-        public void ApplyMightBuff() => _mightExpiresAt = Time.time + 30f;
+        public const float MightBuffMultiplier = 0.25f; // +25% ATK
+        public const float MightBuffDuration = 30f; // 30 seconds
+        public void ApplyMightBuff() => _mightExpiresAt = Time.time + MightBuffDuration;
+        public void RemoveMightBuff() => _mightExpiresAt = 0f;
+        public bool HasMightBuff => Time.time < _mightExpiresAt;
+        public float MightBuffRemaining => Mathf.Max(0f, _mightExpiresAt - Time.time);
+        public void SetMightBuffExpiresAtForTesting(float time) => _mightExpiresAt = time;
 
         private float _skill2BuffExpiresAt;
         public const float Skill2BuffMultiplier = 0.22f; // +22% ATK
@@ -221,6 +227,104 @@ namespace TheLastKnight.Stats
         public bool HasSkill2Buff => Time.time < _skill2BuffExpiresAt;
         public float Skill2BuffRemaining => Mathf.Max(0f, _skill2BuffExpiresAt - Time.time);
         public void SetSkill2BuffExpiresAtForTesting(float time) => _skill2BuffExpiresAt = time;
+        public void SetRegenAuraForTesting(bool active) => SetRegenAura(this, active);
+
+        public void GetActiveBuffs(System.Collections.Generic.List<ActiveBuffInfo> list)
+        {
+            if (list == null) return;
+            list.Clear();
+
+            // 1. Skill 2: Iron Will (Berserk Buff)
+            if (HasSkill2Buff)
+            {
+                float rem = Skill2BuffRemaining;
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "buff_iron_will",
+                    name = "Iron Will",
+                    category = "Combat Skill Buff",
+                    description = "Boosts Attack Power by +22% with unwavering warrior spirit.",
+                    remainingSeconds = rem,
+                    totalDuration = Skill2BuffDuration,
+                    formattedTime = FormatMinecraftTime(rem),
+                    icon = Resources.Load<Sprite>("BuffIcons/buff_iron_will") ?? Resources.Load<Sprite>("CharacterStatus/Skill_BerserkBuff"),
+                    isDebuff = false,
+                    themeColor = new Color(1f, 0.48f, 0.15f) // Fiery Orange
+                });
+            }
+
+            // 2. Potion of Might
+            if (HasMightBuff)
+            {
+                float rem = MightBuffRemaining;
+                Sprite icon = Resources.Load<Sprite>("BuffIcons/buff_might");
+                if (icon == null)
+                {
+                    var def = Resources.Load<TheLastKnight.Inventory.ItemDefinition>("Items/Definitions/Consumables/potion_might");
+                    if (def != null && def.icon != null) icon = def.icon;
+                }
+                if (icon == null) icon = Resources.Load<Sprite>("CharacterStatus/Item_BluePotion");
+
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "buff_might",
+                    name = "Potion of Might",
+                    category = "Elixir Enhancement",
+                    description = "Infuses weapons with brute force, boosting Attack Power by +25%.",
+                    remainingSeconds = rem,
+                    totalDuration = MightBuffDuration,
+                    formattedTime = FormatMinecraftTime(rem),
+                    icon = icon,
+                    isDebuff = false,
+                    themeColor = new Color(0.72f, 0.35f, 0.95f) // Violet / Purple
+                });
+            }
+
+            // 3. Medusa Sacred Fountain Aura
+            if (HasRegenAura)
+            {
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "aura_medusa",
+                    name = "Fountain Grace",
+                    category = "Sacred Aura",
+                    description = "Sacred blessing restoring Stamina (+20%/s) and HP up to 70% Max HP.",
+                    remainingSeconds = -1f,
+                    totalDuration = -1f,
+                    formattedTime = "**:**",
+                    icon = Resources.Load<Sprite>("BuffIcons/buff_medusa") ?? Resources.Load<Sprite>("CharacterStatus/Item_RuneTrident"),
+                    isDebuff = false,
+                    themeColor = new Color(0.25f, 0.85f, 1f) // Holy Cyan
+                });
+            }
+
+            // 4. Stunned Debuff (when player is in Hurt/Stunned state)
+            if (_playerController != null && _playerController.CurrentState == Player.PlayerState.Hurt)
+            {
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "debuff_stun",
+                    name = "Stunned",
+                    category = "Status Debuff",
+                    description = "Stunned and incapacitated. Cannot move, attack, or cast skills.",
+                    remainingSeconds = 1f,
+                    totalDuration = 1f,
+                    formattedTime = "0:01",
+                    icon = Resources.Load<Sprite>("BuffIcons/debuff_stun") ?? Resources.Load<Sprite>("CharacterStatus/Slot_Frame"),
+                    isDebuff = true,
+                    themeColor = new Color(1f, 0.25f, 0.25f) // Red
+                });
+            }
+        }
+
+        public static string FormatMinecraftTime(float seconds)
+        {
+            if (seconds < 0f) return "**:**";
+            int totalSec = Mathf.Max(0, Mathf.CeilToInt(seconds));
+            int m = totalSec / 60;
+            int s = totalSec % 60;
+            return $"{m}:{s:D2}";
+        }
         [CreateProperty]
         public float CriticalChance { get; private set; }
         [CreateProperty]

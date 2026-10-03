@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 1724093317913346435}
   - component: {fileID: 7102006163998495775}
   - component: {fileID: 6242047841382246859}
+  - component: {fileID: 1186875577869231852}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -73,17 +74,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 1.1999999}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 2.56, y: 2.56}
-    newSize: {x: 2.56, y: 2.56}
+    pivot: {x: 0.20996094, y: 0}
+    oldSize: {x: 5.614686, y: 5.614686}
+    newSize: {x: 5.614686, y: 5.614686}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.85, y: 2.28}
   m_EdgeRadius: 0
 --- !u!50 &50082053440409835
 Rigidbody2D:
@@ -108,7 +109,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -179,12 +180,12 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 9a651654adb8a61418a9ae18f1e21f6f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1ab59fc5bf423274dab3f48b9a884858, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.56, y: 2.56}
+  m_Size: {x: 5.614686, y: 5.614686}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -204,8 +205,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Player.PlayerController
   _inputHandler: {fileID: 0}
   _animator: {fileID: 0}
-  _attackDuration: 0.25
-  _attackCooldown: 0.35
+  _attackDuration: 0.4
+  _attackCooldown: 0.5
   _skillDuration: 0.4
   _skillCooldown: 5
   _skillDamageMultiplier: 2
@@ -218,17 +219,17 @@ MonoBehaviour:
   _buffCooldown: 30
   _excaliburDuration: 3.8
   _excaliburCooldown: 50
-  _excaliburDamageMultiplier: 7.92
+  _excaliburDamageMultiplier: 8
   _excaliburHitSize: {x: 24, y: 4.2}
   _excaliburHitOffset: {x: 12, y: 1.47}
   _excaliburDamageDelay: 3.3
   _excaliburStunDuration: 2
-  _excaliburVFXController: {fileID: 0}
+  _excaliburVFXController: {fileID: 1186875577869231852}
   _drinkDuration: 2.5
   _drinkCooldown: 1
   _hurtFrame1Duration: 0.25
   _hurtFrame2Duration: 0.17
-  _baseMoveSpeed: 6
+  _baseMoveSpeed: 8
   _baseSprintSpeed: 13
   _acceleration: 50
   _deceleration: 50
@@ -307,3 +308,48 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1186875577869231852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3696692319623942783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4c8492f8ce23ae49b5736a0b19f8b86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Player.ExcaliburVFXController
+  spritePhase1: {fileID: 21300000, guid: 1ab59fc5bf423274dab3f48b9a884858, type: 3}
+  spritePhase2: {fileID: 8553454827641894527, guid: 307ba343bdacf434186ea5257eef1a74, type: 3}
+  spritePhase3: {fileID: 1472841751132624081, guid: a7302f6cb9b975a41a32947dba49e2eb, type: 3}
+  anticipationDuration: 0.5
+  chargeDuration: 2.8
+  swordBurstDuration: 0.35
+  hitStopDuration: 0.12
+  hitStopTimeScale: 0.02
+  beamDuration: 0.5
+  auraPrefabPhase1: {fileID: 2834995905723977876, guid: 8ccef2abe179d0846a6693a033bec2b5, type: 3}
+  chargeVortexPrefab: {fileID: 8195692410381398314, guid: 82d79ae3bc3b99c45af8cb56de4cbbd8, type: 3}
+  swordBurstPrefab: {fileID: 2406659030162261933, guid: abbc987feeb5b9747b592ff6af037ffd, type: 3}
+  chargeVortexParticles: {fileID: 6046794643531665478, guid: 82d79ae3bc3b99c45af8cb56de4cbbd8, type: 3}
+  beamPrefabPhase3: {fileID: 7475027108594450332, guid: 973dfc1fccaeccd46a78e1c015c19531, type: 3}
+  swordVFXAnchor: {fileID: 2601070539333965873}
+  groundCrackPrefab: {fileID: 1707884263846278841, guid: f3f203407d399de4c8e612f7bac9201d, type: 3}
+  lightningArcsPrefab: {fileID: 9009809067752828400, guid: e5ca702d92f8b1e4d9b3a3087f217284, type: 3}
+  enableCapeTurbulence: 0
+  turbulenceIntensity: 0
+  debrisParticlesPrefab: {fileID: 3467298999829705621, guid: a401c7d956d51a44faa7cea5681b3001, type: 3}
+  shockwaveRingPrefab: {fileID: 4124616164992726272, guid: e94ea1e7f8c61644c8b908479abafcf2, type: 3}
+  shockwaveRingCount: 3
+  shockwaveRingDelay: 0.05
+  groundScorchPrefab: {fileID: 8191783212911515485, guid: a854dadc51acb1f4d9f2a9bb16c0da82, type: 3}
+  residualSmokePrefab: {fileID: 5477275208970478861, guid: e99e9dd55cece1c48a701524519f6459, type: 3}
+  scorchFadeDuration: 3
+  phase2BladeOffset: {x: 0, y: 3.8, z: 0}
+  phase3BeamOffset: {x: 1.5, y: 1.47, z: 0}
+  darkScreenOverlay: {fileID: 0}
+  darkOverlayAlpha: 0.85
+  whiteScreenFlashOverlay: {fileID: 0}
+  chargeImpulseSource: {fileID: 0}
+  beamImpulseSource: {fileID: 0}
