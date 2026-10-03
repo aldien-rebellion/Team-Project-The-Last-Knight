@@ -16,6 +16,7 @@ namespace TheLastKnight.Combat
         private LineRenderer _target;
         [SerializeField] private SpriteRenderer _centerSprite;
         [SerializeField] private bool _useVisibleSpriteBounds;
+        [SerializeField] private bool _useEnemyFacingForStunEffect;
         [SerializeField] private Vector2 _centerLocalOffset;
         [SerializeField] private Texture2D[] _stunEffectFrames;
         [SerializeField, Min(0.1f)] private float _stunEffectDuration = 2f;
@@ -25,12 +26,18 @@ namespace TheLastKnight.Combat
         [SerializeField, Min(0.01f)] private float _stunEffectWorldScale = 0.5f;
         private Sprite[] _stunSprites;
         private SpriteRenderer _stunRenderer;
+        private EnemyController _enemyController;
         private float _stunEffectStart;
         private float _stunEffectUntil;
         public bool IsStaggered => Time.time < _staggerUntil;
         public bool IsWindingUp => _windingUp;
         public float Progress => Mathf.Clamp01((Time.time - _start) / WindupDuration);
         public SpriteRenderer CenterSprite => _centerSprite;
+
+        private void Awake()
+        {
+            _enemyController = GetComponent<EnemyController>();
+        }
 
         public Vector3 GetVisualCenter()
         {
@@ -141,7 +148,9 @@ namespace TheLastKnight.Combat
             Bounds bodyBounds = _centerSprite != null
                 ? (_useVisibleSpriteBounds ? SpriteVisualBounds.GetWorldBounds(_centerSprite) : _centerSprite.bounds)
                 : new Bounds(transform.position, Vector3.one);
-            bool facingLeft = (transform.lossyScale.x < 0f) != (_centerSprite != null && _centerSprite.flipX);
+            bool facingLeft = _useEnemyFacingForStunEffect && _enemyController != null
+                ? !_enemyController.IsFacingRight
+                : (transform.lossyScale.x < 0f) != (_centerSprite != null && _centerSprite.flipX);
             float headX = bodyBounds.center.x + (facingLeft ? -1f : 1f)
                 * bodyBounds.size.x * _stunEffectHeadXFraction;
             float headY = bodyBounds.max.y - bodyBounds.size.y * _stunEffectHeadYFraction

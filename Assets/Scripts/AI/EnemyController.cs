@@ -171,6 +171,7 @@ private Rigidbody2D _rb;
         private ForestMushroomAudioController _forestMushroomAudio;
         private FireWormAudioController _fireWormAudio;
         private FlyingEyeAudioController _flyingEyeAudio;
+        private SkullwolfAudioController _skullwolfAudio;
         private FoxAudioController _foxAudio;
         private GoblinAudioController _goblinAudio;
         private SkeletonAudioController _skeletonAudio;
@@ -223,6 +224,7 @@ _rb = GetComponent<Rigidbody2D>();
             _forestMushroomAudio = GetComponent<ForestMushroomAudioController>();
             _fireWormAudio = GetComponent<FireWormAudioController>();
             _flyingEyeAudio = GetComponent<FlyingEyeAudioController>();
+            _skullwolfAudio = GetComponent<SkullwolfAudioController>();
             _foxAudio = GetComponent<FoxAudioController>();
             _goblinAudio = GetComponent<GoblinAudioController>();
             _skeletonAudio = GetComponent<SkeletonAudioController>();
@@ -948,6 +950,7 @@ _rb = GetComponent<Rigidbody2D>();
                 _fantasyMushroomAudio?.PlayBasicAttack();
                 _forestMushroomAudio?.PlayBasicAttack();
                 _flyingEyeAudio?.PlayBite();
+                _skullwolfAudio?.PlayBite();
             }
             // A new basic swing is a new hit window. Reset each hitbox's per-target
             // cooldown so SideSwing, FwdSwing, and DownSwing can all damage in sequence.

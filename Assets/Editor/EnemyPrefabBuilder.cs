@@ -495,6 +495,9 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 SetupSkeletonKnightAudio(root);
                 SetupStandardParryStunEffect(root, sr, 2f, "Assets/sprites/effect/stun");
             }
+            if (cfg.Name == "Skullwolf")
+                SetupStandardParryStunEffect(root, sr, 2f, useEnemyFacing: true,
+                    headXFraction: 0.38f, headYFraction: 0.15f, headYOffset: 0.08f);
             if (cfg.Name == "FlyingEye") SetupFlyingEyeAudio(root);
             if (cfg.Name == "FlyingEye") SetupFlyingEyeParry(root, sr);
             if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
@@ -673,6 +676,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             else if (cfg.Name == "Fox")
             {
                 SetupFoxAudio(root);
+            }
+            else if (cfg.Name == "Skullwolf")
+            {
+                SetupSkullwolfAudio(root);
             }
             else if (cfg.Name == "Goblin")
             {
@@ -1014,6 +1021,31 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             Debug.Log("[EnemyPrefabBuilder] Connected Fox SFX clips successfully!");
         }
 
+        private static void SetupSkullwolfAudio(GameObject root)
+        {
+            var oneShotSource = root.AddComponent<AudioSource>();
+            oneShotSource.playOnAwake = false;
+            oneShotSource.spatialBlend = 0.8f;
+            oneShotSource.minDistance = 2f;
+            oneShotSource.maxDistance = 20f;
+
+            var movementSource = root.AddComponent<AudioSource>();
+            movementSource.playOnAwake = false;
+            movementSource.loop = true;
+            movementSource.volume = 0.7f;
+            movementSource.spatialBlend = 0.8f;
+            movementSource.minDistance = 2f;
+            movementSource.maxDistance = 20f;
+            movementSource.clip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงวิ่งของหมา.WAV");
+
+            var audio = root.AddComponent<SkullwolfAudioController>();
+            audio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/หมากัด.WAV"),
+                movementSource.clip,
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Skullwolf SFX clips successfully!");
+        }
+
         private static void SetupGoblinAudio(GameObject root)
         {
             var audioSource = root.AddComponent<AudioSource>();
@@ -1182,7 +1214,9 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
         }
 
         private static void SetupStandardParryStunEffect(GameObject root, SpriteRenderer spriteRenderer,
-            float stunDuration = 2f, string stunEffectFolder = "Assets/sprites/effect/Stun")
+            float stunDuration = 2f, string stunEffectFolder = "Assets/sprites/effect/Stun",
+            bool useEnemyFacing = false, float headXFraction = 0f, float headYFraction = 0f,
+            float headYOffset = 0.25f)
         {
             var receiver = root.GetComponent<ParryReceiver>();
             if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
@@ -1190,6 +1224,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             var parry = new SerializedObject(receiver);
             parry.FindProperty("_centerSprite").objectReferenceValue = spriteRenderer;
             parry.FindProperty("_useVisibleSpriteBounds").boolValue = true;
+            parry.FindProperty("_useEnemyFacingForStunEffect").boolValue = useEnemyFacing;
             parry.FindProperty("_centerLocalOffset").vector2Value = Vector2.zero;
 
             string[] stunFramePaths =
@@ -1209,9 +1244,9 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             }
 
             parry.FindProperty("_stunEffectDuration").floatValue = stunDuration;
-            parry.FindProperty("_stunEffectHeadXFraction").floatValue = 0f;
-            parry.FindProperty("_stunEffectHeadYFraction").floatValue = 0f;
-            parry.FindProperty("_stunEffectHeadYOffset").floatValue = 0.25f;
+            parry.FindProperty("_stunEffectHeadXFraction").floatValue = headXFraction;
+            parry.FindProperty("_stunEffectHeadYFraction").floatValue = headYFraction;
+            parry.FindProperty("_stunEffectHeadYOffset").floatValue = headYOffset;
             parry.FindProperty("_stunEffectWorldScale").floatValue = 0.5f;
             parry.ApplyModifiedPropertiesWithoutUndo();
         }
