@@ -1100,6 +1100,13 @@ namespace TheLastKnight.UI
                 return;
             }
 
+            if ((statName == "DEX" || statName == "DEXTERITY") && player.DEX >= TheLastKnight.Stats.PlayerStats.MaxDexterity)
+            {
+                ShowTooltip("DEX Maxed Out", "Notice", $"Dexterity is already at the maximum limit ({TheLastKnight.Stats.PlayerStats.MaxDexterity})!");
+                AudioManager.Instance?.PlaySfx("click");
+                return;
+            }
+
             if (player.UpgradeStat(statName))
             {
                 AudioManager.Instance?.PlaySfx("click");
@@ -1117,6 +1124,13 @@ namespace TheLastKnight.UI
             if (player.StatPoints <= 0)
             {
                 ShowTooltip("No Status Points", "Notice", "You need available Status Points (SP) to upgrade attributes. Level up or consume Golden Seeds to gain points.");
+                AudioManager.Instance?.PlaySfx("click");
+                return;
+            }
+
+            if ((statName == "DEX" || statName == "DEXTERITY") && player.DEX >= TheLastKnight.Stats.PlayerStats.MaxDexterity)
+            {
+                ShowTooltip("DEX Maxed Out", "Notice", $"Dexterity is already at the maximum limit ({TheLastKnight.Stats.PlayerStats.MaxDexterity})!");
                 AudioManager.Instance?.PlaySfx("click");
                 return;
             }
@@ -1175,12 +1189,12 @@ namespace TheLastKnight.UI
                 case "AGI":
                     var ctrl = player != null ? player.GetComponent<Player.PlayerController>() : null;
                     float baseMoveSpd = ctrl != null ? ctrl.BaseMoveSpeed : 8f;
-                    float moveSpd = ctrl != null ? ctrl.MoveSpeed : 8f;
+                    float sprintSpd = ctrl != null ? ctrl.SprintSpeed : 13f;
                     float atkSpd = player != null ? player.AttackSpeedMultiplier : 1f;
                     bool canDoubleJump = player != null && player.CanDoubleJump;
                     string djStatus = canDoubleJump ? "<color=green>Unlocked</color>" : "Locked";
-                    desc = $"Attack Speed: {atkSpd:F2}x\nMove Speed: {FormatStatWithBonus(baseMoveSpd, moveSpd)}";
-                    if (ctrl != null) desc += $"\nSprint Speed: {ctrl.SprintSpeed:F1}\nDash Speed: {ctrl.DashSpeed:F1}";
+                    desc = $"Attack Speed: {atkSpd:F2}x\nMove Speed: {FormatStatNumber(baseMoveSpd)} (Fixed)";
+                    if (ctrl != null) desc += $"\nSprint Speed: {FormatStatNumber(sprintSpd)}\nDash Speed: {ctrl.DashSpeed:F1}";
                     desc += $"\nDouble Jump: {djStatus}";
                     break;
                 case "VIT":
@@ -1189,8 +1203,10 @@ namespace TheLastKnight.UI
                     desc = $"Max HP: {Mathf.CeilToInt(maxHp)}\nMax Stamina: {Mathf.CeilToInt(maxStm)}\nIncreases health and stamina capacity.";
                     break;
                 case "DEX":
-                    float crit = player != null ? player.CriticalChance : 16.8f;
-                    desc = $"Critical Chance: {crit:F2}%\nIncreases the chance of a critical hit.";
+                    float crit = player != null ? player.CriticalChance : 5f;
+                    int dexVal = player != null ? player.DEX : 10;
+                    string maxNotice = dexVal >= TheLastKnight.Stats.PlayerStats.MaxDexterity ? " (MAX)" : "";
+                    desc = $"Critical Chance: {crit:F1}%{maxNotice}\n(Linear: 200 DEX = 100% Crit)\nDEX Crit Damage: 150%\nParry Crit Damage: 200%";
                     break;
             }
 

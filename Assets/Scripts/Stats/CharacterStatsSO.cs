@@ -29,14 +29,14 @@ namespace TheLastKnight.Stats
         [Tooltip("Max Stamina gained per point of VIT above baseVIT.")]
         public float staminaPerVIT = 1f;
 
-        [Header("--- DEX: Critical Chance (Asymptotic Limit) ---")]
-        [Tooltip("Target DEX value where critical chance reaches targetCritAtCap (default: 250).")]
-        public float dexLimitTarget = 250f;
+        [Header("--- DEX: Critical Chance (Linear: 200 DEX = 100%) ---")]
+        [Tooltip("Target DEX value where critical chance reaches targetCritAtCap (default: 200).")]
+        public float dexLimitTarget = 200f;
 
-        [Tooltip("Critical chance percentage achieved at dexLimitTarget (default: 99%).")]
-        public float targetCritAtCap = 99f;
+        [Tooltip("Critical chance percentage achieved at dexLimitTarget (default: 100%).")]
+        public float targetCritAtCap = 100f;
 
-        [Tooltip("Fallback linear crit per DEX if asymptotic is disabled or fallback is queried.")]
+        [Tooltip("Linear crit chance gained per point of DEX (default: 0.5% per DEX).")]
         public float critChancePerDEX = 0.5f;
 
         [Header("--- AGI: Speed, Attack Speed & Double Jump ---")]
@@ -46,7 +46,7 @@ namespace TheLastKnight.Stats
         [Tooltip("Attack speed multiplier gained per point of AGI above baseAGI.")]
         public float attackSpeedPerAGI = 0.004f;
 
-        [Tooltip("ความเร็วเคลื่อนที่ที่เพิ่มขึ้นต่อ 1 AGI (คุมทั้งความเร็วเดินและวิ่งในค่าเดียว โดยความเร็ววิ่งจะสเกลตามความเร็วเดินโดยอัตโนมัติ)")]
+        [Tooltip("ความเร็วในการวิ่ง (Sprint Speed) ที่เพิ่มขึ้นต่อ 1 AGI (ความเร็วเดินปกติจะคงที่ ไม่เปลี่ยนแปลงตาม AGI)")]
         public float speedPerAGI = 0.02f;
 
         [Tooltip("Dash velocity gained per point of AGI.")]
@@ -62,15 +62,14 @@ namespace TheLastKnight.Stats
         public int baseAGI = 10;
 
         /// <summary>
-        /// Calculates Critical Strike Chance based on DEX using an asymptotic limit formula:
-        /// Lim(DEX -> inf) = 100%, and Crit(dexLimitTarget) = targetCritAtCap (default: 99% at 250 DEX).
+        /// Calculates Critical Strike Chance based on DEX using a linear formula:
+        /// 200 DEX = 100% Critical Chance (0.5% crit per DEX, capped at 100%).
         /// </summary>
         public float CalculateCritChance(int dex)
         {
             if (dex <= 0) return 0f;
             if (dexLimitTarget <= 0f) return 0f;
-            float remainingRatio = Mathf.Clamp01(1f - (targetCritAtCap / 100f));
-            float crit = 100f * (1f - Mathf.Pow(remainingRatio, (float)dex / dexLimitTarget));
+            float crit = (dex / dexLimitTarget) * targetCritAtCap;
             return Mathf.Clamp(crit, 0f, 100f);
         }
 

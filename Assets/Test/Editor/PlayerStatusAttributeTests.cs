@@ -76,16 +76,21 @@ namespace TheLastKnight.Tests
         public void AGI_IncreasesMovementSpeed_AndAttackSpeed()
         {
             float initialMoveSpeed = (float)GetProp(_controller, "MoveSpeed");
+            float initialSprintSpeed = (float)GetProp(_controller, "SprintSpeed");
             float initialAtkSpeed = (float)GetProp(_stats, "AttackSpeedMultiplier");
 
             SetField(_stats, "_agility", 50);
             _stats.GetType().GetMethod("RecalculateStats", new[] { typeof(bool) })?.Invoke(_stats, new object[] { false });
 
             float newMoveSpeed = (float)GetProp(_controller, "MoveSpeed");
+            float newSprintSpeed = (float)GetProp(_controller, "SprintSpeed");
             float newAtkSpeed = (float)GetProp(_stats, "AttackSpeedMultiplier");
             float ctrlAtkSpeed = (float)GetProp(_controller, "AttackSpeedMultiplier");
 
-            Assert.That(newMoveSpeed, Is.GreaterThan(initialMoveSpeed));
+            // Walk speed remains fixed (AGI does not affect walk speed)
+            Assert.That(newMoveSpeed, Is.EqualTo(initialMoveSpeed));
+            // Sprint speed and attack speed increase with AGI
+            Assert.That(newSprintSpeed, Is.GreaterThan(initialSprintSpeed));
             Assert.That(newAtkSpeed, Is.GreaterThan(initialAtkSpeed));
             Assert.That(ctrlAtkSpeed, Is.EqualTo(newAtkSpeed));
         }
@@ -129,7 +134,7 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
-        public void DEX_AsymptoticCritChance_Approaches100Percent_AndReaches99At250()
+        public void DEX_LinearCritChance_Reaches100PercentAt200_AndCannotExceed200()
         {
             var soType = RuntimeType("TheLastKnight.Stats.CharacterStatsSO");
             var template = AssetDatabase.LoadAssetAtPath("Assets/Settings/PlayerStatsTemplate.asset", soType);
@@ -141,31 +146,32 @@ namespace TheLastKnight.Tests
             float crit0 = (float)calcMethod.Invoke(template, new object[] { 0 });
             Assert.That(crit0, Is.EqualTo(0f));
 
-            // Base DEX (10)
+            // Base DEX (10) -> 5%
             float crit10 = (float)calcMethod.Invoke(template, new object[] { 10 });
-            Assert.That(crit10, Is.GreaterThan(0f).And.LessThan(25f));
+            Assert.That(crit10, Is.EqualTo(5.0f).Within(0.01f));
 
-            // Mid DEX (50, 100, 200)
+            // Mid DEX (50, 100) -> 25%, 50%
             float crit50 = (float)calcMethod.Invoke(template, new object[] { 50 });
             float crit100 = (float)calcMethod.Invoke(template, new object[] { 100 });
+            Assert.That(crit50, Is.EqualTo(25.0f).Within(0.01f));
+            Assert.That(crit100, Is.EqualTo(50.0f).Within(0.01f));
+
+            // 200 DEX -> 100%
             float crit200 = (float)calcMethod.Invoke(template, new object[] { 200 });
+            Assert.That(crit200, Is.EqualTo(100.0f).Within(0.01f), "At 200 DEX, critical rate must be 100%");
 
-            Assert.That(crit50, Is.GreaterThan(crit10));
-            Assert.That(crit100, Is.GreaterThan(crit50));
-            Assert.That(crit200, Is.GreaterThan(crit100));
-
-            // Cap at 250 DEX -> 99.0%
+            // Beyond 200 DEX -> Capped at 100%
             float crit250 = (float)calcMethod.Invoke(template, new object[] { 250 });
-            Assert.That(crit250, Is.EqualTo(99.0f).Within(0.05f), "At 250 DEX, critical rate must be 99%");
+            Assert.That(crit250, Is.EqualTo(100.0f).Within(0.01f));
 
-            // Beyond 250 DEX -> Approaching 100% asymptotically without exceeding 100%
-            float crit500 = (float)calcMethod.Invoke(template, new object[] { 500 });
-            float crit1000 = (float)calcMethod.Invoke(template, new object[] { 1000 });
-
-            Assert.That(crit500, Is.GreaterThan(crit250));
-            Assert.That(crit500, Is.LessThanOrEqualTo(100f));
-            Assert.That(crit1000, Is.GreaterThanOrEqualTo(crit500));
-            Assert.That(crit1000, Is.LessThanOrEqualTo(100f));
+            // Verify Max DEX cap on PlayerStats: cannot upgrade beyond 200
+            SetField(_stats, "_dexterity", 200);
+            var addPoints = _stats.GetType().GetMethod("AddStatPoints");
+            addPoints.Invoke(_stats, new object[] { 5 });
+            var upgradeMethod = _stats.GetType().GetMethod("UpgradeStat");
+            bool upgradeResult = (bool)upgradeMethod.Invoke(_stats, new object[] { "DEX" });
+            Assert.That(upgradeResult, Is.False, "Upgrading DEX at 200 cap should fail");
+            Assert.That((int)GetProp(_stats, "DEX"), Is.EqualTo(200), "DEX cannot exceed 200");
         }
 
         [Test]
@@ -334,11 +340,11 @@ namespace TheLastKnight.Tests
             var soType = RuntimeType("TheLastKnight.Stats.CharacterStatsSO");
             var customTemplate = ScriptableObject.CreateInstance(soType);
 
-            // Configure single speed setting: speedPerAGI = 0.02
+            // Configure speed setting: speedPerAGI = 0.02
             SetField(customTemplate, "speedPerAGI", 0.02f);
             SetField(_stats, "_statsTemplate", customTemplate);
 
-            // 1. At AGI = 10 (base): MoveSpeed = 8.0, SprintSpeed = 8.0 * (13 / 8) = 13.0
+            // 1. At AGI = 10 (base): MoveSpeed = 8.0, SprintSpeed = 13.0
             SetField(_stats, "_agility", 10);
             _stats.GetType().GetMethod("RecalculateStats", new[] { typeof(bool) })?.Invoke(_stats, new object[] { true });
 
@@ -347,25 +353,24 @@ namespace TheLastKnight.Tests
             Assert.That(moveSpd10, Is.EqualTo(8.0f).Within(0.01f));
             Assert.That(sprintSpd10, Is.EqualTo(13.0f).Within(0.01f));
 
-            // 2. At AGI = 250: MoveSpeed = 8.0 + 240 * 0.02 = 12.8, SprintSpeed = 12.8 * (13 / 8) = 20.8
+            // 2. At AGI = 250: MoveSpeed remains 8.0 (fixed), SprintSpeed = 13.0 + 240 * (0.02 * 1.625) = 20.8
             SetField(_stats, "_agility", 250);
             _stats.GetType().GetMethod("RecalculateStats", new[] { typeof(bool) })?.Invoke(_stats, new object[] { true });
 
             float moveSpd250 = (float)GetProp(_controller, "MoveSpeed");
             float sprintSpd250 = (float)GetProp(_controller, "SprintSpeed");
-            Assert.That(moveSpd250, Is.EqualTo(12.8f).Within(0.01f));
+            Assert.That(moveSpd250, Is.EqualTo(8.0f).Within(0.01f), "Walk speed must remain fixed at 8.0 despite high AGI");
             Assert.That(sprintSpd250, Is.EqualTo(20.8f).Within(0.01f));
             Assert.That(sprintSpd250, Is.GreaterThan(moveSpd250), "Sprint speed must always be greater than walk speed");
 
-            // 3. Lowering single speedPerAGI to 0.01 lowers BOTH walk and sprint proportionally
+            // 3. Lowering speedPerAGI to 0.01 lowers SprintSpeed proportionally while walk speed remains fixed
             SetField(customTemplate, "speedPerAGI", 0.01f);
             _stats.GetType().GetMethod("RecalculateStats", new[] { typeof(bool) })?.Invoke(_stats, new object[] { true });
 
             float moveSpdLowered = (float)GetProp(_controller, "MoveSpeed");
             float sprintSpdLowered = (float)GetProp(_controller, "SprintSpeed");
-            Assert.That(moveSpdLowered, Is.EqualTo(10.4f).Within(0.01f));
+            Assert.That(moveSpdLowered, Is.EqualTo(8.0f).Within(0.01f), "Walk speed must remain 8.0");
             Assert.That(sprintSpdLowered, Is.EqualTo(16.9f).Within(0.01f));
-            Assert.That(moveSpdLowered, Is.LessThan(moveSpd250));
             Assert.That(sprintSpdLowered, Is.LessThan(sprintSpd250));
         }
 
@@ -822,6 +827,93 @@ namespace TheLastKnight.Tests
             Assert.That(staminaBar.transform.position, Is.EqualTo(Vector3.zero), "StaminaBar position must return to 0");
 
             GameObject.DestroyImmediate(hudGo);
+        }
+
+        [Test]
+        public void Combat_DexCritDamage_Is150Percent()
+        {
+            SetField(_stats, "_dexterity", 200); // 100% crit chance
+            _stats.GetType().GetMethod("RecalculateStats", new[] { typeof(bool) })?.Invoke(_stats, new object[] { false });
+            float atk = (float)GetProp(_stats, "AttackPower");
+
+            var enemy = new GameObject("TestEnemy", typeof(BoxCollider2D));
+            enemy.transform.position = _player.transform.position + Vector3.right * 0.5f;
+            var target = enemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+            Invoke(target, "Awake");
+            Physics2D.SyncTransforms();
+
+            try
+            {
+                float beforeHp = (float)GetProp(target, "CurrentHealth");
+                Invoke((Component)_controller, "StartAttack");
+                Invoke((Component)_controller, "ApplyAttackHits");
+                float damageDealt = beforeHp - (float)GetProp(target, "CurrentHealth");
+
+                Assert.That(damageDealt, Is.EqualTo(atk * 1.5f).Within(0.01f), "DEX critical hit must deal 150% damage");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(enemy);
+            }
+        }
+
+        [Test]
+        public void Combat_ParryCritDamage_Is200Percent()
+        {
+            SetField(_stats, "_dexterity", 0); // 0% dex crit chance
+            _stats.GetType().GetMethod("RecalculateStats", new[] { typeof(bool) })?.Invoke(_stats, new object[] { false });
+            float atk = (float)GetProp(_stats, "AttackPower");
+
+            var enemy = new GameObject("TestEnemyParry", typeof(BoxCollider2D));
+            enemy.transform.position = _player.transform.position + Vector3.right * 0.5f;
+            var target = enemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+            var parry = enemy.AddComponent(RuntimeType("TheLastKnight.Combat.ParryReceiver"));
+            Invoke(target, "Awake");
+            SetField(parry, "_isStaggered", true);
+            Physics2D.SyncTransforms();
+
+            try
+            {
+                float beforeHp = (float)GetProp(target, "CurrentHealth");
+                Invoke((Component)_controller, "StartAttack");
+                Invoke((Component)_controller, "ApplyAttackHits");
+                float damageDealt = beforeHp - (float)GetProp(target, "CurrentHealth");
+
+                Assert.That(damageDealt, Is.EqualTo(atk * 2.0f).Within(0.01f), "Parry critical hit must deal 200% damage");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(enemy);
+            }
+        }
+
+        [Test]
+        public void Combat_SkillCanCriticalHit_With150PercentDamage()
+        {
+            SetField(_stats, "_dexterity", 200); // 100% crit chance
+            _stats.GetType().GetMethod("RecalculateStats", new[] { typeof(bool) })?.Invoke(_stats, new object[] { false });
+            float atk = (float)GetProp(_stats, "AttackPower");
+            float skillMult = (float)GetField(_controller, "_skillDamageMultiplier");
+
+            var enemy = new GameObject("TestEnemySkill", typeof(BoxCollider2D));
+            enemy.transform.position = _player.transform.position + Vector3.right * 0.5f;
+            var target = enemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+            Invoke(target, "Awake");
+            Physics2D.SyncTransforms();
+
+            try
+            {
+                float beforeHp = (float)GetProp(target, "CurrentHealth");
+                Invoke((Component)_controller, "StartSkill");
+                Invoke((Component)_controller, "ApplySkillHits");
+                float damageDealt = beforeHp - (float)GetProp(target, "CurrentHealth");
+
+                Assert.That(damageDealt, Is.EqualTo(atk * skillMult * 1.5f).Within(0.01f), "Skill critical hit must deal 150% of base skill damage");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(enemy);
+            }
         }
     }
 }

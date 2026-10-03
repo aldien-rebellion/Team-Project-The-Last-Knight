@@ -86,12 +86,12 @@ namespace TheLastKnight.Editor
                     EditorGUILayout.LabelField("🛡️ DEF", $"{playerStats.Defense:F1} (Base {template.baseDEF} + Lv.{playerStats.Level}×{template.defPerLevel})");
                     EditorGUILayout.LabelField("❤️ Max HP", $"{Mathf.CeilToInt(playerStats.MaxHP)} (VIT×{template.hpPerVIT})");
                     EditorGUILayout.LabelField("⚡ Max Stamina", $"{Mathf.CeilToInt(playerStats.MaxStamina)} (Base {template.baseStamina} + VIT_bonus×{template.staminaPerVIT})");
-                    EditorGUILayout.LabelField("🎯 Crit Chance", $"{playerStats.CriticalChance:F2}% (Limit ~100%, {template.targetCritAtCap}% @ {template.dexLimitTarget} DEX)");
+                    EditorGUILayout.LabelField("🎯 Crit Chance", $"{playerStats.CriticalChance:F2}% (Linear: {template.targetCritAtCap}% @ {template.dexLimitTarget} DEX, Max Cap {TheLastKnight.Stats.PlayerStats.MaxDexterity})");
                     EditorGUILayout.LabelField("🗡️ Attack Speed", $"{playerStats.AttackSpeedMultiplier:F2}x (Base {template.baseAttackSpeed}x + AGI×{template.attackSpeedPerAGI})");
 
                     if (ctrl != null)
                     {
-                        EditorGUILayout.LabelField("🏃 Movement Speed", $"{ctrl.MoveSpeed:F1} (Walk) / {ctrl.SprintSpeed:F1} (Sprint) ➔ ปรับที่ 'speedPerAGI' ค่าเดียว");
+                        EditorGUILayout.LabelField("🏃 Movement Speed", $"{ctrl.MoveSpeed:F1} (Walk - คงที่) / {ctrl.SprintSpeed:F1} (Sprint) ➔ สเกลเฉพาะ Sprint ด้วย 'speedPerAGI'");
                         EditorGUILayout.LabelField("⚡ Dash Speed", $"{ctrl.DashSpeed:F2} (Base {ctrl.BaseDashSpeed:F1} + AGI×{template.dashSpeedPerAGI})");
                     }
 

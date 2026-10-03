@@ -348,7 +348,7 @@ public class PlanRuntimeChecks
                 UnityEngine.Random.InitState(823);
                 player.SendMessage("StartAttack"); player.SendMessage("ApplyAttackHits");
                 UnityEngine.Random.state = originalRandom;
-                Check(Mathf.Abs(50 - enemy.GetComponent<EnemyStats>().CurrentHealth - player.AttackPower * playerMultipliers[mode] * (crit ? 2 : 1)) < 0.01f, "Outgoing attack damage multiplier for " + (GameDifficulty)mode);
+                Check(Mathf.Abs(50 - enemy.GetComponent<EnemyStats>().CurrentHealth - player.AttackPower * playerMultipliers[mode] * (crit ? 1.5f : 1f)) < 0.01f, "Outgoing attack damage multiplier for " + (GameDifficulty)mode);
             }
             finally { Destroy(enemy); }
             yield return new Pause(0.4);

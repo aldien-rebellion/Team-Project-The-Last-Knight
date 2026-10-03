@@ -17,6 +17,7 @@ namespace TheLastKnight.Stats
         [SerializeField] private int _availableStatPoints = 5;
 
         [Header("Current Attribute Allocations")]
+        public const int MaxDexterity = 200;
         [SerializeField] private int _strength;
         [SerializeField] private int _vitality;
         [SerializeField] private int _dexterity;
@@ -394,15 +395,17 @@ namespace TheLastKnight.Stats
             MaxHP = _vitality * hpPerVit;
             MaxStamina = baseStam + Mathf.Max(0, _vitality - baseVit) * stamPerVit;
 
-            // DEX -> Asymptotic Critical Chance approaching 100% (99% at 250 DEX)
+            // Clamp DEX to MaxDexterity limit
+            _dexterity = Mathf.Clamp(_dexterity, 0, MaxDexterity);
+
+            // DEX -> Linear Critical Chance: 200 DEX = 100% crit chance
             if (_statsTemplate != null)
             {
                 CriticalChance = _statsTemplate.CalculateCritChance(_dexterity);
             }
             else
             {
-                float remainingRatio = 0.01f;
-                float crit = 100f * (1f - Mathf.Pow(remainingRatio, (float)_dexterity / 250f));
+                float crit = (_dexterity / 200f) * 100f;
                 CriticalChance = Mathf.Clamp(crit, 0f, 100f);
             }
 
@@ -440,10 +443,10 @@ namespace TheLastKnight.Stats
             // Sync stats to Arthur's PlayerController movement & combat logic
             if (_playerController != null)
             {
-                // Dynamic scaling of speed based on AGI (unified: single speedPerAGI value controls both walk & sprint)
-                _playerController.MoveSpeed = _playerController.BaseMoveSpeed + (_agility - baseAgi) * spdPerAgi;
+                // Walk speed is fixed at BaseMoveSpeed (AGI does not affect walking speed)
+                _playerController.MoveSpeed = _playerController.BaseMoveSpeed;
                 float sprintRatio = _playerController.BaseMoveSpeed > 0f ? (_playerController.BaseSprintSpeed / _playerController.BaseMoveSpeed) : 1.625f;
-                _playerController.SprintSpeed = _playerController.MoveSpeed * sprintRatio;
+                _playerController.SprintSpeed = _playerController.BaseSprintSpeed + (_agility - baseAgi) * (spdPerAgi * sprintRatio);
                 _playerController.DashSpeed = _playerController.BaseDashSpeed + (_agility - baseAgi) * dashSpdPerAgi;
                 _playerController.AttackSpeedMultiplier = AttackSpeedMultiplier;
                 _playerController.CanDoubleJump = CanDoubleJump;
@@ -511,6 +514,11 @@ namespace TheLastKnight.Stats
                     break;
                 case "DEX":
                 case "DEXTERITY":
+                    if (_dexterity >= MaxDexterity)
+                    {
+                        Debug.LogWarning($"[PlayerStats] Dexterity is already at maximum cap ({MaxDexterity})!");
+                        return false;
+                    }
                     _dexterity++;
                     upgraded = true;
                     break;
@@ -626,7 +634,7 @@ namespace TheLastKnight.Stats
         public void Restore(TheLastKnight.Core.PlayerSaveData state)
         {
             _currentLevel = state.level; _currentEXP = state.exp; _availableStatPoints = state.statPoints;
-            _strength = state.strength; _vitality = state.vitality; _dexterity = state.dexterity; _agility = state.agility;
+            _strength = state.strength; _vitality = state.vitality; _dexterity = Mathf.Clamp(state.dexterity, 0, MaxDexterity); _agility = state.agility;
             _gold = state.gold; _healingPotions = state.potions;
             RecalculateStats();
             _currentHP = Mathf.Clamp(state.hp, 0, MaxHP);

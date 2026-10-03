@@ -720,8 +720,11 @@ namespace TheLastKnight.Player
                 }
                 if (target == null || !_attackTargets.Add(target)) continue;
                 var parry = collider.GetComponentInParent<ParryReceiver>();
-                bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
-                float damage = stats.AttackPower * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
+                bool isParryStagger = parry != null && parry.IsStaggered;
+                bool isDexCrit = Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
+                bool critical = isParryStagger || isDexCrit;
+                float critMultiplier = isParryStagger ? 2f : (isDexCrit ? 1.5f : 1f);
+                float damage = stats.AttackPower * critMultiplier * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
                 target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
             }
@@ -808,8 +811,11 @@ namespace TheLastKnight.Player
                 }
                 if (target == null || !_skillTargets.Add(target)) continue;
                 var parry = collider.GetComponentInParent<ParryReceiver>();
-                bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
-                float damage = stats.AttackPower * _skillDamageMultiplier * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
+                bool isParryStagger = parry != null && parry.IsStaggered;
+                bool isDexCrit = Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
+                bool critical = isParryStagger || isDexCrit;
+                float critMultiplier = isParryStagger ? 2f : (isDexCrit ? 1.5f : 1f);
+                float damage = stats.AttackPower * _skillDamageMultiplier * critMultiplier * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
 
                 // Calculate push / knockback direction away from the player along the skill circle
@@ -1112,8 +1118,11 @@ namespace TheLastKnight.Player
                 }
                 if (target == null || !_excaliburTargets.Add(target)) continue;
                 var parry = collider.GetComponentInParent<ParryReceiver>();
-                bool critical = (parry != null && parry.IsStaggered) || Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
-                float damage = stats.AttackPower * _excaliburDamageMultiplier * (critical ? 2f : 1f) * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
+                bool isParryStagger = parry != null && parry.IsStaggered;
+                bool isDexCrit = Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
+                bool critical = isParryStagger || isDexCrit;
+                float critMultiplier = isParryStagger ? 2f : (isDexCrit ? 1.5f : 1f);
+                float damage = stats.AttackPower * _excaliburDamageMultiplier * critMultiplier * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
                 target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
                 FloatingCombatText.Show(point, Mathf.CeilToInt(damage).ToString() + (critical ? "!" : ""), Color.yellow);
