@@ -183,6 +183,11 @@ namespace TheLastKnight.UI
             }
 
             // 4. Check other open UIs
+            if (TheLastKnight.Player.PlayerAdminMode.IsAdminModeOpen)
+            {
+                return;
+            }
+
             if (CharacterStatusUI.Instance != null && CharacterStatusUI.Instance.IsOpen)
             {
                 return;
