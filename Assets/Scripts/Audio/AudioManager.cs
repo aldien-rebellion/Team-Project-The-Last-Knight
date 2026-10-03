@@ -8,7 +8,9 @@ namespace TheLastKnight.Audio
     {
         public static AudioManager Instance { get; private set; }
         [SerializeField] private AudioCatalog _catalog;
-        private AudioSource _bgmA, _bgmB, _sfx;
+        private AudioSource _bgmA, _bgmB, _sfx, _loopingSfx, _stoppableSfx;
+        private string _loopingSfxId;
+        private string _stoppableSfxId;
         private Coroutine _fade;
         private float _blend = 1f;
         public float Master { get; private set; } = 1f;
@@ -23,8 +25,11 @@ namespace TheLastKnight.Audio
             if (_catalog == null) _catalog = Resources.Load<AudioCatalog>("AudioCatalog");
             _bgmA = gameObject.AddComponent<AudioSource>(); _bgmB = gameObject.AddComponent<AudioSource>();
             _sfx = gameObject.AddComponent<AudioSource>();
+            _loopingSfx = gameObject.AddComponent<AudioSource>();
+            _stoppableSfx = gameObject.AddComponent<AudioSource>();
             _bgmA.loop = _bgmB.loop = true;
-            _bgmA.playOnAwake = _bgmB.playOnAwake = _sfx.playOnAwake = false;
+            _loopingSfx.loop = true;
+            _bgmA.playOnAwake = _bgmB.playOnAwake = _sfx.playOnAwake = _loopingSfx.playOnAwake = _stoppableSfx.playOnAwake = false;
             SetVolumes(PlayerPrefs.GetFloat("MasterVolume", 1f), PlayerPrefs.GetFloat("MusicVolume", 0.7f), PlayerPrefs.GetFloat("EffectsVolume", 1f));
             SceneManager.sceneLoaded += SceneChanged;
         }
@@ -55,6 +60,45 @@ namespace TheLastKnight.Audio
         {
             var clip = _catalog != null ? _catalog.Find(id) : null;
             if (clip != null) _sfx.PlayOneShot(clip, id == "click" ? 0.5f : 1f);
+        }
+
+        public void PlaySfxLoop(string id)
+        {
+            var clip = _catalog != null ? _catalog.Find(id) : null;
+            if (clip == null || _loopingSfx == null) return;
+            if (_loopingSfxId == id && _loopingSfx.isPlaying) return;
+
+            _loopingSfxId = id;
+            _loopingSfx.clip = clip;
+            _loopingSfx.Play();
+        }
+
+        public void StopSfxLoop(string id)
+        {
+            if (_loopingSfx == null || _loopingSfxId != id) return;
+            _loopingSfx.Stop();
+            _loopingSfx.clip = null;
+            _loopingSfxId = null;
+        }
+
+        public void PlaySfxUntilStopped(string id)
+        {
+            var clip = _catalog != null ? _catalog.Find(id) : null;
+            if (clip == null || _stoppableSfx == null) return;
+
+            _stoppableSfx.Stop();
+            _stoppableSfxId = id;
+            _stoppableSfx.loop = false;
+            _stoppableSfx.clip = clip;
+            _stoppableSfx.Play();
+        }
+
+        public void StopSfxUntilStopped(string id)
+        {
+            if (_stoppableSfx == null || _stoppableSfxId != id) return;
+            _stoppableSfx.Stop();
+            _stoppableSfx.clip = null;
+            _stoppableSfxId = null;
         }
 
         public void PlayMusic(string id)
@@ -111,6 +155,8 @@ namespace TheLastKnight.Audio
             _bgmA.volume = Master * Music * _blend;
             _bgmB.volume = Master * Music * (1f - _blend);
             _sfx.volume = Master * Effects;
+            if (_loopingSfx != null) _loopingSfx.volume = Master * Effects;
+            if (_stoppableSfx != null) _stoppableSfx.volume = Master * Effects;
         }
     }
 }

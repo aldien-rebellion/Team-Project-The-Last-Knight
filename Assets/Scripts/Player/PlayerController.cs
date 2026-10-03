@@ -91,6 +91,8 @@ namespace TheLastKnight.Player
         private float _hurtFrame1Duration = 0.25f;
         [SerializeField, Tooltip("Frame 2 duration.")]
         private float _hurtFrame2Duration = 0.17f;
+        [SerializeField, Min(0f), Tooltip("Minimum interval between player hurt voice lines.")]
+        private float _hurtVoiceCooldown = 0.6f;
 
         [Header("Movement Settings")]
         [SerializeField, Tooltip("Base movement speed.")]
@@ -216,6 +218,51 @@ namespace TheLastKnight.Player
         public void ResetVelocity() => _velocity = Vector2.zero;
         public bool IsFacingRight { get; private set; } = true;
 
+        /// <summary>
+        /// Called by the Walk and Run animation events when a foot lands.
+        /// </summary>
+        public void PlayFootstep()
+        {
+            if ((CurrentState != PlayerState.Walking && CurrentState != PlayerState.Running) ||
+                _kinematicController == null || !_kinematicController.IsGrounded || Mathf.Abs(_velocity.x) < 0.1f)
+            {
+                return;
+            }
+
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("player_footstep");
+        }
+
+        /// <summary>
+        /// Called by the Drink animation when the potion reaches the player's mouth.
+        /// </summary>
+        public void PlayDrinkSound()
+        {
+            if (CurrentState != PlayerState.Drinking || _drinkingItem == null) return;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("drink");
+        }
+
+        /// <summary>
+        /// Called by the Excalibur animation when the player raises the sword overhead.
+        /// </summary>
+        public void PlayExcaliburSetupSoundTwo()
+        {
+            if (CurrentState != PlayerState.Excalibur) return;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfxLoop("excalibur_setup_2");
+        }
+
+        public void StopExcaliburSetupSounds()
+        {
+            var audioManager = TheLastKnight.Audio.AudioManager.Instance;
+            audioManager?.StopSfxLoop("excalibur_setup_2");
+            audioManager?.StopSfxUntilStopped("excalibur");
+        }
+
+        public void PlayExcaliburSlashDownSound()
+        {
+            if (CurrentState != PlayerState.Excalibur) return;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("excalibur_slash_down");
+        }
+
         // Attack State Variables
         private float _attackTimer = 0f;
         private float _attackCooldownTimer = 0f;
@@ -245,6 +292,7 @@ namespace TheLastKnight.Player
 
         // Hurt State Variables
         private float _hurtTimer = 0f;
+        private float _nextHurtVoiceTime;
 
         // Action Cancellation Tracking
         private float _actionDurationTimer = 0f;
@@ -937,6 +985,7 @@ namespace TheLastKnight.Player
         private void StartBuff()
         {
             CurrentState = PlayerState.Buffing;
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("buff");
             _buffTimer = _buffDuration;
             _buffCooldownTimer = _buffCooldown;
             _actionDurationTimer = 0f;
@@ -1003,9 +1052,10 @@ namespace TheLastKnight.Player
         private void StartExcalibur()
         {
             if (!GetComponent<PlayerStats>().TrySpendStamina(50f)) return;
+            StopExcaliburSetupSounds();
             _excaliburTargets.Clear();
             CurrentState = PlayerState.Excalibur;
-            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("excalibur");
+            TheLastKnight.Audio.AudioManager.Instance?.PlaySfxUntilStopped("excalibur");
             _excaliburTimer = _excaliburDuration;
             _excaliburCooldownTimer = _excaliburCooldown;
             _actionDurationTimer = 0f;
@@ -1071,6 +1121,7 @@ namespace TheLastKnight.Player
 
         private void EndExcalibur()
         {
+            StopExcaliburSetupSounds();
             _excaliburTargets.Clear();
             TransitionToMovementState();
         }
@@ -1085,6 +1136,7 @@ namespace TheLastKnight.Player
         {
             if (CurrentState != PlayerState.Excalibur) return;
 
+            StopExcaliburSetupSounds();
             _excaliburTargets.Clear();
             _excaliburTimer = 0f;
 
@@ -1150,7 +1202,6 @@ namespace TheLastKnight.Player
             _drinkingSlot = index;
             _drinkingItem = inventory.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, index);
             CurrentState = PlayerState.Drinking;
-            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("drink");
             _drinkTimer = _drinkDuration;
             _drinkCooldownTimer = _drinkDuration + _drinkCooldown;
             _actionDurationTimer = 0f;
@@ -1221,6 +1272,14 @@ namespace TheLastKnight.Player
         /// </summary>
         public void OnTakeDamage()
         {
+            var audioManager = TheLastKnight.Audio.AudioManager.Instance;
+            audioManager?.PlaySfx("player_damaged");
+            if (Time.time >= _nextHurtVoiceTime)
+            {
+                audioManager?.PlaySfx("player_hurt_voice");
+                _nextHurtVoiceTime = Time.time + _hurtVoiceCooldown;
+            }
+
             // Do not interrupt ultimate skill (Excalibur), normal skill (Carnage Burst), or dash with hurt reaction
             if (CurrentState == PlayerState.Excalibur || CurrentState == PlayerState.UsingSkill || CurrentState == PlayerState.Dashing)
             {
@@ -1244,7 +1303,6 @@ namespace TheLastKnight.Player
             }
 
             CurrentState = PlayerState.Hurt;
-            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("hurt");
             _hurtTimer = _hurtFrame1Duration + _hurtFrame2Duration;
             _actionDurationTimer = 0f;
             _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
