@@ -449,6 +449,8 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             serializedAI.FindProperty("_useColliderEdgeAttackDistance").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath";
             serializedAI.FindProperty("_useColliderEdgeAttackRanges").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "FlyingEye" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon";
             serializedAI.FindProperty("_requireCloseRangeForContactSkills").boolValue = cfg.Name == "UndeadExecutioner" || cfg.Name == "Small_dragon" || cfg.Name == "ForestMushroom" || cfg.Name == "SkeletonKnight" || cfg.Name == "Necromancer";
+            serializedAI.FindProperty("_requireMeleeRangeForBasicAttack").boolValue = cfg.Name == "FantasyMushroom";
+            serializedAI.FindProperty("_requireSkillRangeBeforeAttack").boolValue = cfg.Name == "FantasyMushroom";
             serializedAI.FindProperty("_allowBasicParryWithSkills").boolValue = cfg.Name == "Small_dragon";
             serializedAI.FindProperty("_playAttackStatesDirectly").boolValue = cfg.Name == "MoonstoneKeeper" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "SkeletonKnight";
             serializedAI.FindProperty("_usePassiveStanceAnimations").boolValue = cfg.Name == "Reaper";
