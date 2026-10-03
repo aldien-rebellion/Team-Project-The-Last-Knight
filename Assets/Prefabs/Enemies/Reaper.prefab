@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 731b67cd6340d6b4c936763f3fac4db7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.FloatingHealthBar
   _targetStats: {fileID: 3622548920129109940}
   _healthBarFill: {fileID: 5583891784832857081}
@@ -83,6 +83,7 @@ MonoBehaviour:
   _followSprite: {fileID: 4426489115621437184}
   _useVisibleSpriteBounds: 1
   _headGap: 0.08
+  _headHorizontalOffset: 0
   _followSpriteBounds: 0
   _headOffset: 0.12
 --- !u!1 &6306785311533167210
@@ -283,13 +284,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
-  _level: 1
+  _level: 47
   _useLevelScaling: 1
-  _maxHealth: 100
-  _defense: 1
-  _attackPower: 10
-  _goldReward: 24
-  _expReward: 25
+  _maxHealth: 3525
+  _defense: 47
+  _attackPower: 470
+  _goldReward: 1174
+  _expReward: 958
   _currentStatus: 0
 --- !u!114 &5522708467596627523
 MonoBehaviour:
@@ -311,6 +312,9 @@ MonoBehaviour:
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -325,6 +329,7 @@ MonoBehaviour:
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 0
   _playAttackStatesDirectly: 1
+  _useMovementAnimationStates: 0
   _usePassiveStanceAnimations: 1
   _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 0
@@ -333,19 +338,37 @@ MonoBehaviour:
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: HostileAttack
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0
+  _basicAttackActionDuration: 0
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
   _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 3
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills: []
   _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 0
+  _waitForAttackProjectileToFinish: 0
+  _interruptAttackOnDamage: 0
   _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
+  _attackSortingLayerName: 
 --- !u!114 &9010000000000000002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,10 +379,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 4426489115621437184}
   _useVisibleSpriteBounds: 1
+  _centerLocalOffset: {x: 0, y: 0}
+  _stunEffectFrames: []
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0
+  _stunEffectHeadYFraction: 0
+  _stunEffectHeadYOffset: 0
+  _stunEffectWorldScale: 0.5
 --- !u!1 &6765031090875817698
 GameObject:
   m_ObjectHideFlags: 0

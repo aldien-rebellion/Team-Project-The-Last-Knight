@@ -142,7 +142,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.0012077093, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -152,7 +152,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.495, y: 0.84}
+  m_Size: {x: 0.5056282, y: 0.84}
   m_EdgeRadius: 0
 --- !u!114 &2114830047653526261
 MonoBehaviour:
@@ -330,6 +330,7 @@ MonoBehaviour:
   _followSprite: {fileID: 6715231333313269192}
   _useVisibleSpriteBounds: 1
   _headGap: 0.08
+  _headHorizontalOffset: 0
   _followSpriteBounds: 0
   _headOffset: 0.12
 --- !u!1 &9202071590010905333
@@ -555,8 +556,13 @@ MonoBehaviour:
   _chaseSpeed: 3.6
   _patrolDistance: 3
   _isFlying: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -571,21 +577,43 @@ MonoBehaviour:
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 1
   _playAttackStatesDirectly: 1
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
+  _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0
+  _basicAttackActionDuration: 0
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 0
+  _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 0
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills:
   - skillName: SpinningCleave
     animationName: Skill1
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: 3
     damageMultiplier: 2
     cooldown: 7
@@ -598,11 +626,25 @@ MonoBehaviour:
     damageDuration: 0.4
     dealDamageAsSingleHit: 0
     secondDamageHitTime: -1
+    additionalDamageHitTimes: []
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   - skillName: DarkSummon
     animationName: Summon
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: 4
     damageMultiplier: 1.5
     cooldown: 15
@@ -613,16 +655,30 @@ MonoBehaviour:
     guardDuration: 0
     damageStartDelay: 0.4
     damageDuration: 0.4
-    dealDamageAsSingleHit: 0
+    dealDamageAsSingleHit: 1
     secondDamageHitTime: -1
+    additionalDamageHitTimes: []
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 0
+  _waitForAttackProjectileToFinish: 0
+  _interruptAttackOnDamage: 0
   _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 2.2
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
+  _attackSortingLayerName: 
 --- !u!114 &9010000000000000001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -633,10 +689,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 6715231333313269192}
   _useVisibleSpriteBounds: 1
+  _centerLocalOffset: {x: 0, y: 0}
+  _stunEffectFrames: []
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0
+  _stunEffectHeadYFraction: 0
+  _stunEffectHeadYOffset: 0
+  _stunEffectWorldScale: 0.5
 --- !u!114 &9010000000000000002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,7 +710,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5cb7c983b9dc4d768c04d45b9be7191b, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.UndeadExecutionerSummonEffect
   _appearFrames:
   - {fileID: 4859837826577371973, guid: 0ced35470fc20ff4793d85f4e817fe74, type: 3}

@@ -198,13 +198,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
-  _level: 1
-  _useLevelScaling: 0
-  _maxHealth: 110
-  _defense: 3
-  _attackPower: 20
-  _goldReward: 8
-  _expReward: 15
+  _level: 45
+  _useLevelScaling: 1
+  _maxHealth: 3375
+  _defense: 45
+  _attackPower: 450
+  _goldReward: 1051
+  _expReward: 1163
   _currentStatus: 0
 --- !u!114 &2028784599983360218
 MonoBehaviour:

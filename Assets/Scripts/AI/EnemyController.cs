@@ -43,6 +43,10 @@ namespace TheLastKnight.AI
 
         [Header("Combat Ranges")]
         [SerializeField, Min(0f)] private float _detectionRange = 7f;
+        [Tooltip("Display this enemy's detection range as a rectangle in the Scene view.")]
+        [SerializeField] private bool _rectangularDetectionGizmo;
+        [Tooltip("Rectangle width divided by height for the detection range gizmo.")]
+        [SerializeField, Min(0.01f)] private float _detectionGizmoAspectRatio = 2f;
         [SerializeField] private float _meleeRange = 1.4f;
         [SerializeField] private float _meleeCooldown = 1.5f;
         [Tooltip("Measure attack range between the nearest edges of the enemy and player solid colliders.")]
@@ -479,10 +483,11 @@ _rb = GetComponent<Rigidbody2D>();
             // ถ้า player เดินออกไปไกลเกิน 2 เท่าของระยะการมองเห็น (_detectionRange * 2) จากจุดเกิด จะหยุดไล่ตามกลับไปที่เดิมและฟื้นฟู HP
             if (!_isBoss && _player != null)
             {
-                float playerDistFromSpawn = Vector2.Distance(_player.transform.position, _spawnPosition);
                 float maxLeashDist = _detectionRange * _leashRangeMultiplier;
+                bool outsideLeash = Vector2.Distance(_player.transform.position, _spawnPosition) > maxLeashDist
+                    || Vector2.Distance(transform.position, _spawnPosition) > maxLeashDist;
 
-                if (playerDistFromSpawn > maxLeashDist || Vector2.Distance(transform.position, _spawnPosition) > maxLeashDist)
+                if (outsideLeash)
                 {
                     StartReturningToSpawn();
                     return;
@@ -502,7 +507,6 @@ _rb = GetComponent<Rigidbody2D>();
             bool withinDetectionRange = isTouching || (_useColliderEdgeAttackRanges
                 ? colliderEdgeDistance <= _detectionRange
                 : distToPlayer <= _detectionRange);
-
             if (_usePassiveStanceAnimations && withinDetectionRange && !_weaponDrawn)
             {
                 StartCoroutine(ChangeWeaponStance(true));
@@ -558,6 +562,7 @@ _rb = GetComponent<Rigidbody2D>();
             }
             else if (withinDetectionRange && _playAttackStatesDirectly && readySkill == null
                 && _skills != null && _skills.Length > 0 && !_disableBasicAttack
+                && (meleeDistance <= _meleeRange || isTouching)
                 && Time.time >= _nextMeleeTime)
             {
                 // Keep this boss applying pressure with its basic attack while
@@ -2227,9 +2232,18 @@ _rb = GetComponent<Rigidbody2D>();
         {
             Vector3 center = Application.isPlaying ? _spawnPosition : transform.position;
 
-            // Detection Range (Yellow Wire Sphere)
+            // Detection Range (Yellow Wire Sphere or 2D Rectangle)
             Gizmos.color = new Color(1f, 0.92f, 0.016f, 0.35f);
-            Gizmos.DrawWireSphere(center, _detectionRange);
+            if (_rectangularDetectionGizmo)
+            {
+                float width = _detectionRange * 2f;
+                float height = width / Mathf.Max(0.01f, _detectionGizmoAspectRatio);
+                Gizmos.DrawWireCube(center, new Vector3(width, height, 0f));
+            }
+            else
+            {
+                Gizmos.DrawWireSphere(center, _detectionRange);
+            }
 
             // Leash Range (2x Detection Range) for non-bosses (Red Wire Sphere)
             if (!_isBoss)
@@ -2248,6 +2262,41 @@ _rb = GetComponent<Rigidbody2D>();
                 Gizmos.color = new Color(0f, 1f, 1f, 0.3f);
                 Gizmos.DrawWireCube(center, Vector3.one * 0.8f);
             }
+        }
+
+        private void OnValidate()
+        {
+            if (!gameObject.name.Contains("Volcanox")) return;
+            UnityEditor.SceneView.duringSceneGui -= DrawVolcanoxRangeControls;
+            UnityEditor.SceneView.duringSceneGui += DrawVolcanoxRangeControls;
+        }
+
+        private void DrawVolcanoxRangeControls(UnityEditor.SceneView sceneView)
+        {
+            if (this == null || !gameObject.name.Contains("Volcanox") || UnityEditor.Selection.activeGameObject != gameObject)
+                return;
+
+            UnityEditor.Handles.BeginGUI();
+            const float panelWidth = 280f;
+            const float panelHeight = 100f;
+            float panelX = (sceneView.position.width - panelWidth) * 0.5f;
+            GUILayout.BeginArea(new Rect(panelX, sceneView.position.height - panelHeight - 12f,
+                panelWidth, panelHeight), GUI.skin.window);
+            GUILayout.Label("Volcanox Detection Range", UnityEditor.EditorStyles.boldLabel);
+            UnityEditor.EditorGUI.BeginChangeCheck();
+            float range = UnityEditor.EditorGUILayout.FloatField("Range", _detectionRange);
+            float ratio = UnityEditor.EditorGUILayout.FloatField("Rect Width / Height", _detectionGizmoAspectRatio);
+            if (UnityEditor.EditorGUI.EndChangeCheck())
+            {
+                UnityEditor.Undo.RecordObject(this, "Adjust Volcanox Detection Range");
+                _detectionRange = Mathf.Max(0f, range);
+                _detectionGizmoAspectRatio = Mathf.Max(0.01f, ratio);
+                UnityEditor.EditorUtility.SetDirty(this);
+                UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+                UnityEditor.SceneView.RepaintAll();
+            }
+            GUILayout.EndArea();
+            UnityEditor.Handles.EndGUI();
         }
 #endif
 
