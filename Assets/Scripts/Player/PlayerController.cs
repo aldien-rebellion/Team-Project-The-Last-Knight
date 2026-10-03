@@ -991,8 +991,6 @@ namespace TheLastKnight.Player
             _actionDurationTimer = 0f;
             _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
 
-            TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("skill");
-
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
                 _animator.Play("Buff", 0, 0f);
