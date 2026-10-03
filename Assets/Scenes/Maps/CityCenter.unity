@@ -169,11 +169,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3622548920129109940, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
       propertyPath: _expReward
-      value: 20
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 3622548920129109940, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
       propertyPath: _goldReward
-      value: 24
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6306785311533167210, guid: 5abfb943999bb564e8621ebdea1fb79f, type: 3}
       propertyPath: m_Name
@@ -5170,87 +5170,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 897228015}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &116345801
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 913036085261520604, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_Name
-      value: Demon
-      objectReference: {fileID: 0}
-    - target: {fileID: 2161911473836219496, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: _attackPower
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5969207111051139155, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5969207111051139155, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5969207111051139155, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7229979112023313809, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7229979112023313809, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 2.398
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -7.7839704
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -3.5759892
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8993100918636721035, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c72b015406f2c3646b0ae3cc17524a5d, type: 3}
 --- !u!1 &140062431
 GameObject:
   m_ObjectHideFlags: 0
@@ -35729,6 +35648,14 @@ PrefabInstance:
       propertyPath: _groundLayer.m_Bits
       value: 193
       objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _expReward
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _goldReward
+      value: 26
+      objectReference: {fileID: 0}
     - target: {fileID: 6921010378139430298, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: m_Name
       value: BlueSlime
@@ -65700,11 +65627,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _maxHealth
-      value: 100
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _goldReward
-      value: 26
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _useLevelScaling
@@ -70812,6 +70739,14 @@ PrefabInstance:
     - target: {fileID: 3636799132960694305, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: _groundLayer.m_Bits
       value: 193
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _expReward
+      value: 27
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _goldReward
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 6921010378139430298, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: m_Name
@@ -76154,6 +76089,14 @@ PrefabInstance:
       propertyPath: _groundLayer.m_Bits
       value: 193
       objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _expReward
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _goldReward
+      value: 24
+      objectReference: {fileID: 0}
     - target: {fileID: 6921010378139430298, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: m_Name
       value: BlueSlime
@@ -81334,6 +81277,7 @@ MonoBehaviour:
   _drinkCooldown: 1
   _hurtFrame1Duration: 0.25
   _hurtFrame2Duration: 0.17
+  _hurtVoiceCooldown: 0.6
   _baseMoveSpeed: 8
   _baseSprintSpeed: 13
   _acceleration: 50
@@ -81349,6 +81293,7 @@ MonoBehaviour:
   _baseDashDuration: 0.2
   _dashCooldown: 0.5
   _dashIFrameDuration: 0.15
+  _platformDropDuration: 0.15
   _attackSize: {x: 2.2, y: 2}
   _attackOffset: {x: 1.1, y: 0}
   _attackLayers:
@@ -81428,6 +81373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Physics.KinematicCharacterController2D
   _skinWidth: 0.015
   _maxSlopeAngle: 45
+  _stepOffset: 0.25
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 0
@@ -102106,6 +102052,14 @@ PrefabInstance:
       propertyPath: _groundLayer.m_Bits
       value: 193
       objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _expReward
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347883734464979851, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
+      propertyPath: _goldReward
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6921010378139430298, guid: 5fafbb05aef69f44bbc008bc29faef57, type: 3}
       propertyPath: m_Name
       value: BlueSlime
@@ -102237,4 +102191,3 @@ SceneRoots:
   - {fileID: 2012203833}
   - {fileID: 1190154662}
   - {fileID: 103115346}
-  - {fileID: 116345801}
