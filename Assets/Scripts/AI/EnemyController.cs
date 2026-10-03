@@ -173,6 +173,7 @@ private Rigidbody2D _rb;
         private FlyingEyeAudioController _flyingEyeAudio;
         private FoxAudioController _foxAudio;
         private GoblinAudioController _goblinAudio;
+        private SkeletonAudioController _skeletonAudio;
         private LizardAudioController _lizardAudio;
         private MinotaurAudioController _minotaurAudio;
         private MoonstoneKeeperAudioController _moonstoneKeeperAudio;
@@ -223,6 +224,7 @@ _rb = GetComponent<Rigidbody2D>();
             _flyingEyeAudio = GetComponent<FlyingEyeAudioController>();
             _foxAudio = GetComponent<FoxAudioController>();
             _goblinAudio = GetComponent<GoblinAudioController>();
+            _skeletonAudio = GetComponent<SkeletonAudioController>();
             _lizardAudio = GetComponent<LizardAudioController>();
             _minotaurAudio = GetComponent<MinotaurAudioController>();
             _moonstoneKeeperAudio = GetComponent<MoonstoneKeeperAudioController>();
@@ -1236,6 +1238,10 @@ _rb = GetComponent<Rigidbody2D>();
             // the hitbox's 0.8s victim cooldown can suppress the next skill.
             foreach (var hitbox in GetComponentsInChildren<EnemyHitbox2D>())
                 hitbox.BeginAttack();
+            if (skill.animationName == "Attack" && skill.projectilePrefab == null
+                && skill.groundSpellPrefab == null && skill.guardDuration <= 0f)
+                _skeletonAudio?.PlayNormalAttack();
+
             // A thrown weapon delivers its own damage; do not also hit with the body.
             if (skill.dealDamageAsSingleHit)
             {
@@ -1778,6 +1784,7 @@ _rb = GetComponent<Rigidbody2D>();
             Vector3 spawnPos = GetProjectileSpawnPosition(dirX);
 
             GameObject proj = Instantiate(prefab, spawnPos, Quaternion.identity);
+            _skeletonAudio?.PlaySwordThrow();
             _goblinAudio?.PlayBombThrow();
             if (_continuousActions || _waitForAttackProjectileToFinish) _activeSkillProjectile = proj;
             Vector3 scale = proj.transform.localScale;

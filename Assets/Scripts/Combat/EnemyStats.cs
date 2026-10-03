@@ -148,6 +148,8 @@ namespace TheLastKnight.Combat
                 || (attackingPlayer != null && necromancerSfx != null && necromancerSfx.isActiveAndEnabled)
                 || (attackingPlayer != null && reaperSfx != null && reaperSfx.isActiveAndEnabled)
                 || (GetComponent<TheLastKnight.AI.MechaStoneGolemAudioController>() is { isActiveAndEnabled: true });
+            hasSpecificHitSound = hasSpecificHitSound
+                || (GetComponent<TheLastKnight.AI.SkeletonAudioController>() is { isActiveAndEnabled: true });
             if (!hasSpecificHitSound)
                 TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
             CurrentHealth = Mathf.Max(0f, CurrentHealth - actualDamage);

@@ -93,7 +93,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
 --- !u!95 &6239444329937594630
@@ -182,10 +182,10 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.92, y: 1.02}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
@@ -206,5 +206,20 @@ MonoBehaviour:
   _speed: 8.5
   _damage: 12
   _lifetime: 5
+  _impactVisualHoldTime: 0
+  _fadeOutAfterImpact: 0
+  _maxTravelDistance: 0
+  _hitOverlappingPlayerOnSpawn: 0
+  _impactAudioClip: {fileID: 0}
+  _impactAudioVolume: 1
+  _playerImpactAudioClip: {fileID: 8300000, guid: 6964242e2232b9244a65356e5255fad0, type: 3}
+  _playerImpactAudioVolume: 1
+  _beamStartAudioClip: {fileID: 0}
+  _beamStartAudioVolume: 1
+  _continuousDamageInterval: 0
   _destroyOnGround: 1
   _knockback: {x: 3, y: 2}
+  _lobToTarget: 0
+  _lobFlightTime: 0.9
+  _lobArcHeight: 2
+  _explosionRadius: 1.25

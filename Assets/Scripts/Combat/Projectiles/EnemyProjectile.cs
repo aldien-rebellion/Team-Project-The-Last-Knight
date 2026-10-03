@@ -16,6 +16,8 @@ namespace TheLastKnight.Combat.Projectiles
         [SerializeField] private bool _hitOverlappingPlayerOnSpawn;
         [SerializeField] private AudioClip _impactAudioClip;
         [SerializeField, Range(0f, 1f)] private float _impactAudioVolume = 1f;
+        [SerializeField] private AudioClip _playerImpactAudioClip;
+        [SerializeField, Range(0f, 1f)] private float _playerImpactAudioVolume = 1f;
         [SerializeField] private AudioClip _beamStartAudioClip;
         [SerializeField, Range(0f, 1f)] private float _beamStartAudioVolume = 1f;
         [SerializeField, Min(0f)] private float _continuousDamageInterval;
@@ -34,6 +36,7 @@ namespace TheLastKnight.Combat.Projectiles
         private SpriteRenderer _spriteRenderer;
         private float _initialAlpha;
         private float _impactStartTime;
+        private float _playerImpactAudioHoldTime;
         private Collider2D _collider;
         private bool _hasImpacted = false;
         private Vector2 _startPosition;
@@ -221,6 +224,12 @@ namespace TheLastKnight.Combat.Projectiles
                     }
                 }
 
+                if (_playerImpactAudioClip != null)
+                {
+                    PlayAudioClip(_playerImpactAudioClip, _playerImpactAudioVolume);
+                    _playerImpactAudioHoldTime = _playerImpactAudioClip.length;
+                }
+
                 if (_beamActive)
                     _nextBeamDamageTime = Time.time + _continuousDamageInterval;
                 else
@@ -298,12 +307,14 @@ namespace TheLastKnight.Combat.Projectiles
                     }
                 }
                 Destroy(gameObject, Mathf.Max(explosionDuration,
-                    _impactAudioClip != null ? _impactAudioClip.length : 0f));
+                    Mathf.Max(_impactAudioClip != null ? _impactAudioClip.length : 0f,
+                        _playerImpactAudioClip != null ? _playerImpactAudioClip.length : 0f)));
             }
             else
             {
                 Destroy(gameObject, Mathf.Max(_impactVisualHoldTime,
-                    _impactAudioClip != null ? _impactAudioClip.length : 0f));
+                    Mathf.Max(_impactAudioClip != null ? _impactAudioClip.length : 0f,
+                        _playerImpactAudioHoldTime)));
             }
         }
 
