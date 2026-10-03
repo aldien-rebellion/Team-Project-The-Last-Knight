@@ -19,8 +19,8 @@ MonoBehaviour:
   hpPerVIT: 10
   baseStamina: 150
   staminaPerVIT: 1.5
-  dexLimitTarget: 250
-  targetCritAtCap: 99
+  dexLimitTarget: 200
+  targetCritAtCap: 100
   critChancePerDEX: 0.5
   baseAttackSpeed: 1
   attackSpeedPerAGI: 0.01

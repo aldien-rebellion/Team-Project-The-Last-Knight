@@ -50,7 +50,7 @@ namespace TheLastKnight.Tests
                 float enemyBefore = Read(target, "CurrentHealth");
                 Invoke(controller, "StartAttack");
                 Invoke(controller, "ApplyAttackHits");
-                float expected = Read(stats, "AttackPower") * outgoingMultiplier * (critical ? 2f : 1f);
+                float expected = Read(stats, "AttackPower") * outgoingMultiplier * (critical ? 1.5f : 1f);
                 Assert.That(enemyBefore - Read(target, "CurrentHealth"), Is.EqualTo(expected).Within(0.001f));
             }
             finally
