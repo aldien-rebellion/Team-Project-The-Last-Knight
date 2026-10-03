@@ -1271,7 +1271,6 @@ namespace TheLastKnight.Player
         public void OnTakeDamage()
         {
             var audioManager = TheLastKnight.Audio.AudioManager.Instance;
-            audioManager?.PlaySfx("player_damaged");
             if (Time.time >= _nextHurtVoiceTime)
             {
                 audioManager?.PlaySfx("player_hurt_voice");

@@ -53,8 +53,6 @@ MonoBehaviour:
     clip: {fileID: 0}
   - id: player_hit
     clip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
-  - id: player_damaged
-    clip: {fileID: 8300000, guid: 80d879dc48fce1646b431a8ec3e61627, type: 3}
   - id: player_hurt_voice
     clip: {fileID: 8300000, guid: a49f42d474e40974684cbb262aed072f, type: 3}
   - id: enemy_death
