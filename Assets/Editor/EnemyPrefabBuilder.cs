@@ -494,7 +494,9 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "FlyingEye") SetupFlyingEyeParry(root, sr);
             if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
             if (cfg.Name == "Jinn") SetupJinnParry(root, sr);
-            if (cfg.Name == "Goblin" || cfg.Name == "Minotaur_1" || cfg.Name == "Minotaur_3" || cfg.Name == "Necromancer")
+            if (cfg.Name == "Satyr")
+                SetupStandardParryStunEffect(root, sr, 2f, "Assets/sprites/effect/stun");
+            else if (cfg.Name == "Goblin" || cfg.Name == "Minotaur_1" || cfg.Name == "Minotaur_3" || cfg.Name == "Necromancer")
                 SetupStandardParryStunEffect(root, sr);
             if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
             if (cfg.Name == "UndeadExecutioner")
@@ -691,6 +693,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                     ? "Assets/Sound/เสียงแทง.WAV"
                     : "Assets/Sound/ดาบใหญ่ผ่าอากาศ.WAV";
                 SetupMinotaurAudio(root, attackClipPath);
+            }
+            else if (cfg.Name == "Satyr")
+            {
+                SetupSatyrAudio(root);
             }
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
@@ -1049,6 +1055,24 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             Debug.Log("[EnemyPrefabBuilder] Connected Minotaur SFX clips successfully!");
         }
 
+        private static void SetupSatyrAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var satyrAudio = root.AddComponent<SatyrAudioController>();
+            satyrAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/sound/เสียงลมโดน.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/sound/เสียงยิง.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/sound/เสียงชกหรือฟาด.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/sound/เสียงลม.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Satyr SFX clips successfully!");
+        }
+
         private static void SetupMoonstoneKeeperAudio(GameObject root)
         {
             var audioSource = root.AddComponent<AudioSource>();
@@ -1134,7 +1158,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
         }
 
         private static void SetupStandardParryStunEffect(GameObject root, SpriteRenderer spriteRenderer,
-            float stunDuration = 2f)
+            float stunDuration = 2f, string stunEffectFolder = "Assets/sprites/effect/Stun")
         {
             var receiver = root.GetComponent<ParryReceiver>();
             if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
@@ -1146,11 +1170,11 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
 
             string[] stunFramePaths =
             {
-                "Assets/sprites/effect/Stun/Stun_1.png",
-                "Assets/sprites/effect/Stun/Stun_2.png",
-                "Assets/sprites/effect/Stun/Stun_3.png",
-                "Assets/sprites/effect/Stun/Stun_4.png",
-                "Assets/sprites/effect/Stun/Stun_5.png"
+                $"{stunEffectFolder}/Stun_1.png",
+                $"{stunEffectFolder}/Stun_2.png",
+                $"{stunEffectFolder}/Stun_3.png",
+                $"{stunEffectFolder}/Stun_4.png",
+                $"{stunEffectFolder}/Stun_5.png"
             };
             var stunFrames = parry.FindProperty("_stunEffectFrames");
             stunFrames.arraySize = stunFramePaths.Length;
