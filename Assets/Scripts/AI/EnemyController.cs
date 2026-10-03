@@ -163,7 +163,6 @@ private Rigidbody2D _rb;
         private bool _weaponDrawn;
         private float _patrolPauseUntil;
         private ParryReceiver _parry;
-        private SmallDragonFireAttackEffect _smallDragonFireEffect;
         private ArchDemonAudioController _archDemonAudio;
         private JinnAudioController _jinnAudio;
         private DemonAudioController _demonAudio;
@@ -217,7 +216,6 @@ _rb = GetComponent<Rigidbody2D>();
             if (_parry == null) _parry = gameObject.AddComponent<ParryReceiver>();
             if (_useColliderEdgeAttackRanges)
                 _parry.SetSpriteCenter(GetComponent<SpriteRenderer>(), true);
-            _smallDragonFireEffect = GetComponentInChildren<SmallDragonFireAttackEffect>(true);
             _archDemonAudio = GetComponent<ArchDemonAudioController>();
             _jinnAudio = GetComponent<JinnAudioController>();
             _demonAudio = GetComponent<DemonAudioController>();
@@ -928,7 +926,6 @@ _rb = GetComponent<Rigidbody2D>();
                 _necromancerAudio?.PlayAttack();
                 _minotaurAudio?.PlayBasicAttack();
             }
-            _smallDragonFireEffect?.Play();
             float damageStartDelay = ranged ? 0f : Mathf.Max(
                 _basicAttackDamageDelay,
                 GetBasicAttackDamageStartDelay(_basicAttackAnimState));
@@ -1219,7 +1216,6 @@ _rb = GetComponent<Rigidbody2D>();
                 _foxAudio?.PlayBite();
             if (skill.skillName == "FireBreath" || skill.skillName == "SmallFireBall")
                 _dragonSfx?.PlayFireBreath();
-            _smallDragonFireEffect?.Play();
             if (skill.animationName == "Skill1")
                 _undeadExecutionerAudio?.PlaySpinningCleave();
             if (skill.animationName == "Summon")
@@ -1727,7 +1723,6 @@ _rb = GetComponent<Rigidbody2D>();
             _holdingFireballRain = false;
             SetSkillSpriteHidden(false);
             SetSkillHealthBarsHidden(false);
-            _smallDragonFireEffect?.Stop();
             _parry?.FinishWindup();
             _damageUntil = 0f;
             _projectileSpawned = true;

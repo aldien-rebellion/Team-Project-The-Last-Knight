@@ -389,11 +389,6 @@ private static void BuildBringerOfDeathSpell()
                 anim.runtimeAnimatorController = controller;
             }
 
-            if (cfg.Name == "Small_dragon")
-            {
-                SetupSmallDragonFireAttack(root);
-            }
-
             // Rigidbody2D
             var rb = root.AddComponent<Rigidbody2D>();
             rb.bodyType = RigidbodyType2D.Dynamic;
@@ -733,53 +728,6 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 property.GetArrayElementAtIndex(i).objectReferenceValue = frames[i];
         }
 
-        private static void SetupSmallDragonFireAttack(GameObject root)
-        {
-            var effect = new GameObject("FireAttack");
-            effect.transform.SetParent(root.transform, false);
-            effect.transform.localPosition = new Vector3(0.46f, 0.16f, -0.02f);
-            effect.transform.localScale = new Vector3(1.75f, 1.75f, 1f);
-
-            var fireRenderer = effect.AddComponent<SpriteRenderer>();
-            fireRenderer.enabled = false;
-            fireRenderer.sortingOrder = 3;
-
-            var fireAudio = effect.AddComponent<AudioSource>();
-            fireAudio.clip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ไฟไหม้.mp3");
-            fireAudio.playOnAwake = false;
-            fireAudio.loop = true;
-            fireAudio.spatialBlend = 0.8f;
-            fireAudio.volume = 0.7f;
-            fireAudio.minDistance = 2f;
-            fireAudio.maxDistance = 20f;
-
-            var fireEffect = effect.AddComponent<SmallDragonFireAttackEffect>();
-
-            var sprites = new Sprite[6];
-            for (int i = 0; i < 5; i++)
-            {
-                sprites[i] = AssetDatabase.LoadAssetAtPath<Sprite>(
-                    $"Assets/sprites/Monsters/craftpix-561178-free-rpg-monster-sprites-pixel-art/PNG/small_dragon/Fire_Attack{i + 1}.png");
-            }
-
-            // Fire_Attack6 is imported as a single Sprite in Unity; use that
-            // full frame instead of an automatically sliced sub-sprite.
-            sprites[5] = AssetDatabase.LoadAssetAtPath<Sprite>(
-                "Assets/sprites/Monsters/craftpix-561178-free-rpg-monster-sprites-pixel-art/PNG/small_dragon/Fire_Attack6.png");
-            if (sprites.Any(sprite => sprite == null)) return;
-
-            var effectData = new SerializedObject(fireEffect);
-            effectData.FindProperty("_renderer").objectReferenceValue = fireRenderer;
-            effectData.FindProperty("_audioSource").objectReferenceValue = fireAudio;
-            var frameProperty = effectData.FindProperty("_frames");
-            frameProperty.arraySize = sprites.Length;
-            for (int i = 0; i < sprites.Length; i++)
-                frameProperty.GetArrayElementAtIndex(i).objectReferenceValue = sprites[i];
-            effectData.FindProperty("_duration").floatValue = 2f;
-            effectData.FindProperty("_frameRate").floatValue = 16f;
-            effectData.ApplyModifiedPropertiesWithoutUndo();
-        }
-
         private static void CreateHealthBarCanvas(GameObject parent, EnemyStats stats, float characterHeight)
         {
             GameObject canvasGo = new GameObject("HealthCanvas");
@@ -867,8 +815,19 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             audioSource.minDistance = 2f;
             audioSource.maxDistance = 20f;
 
+            var attackAudioSource = root.AddComponent<AudioSource>();
+            attackAudioSource.playOnAwake = false;
+            attackAudioSource.spatialBlend = 0.8f;
+            attackAudioSource.minDistance = 2f;
+            attackAudioSource.maxDistance = 20f;
+
             var dragonSfx = root.AddComponent<DragonSfxController>();
             var sfx = new SerializedObject(dragonSfx);
+            sfx.FindProperty("_attackAudioSource").objectReferenceValue = attackAudioSource;
+            sfx.FindProperty("_attackStartOffset").floatValue = 0.2f;
+            sfx.FindProperty("_attackEndOffset").floatValue = 2.13f;
+            sfx.FindProperty("_attackFadeOutDuration").floatValue = 0.92f;
+            sfx.FindProperty("_attackPitch").floatValue = 1.15f;
             var fireBreathClip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ลมหายใจไฟ.wav");
             sfx.FindProperty("_biteClip").objectReferenceValue = fireBreathClip;
             sfx.FindProperty("_fireBreathClip").objectReferenceValue = fireBreathClip;
