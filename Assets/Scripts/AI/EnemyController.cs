@@ -570,6 +570,7 @@ _rb = GetComponent<Rigidbody2D>();
             }
             else if (withinDetectionRange && _playAttackStatesDirectly && readySkill == null
                 && _skills != null && _skills.Length > 0 && !_disableBasicAttack
+                && (!_requireCloseRangeForContactSkills || meleeDistance <= _meleeRange || isTouching)
                 && Time.time >= _nextMeleeTime)
             {
                 // Keep this boss applying pressure with its basic attack while
