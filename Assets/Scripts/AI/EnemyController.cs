@@ -1215,7 +1215,7 @@ _rb = GetComponent<Rigidbody2D>();
                 _skeletonKnightAudio?.PlayFullCombo();
             if (skill.skillName == "ParryBite")
                 _foxAudio?.PlayBite();
-            if (skill.skillName == "FireBreath")
+            if (skill.skillName == "FireBreath" || skill.skillName == "SmallFireBall")
                 _dragonSfx?.PlayFireBreath();
             _smallDragonFireEffect?.Play();
             if (skill.animationName == "Summon")

@@ -490,6 +490,8 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (spellPrefab != null) serializedAI.FindProperty("_groundSpellPrefab").objectReferenceValue = spellPrefab;
             serializedAI.ApplyModifiedProperties();
             ConfigureMonsterSkillsAndParry(ai, cfg.Name);
+            if (cfg.Name == "Small_dragon")
+                SetupStandardParryStunEffect(root, sr, 2f, "Assets/sprites/effect/Stun");
             if (cfg.Name == "SkeletonKnight")
             {
                 SetupSkeletonKnightAudio(root);
@@ -645,7 +647,11 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             }
 
             // Special handling for ShadowDemonDragon: Audio Controller
-            if (cfg.Name == "ShadowDemonDragon")
+            if (cfg.Name == "Small_dragon")
+            {
+                SetupSmallDragonAudio(root);
+            }
+            else if (cfg.Name == "ShadowDemonDragon")
             {
                 SetupDragonAudio(root);
             }
@@ -729,12 +735,21 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
         {
             var effect = new GameObject("FireAttack");
             effect.transform.SetParent(root.transform, false);
-            effect.transform.localPosition = new Vector3(0.46f, 0.08f, -0.02f);
+            effect.transform.localPosition = new Vector3(0.46f, 0.16f, -0.02f);
             effect.transform.localScale = new Vector3(1.75f, 1.75f, 1f);
 
             var fireRenderer = effect.AddComponent<SpriteRenderer>();
             fireRenderer.enabled = false;
             fireRenderer.sortingOrder = 3;
+
+            var fireAudio = effect.AddComponent<AudioSource>();
+            fireAudio.clip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ไฟไหม้.mp3");
+            fireAudio.playOnAwake = false;
+            fireAudio.loop = true;
+            fireAudio.spatialBlend = 0.8f;
+            fireAudio.volume = 0.7f;
+            fireAudio.minDistance = 2f;
+            fireAudio.maxDistance = 20f;
 
             var fireEffect = effect.AddComponent<SmallDragonFireAttackEffect>();
 
@@ -753,6 +768,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
 
             var effectData = new SerializedObject(fireEffect);
             effectData.FindProperty("_renderer").objectReferenceValue = fireRenderer;
+            effectData.FindProperty("_audioSource").objectReferenceValue = fireAudio;
             var frameProperty = effectData.FindProperty("_frames");
             frameProperty.arraySize = sprites.Length;
             for (int i = 0; i < sprites.Length; i++)
@@ -839,6 +855,28 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
 
             dragonAudio.SetClips(idle, footstep, attack, hit, death, deathFall);
             Debug.Log("[EnemyPrefabBuilder] Connected Shadow Demon Dragon SFX clips successfully!");
+        }
+
+        private static void SetupSmallDragonAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var dragonSfx = root.AddComponent<DragonSfxController>();
+            var sfx = new SerializedObject(dragonSfx);
+            var fireBreathClip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ลมหายใจไฟ.wav");
+            sfx.FindProperty("_biteClip").objectReferenceValue = fireBreathClip;
+            sfx.FindProperty("_fireBreathClip").objectReferenceValue = fireBreathClip;
+            sfx.FindProperty("_playerHitClip").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV");
+            sfx.FindProperty("_biteVolume").floatValue = 0.9f;
+            sfx.FindProperty("_fireBreathVolume").floatValue = 0.9f;
+            sfx.FindProperty("_playerHitVolume").floatValue = 0.9f;
+            sfx.ApplyModifiedPropertiesWithoutUndo();
+            Debug.Log("[EnemyPrefabBuilder] Connected Small Dragon SFX clips successfully!");
         }
 
         private static void SetupFantasyMushroomAudio(GameObject root)
