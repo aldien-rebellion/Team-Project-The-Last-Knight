@@ -511,6 +511,7 @@ namespace TheLastKnight.Player
             {
                 currentActiveBeam = TrackSpawn(Instantiate(beamPrefabPhase3, beamSpawnPos, beamSpawnRot));
                 currentActiveBeam.transform.position = beamSpawnPos;
+                TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("excalibur_beam_release");
 
                 ParticleSystem[] beamPS = currentActiveBeam.GetComponentsInChildren<ParticleSystem>(true);
                 foreach (var ps in beamPS) if (ps != null) ps.Play();

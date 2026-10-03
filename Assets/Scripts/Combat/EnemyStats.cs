@@ -142,7 +142,9 @@ namespace TheLastKnight.Combat
             bool hasSpecificHitSound = (dragonSfx != null && dragonSfx.isActiveAndEnabled)
                 || (jinnSfx != null && jinnSfx.isActiveAndEnabled)
                 || (GetComponent<TheLastKnight.AI.MechaStoneGolemAudioController>() is { isActiveAndEnabled: true });
-            if (!hasSpecificHitSound)
+            if (attackingPlayer != null)
+                TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("player_hit");
+            else if (!hasSpecificHitSound)
                 TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
             CurrentHealth = Mathf.Max(0f, CurrentHealth - actualDamage);
 
