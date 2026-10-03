@@ -349,6 +349,7 @@ GameObject:
   - component: {fileID: 5916732871693478112}
   - component: {fileID: 9010000000000000001}
   - component: {fileID: 9010000000000000002}
+  - component: {fileID: 9010000000000000003}
   m_Layer: 0
   m_Name: UndeadExecutioner
   m_TagString: Untagged
@@ -637,6 +638,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 6715231333313269192}
   _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 0
+  _centerLocalOffset: {x: 0, y: 0}
+  _stunEffectFrames:
+  - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
+  - {fileID: 2800000, guid: f9d72ddb787e9a142bf7fc9974eb9b0d, type: 3}
+  - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
+  - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
+  - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0
+  _stunEffectHeadYFraction: 0
+  _stunEffectHeadYOffset: 0.25
+  _stunEffectWorldScale: 0.5
 --- !u!114 &9010000000000000002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -670,3 +684,19 @@ MonoBehaviour:
   _frameDuration: 0.1
   _idleDuration: 0.45
   _headGap: 0.08
+--- !u!114 &9010000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9202071590010905333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd1527dae41456082ee88bba14d8eb4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.UndeadExecutionerAudioController
+  _basicAttackClip: {fileID: 8300000, guid: f3f9d844ea901ad49a4a9c74b3375a94, type: 3}
+  _spinningCleaveClip: {fileID: 8300000, guid: 6e78d67fafe1fdb4fa94836bd1e3a67a, type: 3}
+  _darkSummonClip: {fileID: 8300000, guid: f4841b35d1f5ec5409bb98e5430b65b4, type: 3}
+  _playerHitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}

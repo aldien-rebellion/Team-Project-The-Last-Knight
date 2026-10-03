@@ -16,6 +16,7 @@ namespace TheLastKnight.EditorTools
         public Sprite[] Frames;
         public float FPS;
         public bool IsLooping;
+        public AnimationEvent[] AnimationEvents;
     }
 
     public class MoveVerificationResult
@@ -208,6 +209,8 @@ namespace TheLastKnight.EditorTools
             }
 
             AnimationUtility.SetObjectReferenceCurve(clip, binding, keyframes);
+            if (move.AnimationEvents != null)
+                AnimationUtility.SetAnimationEvents(clip, move.AnimationEvents);
 
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
             settings.loopTime = move.IsLooping;
@@ -881,7 +884,18 @@ namespace TheLastKnight.EditorTools
 
             var moves = new List<MonsterMove>
             {
-                new MonsterMove { Name = "Attack", Frames = attackSprites, FPS = 10f, IsLooping = false },
+                new MonsterMove
+                {
+                    Name = "Attack",
+                    Frames = attackSprites,
+                    FPS = 10f,
+                    IsLooping = false,
+                    AnimationEvents = new AnimationEvent[]
+                    {
+                        new AnimationEvent { time = 0.3f, functionName = "PlayBasicAttack" },
+                        new AnimationEvent { time = 0.9f, functionName = "PlayBasicAttack" }
+                    }
+                },
                 new MonsterMove { Name = "Death", Frames = deathSprites, FPS = 10f, IsLooping = false },
                 new MonsterMove { Name = "Idle", Frames = idleSprites, FPS = 8f, IsLooping = true },
                 new MonsterMove { Name = "Idle2", Frames = idle2Sprites, FPS = 8f, IsLooping = true },

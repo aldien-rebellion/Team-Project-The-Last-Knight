@@ -184,6 +184,7 @@ private Rigidbody2D _rb;
         private MechaStoneGolemAudioController _mechaStoneGolemAudio;
         private NecromancerAudioController _necromancerAudio;
         private SatyrAudioController _satyrAudio;
+        private UndeadExecutionerAudioController _undeadExecutionerAudio;
         private float _damageUntil;
         private bool _projectileSpawned;
         private bool _wasAirborne;
@@ -237,6 +238,7 @@ _rb = GetComponent<Rigidbody2D>();
             _mechaStoneGolemAudio = GetComponent<MechaStoneGolemAudioController>();
             _necromancerAudio = GetComponent<NecromancerAudioController>();
             _satyrAudio = GetComponent<SatyrAudioController>();
+            _undeadExecutionerAudio = GetComponent<UndeadExecutionerAudioController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
             _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
@@ -1218,8 +1220,13 @@ _rb = GetComponent<Rigidbody2D>();
             if (skill.skillName == "FireBreath" || skill.skillName == "SmallFireBall")
                 _dragonSfx?.PlayFireBreath();
             _smallDragonFireEffect?.Play();
+            if (skill.animationName == "Skill1")
+                _undeadExecutionerAudio?.PlaySpinningCleave();
             if (skill.animationName == "Summon")
+            {
                 GetComponent<TheLastKnight.Combat.UndeadExecutionerSummonEffect>()?.Play(_player);
+                _undeadExecutionerAudio?.PlayDarkSummon();
+            }
             _damageUntil = 0f;
 
             float damageStartDelay = Mathf.Max(0f, skill.damageStartDelay);

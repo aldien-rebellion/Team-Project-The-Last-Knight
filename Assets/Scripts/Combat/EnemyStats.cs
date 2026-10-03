@@ -156,6 +156,9 @@ namespace TheLastKnight.Combat
             hasSpecificHitSound = hasSpecificHitSound
                 || (attackingPlayer != null
                     && GetComponent<TheLastKnight.AI.HoodedProtagonistAudioController>() is { isActiveAndEnabled: true });
+            hasSpecificHitSound = hasSpecificHitSound
+                || (attackingPlayer != null
+                    && GetComponent<TheLastKnight.AI.UndeadExecutionerAudioController>() is { isActiveAndEnabled: true });
             if (!hasSpecificHitSound)
                 TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
             CurrentHealth = Mathf.Max(0f, CurrentHealth - actualDamage);

@@ -511,6 +511,8 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
             if (cfg.Name == "UndeadExecutioner")
             {
+                SetupUndeadExecutionerAudio(root);
+                SetupStandardParryStunEffect(root, sr, 2f, "Assets/sprites/effect/stun");
                 var effect = root.AddComponent<UndeadExecutionerSummonEffect>();
                 var effectData = new SerializedObject(effect);
                 string spriteDir = "Assets/sprites/Monsters/Undead executioner/Undead executioner puppet/png";
@@ -1128,6 +1130,23 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>(basicAttackClipPath),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Minotaur SFX clips successfully!");
+        }
+
+        private static void SetupUndeadExecutionerAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var audio = root.AddComponent<UndeadExecutionerAudioController>();
+            audio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงแทง.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงลมโดน.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงยิง.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Undead Executioner SFX clips successfully!");
         }
 
         private static void SetupSatyrAudio(GameObject root)
