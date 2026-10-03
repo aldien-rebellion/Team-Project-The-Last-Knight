@@ -176,6 +176,7 @@ private Rigidbody2D _rb;
         private LizardAudioController _lizardAudio;
         private MinotaurAudioController _minotaurAudio;
         private MoonstoneKeeperAudioController _moonstoneKeeperAudio;
+        private ReaperAudioController _reaperAudio;
         private DragonSfxController _dragonSfx;
         private MechaStoneGolemAudioController _mechaStoneGolemAudio;
         private NecromancerAudioController _necromancerAudio;
@@ -224,6 +225,7 @@ _rb = GetComponent<Rigidbody2D>();
             _lizardAudio = GetComponent<LizardAudioController>();
             _minotaurAudio = GetComponent<MinotaurAudioController>();
             _moonstoneKeeperAudio = GetComponent<MoonstoneKeeperAudioController>();
+            _reaperAudio = GetComponent<ReaperAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
             _mechaStoneGolemAudio = GetComponent<MechaStoneGolemAudioController>();
             _necromancerAudio = GetComponent<NecromancerAudioController>();
@@ -649,6 +651,7 @@ _rb = GetComponent<Rigidbody2D>();
             _weaponDrawn = drawWeapon;
             string animationName = drawWeapon ? "WieldWeapon" : "HolsterWeapon";
             PlayStanceAnimation(animationName);
+            if (drawWeapon) _reaperAudio?.PlayWeaponDraw();
             yield return new WaitForSeconds(GetAnimationDuration(animationName, 0.5f));
             if (!_stats.IsDead)
                 PlayStanceAnimation(drawWeapon ? "HostileIdle" : "PassiveIdle");
@@ -904,6 +907,7 @@ _rb = GetComponent<Rigidbody2D>();
             }
             if (!ranged)
             {
+                _reaperAudio?.PlaySwordSlash();
                 _jinnAudio?.PlayCloseAttack();
                 _foxAudio?.PlayBite();
                 _dragonSfx?.PlayBite();

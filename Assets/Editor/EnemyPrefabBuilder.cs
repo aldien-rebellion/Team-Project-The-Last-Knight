@@ -575,7 +575,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 parry.FindProperty("_centerSprite").objectReferenceValue = sr;
                 parry.FindProperty("_useVisibleSpriteBounds").boolValue = cfg.Name == "Skeleton" || cfg.Name == "SkeletonKnight" || cfg.Name == "Small_dragon" || cfg.Name == "UndeadExecutioner" || cfg.Name == "ShadowDemonDragon" || cfg.Name == "ForestMushroom" || cfg.Name == "Reaper" || cfg.Name == "Necromancer" || cfg.Name == "BringerOfDeath" || cfg.Name == "Demon" || cfg.Name == "FantasyMushroom";
                 parry.FindProperty("_centerLocalOffset").vector2Value = cfg.Name == "Demon" ? new Vector2(-0.08f, 0f) : Vector2.zero;
-                if (cfg.Name == "FantasyMushroom")
+                if (cfg.Name == "FantasyMushroom" || cfg.Name == "Reaper")
                 {
                     string[] stunFramePaths =
                     {
@@ -595,7 +595,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                     parry.FindProperty("_stunEffectDuration").floatValue = 2f;
                     parry.FindProperty("_stunEffectHeadXFraction").floatValue = 0f;
                     parry.FindProperty("_stunEffectHeadYFraction").floatValue = 0f;
-                    parry.FindProperty("_stunEffectHeadYOffset").floatValue = 0.1f;
+                    parry.FindProperty("_stunEffectHeadYOffset").floatValue = cfg.Name == "Reaper" ? 0.25f : 0.1f;
                     parry.FindProperty("_stunEffectWorldScale").floatValue = 0.5f;
                 }
                 parry.ApplyModifiedPropertiesWithoutUndo();
@@ -654,6 +654,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             else if (cfg.Name == "MoonstoneKeeper")
             {
                 SetupMoonstoneKeeperAudio(root);
+            }
+            else if (cfg.Name == "Reaper")
+            {
+                SetupReaperAudio(root);
             }
             else if (cfg.Name == "ForestMushroom")
             {
@@ -1058,6 +1062,22 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ดาบใหญ่ผ่าอากาศ.WAV"),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Moonstone Keeper SFX clips successfully!");
+        }
+
+        private static void SetupReaperAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 24f;
+
+            var reaperAudio = root.AddComponent<ReaperAudioController>();
+            reaperAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/sound/ฟันดาบ.wav"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/sound/เสียงขว้าง.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Reaper SFX clips successfully!");
         }
 
         private static void SetupMechaStoneGolemAudio(GameObject root)
