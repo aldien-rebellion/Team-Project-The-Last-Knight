@@ -399,7 +399,8 @@ namespace TheLastKnight.Tests
                 player.transform.position = new Vector3(26000, 26000, 0);
                 var controller = player.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController"));
                 var stats = player.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
-                var vfx = player.AddComponent(RuntimeType("TheLastKnight.Player.ExcaliburVFXController"));
+                var vfx = player.GetComponent(RuntimeType("TheLastKnight.Player.ExcaliburVFXController")) 
+                    ?? player.AddComponent(RuntimeType("TheLastKnight.Player.ExcaliburVFXController"));
                 Invoke(controller, "Awake");
                 Invoke(stats, "Awake");
 

@@ -72,6 +72,13 @@ namespace TheLastKnight.UI
         private readonly List<TheLastKnight.Inventory.InventorySlotUI> _quickSlotUIs = new List<TheLastKnight.Inventory.InventorySlotUI>();
         private readonly List<SkillSlotUI> _skillSlots = new List<SkillSlotUI>();
 
+        // Left Buff Dock (Docked to wooden frame expanding leftwards)
+        private RectTransform _leftBuffDock;
+        public RectTransform LeftBuffDock => _leftBuffDock;
+        private readonly List<BuffCardUI> _statusBuffCards = new List<BuffCardUI>();
+        public IReadOnlyList<BuffCardUI> StatusBuffCards => _statusBuffCards;
+        private readonly List<ActiveBuffInfo> _cachedActiveBuffs = new List<ActiveBuffInfo>();
+
         // Floating Cursor Follower
         private GameObject _cursorFollower;
         private Image _cursorIcon;
@@ -83,7 +90,7 @@ namespace TheLastKnight.UI
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoInitialize()
         {
-            if (Instance == null)
+            if (Application.isPlaying && Instance == null)
             {
                 var go = new GameObject("CharacterStatusUI_Manager");
                 go.AddComponent<CharacterStatusUI>();
@@ -100,7 +107,7 @@ namespace TheLastKnight.UI
             }
 
             Instance = this;
-            if (transform.parent == null)
+            if (Application.isPlaying && transform.parent == null)
             {
                 DontDestroyOnLoad(gameObject);
             }
@@ -286,6 +293,8 @@ namespace TheLastKnight.UI
                 }
                 // Keep the document alive so hiding the HUD does not tear down shared UI input.
             }
+            SkillCooldownHUD.Instance?.SetVisible(visible);
+            PlayerBuffHUD.Instance?.SetVisible(visible);
         }
 
         private void SetWindowVisible(bool visible)
@@ -428,6 +437,9 @@ namespace TheLastKnight.UI
 
             // Right Panel Overlays (Status Points, STR/AGI/VIT/DEX, Inventory Grid)
             BuildRightOverlays(_windowRect);
+
+            // Left Dock Overlays (Active Buffs attached to wooden frame expanding leftwards)
+            BuildLeftBuffDock(_windowRect);
 
             // Close Button [X] at Top-Right (built after overlays to stay topmost)
             BuildCloseButton(_windowRect);
@@ -1266,6 +1278,9 @@ namespace TheLastKnight.UI
                 }
             }
 
+            // Refresh Active Buffs on the left side of the wooden frame
+            RefreshBuffDock(player);
+
             if (_isOpen && _currentHoveredStat != null && _tooltipBox != null && _tooltipBox.activeSelf)
             {
                 ShowStatTooltip(_currentHoveredStat, _currentHoveredPrefix);
@@ -1291,7 +1306,215 @@ namespace TheLastKnight.UI
         }
         #endregion
 
+        #region Left Buff Dock (Minecraft-style status effects docked to wooden frame, expanding leftwards)
+        private void BuildLeftBuffDock(RectTransform windowRect)
+        {
+            var dockGo = new GameObject("BuffDock_Left", typeof(RectTransform), typeof(VerticalLayoutGroup));
+            dockGo.transform.SetParent(windowRect, false);
+
+            _leftBuffDock = dockGo.GetComponent<RectTransform>();
+            // Docked to the left edge of the wooden window frame!
+            _leftBuffDock.anchorMin = new Vector2(0f, 1f); // Top-left of wooden frame
+            _leftBuffDock.anchorMax = new Vector2(0f, 1f);
+            _leftBuffDock.pivot = new Vector2(1f, 1f); // Right-aligned to frame's left edge
+            _leftBuffDock.anchoredPosition = new Vector2(-10f, -16f); // 10px to the left of the wooden frame
+            _leftBuffDock.sizeDelta = new Vector2(150f, 400f);
+
+            var vlg = dockGo.GetComponent<VerticalLayoutGroup>();
+            vlg.spacing = 6;
+            vlg.childControlWidth = false;
+            vlg.childControlHeight = false;
+            vlg.childForceExpandWidth = false;
+            vlg.childForceExpandHeight = false;
+            vlg.childAlignment = TextAnchor.UpperRight; // Cards grow outwards to the left!
+        }
+
+        private BuffCardUI CreateStatusBuffCard(int index)
+        {
+            var cardGo = new GameObject($"BuffCard_{index}", typeof(RectTransform), typeof(Image), typeof(Outline));
+            cardGo.transform.SetParent(_leftBuffDock, false);
+
+            var cardRt = cardGo.GetComponent<RectTransform>();
+            cardRt.pivot = new Vector2(1f, 0.5f); // Anchored on right, expands outwards to left
+            cardRt.sizeDelta = new Vector2(146f, 38f);
+
+            var bgImg = cardGo.GetComponent<Image>();
+            bgImg.color = new Color(0.07f, 0.08f, 0.12f, 0.92f);
+            bgImg.raycastTarget = true; // Enables hover for tooltip
+
+            var outline = cardGo.GetComponent<Outline>();
+            outline.effectColor = new Color(0.65f, 0.52f, 0.28f, 0.85f); // Warm gold border matching wooden frame
+            outline.effectDistance = new Vector2(1.2f, 1.2f);
+
+            // Icon Socket
+            var socketGo = new GameObject("IconSocket", typeof(RectTransform), typeof(Image));
+            socketGo.transform.SetParent(cardGo.transform, false);
+            var socketRt = socketGo.GetComponent<RectTransform>();
+            socketRt.anchorMin = new Vector2(0f, 0.5f);
+            socketRt.anchorMax = new Vector2(0f, 0.5f);
+            socketRt.pivot = new Vector2(0f, 0.5f);
+            socketRt.anchoredPosition = new Vector2(4f, 0f);
+            socketRt.sizeDelta = new Vector2(30f, 30f);
+
+            var socketImg = socketGo.GetComponent<Image>();
+            socketImg.color = new Color(0.03f, 0.04f, 0.06f, 0.95f);
+            socketImg.raycastTarget = false;
+
+            // Icon Image
+            var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+            iconGo.transform.SetParent(socketGo.transform, false);
+            var iconRt = iconGo.GetComponent<RectTransform>();
+            iconRt.anchorMin = new Vector2(0.5f, 0.5f);
+            iconRt.anchorMax = new Vector2(0.5f, 0.5f);
+            iconRt.pivot = new Vector2(0.5f, 0.5f);
+            iconRt.sizeDelta = new Vector2(26f, 26f);
+            iconRt.anchoredPosition = Vector2.zero;
+
+            var iconImg = iconGo.GetComponent<Image>();
+            iconImg.color = Color.white;
+            iconImg.raycastTarget = false;
+
+            // Name Text
+            var nameGo = new GameObject("Txt_Name", typeof(RectTransform), typeof(TextMeshProUGUI));
+            nameGo.transform.SetParent(cardGo.transform, false);
+            var nameRt = nameGo.GetComponent<RectTransform>();
+            nameRt.anchorMin = new Vector2(0f, 1f);
+            nameRt.anchorMax = new Vector2(1f, 1f);
+            nameRt.pivot = new Vector2(0f, 1f);
+            nameRt.anchoredPosition = new Vector2(38f, -4f);
+            nameRt.sizeDelta = new Vector2(-42f, 16f);
+
+            var nameText = nameGo.GetComponent<TextMeshProUGUI>();
+            nameText.fontSize = 11f;
+            nameText.fontStyle = FontStyles.Bold;
+            nameText.alignment = TextAlignmentOptions.TopLeft;
+            nameText.raycastTarget = false;
+
+            // Duration / Time Text
+            var timeGo = new GameObject("Txt_Time", typeof(RectTransform), typeof(TextMeshProUGUI));
+            timeGo.transform.SetParent(cardGo.transform, false);
+            var timeRt = timeGo.GetComponent<RectTransform>();
+            timeRt.anchorMin = new Vector2(0f, 0f);
+            timeRt.anchorMax = new Vector2(1f, 0f);
+            timeRt.pivot = new Vector2(0f, 0f);
+            timeRt.anchoredPosition = new Vector2(38f, 3f);
+            timeRt.sizeDelta = new Vector2(-42f, 14f);
+
+            var timeText = timeGo.GetComponent<TextMeshProUGUI>();
+            timeText.fontSize = 10f;
+            timeText.alignment = TextAlignmentOptions.BottomLeft;
+            timeText.raycastTarget = false;
+
+            var card = new BuffCardUI
+            {
+                Root = cardGo,
+                BgImage = bgImg,
+                Outline = outline,
+                IconImage = iconImg,
+                NameText = nameText,
+                TimeText = timeText
+            };
+
+            AddHoverTrigger(cardGo,
+                () =>
+                {
+                    var info = card.CurrentInfo;
+                    if (!string.IsNullOrEmpty(info.name))
+                    {
+                        string timeHint = info.remainingSeconds >= 0f
+                            ? $"Time Remaining: {info.formattedTime} ({info.remainingSeconds:0.0}s)"
+                            : "Continuous Aura (Sacred Area)";
+                        ShowTooltip(info.name, info.category, info.description, timeHint);
+                    }
+                },
+                HideTooltip);
+
+            return card;
+        }
+
+        private void RefreshBuffDock(PlayerStats player)
+        {
+            if (_leftBuffDock == null) return;
+
+            _cachedActiveBuffs.Clear();
+            if (player != null)
+            {
+                player.GetActiveBuffs(_cachedActiveBuffs);
+            }
+
+            int count = _cachedActiveBuffs.Count;
+            while (_statusBuffCards.Count < count)
+            {
+                _statusBuffCards.Add(CreateStatusBuffCard(_statusBuffCards.Count));
+            }
+
+            for (int i = 0; i < _statusBuffCards.Count; i++)
+            {
+                var card = _statusBuffCards[i];
+                if (i < count)
+                {
+                    card.Root.SetActive(true);
+                    card.Bind(_cachedActiveBuffs[i]);
+                }
+                else
+                {
+                    card.Root.SetActive(false);
+                }
+            }
+        }
+        #endregion
+
         #region Helper Classes
+        public class BuffCardUI
+        {
+            public GameObject Root;
+            public Image BgImage;
+            public Outline Outline;
+            public Image IconImage;
+            public TextMeshProUGUI NameText;
+            public TextMeshProUGUI TimeText;
+            public ActiveBuffInfo CurrentInfo;
+
+            public void Bind(ActiveBuffInfo info)
+            {
+                CurrentInfo = info;
+
+                if (NameText != null)
+                {
+                    NameText.text = info.name;
+                    NameText.color = info.themeColor;
+                }
+
+                if (IconImage != null)
+                {
+                    IconImage.sprite = info.icon;
+                    IconImage.color = info.icon != null ? Color.white : new Color(1f, 1f, 1f, 0f);
+                }
+
+                if (TimeText != null)
+                {
+                    TimeText.text = info.formattedTime;
+
+                    if (info.remainingSeconds >= 0f && info.remainingSeconds <= 5f)
+                    {
+                        bool flash = (Mathf.FloorToInt(Time.unscaledTime * 4f) % 2) == 0;
+                        TimeText.color = flash ? new Color(1f, 0.25f, 0.25f) : new Color(1f, 0.85f, 0.35f);
+                    }
+                    else
+                    {
+                        TimeText.color = new Color(0.85f, 0.85f, 0.9f);
+                    }
+                }
+
+                if (Outline != null)
+                {
+                    Color border = info.themeColor;
+                    border.a = 0.65f;
+                    Outline.effectColor = border;
+                }
+            }
+        }
+
         private class SkillSlotUI
         {
             public Button button;

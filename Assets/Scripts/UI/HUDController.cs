@@ -39,6 +39,26 @@ namespace TheLastKnight.UI
             {
                 _playerStats = FindAnyObjectByType<PlayerStats>();
             }
+
+            if (SkillCooldownHUD.Instance == null)
+            {
+                var existing = FindAnyObjectByType<SkillCooldownHUD>();
+                if (existing == null)
+                {
+                    var go = new GameObject("SkillCooldownHUD_Manager");
+                    go.AddComponent<SkillCooldownHUD>();
+                }
+            }
+
+            if (PlayerBuffHUD.Instance == null)
+            {
+                var existingBuff = FindAnyObjectByType<PlayerBuffHUD>();
+                if (existingBuff == null)
+                {
+                    var go = new GameObject("PlayerBuffHUD_Manager");
+                    go.AddComponent<PlayerBuffHUD>();
+                }
+            }
         }
 
         private void OnEnable()

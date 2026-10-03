@@ -105777,8 +105777,8 @@ MonoBehaviour:
   _animator: {fileID: 0}
   _attackDuration: 0.4
   _attackCooldown: 0.5
-  _skillDuration: 0.5
-  _skillCooldown: 1
+  _skillDuration: 0.4
+  _skillCooldown: 5
   _skillDamageMultiplier: 2
   _skillAttackRadius: 2.2
   _skillAttackSize: {x: 2.8, y: 2.2}
@@ -105788,13 +105788,13 @@ MonoBehaviour:
   _buffDuration: 0.6
   _buffCooldown: 30
   _excaliburDuration: 3.8
-  _excaliburCooldown: 1
-  _excaliburDamageMultiplier: 5
+  _excaliburCooldown: 50
+  _excaliburDamageMultiplier: 8
   _excaliburHitSize: {x: 24, y: 4.2}
   _excaliburHitOffset: {x: 12, y: 1.47}
   _excaliburDamageDelay: 3.3
   _excaliburStunDuration: 2
-  _excaliburVFXController: {fileID: 0}
+  _excaliburVFXController: {fileID: 1794657360}
   _drinkDuration: 2.5
   _drinkCooldown: 1
   _hurtFrame1Duration: 0.25
