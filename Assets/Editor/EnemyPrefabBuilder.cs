@@ -490,6 +490,11 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (spellPrefab != null) serializedAI.FindProperty("_groundSpellPrefab").objectReferenceValue = spellPrefab;
             serializedAI.ApplyModifiedProperties();
             ConfigureMonsterSkillsAndParry(ai, cfg.Name);
+            if (cfg.Name == "SkeletonKnight")
+            {
+                SetupSkeletonKnightAudio(root);
+                SetupStandardParryStunEffect(root, sr, 2f, "Assets/sprites/effect/stun");
+            }
             if (cfg.Name == "FlyingEye") SetupFlyingEyeAudio(root);
             if (cfg.Name == "FlyingEye") SetupFlyingEyeParry(root, sr);
             if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
@@ -1086,6 +1091,25 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ดาบใหญ่ผ่าอากาศ.WAV"),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Moonstone Keeper SFX clips successfully!");
+        }
+
+        private static void SetupSkeletonKnightAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 24f;
+
+            var knightAudio = root.AddComponent<SkeletonKnightAudioController>();
+            var swordSwing = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/ดาบใหญ่ผ่าอากาศ.WAV");
+            knightAudio.SetClips(
+                swordSwing,
+                swordSwing,
+                swordSwing,
+                swordSwing,
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Skeleton Knight SFX clips successfully!");
         }
 
         private static void SetupReaperAudio(GameObject root)

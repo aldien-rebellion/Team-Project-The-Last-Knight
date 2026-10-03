@@ -174,6 +174,7 @@ private Rigidbody2D _rb;
         private FoxAudioController _foxAudio;
         private GoblinAudioController _goblinAudio;
         private SkeletonAudioController _skeletonAudio;
+        private SkeletonKnightAudioController _skeletonKnightAudio;
         private LizardAudioController _lizardAudio;
         private MinotaurAudioController _minotaurAudio;
         private MoonstoneKeeperAudioController _moonstoneKeeperAudio;
@@ -225,6 +226,7 @@ _rb = GetComponent<Rigidbody2D>();
             _foxAudio = GetComponent<FoxAudioController>();
             _goblinAudio = GetComponent<GoblinAudioController>();
             _skeletonAudio = GetComponent<SkeletonAudioController>();
+            _skeletonKnightAudio = GetComponent<SkeletonKnightAudioController>();
             _lizardAudio = GetComponent<LizardAudioController>();
             _minotaurAudio = GetComponent<MinotaurAudioController>();
             _moonstoneKeeperAudio = GetComponent<MoonstoneKeeperAudioController>();
@@ -911,6 +913,7 @@ _rb = GetComponent<Rigidbody2D>();
             }
             if (!ranged)
             {
+                _skeletonKnightAudio?.PlayBasicAttack(_basicAttackAnimState);
                 _satyrAudio?.PlayBasicAttack();
                 _reaperAudio?.PlaySwordSlash();
                 _jinnAudio?.PlayCloseAttack();
@@ -1205,6 +1208,8 @@ _rb = GetComponent<Rigidbody2D>();
             _satyrAudio?.PlaySkill(skill.skillName);
             _necromancerAudio?.PlayAttack();
             _moonstoneKeeperAudio?.PlaySwordSwing();
+            if (skill.skillName == "FullCombo" || skill.animationName == "FullCombo")
+                _skeletonKnightAudio?.PlayFullCombo();
             if (skill.skillName == "ParryBite")
                 _foxAudio?.PlayBite();
             if (skill.skillName == "FireBreath")

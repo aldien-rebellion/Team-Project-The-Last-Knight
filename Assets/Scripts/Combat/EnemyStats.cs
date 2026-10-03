@@ -152,6 +152,9 @@ namespace TheLastKnight.Combat
                 || (GetComponent<TheLastKnight.AI.SkeletonAudioController>() is { isActiveAndEnabled: true });
             hasSpecificHitSound = hasSpecificHitSound
                 || (attackingPlayer != null
+                    && GetComponent<TheLastKnight.AI.SkeletonKnightAudioController>() is { isActiveAndEnabled: true });
+            hasSpecificHitSound = hasSpecificHitSound
+                || (attackingPlayer != null
                     && GetComponent<TheLastKnight.AI.HoodedProtagonistAudioController>() is { isActiveAndEnabled: true });
             if (!hasSpecificHitSound)
                 TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_hurt");
