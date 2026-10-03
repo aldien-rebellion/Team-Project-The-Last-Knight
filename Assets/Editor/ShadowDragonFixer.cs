@@ -14,6 +14,7 @@ namespace TheLastKnight.EditorTools
         private const string DragonClipsDir = "Assets/Animations/Enemies/ShadowDemonDragon";
         private const string PrefabsDir = "Assets/Prefabs/Enemies";
         private const string DragonAudioDir = "Assets/sprites/Monsters/Shadow_Demon_Dragon_Asset_Pack/Shadow_Demon_Dragon_Asset_Pack/Audio";
+        private const string DragonPlayerAttackHitClipPath = "Assets/Sound/โดนผู้เล่นโจมตี.WAV";
 
         static ShadowDragonFixer()
         {
@@ -287,6 +288,28 @@ namespace TheLastKnight.EditorTools
             barSettings.ApplyModifiedPropertiesWithoutUndo();
             var parry = root.AddComponent<ParryReceiver>();
             parry.SetSpriteCenter(sr, true);
+            var parrySettings = new SerializedObject(parry);
+            string[] stunFramePaths =
+            {
+                "Assets/sprites/effect/stun/Stun_1.png",
+                "Assets/sprites/effect/stun/Stun_2.png",
+                "Assets/sprites/effect/stun/Stun_3.png",
+                "Assets/sprites/effect/stun/Stun_4.png",
+                "Assets/sprites/effect/stun/Stun_5.png"
+            };
+            var stunFrames = parrySettings.FindProperty("_stunEffectFrames");
+            stunFrames.arraySize = stunFramePaths.Length;
+            for (int i = 0; i < stunFramePaths.Length; i++)
+                stunFrames.GetArrayElementAtIndex(i).objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<Texture2D>(stunFramePaths[i]);
+            parrySettings.FindProperty("_stunEffectDuration").floatValue = 2f;
+            parrySettings.FindProperty("_useEnemyFacingForStunEffect").boolValue = true;
+            parrySettings.FindProperty("_stunEffectHeadXFraction").floatValue = 0.38f;
+            parrySettings.FindProperty("_stunEffectHeadXOffset").floatValue = 0.12f;
+            parrySettings.FindProperty("_stunEffectHeadYFraction").floatValue = 0.18f;
+            parrySettings.FindProperty("_stunEffectHeadYOffset").floatValue = 0.45f;
+            parrySettings.FindProperty("_stunEffectWorldScale").floatValue = 0.5f;
+            parrySettings.ApplyModifiedPropertiesWithoutUndo();
 
             // Setup Hitbox for damage dealing
             CreateContactHitbox(root, 55f, 3.8f, 3.2f);
@@ -303,9 +326,11 @@ namespace TheLastKnight.EditorTools
             var footstepClip = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_foot tep.mp3");
             var attackClip = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_attack.mp3");
             var hitClip = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_hit.mp3");
+            var playerAttackHitClip = AssetDatabase.LoadAssetAtPath<AudioClip>(DragonPlayerAttackHitClipPath);
             var deathClip = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_death.mp3");
             var deathFallClip = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_death_(Falling_to_the_ground).mp3");
-            dragonAudio.SetClips(idleClip, footstepClip, attackClip, hitClip, deathClip, deathFallClip);
+            dragonAudio.SetClips(idleClip, footstepClip, attackClip, hitClip,
+                playerAttackHitClip, deathClip, deathFallClip);
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
             Object.DestroyImmediate(root);

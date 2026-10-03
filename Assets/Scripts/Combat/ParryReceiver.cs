@@ -21,6 +21,8 @@ namespace TheLastKnight.Combat
         [SerializeField] private Texture2D[] _stunEffectFrames;
         [SerializeField, Min(0.1f)] private float _stunEffectDuration = 2f;
         [SerializeField, Range(0f, 0.5f)] private float _stunEffectHeadXFraction;
+        [SerializeField, Tooltip("Offsets the stun effect opposite to the enemy's facing direction, in world units.")]
+        private float _stunEffectHeadXOffset;
         [SerializeField, Range(0f, 1f)] private float _stunEffectHeadYFraction;
         [SerializeField] private float _stunEffectHeadYOffset;
         [SerializeField, Min(0.01f)] private float _stunEffectWorldScale = 0.5f;
@@ -151,8 +153,9 @@ namespace TheLastKnight.Combat
             bool facingLeft = _useEnemyFacingForStunEffect && _enemyController != null
                 ? !_enemyController.IsFacingRight
                 : (transform.lossyScale.x < 0f) != (_centerSprite != null && _centerSprite.flipX);
-            float headX = bodyBounds.center.x + (facingLeft ? -1f : 1f)
-                * bodyBounds.size.x * _stunEffectHeadXFraction;
+            float facingSign = facingLeft ? -1f : 1f;
+            float headX = bodyBounds.center.x + facingSign
+                * (bodyBounds.size.x * _stunEffectHeadXFraction - _stunEffectHeadXOffset);
             float headY = bodyBounds.max.y - bodyBounds.size.y * _stunEffectHeadYFraction
                 + _stunEffectHeadYOffset;
             effectTransform.position = new Vector3(headX, headY, transform.position.z);

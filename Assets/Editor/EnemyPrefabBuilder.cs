@@ -17,6 +17,7 @@ namespace TheLastKnight.EditorTools
         private const string AnimationsEnemiesDir = "Assets/Animations/Enemies";
         private const string AnimationsProjectilesDir = "Assets/Animations/Enemies/Projectiles";
         private const string DragonAudioDir = "Assets/sprites/Monsters/Shadow_Demon_Dragon_Asset_Pack/Shadow_Demon_Dragon_Asset_Pack/Audio";
+        private const string DragonPlayerAttackHitClipPath = "Assets/Sound/โดนผู้เล่นโจมตี.WAV";
 
         [MenuItem("Tools/Build Monster & Projectile Prefabs")]
         public static void BuildAll()
@@ -487,6 +488,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             ConfigureMonsterSkillsAndParry(ai, cfg.Name);
             if (cfg.Name == "Small_dragon")
                 SetupStandardParryStunEffect(root, sr, 2f, "Assets/sprites/effect/Stun");
+            if (cfg.Name == "ShadowDemonDragon")
+                SetupStandardParryStunEffect(root, sr, 2f, "Assets/sprites/effect/stun",
+                    useEnemyFacing: true, headXFraction: 0.38f, headYFraction: 0.18f,
+                    headYOffset: 0.45f, headXOffset: 0.12f);
             if (cfg.Name == "SkeletonKnight")
             {
                 SetupSkeletonKnightAudio(root);
@@ -800,10 +805,11 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             var footstep = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_foot tep.mp3");
             var attack = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_attack.mp3");
             var hit = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_hit.mp3");
+            var playerAttackHit = AssetDatabase.LoadAssetAtPath<AudioClip>(DragonPlayerAttackHitClipPath);
             var death = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_death.mp3");
             var deathFall = AssetDatabase.LoadAssetAtPath<AudioClip>($"{DragonAudioDir}/dragon_death_(Falling_to_the_ground).mp3");
 
-            dragonAudio.SetClips(idle, footstep, attack, hit, death, deathFall);
+            dragonAudio.SetClips(idle, footstep, attack, hit, playerAttackHit, death, deathFall);
             Debug.Log("[EnemyPrefabBuilder] Connected Shadow Demon Dragon SFX clips successfully!");
         }
 
@@ -1232,7 +1238,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
         private static void SetupStandardParryStunEffect(GameObject root, SpriteRenderer spriteRenderer,
             float stunDuration = 2f, string stunEffectFolder = "Assets/sprites/effect/Stun",
             bool useEnemyFacing = false, float headXFraction = 0f, float headYFraction = 0f,
-            float headYOffset = 0.25f)
+            float headYOffset = 0.25f, float headXOffset = 0f)
         {
             var receiver = root.GetComponent<ParryReceiver>();
             if (receiver == null) receiver = root.AddComponent<ParryReceiver>();
@@ -1261,6 +1267,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
 
             parry.FindProperty("_stunEffectDuration").floatValue = stunDuration;
             parry.FindProperty("_stunEffectHeadXFraction").floatValue = headXFraction;
+            parry.FindProperty("_stunEffectHeadXOffset").floatValue = headXOffset;
             parry.FindProperty("_stunEffectHeadYFraction").floatValue = headYFraction;
             parry.FindProperty("_stunEffectHeadYOffset").floatValue = headYOffset;
             parry.FindProperty("_stunEffectWorldScale").floatValue = 0.5f;

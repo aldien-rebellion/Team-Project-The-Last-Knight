@@ -12,6 +12,7 @@ namespace TheLastKnight.AI
         [SerializeField] private AudioClip _footstepClip;
         [SerializeField] private AudioClip _attackClip;
         [SerializeField] private AudioClip _hitClip;
+        [SerializeField] private AudioClip _playerAttackHitClip;
         [SerializeField] private AudioClip _deathClip;
         [SerializeField] private AudioClip _deathFallClip;
 
@@ -107,7 +108,8 @@ namespace TheLastKnight.AI
                 _playedState = desired;
             }
 
-            if (desired != null && desired.StartsWith("Walk_") && Time.time >= _nextFootstepTime)
+            if (state == EnemyAIState.Chase && desired != null && desired.StartsWith("Walk_")
+                && Time.time >= _nextFootstepTime)
             {
                 PlayFootstep();
                 _nextFootstepTime = Time.time + 0.45f;
@@ -151,6 +153,7 @@ namespace TheLastKnight.AI
         private void HandleDamaged(DamageData data)
         {
             PlayOneShot(_hitClip, 0.9f);
+            PlayOneShot(_playerAttackHitClip, 0.9f);
         }
 
         private void HandleDeath()
@@ -173,12 +176,14 @@ namespace TheLastKnight.AI
             }
         }
 
-        public void SetClips(AudioClip idle, AudioClip footstep, AudioClip attack, AudioClip hit, AudioClip death, AudioClip deathFall)
+        public void SetClips(AudioClip idle, AudioClip footstep, AudioClip attack, AudioClip hit,
+            AudioClip playerAttackHit, AudioClip death, AudioClip deathFall)
         {
             _idleClip = idle;
             _footstepClip = footstep;
             _attackClip = attack;
             _hitClip = hit;
+            _playerAttackHitClip = playerAttackHit;
             _deathClip = death;
             _deathFallClip = deathFall;
         }
