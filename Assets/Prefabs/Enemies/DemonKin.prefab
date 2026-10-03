@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 4284945896839203271}
   - component: {fileID: 9010000000000000031}
   - component: {fileID: 7777000000000000001}
+  - component: {fileID: 2216583602667487976}
   m_Layer: 0
   m_Name: DemonKin
   m_TagString: Untagged
@@ -199,13 +200,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
-  _level: 1
-  _useLevelScaling: 0
-  _maxHealth: 60
-  _defense: 1
-  _attackPower: 12
-  _goldReward: 8
-  _expReward: 15
+  _level: 5
+  _useLevelScaling: 1
+  _maxHealth: 375
+  _defense: 5
+  _attackPower: 50
+  _goldReward: 134
+  _expReward: 130
   _currentStatus: 0
 --- !u!114 &4284945896839203271
 MonoBehaviour:
@@ -258,6 +259,7 @@ MonoBehaviour:
   _basicAttackAnimState: BasicAtk
   _basicAttackAnimStates: []
   _basicAttackDamageDelay: 0
+  _basicAttackActionDuration: 0
   _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
@@ -265,7 +267,7 @@ MonoBehaviour:
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 0
   _basicGuardEveryNAttacks: 0
-  _basicGuardSkillName:
+  _basicGuardSkillName: 
   _skills: []
   _cycleNonParryableSkills: 0
   _waitForAttackAnimationToFinish: 0
@@ -282,7 +284,7 @@ MonoBehaviour:
   _respawnAtDeathPosition: 0
   _bringToFrontWhileAttacking: 0
   _attackSortingOrder: 1
-  _attackSortingLayerName:
+  _attackSortingLayerName: 
 --- !u!114 &9010000000000000031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,7 +295,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 5984918817122751906}
   _useVisibleSpriteBounds: 1
@@ -319,10 +321,107 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1a6d2ef3c5a481f9f0a2c76be875139, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.DemonAudioController
   _basicAttackClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
   _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!82 &2216583602667487976
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462627997351081609}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2239006290269960850
 GameObject:
   m_ObjectHideFlags: 0

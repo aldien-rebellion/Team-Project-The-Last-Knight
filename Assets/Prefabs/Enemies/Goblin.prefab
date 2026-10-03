@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.9, g: 0.15, b: 0.15, a: 1}
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.75}
@@ -269,7 +269,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage:
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -335,8 +335,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.6}
-  m_Size: {x: 0.67499995, y: 1.2}
+  m_Offset: {x: 0.028799558, y: 0.33749998}
+  m_Size: {x: 0.32023636, y: 0.67499995}
   m_Direction: 0
 --- !u!114 &291610269889353437
 MonoBehaviour:
@@ -348,15 +348,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
-  _level: 1
-  _useLevelScaling: 0
-  _maxHealth: 45
-  _defense: 0
-  _attackPower: 12
-  _goldReward: 8
-  _expReward: 15
+  _level: 40
+  _useLevelScaling: 1
+  _maxHealth: 3000
+  _defense: 40
+  _attackPower: 400
+  _goldReward: 1170
+  _expReward: 978
   _currentStatus: 0
 --- !u!114 &4321245110823902204
 MonoBehaviour:
@@ -368,11 +368,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a223c0ce5d98f3a4c88422488ea4ea4a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
-  _patrolSpeed: 2.2
-  _chaseSpeed: 4.2
-  _patrolDistance: 3
+  _patrolSpeed: 3
+  _chaseSpeed: 5
+  _patrolDistance: 6
   _isFlying: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
@@ -389,18 +389,18 @@ MonoBehaviour:
   _groundCheckDistance: 1.2
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
-  _detectionRange: 10
+  _detectionRange: 13
   _meleeRange: 0.05
   _meleeCooldown: 1.5
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 0
-  _playAttackStatesDirectly: 1
+  _playAttackStatesDirectly: 0
   _useMovementAnimationStates: 0
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
   _disableBasicAttack: 0
   _hasRangedAttack: 0
-  _rangedRange: 8
+  _rangedRange: 10
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 179764981944846183, guid: 3597c0ddfcbcb79408c18ffc87ecf92c, type: 3}
   _projectileSpawnOffset: {x: 0.8, y: 1.05}
@@ -411,19 +411,19 @@ MonoBehaviour:
   _basicAttackDamageDelay: 0
   _basicAttackActionDuration: 0
   _basicAttackDamageStartDelays: []
-  _basicAttackMultiplier: 1
+  _basicAttackMultiplier: 0
   _basicAttackCanParry: 0
   _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 0
   _basicGuardEveryNAttacks: 0
-  _basicGuardSkillName:
+  _basicGuardSkillName: 
   _skills:
   - skillName: GoblinBomb
     animationName: Attack3
-    preparationAnimationName:
+    preparationAnimationName: 
     preparationDurationOverride: 0
-    reappearanceAnimationName:
+    reappearanceAnimationName: 
     reappearanceDurationOverride: 0
     actionDurationOverride: 0
     skipAnticipation: 0
@@ -465,7 +465,7 @@ MonoBehaviour:
   _respawnAtDeathPosition: 0
   _bringToFrontWhileAttacking: 0
   _attackSortingOrder: 1
-  _attackSortingLayerName:
+  _attackSortingLayerName: 
 --- !u!114 &9010000000000000501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,7 +476,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 6972004819961490791}
   _useVisibleSpriteBounds: 1
@@ -599,7 +599,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79d394b7d1a44cf998654e026e7d51ac, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.GoblinAudioController
   _basicAttackClip: {fileID: 8300000, guid: cdfcb7b9979a70446b1b07fc877d5e4d, type: 3}
   _bombThrowClip: {fileID: 8300000, guid: 4cb651edcee996a4ab083883692135ed, type: 3}
@@ -677,7 +677,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 731b67cd6340d6b4c936763f3fac4db7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.FloatingHealthBar
   _targetStats: {fileID: 291610269889353437}
   _healthBarFill: {fileID: 1022075540112235742}
@@ -757,7 +757,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.041138954, y: -0.28569537}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -767,7 +767,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.74249995, y: 1.26}
+  m_Size: {x: 0.3693323, y: 0.68860924}
   m_EdgeRadius: 0
 --- !u!114 &4856323766018077973
 MonoBehaviour:
@@ -779,7 +779,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b524f0b391f3dc54c8511d3f68d030c2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyHitbox2D
   _damage: 12
   _damageType: 0

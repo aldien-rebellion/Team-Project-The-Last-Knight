@@ -110,7 +110,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6677937697487440676}
@@ -275,13 +275,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
-  _level: 1
-  _useLevelScaling: 0
-  _maxHealth: 750
-  _defense: 12
-  _attackPower: 45
-  _goldReward: 8
-  _expReward: 15
+  _level: 20
+  _useLevelScaling: 1
+  _maxHealth: 1500
+  _defense: 20
+  _attackPower: 200
+  _goldReward: 566
+  _expReward: 521
   _currentStatus: 0
 --- !u!114 &3759819579243811750
 MonoBehaviour:
@@ -346,9 +346,9 @@ MonoBehaviour:
   _skills:
   - skillName: RocketPunch
     animationName: Shoot
-    preparationAnimationName:
+    preparationAnimationName: 
     preparationDurationOverride: 0
-    reappearanceAnimationName:
+    reappearanceAnimationName: 
     reappearanceDurationOverride: 0
     actionDurationOverride: 0
     skipAnticipation: 0
@@ -377,9 +377,9 @@ MonoBehaviour:
     groundSpellPrefab: {fileID: 0}
   - skillName: LaserBeam
     animationName: LaserCast
-    preparationAnimationName:
+    preparationAnimationName: 
     preparationDurationOverride: 0
-    reappearanceAnimationName:
+    reappearanceAnimationName: 
     reappearanceDurationOverride: 0
     actionDurationOverride: 0
     skipAnticipation: 0
@@ -408,9 +408,9 @@ MonoBehaviour:
     groundSpellPrefab: {fileID: 0}
   - skillName: StoneShield
     animationName: ShieldCast
-    preparationAnimationName:
+    preparationAnimationName: 
     preparationDurationOverride: 0
-    reappearanceAnimationName:
+    reappearanceAnimationName: 
     reappearanceDurationOverride: 0
     actionDurationOverride: 0
     skipAnticipation: 0
@@ -452,7 +452,7 @@ MonoBehaviour:
   _respawnAtDeathPosition: 0
   _bringToFrontWhileAttacking: 0
   _attackSortingOrder: 1
-  _attackSortingLayerName:
+  _attackSortingLayerName: 
 --- !u!114 &9010000000000000010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,7 +463,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 4887483311359214869}
   _useVisibleSpriteBounds: 1
@@ -586,7 +586,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39e71f54a17e4f669c3916608d197d2a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.MechaStoneGolemAudioController
   _meleeAttackClip: {fileID: 8300000, guid: 1056d45f0565e794b807009358bfb223, type: 3}
   _rocketPunchClip: {fileID: 8300000, guid: 6e78d67fafe1fdb4fa94836bd1e3a67a, type: 3}
