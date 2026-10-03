@@ -568,15 +568,6 @@ _rb = GetComponent<Rigidbody2D>();
                 FaceTarget(_player.transform.position);
                 PerformRangedAttack();
             }
-            else if (withinDetectionRange && _playAttackStatesDirectly && readySkill == null
-                && _skills != null && _skills.Length > 0 && !_disableBasicAttack
-                && Time.time >= _nextMeleeTime)
-            {
-                // Keep this boss applying pressure with its basic attack while
-                // its special moves are cooling down.
-                FaceTarget(_player.transform.position);
-                PerformMeleeAttack();
-            }
             else if (withinDetectionRange)
             {
                 ChasePlayer();
