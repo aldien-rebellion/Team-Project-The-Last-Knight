@@ -494,7 +494,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "FlyingEye") SetupFlyingEyeParry(root, sr);
             if (cfg.Name == "FireWorm") SetupFireWormParry(root, sr);
             if (cfg.Name == "Jinn") SetupJinnParry(root, sr);
-            if (cfg.Name == "Goblin" || cfg.Name == "Minotaur_1" || cfg.Name == "Minotaur_3")
+            if (cfg.Name == "Goblin" || cfg.Name == "Minotaur_1" || cfg.Name == "Minotaur_3" || cfg.Name == "Necromancer")
                 SetupStandardParryStunEffect(root, sr);
             if (cfg.Name == "ForestMushroom") root.AddComponent<ForestMushroomRunSync>();
             if (cfg.Name == "UndeadExecutioner")
@@ -642,6 +642,10 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             else if (cfg.Name == "FantasyMushroom")
             {
                 SetupFantasyMushroomAudio(root);
+            }
+            else if (cfg.Name == "Necromancer")
+            {
+                SetupNecromancerAudio(root);
             }
             else if (cfg.Name == "FireWorm")
             {
@@ -829,6 +833,21 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"),
                 AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงยิง.WAV"));
             Debug.Log("[EnemyPrefabBuilder] Connected Fantasy Mushroom SFX clips successfully!");
+        }
+
+        private static void SetupNecromancerAudio(GameObject root)
+        {
+            var audioSource = root.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.8f;
+            audioSource.minDistance = 2f;
+            audioSource.maxDistance = 20f;
+
+            var necromancerAudio = root.AddComponent<NecromancerAudioController>();
+            necromancerAudio.SetClips(
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/เสียงยิง.WAV"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/โดนผู้เล่นโจมตี.WAV"));
+            Debug.Log("[EnemyPrefabBuilder] Connected Necromancer SFX clips successfully!");
         }
 
         private static void SetupForestMushroomAudio(GameObject root)

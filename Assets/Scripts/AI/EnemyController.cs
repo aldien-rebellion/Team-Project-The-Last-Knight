@@ -178,6 +178,7 @@ private Rigidbody2D _rb;
         private MoonstoneKeeperAudioController _moonstoneKeeperAudio;
         private DragonSfxController _dragonSfx;
         private MechaStoneGolemAudioController _mechaStoneGolemAudio;
+        private NecromancerAudioController _necromancerAudio;
         private float _damageUntil;
         private bool _projectileSpawned;
         private bool _wasAirborne;
@@ -225,6 +226,7 @@ _rb = GetComponent<Rigidbody2D>();
             _moonstoneKeeperAudio = GetComponent<MoonstoneKeeperAudioController>();
             _dragonSfx = GetComponent<DragonSfxController>();
             _mechaStoneGolemAudio = GetComponent<MechaStoneGolemAudioController>();
+            _necromancerAudio = GetComponent<NecromancerAudioController>();
             _colliders = GetComponentsInChildren<Collider2D>();
             var attackHitbox = GetComponentInChildren<EnemyHitbox2D>(true);
             _attackHitbox = attackHitbox != null ? attackHitbox.GetComponent<Collider2D>() : null;
@@ -907,6 +909,7 @@ _rb = GetComponent<Rigidbody2D>();
                 _dragonSfx?.PlayBite();
                 _archDemonAudio?.PlayBasicAttack();
                 _demonAudio?.PlayBasicAttack();
+                _necromancerAudio?.PlayAttack();
                 _minotaurAudio?.PlayBasicAttack();
             }
             _smallDragonFireEffect?.Play();
@@ -1190,6 +1193,7 @@ _rb = GetComponent<Rigidbody2D>();
                 _animator.Play(skill.animationName, 0, 0f);
             else
                 PlayAnimationAction(skill.animationName, skill.actionIndex);
+            _necromancerAudio?.PlayAttack();
             _moonstoneKeeperAudio?.PlaySwordSwing();
             if (skill.skillName == "ParryBite")
                 _foxAudio?.PlayBite();
