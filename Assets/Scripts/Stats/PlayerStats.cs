@@ -489,57 +489,69 @@ namespace TheLastKnight.Stats
         }
 
         /// <summary>
-        /// Upgrades an attribute using available Stat Points.
+        /// Upgrades an attribute by a specified amount using available Stat Points.
+        /// Returns the actual number of points allocated.
         /// </summary>
-        public bool UpgradeStat(string statName)
+        public int UpgradeStatAmount(string statName, int count)
         {
-            if (_availableStatPoints <= 0)
+            if (count <= 0 || _availableStatPoints <= 0)
             {
-                Debug.LogWarning("[PlayerStats] Attempted to upgrade stat, but no Stat Points are available!");
-                return false;
+                Debug.LogWarning("[PlayerStats] Attempted to upgrade stat, but count <= 0 or no Stat Points available!");
+                return 0;
             }
 
-            bool upgraded = false;
+            int toAllocate = Mathf.Min(count, _availableStatPoints);
+            int allocated = 0;
+
             switch (statName.ToUpper())
             {
                 case "STR":
                 case "STRENGTH":
-                    _strength++;
-                    upgraded = true;
+                    _strength += toAllocate;
+                    allocated = toAllocate;
                     break;
                 case "VIT":
                 case "VITALITY":
-                    _vitality++;
-                    upgraded = true;
+                    _vitality += toAllocate;
+                    allocated = toAllocate;
                     break;
                 case "DEX":
                 case "DEXTERITY":
                     if (_dexterity >= MaxDexterity)
                     {
                         Debug.LogWarning($"[PlayerStats] Dexterity is already at maximum cap ({MaxDexterity})!");
-                        return false;
+                        return 0;
                     }
-                    _dexterity++;
-                    upgraded = true;
+                    int canAdd = Mathf.Clamp(toAllocate, 0, Mathf.Max(0, MaxDexterity - _dexterity));
+                    _dexterity += canAdd;
+                    allocated = canAdd;
                     break;
                 case "AGI":
                 case "AGILITY":
-                    _agility++;
-                    upgraded = true;
+                    _agility += toAllocate;
+                    allocated = toAllocate;
                     break;
                 default:
                     Debug.LogError($"[PlayerStats] Unknown stat upgrade requested: {statName}");
                     break;
             }
 
-            if (upgraded)
+            if (allocated > 0)
             {
-                _availableStatPoints--;
+                _availableStatPoints -= allocated;
                 RecalculateStats();
-                Debug.Log($"[PlayerStats] Stat Modified: {statName.ToUpper()} upgraded. Remaining points: {_availableStatPoints}");
+                Debug.Log($"[PlayerStats] Stat Modified: {statName.ToUpper()} upgraded +{allocated}. Remaining points: {_availableStatPoints}");
             }
 
-            return upgraded;
+            return allocated;
+        }
+
+        /// <summary>
+        /// Upgrades an attribute using available Stat Points.
+        /// </summary>
+        public bool UpgradeStat(string statName)
+        {
+            return UpgradeStatAmount(statName, 1) > 0;
         }
 
         /// <summary>

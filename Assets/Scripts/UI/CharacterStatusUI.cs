@@ -58,6 +58,23 @@ namespace TheLastKnight.UI
         private Button _btnVitPlus, _btnVitMax;
         private Button _btnDexPlus, _btnDexMax;
 
+        // Side Status Allocation Panel (Dropdown/flyout to the right)
+        private bool _isSidePanelOpen;
+        public bool IsSidePanelOpen => _isSidePanelOpen;
+        private GameObject _sidePanelGo;
+        public GameObject SidePanelGo => _sidePanelGo;
+        private RectTransform _sidePanelRect;
+        public RectTransform SidePanelRect => _sidePanelRect;
+        private RectTransform _sideToggleBtnRect;
+        public RectTransform SideToggleBtnRect => _sideToggleBtnRect;
+        private TextMeshProUGUI _txtSideToggleArrow;
+        public TextMeshProUGUI TxtSideToggleArrow => _txtSideToggleArrow;
+        private Image _imgSideToggleBg;
+        private readonly Dictionary<string, TMP_InputField> _customStatInputs = new Dictionary<string, TMP_InputField>();
+        public IReadOnlyDictionary<string, TMP_InputField> CustomStatInputs => _customStatInputs;
+        private readonly List<Button> _sidePanelButtons = new List<Button>();
+        public IReadOnlyList<Button> SidePanelButtons => _sidePanelButtons;
+
         // Tooltip Elements
         private GameObject _tooltipBox;
         private TextMeshProUGUI _txtTooltipTitle;
@@ -441,6 +458,9 @@ namespace TheLastKnight.UI
             // Left Dock Overlays (Active Buffs attached to wooden frame expanding leftwards)
             BuildLeftBuffDock(_windowRect);
 
+            // Side Status Allocation Drawer (Flyout to the right with [+1], [+10], [custom], [max])
+            BuildSideStatusDrawer(_windowRect);
+
             // Close Button [X] at Top-Right (built after overlays to stay topmost)
             BuildCloseButton(_windowRect);
 
@@ -734,15 +754,18 @@ namespace TheLastKnight.UI
 
         private void BuildRightOverlays(RectTransform parent)
         {
-            // 1. Status Points Number overlay (Clean text directly on wood)
+            // 1. Status Points Number overlay (Clean text directly on wood, extending to the right without wrapping)
             var spGo = new GameObject("Txt_SP", typeof(RectTransform));
             spGo.transform.SetParent(parent, false);
             var spRt = spGo.GetComponent<RectTransform>();
-            spRt.anchoredPosition = ToUI(745, 420);
-            spRt.sizeDelta = new Vector2(32, 20);
+            spRt.anchoredPosition = ToUI(736, 420);
+            spRt.pivot = new Vector2(0f, 0.5f);
+            spRt.sizeDelta = new Vector2(100, 22);
 
-            _txtStatusPoints = CreateText(spGo.transform, "Label", "0", 17, TextAlignmentOptions.Center,
+            _txtStatusPoints = CreateText(spGo.transform, "Label", "0", 17, TextAlignmentOptions.MidlineLeft,
                 Color.white, FontStyles.Bold);
+            _txtStatusPoints.enableWordWrapping = false;
+            _txtStatusPoints.overflowMode = TextOverflowModes.Overflow;
             var sptRt = _txtStatusPoints.rectTransform;
             sptRt.anchorMin = Vector2.zero; sptRt.anchorMax = Vector2.one;
             sptRt.offsetMin = sptRt.offsetMax = Vector2.zero;
@@ -780,12 +803,16 @@ namespace TheLastKnight.UI
             valRt.anchoredPosition = ToUI(631, py);
             valRt.sizeDelta = new Vector2(98, 24);
 
-            valueTxt = CreateText(valGo.transform, "Label", "10", 16, TextAlignmentOptions.Center,
+            valueTxt = CreateText(valGo.transform, "Label", "10", 16, TextAlignmentOptions.MidlineLeft,
                 Color.white, FontStyles.Bold);
+            valueTxt.enableWordWrapping = false;
+            valueTxt.overflowMode = TextOverflowModes.Overflow;
             var vtRt = valueTxt.rectTransform;
-            vtRt.anchorMin = new Vector2(0.5f, 0f); vtRt.anchorMax = new Vector2(0.5f, 1f);
-            vtRt.sizeDelta = new Vector2(46, 0);
-            vtRt.anchoredPosition = new Vector2(24, 0);
+            vtRt.anchorMin = new Vector2(0f, 0f);
+            vtRt.anchorMax = new Vector2(1f, 1f);
+            vtRt.pivot = new Vector2(0f, 0.5f);
+            vtRt.offsetMin = new Vector2(49f, 0f); // Space after baked "STR:" label
+            vtRt.offsetMax = new Vector2(40f, 0f); // Extends cleanly to the right without wrapping
             AddHoverTrigger(valGo, () => ShowStatTooltip(label), () => HideTooltip());
 
             // [+] Button
@@ -1090,6 +1117,11 @@ namespace TheLastKnight.UI
         #region Actions & System Binding
         public void UpgradeStat(string statName)
         {
+            UpgradeStat(statName, 1);
+        }
+
+        public void UpgradeStat(string statName, int count)
+        {
             var player = GetPlayer();
             if (player == null) return;
 
@@ -1107,12 +1139,13 @@ namespace TheLastKnight.UI
                 return;
             }
 
-            if (player.UpgradeStat(statName))
+            int allocated = player.UpgradeStatAmount(statName, count);
+            if (allocated > 0)
             {
                 AudioManager.Instance?.PlaySfx("click");
                 GameManager.Instance?.Capture();
                 Refresh(true);
-                ShowStatTooltip(statName, $"+1 to {statName}! Remaining SP: {player.StatPoints}");
+                ShowStatTooltip(statName, $"+{allocated} to {statName}! Remaining SP: {player.StatPoints}");
             }
         }
 
@@ -1135,19 +1168,29 @@ namespace TheLastKnight.UI
                 return;
             }
 
-            int count = 0;
-            while (player.StatPoints > 0)
-            {
-                if (player.UpgradeStat(statName)) count++;
-                else break;
-            }
-
-            if (count > 0)
+            int allocated = player.UpgradeStatAmount(statName, player.StatPoints);
+            if (allocated > 0)
             {
                 AudioManager.Instance?.PlaySfx("click");
                 GameManager.Instance?.Capture();
                 Refresh(true);
-                ShowStatTooltip(statName, $"Allocated +{count} points to {statName}! Remaining SP: {player.StatPoints}");
+                ShowStatTooltip(statName, $"Allocated +{allocated} points to {statName}! Remaining SP: {player.StatPoints}");
+            }
+        }
+
+        public void ApplyCustomStat(string statName)
+        {
+            if (_customStatInputs.TryGetValue(statName, out var inputField))
+            {
+                string text = inputField != null ? inputField.text.Trim() : "";
+                if (int.TryParse(text, out int amount) && amount > 0)
+                {
+                    UpgradeStat(statName, amount);
+                }
+                else
+                {
+                    UpgradeStat(statName, 1);
+                }
             }
         }
 
@@ -1277,6 +1320,15 @@ namespace TheLastKnight.UI
             if (_btnDexPlus != null) _btnDexPlus.interactable = true;
             if (_btnDexMax != null) _btnDexMax.interactable = true;
 
+            // Refresh side panel buttons interactability
+            for (int i = 0; i < _sidePanelButtons.Count; i++)
+            {
+                if (_sidePanelButtons[i] != null)
+                {
+                    _sidePanelButtons[i].interactable = true;
+                }
+            }
+
             // Refresh Inventory & Quick Slots from InventoryManager
             var inv = TheLastKnight.Inventory.InventoryManager.Instance;
             if (inv != null)
@@ -1319,6 +1371,336 @@ namespace TheLastKnight.UI
                 }
             }
             Refresh(false);
+        }
+        #endregion
+
+        #region Side Status Allocation Drawer
+        private void BuildSideStatusDrawer(RectTransform parent)
+        {
+            float drawerW = 210f;
+            float drawerH = 160f;
+            float drawerY = 104f;
+
+            // 1. Side Panel Container (Docked to right edge of wooden frame)
+            _sidePanelGo = new GameObject("SideStatusDrawer", typeof(RectTransform), typeof(Image));
+            _sidePanelGo.transform.SetParent(parent, false);
+
+            _sidePanelRect = _sidePanelGo.GetComponent<RectTransform>();
+            _sidePanelRect.anchorMin = new Vector2(1f, 0.5f);
+            _sidePanelRect.anchorMax = new Vector2(1f, 0.5f);
+            _sidePanelRect.pivot = new Vector2(0f, 0.5f);
+            _sidePanelRect.anchoredPosition = new Vector2(-4f, drawerY);
+            _sidePanelRect.sizeDelta = new Vector2(drawerW, drawerH);
+            _sidePanelRect.localScale = new Vector3(1.75f, 1.75f, 1f);
+
+            // Rich Medieval Wood panel background
+            var panelImg = _sidePanelGo.GetComponent<Image>();
+            panelImg.color = new Color(0.12f, 0.08f, 0.05f, 0.98f);
+
+            // Outer dark carved border
+            var panelOutline = _sidePanelGo.AddComponent<Outline>();
+            panelOutline.effectColor = new Color(0.32f, 0.20f, 0.11f, 0.95f);
+            panelOutline.effectDistance = new Vector2(2f, -2f);
+
+            // Inner ornate golden rim
+            var innerBorderGo = new GameObject("InnerGoldBorder", typeof(RectTransform), typeof(Image), typeof(Outline));
+            innerBorderGo.transform.SetParent(_sidePanelGo.transform, false);
+            var ibRt = innerBorderGo.GetComponent<RectTransform>();
+            ibRt.anchorMin = Vector2.zero; ibRt.anchorMax = Vector2.one;
+            ibRt.offsetMin = new Vector2(2, 2); ibRt.offsetMax = new Vector2(-2, -2);
+            var ibImg = innerBorderGo.GetComponent<Image>();
+            ibImg.color = new Color(0.16f, 0.10f, 0.06f, 0.6f);
+            ibImg.raycastTarget = false;
+            var ibOutline = innerBorderGo.GetComponent<Outline>();
+            ibOutline.effectColor = new Color(0.68f, 0.52f, 0.24f, 0.8f);
+            ibOutline.effectDistance = new Vector2(1f, -1f);
+
+            // Header Banner
+            var headerGo = new GameObject("Header", typeof(RectTransform), typeof(Image));
+            headerGo.transform.SetParent(_sidePanelGo.transform, false);
+            var hRt = headerGo.GetComponent<RectTransform>();
+            hRt.anchorMin = new Vector2(0f, 1f); hRt.anchorMax = new Vector2(1f, 1f);
+            hRt.pivot = new Vector2(0.5f, 1f);
+            hRt.anchoredPosition = Vector2.zero;
+            hRt.sizeDelta = new Vector2(0f, 24f);
+            var hImg = headerGo.GetComponent<Image>();
+            hImg.color = new Color(0.18f, 0.11f, 0.06f, 0.9f);
+            hImg.raycastTarget = false;
+
+            var txtHeader = CreateText(headerGo.transform, "TxtTitle", "« STAT ALLOCATION »", 10.5f,
+                TextAlignmentOptions.Center, new Color(0.96f, 0.86f, 0.55f), FontStyles.Bold);
+            var thRt = txtHeader.rectTransform;
+            thRt.anchorMin = Vector2.zero; thRt.anchorMax = Vector2.one;
+            thRt.offsetMin = thRt.offsetMax = Vector2.zero;
+
+            // Separator line under header
+            var sepGo = new GameObject("HeaderSep", typeof(RectTransform), typeof(Image));
+            sepGo.transform.SetParent(_sidePanelGo.transform, false);
+            var sepRt = sepGo.GetComponent<RectTransform>();
+            sepRt.anchorMin = new Vector2(0f, 1f); sepRt.anchorMax = new Vector2(1f, 1f);
+            sepRt.pivot = new Vector2(0.5f, 1f);
+            sepRt.anchoredPosition = new Vector2(0f, -24f);
+            sepRt.sizeDelta = new Vector2(-12f, 1.5f);
+            var sepImg = sepGo.GetComponent<Image>();
+            sepImg.color = new Color(0.65f, 0.50f, 0.25f, 0.7f);
+            sepImg.raycastTarget = false;
+
+            // 2. The 4 Stat Rows (STR, AGI, VIT, DEX)
+            // Exactly matching the main window's visual button positions
+            string[] stats = { "STR", "AGI", "VIT", "DEX" };
+            float[] rowYs = { 42.5f, 13.5f, -14.5f, -42.5f };
+
+            _customStatInputs.Clear();
+            _sidePanelButtons.Clear();
+            for (int i = 0; i < stats.Length; i++)
+            {
+                string stat = stats[i];
+                float y = rowYs[i];
+                BuildSideStatRow(_sidePanelGo.transform, stat, y);
+            }
+
+            // 3. Side Toggle Tab Button (Attached to right edge)
+            var toggleGo = new GameObject("Btn_SideToggle", typeof(RectTransform), typeof(Image), typeof(Button));
+            toggleGo.transform.SetParent(parent, false);
+            toggleGo.transform.SetAsLastSibling();
+
+            _sideToggleBtnRect = toggleGo.GetComponent<RectTransform>();
+            _sideToggleBtnRect.anchorMin = new Vector2(1f, 0.5f);
+            _sideToggleBtnRect.anchorMax = new Vector2(1f, 0.5f);
+            _sideToggleBtnRect.pivot = new Vector2(0f, 0.5f);
+            _sideToggleBtnRect.sizeDelta = new Vector2(24f, 54f);
+            _sideToggleBtnRect.localScale = new Vector3(1.75f, 1.75f, 1f);
+
+            _imgSideToggleBg = toggleGo.GetComponent<Image>();
+            _imgSideToggleBg.color = new Color(0.18f, 0.11f, 0.07f, 0.98f);
+
+            var toggleOutline = toggleGo.AddComponent<Outline>();
+            toggleOutline.effectColor = new Color(0.72f, 0.54f, 0.24f, 0.95f);
+            toggleOutline.effectDistance = new Vector2(1.5f, -1.5f);
+
+            var toggleBtn = toggleGo.GetComponent<Button>();
+            toggleBtn.targetGraphic = _imgSideToggleBg;
+            toggleBtn.onClick.AddListener(ToggleSidePanel);
+
+            _txtSideToggleArrow = CreateText(toggleGo.transform, "Arrow", "»", 16f,
+                TextAlignmentOptions.Center, new Color(0.98f, 0.88f, 0.45f), FontStyles.Bold);
+            var taRt = _txtSideToggleArrow.rectTransform;
+            taRt.anchorMin = Vector2.zero; taRt.anchorMax = Vector2.one;
+            taRt.offsetMin = taRt.offsetMax = Vector2.zero;
+
+            AddHoverTrigger(toggleGo,
+                () => ShowTooltip(_isSidePanelOpen ? "Collapse Side Panel" : "Expand Status Controls",
+                    "Status Points",
+                    _isSidePanelOpen ? "Click to fold the status upgrade drawer." : "Click to expand multi-point (+1, +10, Custom, Max) allocation."),
+                HideTooltip);
+
+            AddMedievalButtonHover(toggleGo, _imgSideToggleBg, toggleOutline,
+                new Color(0.72f, 0.54f, 0.24f, 0.95f), new Color(1f, 0.88f, 0.40f, 1f));
+
+            // Default state: Closed (matching image 1)
+            SetSidePanelOpen(false);
+        }
+
+        private void BuildSideStatRow(Transform parent, string statName, float localY)
+        {
+            var rowGo = new GameObject($"Row_{statName}", typeof(RectTransform));
+            rowGo.transform.SetParent(parent, false);
+            var rowRt = rowGo.GetComponent<RectTransform>();
+            rowRt.anchorMin = new Vector2(0f, 0.5f);
+            rowRt.anchorMax = new Vector2(1f, 0.5f);
+            rowRt.pivot = new Vector2(0.5f, 0.5f);
+            rowRt.anchoredPosition = new Vector2(0f, localY);
+            rowRt.sizeDelta = new Vector2(0f, 22f);
+
+            float curX = 7f;
+
+            // 1. Stat Badge
+            var badgeGo = new GameObject("Badge", typeof(RectTransform), typeof(Image), typeof(Outline));
+            badgeGo.transform.SetParent(rowGo.transform, false);
+            var bRt = badgeGo.GetComponent<RectTransform>();
+            bRt.anchorMin = new Vector2(0f, 0.5f); bRt.anchorMax = new Vector2(0f, 0.5f);
+            bRt.pivot = new Vector2(0f, 0.5f);
+            bRt.anchoredPosition = new Vector2(curX, 0f);
+            bRt.sizeDelta = new Vector2(28f, 20f);
+            badgeGo.GetComponent<Image>().color = new Color(0.14f, 0.09f, 0.06f, 0.98f);
+            var bOutline = badgeGo.GetComponent<Outline>();
+            bOutline.effectColor = new Color(0.55f, 0.38f, 0.22f, 0.9f);
+            bOutline.effectDistance = new Vector2(1f, -1f);
+            var bTxt = CreateText(badgeGo.transform, "Label", statName, 10f, TextAlignmentOptions.Center,
+                new Color(0.94f, 0.85f, 0.70f), FontStyles.Bold);
+            bTxt.rectTransform.anchorMin = Vector2.zero; bTxt.rectTransform.anchorMax = Vector2.one;
+            bTxt.rectTransform.offsetMin = bTxt.rectTransform.offsetMax = Vector2.zero;
+            AddHoverTrigger(badgeGo, () => ShowStatTooltip(statName), HideTooltip);
+
+            curX += 28f + 3f;
+
+            // 2. [+1] Button
+            CreateSideButton(rowGo.transform, "Btn_Plus1", "+1", new Vector2(curX, 0f), new Vector2(28f, 20f),
+                new Color(0.92f, 0.84f, 0.70f), () => UpgradeStat(statName, 1),
+                $"Add +1 to {statName}", $"Allocates 1 Status Point to {statName}.");
+            curX += 28f + 3f;
+
+            // 3. [+10] Button
+            CreateSideButton(rowGo.transform, "Btn_Plus10", "+10", new Vector2(curX, 0f), new Vector2(32f, 20f),
+                new Color(0.98f, 0.88f, 0.55f), () => UpgradeStat(statName, 10),
+                $"Add +10 to {statName}", $"Allocates 10 Status Points (or remaining SP) to {statName}.");
+            curX += 32f + 3f;
+
+            // 4. Custom Input Field [_]
+            var input = CreateInputField(rowGo.transform, $"Input_{statName}", new Vector2(curX, 0f), new Vector2(32f, 20f), "_");
+            _customStatInputs[statName] = input;
+            input.onSubmit.AddListener((val) => ApplyCustomStat(statName));
+            AddHoverTrigger(input.gameObject,
+                () => ShowTooltip($"Custom Points: {statName}", "Manual Allocation", "Type number of points to allocate, then press Enter or click [+]."),
+                HideTooltip);
+            curX += 32f + 2f;
+
+            // 5. Companion [+] Apply Button
+            CreateSideButton(rowGo.transform, "Btn_Apply", "+", new Vector2(curX, 0f), new Vector2(18f, 20f),
+                new Color(1f, 0.92f, 0.60f), () => ApplyCustomStat(statName),
+                $"Apply to {statName}", "Allocates the typed number of points to this attribute.");
+            curX += 18f + 3f;
+
+            // 6. [MAX] Button
+            CreateSideButton(rowGo.transform, "Btn_Max", "MAX", new Vector2(curX, 0f), new Vector2(38f, 20f),
+                new Color(1f, 0.85f, 0.30f), () => UpgradeStatMax(statName),
+                $"Max Out {statName}", $"Allocates ALL available Status Points to {statName} attribute.");
+        }
+
+        private Button CreateSideButton(Transform parent, string name, string label, Vector2 pos, Vector2 size,
+            Color textColor, UnityEngine.Events.UnityAction onClick, string tipTitle, string tipDesc)
+        {
+            var btnGo = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button), typeof(Outline));
+            btnGo.transform.SetParent(parent, false);
+            var rt = btnGo.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0f, 0.5f); rt.anchorMax = new Vector2(0f, 0.5f);
+            rt.pivot = new Vector2(0f, 0.5f);
+            rt.anchoredPosition = pos;
+            rt.sizeDelta = size;
+
+            var img = btnGo.GetComponent<Image>();
+            img.color = new Color(0.20f, 0.13f, 0.08f, 0.95f);
+
+            var outline = btnGo.GetComponent<Outline>();
+            Color normalBorder = new Color(0.55f, 0.40f, 0.20f, 0.85f);
+            Color hoverBorder = new Color(1f, 0.88f, 0.40f, 1f);
+            outline.effectColor = normalBorder;
+            outline.effectDistance = new Vector2(1f, -1f);
+
+            var btn = btnGo.GetComponent<Button>();
+            btn.targetGraphic = img;
+            btn.onClick.AddListener(onClick);
+
+            var txt = CreateText(btnGo.transform, "Label", label, 10f, TextAlignmentOptions.Center, textColor, FontStyles.Bold);
+            txt.rectTransform.anchorMin = Vector2.zero; txt.rectTransform.anchorMax = Vector2.one;
+            txt.rectTransform.offsetMin = txt.rectTransform.offsetMax = Vector2.zero;
+
+            AddHoverTrigger(btnGo, () => ShowTooltip(tipTitle, "Status Points", tipDesc), HideTooltip);
+            AddMedievalButtonHover(btnGo, img, outline, normalBorder, hoverBorder);
+
+            _sidePanelButtons.Add(btn);
+            return btn;
+        }
+
+        private TMP_InputField CreateInputField(Transform parent, string name, Vector2 pos, Vector2 size, string placeholderText)
+        {
+            var rootGo = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Outline), typeof(TMP_InputField));
+            rootGo.transform.SetParent(parent, false);
+            var rootRt = rootGo.GetComponent<RectTransform>();
+            rootRt.anchorMin = new Vector2(0f, 0.5f); rootRt.anchorMax = new Vector2(0f, 0.5f);
+            rootRt.pivot = new Vector2(0f, 0.5f);
+            rootRt.anchoredPosition = pos;
+            rootRt.sizeDelta = size;
+
+            var bgImg = rootGo.GetComponent<Image>();
+            bgImg.color = new Color(0.08f, 0.05f, 0.03f, 0.98f);
+
+            var outline = rootGo.GetComponent<Outline>();
+            outline.effectColor = new Color(0.48f, 0.35f, 0.20f, 0.9f);
+            outline.effectDistance = new Vector2(1f, -1f);
+
+            var textAreaGo = new GameObject("Text Area", typeof(RectTransform), typeof(RectMask2D));
+            textAreaGo.transform.SetParent(rootGo.transform, false);
+            var textAreaRt = textAreaGo.GetComponent<RectTransform>();
+            textAreaRt.anchorMin = Vector2.zero; textAreaRt.anchorMax = Vector2.one;
+            textAreaRt.offsetMin = new Vector2(2, 1); textAreaRt.offsetMax = new Vector2(-2, -1);
+
+            var phTxt = CreateText(textAreaGo.transform, "Placeholder", placeholderText, 10f,
+                TextAlignmentOptions.Center, new Color(0.55f, 0.45f, 0.35f, 0.75f), FontStyles.Italic);
+            phTxt.rectTransform.anchorMin = Vector2.zero; phTxt.rectTransform.anchorMax = Vector2.one;
+            phTxt.rectTransform.offsetMin = phTxt.rectTransform.offsetMax = Vector2.zero;
+
+            var textTxt = CreateText(textAreaGo.transform, "Text", "", 10f,
+                TextAlignmentOptions.Center, new Color(1f, 0.92f, 0.60f), FontStyles.Bold);
+            textTxt.rectTransform.anchorMin = Vector2.zero; textTxt.rectTransform.anchorMax = Vector2.one;
+            textTxt.rectTransform.offsetMin = textTxt.rectTransform.offsetMax = Vector2.zero;
+
+            var inputField = rootGo.GetComponent<TMP_InputField>();
+            inputField.textViewport = textAreaRt;
+            inputField.textComponent = textTxt;
+            inputField.placeholder = phTxt;
+            inputField.contentType = TMP_InputField.ContentType.IntegerNumber;
+            inputField.characterLimit = 4;
+            inputField.targetGraphic = bgImg;
+
+            return inputField;
+        }
+
+        private void AddMedievalButtonHover(GameObject target, Image img, Outline outline, Color normalBorder, Color hoverBorder)
+        {
+            var trigger = target.GetComponent<UnityEngine.EventSystems.EventTrigger>() ?? target.AddComponent<UnityEngine.EventSystems.EventTrigger>();
+
+            Color normalBg = img.color;
+            Color hoverBg = new Color(Mathf.Min(1f, normalBg.r * 1.35f), Mathf.Min(1f, normalBg.g * 1.35f), Mathf.Min(1f, normalBg.b * 1.35f), normalBg.a);
+
+            var enter = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerEnter };
+            enter.callback.AddListener((d) =>
+            {
+                img.color = hoverBg;
+                if (outline != null) outline.effectColor = hoverBorder;
+            });
+            trigger.triggers.Add(enter);
+
+            var exit = new UnityEngine.EventSystems.EventTrigger.Entry { eventID = UnityEngine.EventSystems.EventTriggerType.PointerExit };
+            exit.callback.AddListener((d) =>
+            {
+                img.color = normalBg;
+                if (outline != null) outline.effectColor = normalBorder;
+            });
+            trigger.triggers.Add(exit);
+        }
+
+        public void ToggleSidePanel()
+        {
+            SetSidePanelOpen(!_isSidePanelOpen);
+        }
+
+        public void SetSidePanelOpen(bool open)
+        {
+            _isSidePanelOpen = open;
+            if (_sidePanelGo != null)
+            {
+                _sidePanelGo.SetActive(open);
+            }
+
+            if (_sideToggleBtnRect != null)
+            {
+                // When open, tab sits on outer right edge of the 1.75x drawer (210f * 1.75f - 4f = 363.5f)
+                float posX = open ? (210f * 1.75f - 4f) : -4f;
+                _sideToggleBtnRect.anchoredPosition = new Vector2(posX, 104f);
+            }
+
+            if (_txtSideToggleArrow != null)
+            {
+                _txtSideToggleArrow.text = open ? "«" : "»";
+            }
+
+            if (_windowRect != null)
+            {
+                _windowRect.anchoredPosition = open ? new Vector2(-160f, 0f) : Vector2.zero;
+            }
+
+            AudioManager.Instance?.PlaySfx("click");
         }
         #endregion
 

@@ -915,6 +915,124 @@ namespace TheLastKnight.Tests
                 UnityEngine.Object.DestroyImmediate(enemy);
             }
         }
+
+        [Test]
+        public void CharacterStatusUI_SideDrawer_BuildsCorrectly_With16ButtonsAnd4Inputs()
+        {
+            var uiType = RuntimeType("TheLastKnight.UI.CharacterStatusUI");
+            var go = new GameObject("Test_StatusUI_DrawerStructure");
+            try
+            {
+                var ui = go.AddComponent(uiType);
+                Invoke(ui, "Awake");
+
+                var drawerGo = GetProp(ui, "SidePanelGo") as GameObject;
+                Assert.IsNotNull(drawerGo, "SideStatusDrawer GameObject must exist");
+
+                var toggleRt = GetProp(ui, "SideToggleBtnRect") as RectTransform;
+                Assert.IsNotNull(toggleRt, "SideToggleBtnRect must exist");
+
+                var inputs = GetProp(ui, "CustomStatInputs") as System.Collections.ICollection;
+                Assert.IsNotNull(inputs);
+                Assert.AreEqual(4, inputs.Count, "Must have 4 custom input fields (STR, AGI, VIT, DEX)");
+
+                var buttons = GetProp(ui, "SidePanelButtons") as System.Collections.ICollection;
+                Assert.IsNotNull(buttons);
+                Assert.AreEqual(16, buttons.Count, "Must have 16 side panel buttons (4 rows x 4 buttons)");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void CharacterStatusUI_SideDrawer_Toggle_OpensAndCloses()
+        {
+            var uiType = RuntimeType("TheLastKnight.UI.CharacterStatusUI");
+            var go = new GameObject("Test_StatusUI_Toggle");
+            try
+            {
+                var ui = go.AddComponent(uiType);
+                Invoke(ui, "Awake");
+
+                var drawerGo = GetProp(ui, "SidePanelGo") as GameObject;
+                var arrowTmp = GetProp(ui, "TxtSideToggleArrow");
+                var arrowProp = arrowTmp.GetType().GetProperty("text");
+
+                // Starts closed
+                Assert.IsFalse((bool)GetProp(ui, "IsSidePanelOpen"), "Drawer must start closed");
+                Assert.IsFalse(drawerGo.activeSelf, "Drawer GameObject must start inactive");
+                Assert.AreEqual("»", arrowProp.GetValue(arrowTmp), "Arrow must point right when closed");
+
+                // Toggle open
+                ui.GetType().GetMethod("ToggleSidePanel")?.Invoke(ui, null);
+                Assert.IsTrue((bool)GetProp(ui, "IsSidePanelOpen"), "Drawer must be open after toggle");
+                Assert.IsTrue(drawerGo.activeSelf, "Drawer GameObject must be active after toggle");
+                Assert.AreEqual("«", arrowProp.GetValue(arrowTmp), "Arrow must point left when open");
+
+                // Toggle close
+                ui.GetType().GetMethod("ToggleSidePanel")?.Invoke(ui, null);
+                Assert.IsFalse((bool)GetProp(ui, "IsSidePanelOpen"), "Drawer must be closed after second toggle");
+                Assert.IsFalse(drawerGo.activeSelf, "Drawer GameObject must be inactive after second toggle");
+                Assert.AreEqual("»", arrowProp.GetValue(arrowTmp), "Arrow must point right when closed");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void CharacterStatusUI_UpgradeStat_Plus1_Plus10_Custom_Max()
+        {
+            var addPoints = _stats.GetType().GetMethod("AddStatPoints");
+            addPoints.Invoke(_stats, new object[] { 60 });
+
+            var uiType = RuntimeType("TheLastKnight.UI.CharacterStatusUI");
+            var go = new GameObject("Test_StatusUI_UpgradeLogic");
+            try
+            {
+                var ui = go.AddComponent(uiType);
+                Invoke(ui, "Awake");
+                SetField(ui, "_cachedStats", _stats);
+
+                int initialSTR = (int)GetProp(_stats, "STR");
+                int initialSP = (int)GetProp(_stats, "StatPoints");
+
+                // 1. Upgrade +1
+                ui.GetType().GetMethod("UpgradeStat", new[] { typeof(string), typeof(int) })?.Invoke(ui, new object[] { "STR", 1 });
+                Assert.AreEqual(initialSTR + 1, (int)GetProp(_stats, "STR"));
+                Assert.AreEqual(initialSP - 1, (int)GetProp(_stats, "StatPoints"));
+
+                // 2. Upgrade +10
+                ui.GetType().GetMethod("UpgradeStat", new[] { typeof(string), typeof(int) })?.Invoke(ui, new object[] { "STR", 10 });
+                Assert.AreEqual(initialSTR + 11, (int)GetProp(_stats, "STR"));
+                Assert.AreEqual(initialSP - 11, (int)GetProp(_stats, "StatPoints"));
+
+                // 3. Custom Input (e.g. 7 points to AGI)
+                var inputsDict = GetProp(ui, "CustomStatInputs") as System.Collections.IDictionary;
+                var agiInput = inputsDict["AGI"];
+                agiInput.GetType().GetProperty("text")?.SetValue(agiInput, "7");
+
+                int initialAGI = (int)GetProp(_stats, "AGI");
+                int spBeforeCustom = (int)GetProp(_stats, "StatPoints");
+                ui.GetType().GetMethod("ApplyCustomStat")?.Invoke(ui, new object[] { "AGI" });
+                Assert.AreEqual(initialAGI + 7, (int)GetProp(_stats, "AGI"));
+                Assert.AreEqual(spBeforeCustom - 7, (int)GetProp(_stats, "StatPoints"));
+
+                // 4. MAX to VIT
+                int spBeforeMax = (int)GetProp(_stats, "StatPoints");
+                int initialVIT = (int)GetProp(_stats, "VIT");
+                ui.GetType().GetMethod("UpgradeStatMax")?.Invoke(ui, new object[] { "VIT" });
+                Assert.AreEqual(initialVIT + spBeforeMax, (int)GetProp(_stats, "VIT"));
+                Assert.AreEqual(0, (int)GetProp(_stats, "StatPoints"));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+            }
+        }
     }
 }
 

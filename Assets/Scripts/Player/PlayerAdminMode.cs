@@ -24,6 +24,9 @@ namespace TheLastKnight.Player
         private bool _statusImmunity;
         private GUIStyle _rowStyle;
 
+        public static bool IsAdminModeOpen { get; private set; }
+        public bool IsOpen => _isOpen;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Initialize()
         {
@@ -46,14 +49,65 @@ namespace TheLastKnight.Player
             _items.AddRange(ItemRegistry.GetAllItems());
         }
 
+        private void OnDisable()
+        {
+            if (_isOpen)
+            {
+                SetOpen(false);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_isOpen)
+            {
+                SetOpen(false);
+            }
+        }
+
+        public void SetOpen(bool open)
+        {
+            if (_isOpen == open) return;
+            _isOpen = open;
+            IsAdminModeOpen = open;
+
+            if (TheLastKnight.Core.GameManager.Instance != null)
+            {
+                if (_isOpen)
+                {
+                    TheLastKnight.Core.GameManager.Instance.SetInputBlocked(true);
+                }
+                else
+                {
+                    if (ShouldRestoreInput())
+                    {
+                        TheLastKnight.Core.GameManager.Instance.SetInputBlocked(false);
+                    }
+                }
+            }
+        }
+
+        private bool ShouldRestoreInput()
+        {
+            if (TheLastKnight.UI.PauseMenuUI.Instance != null && TheLastKnight.UI.PauseMenuUI.Instance.IsOpen) return false;
+            if (TheLastKnight.UI.CharacterStatusUI.Instance != null && TheLastKnight.UI.CharacterStatusUI.Instance.IsOpen) return false;
+            var shop = FindAnyObjectByType<TheLastKnight.UI.ShopUI>();
+            if (shop != null && shop.IsOpen) return false;
+            return true;
+        }
+
         private void Update()
         {
-            var actions = InputSystem.actions;
-            var toggleAction = actions != null ? actions.FindAction("AdminModeKey") : null;
-            var modifierAction = actions != null ? actions.FindAction("AdminModeModifier") : null;
-            if (toggleAction != null && modifierAction != null &&
-                toggleAction.WasPressedThisFrame() && modifierAction.IsPressed())
-                _isOpen = !_isOpen;
+            HandleToggleInput();
+
+            if (_isOpen)
+            {
+                var kb = Keyboard.current;
+                if (kb != null && kb.escapeKey.wasPressedThisFrame)
+                {
+                    SetOpen(false);
+                }
+            }
 
             var stats = GetComponent<PlayerStats>();
             var controller = GetComponent<PlayerController>();
@@ -65,9 +119,49 @@ namespace TheLastKnight.Player
             }
         }
 
+        private void HandleToggleInput()
+        {
+            bool togglePressed = false;
+            var actions = InputSystem.actions;
+            var toggleAction = actions != null ? actions.FindAction("AdminModeKey") : null;
+            var modifierAction = actions != null ? actions.FindAction("AdminModeModifier") : null;
+            if (toggleAction != null && modifierAction != null)
+            {
+                if (!toggleAction.enabled) toggleAction.Enable();
+                if (!modifierAction.enabled) modifierAction.Enable();
+                togglePressed = toggleAction.WasPressedThisFrame() && modifierAction.IsPressed();
+            }
+
+            if (!togglePressed)
+            {
+                var kb = Keyboard.current;
+                if (kb != null)
+                {
+                    togglePressed = kb.gKey.wasPressedThisFrame && kb.f3Key.isPressed;
+                }
+            }
+
+            if (togglePressed)
+            {
+                SetOpen(!_isOpen);
+            }
+        }
+
         private void OnGUI()
         {
             if (!_isOpen) return;
+
+            Event currentEvent = Event.current;
+            if (currentEvent != null && currentEvent.type == EventType.MouseDown)
+            {
+                if (!_windowRect.Contains(currentEvent.mousePosition))
+                {
+                    SetOpen(false);
+                    currentEvent.Use();
+                    return;
+                }
+            }
+
             if (_rowStyle == null)
             {
                 _rowStyle = new GUIStyle(GUI.skin.label) { wordWrap = true };
