@@ -911,6 +911,15 @@ _rb = GetComponent<Rigidbody2D>();
                 }
             }
 
+            // The player may leave melee range during anticipation or the parry windup.
+            if (!ranged && _requireCloseRangeForContactSkills
+                && (_player == null || !_player.activeInHierarchy || GetAttackDistance() > _meleeRange))
+            {
+                _currentState = EnemyAIState.Idle;
+                _isActionLocked = false;
+                yield break;
+            }
+
             if (dragonAudio != null && !ranged)
                 dragonAudio.PlayAttackAnimation();
             else
@@ -1204,6 +1213,21 @@ _rb = GetComponent<Rigidbody2D>();
                 _currentAttackMultiplier = _basicAttackMultiplier;
                 skill.nextReadyTime = Time.time + skill.cooldown;
                 SetSkillHealthBarsHidden(false);
+                _isActionLocked = false;
+                yield break;
+            }
+
+            // Recheck after preparation/reappearance and parry anticipation, before
+            // playing a contact attack. Teleporting into range is not enough if
+            // the player has already moved away during the reappearance animation.
+            if (_requireCloseRangeForContactSkills && skill.projectilePrefab == null
+                && skill.groundSpellPrefab == null && !skill.summonFireballRain
+                && (_player == null || !_player.activeInHierarchy || GetAttackDistance() > _meleeRange))
+            {
+                SetSkillHealthBarsHidden(false);
+                _currentAttackMultiplier = _basicAttackMultiplier;
+                _currentState = EnemyAIState.Idle;
+                if (_useMovementAnimationStates) PlayMovementState("Idle");
                 _isActionLocked = false;
                 yield break;
             }
