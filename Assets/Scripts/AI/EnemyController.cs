@@ -619,8 +619,7 @@ _rb = GetComponent<Rigidbody2D>();
                 && !_requireMeleeRangeForBasicAttack
                 && Time.time >= _nextMeleeTime)
             {
-                // Keep this boss applying pressure with its basic attack while
-                // its special moves are cooling down.
+                // Use the basic attack during skill cooldowns only after reaching melee range.
                 FaceTarget(_player.transform.position);
                 PerformMeleeAttack();
             }
