@@ -62,13 +62,13 @@ namespace TheLastKnight.Combat
         public void ApplyLevelScaling()
         {
             _level = Mathf.Max(1, _level);
-            _maxHealth = _level * 75f;
-            _attackPower = _level * 10f;
+            _maxHealth = _level * 50f;
+            _attackPower = _level * 7f;
             _defense = _level * 1f;
 
             int baseValue = _level * 100;
-            int minReward = Mathf.RoundToInt(baseValue * 0.20f);
-            int maxReward = Mathf.RoundToInt(baseValue * 0.30f);
+            int minReward = Mathf.RoundToInt(baseValue * 0.30f);
+            int maxReward = Mathf.RoundToInt(baseValue * 0.80f);
             _expReward = UnityEngine.Random.Range(minReward, maxReward + 1);
             _goldReward = UnityEngine.Random.Range(minReward, maxReward + 1);
 
@@ -243,8 +243,8 @@ namespace TheLastKnight.Combat
         public void RollRewards()
         {
             int baseValue = _level * 100;
-            int minReward = Mathf.RoundToInt(baseValue * 0.20f);
-            int maxReward = Mathf.RoundToInt(baseValue * 0.30f);
+            int minReward = Mathf.RoundToInt(baseValue * 0.30f);
+            int maxReward = Mathf.RoundToInt(baseValue * 0.80f);
             _expReward = UnityEngine.Random.Range(minReward, maxReward + 1);
             _goldReward = UnityEngine.Random.Range(minReward, maxReward + 1);
         }
