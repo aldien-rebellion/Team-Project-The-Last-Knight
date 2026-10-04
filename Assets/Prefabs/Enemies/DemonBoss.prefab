@@ -235,7 +235,7 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 4294967295
-  _groundCheckDistance: 1.2
+  _groundCheckDistance: 3
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 20

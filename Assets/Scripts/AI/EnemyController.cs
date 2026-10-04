@@ -613,16 +613,6 @@ _rb = GetComponent<Rigidbody2D>();
                 FaceTarget(_player.transform.position);
                 PerformRangedAttack();
             }
-            else if (withinDetectionRange && _playAttackStatesDirectly && readySkill == null
-                && _skills != null && _skills.Length > 0 && !_disableBasicAttack
-                && (meleeDistance <= _meleeRange || isTouching)
-                && !_requireMeleeRangeForBasicAttack
-                && Time.time >= _nextMeleeTime)
-            {
-                // Use the basic attack during skill cooldowns only after reaching melee range.
-                FaceTarget(_player.transform.position);
-                PerformMeleeAttack();
-            }
             else if (withinDetectionRange)
             {
                 ChasePlayer();

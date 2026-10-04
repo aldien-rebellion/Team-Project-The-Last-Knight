@@ -430,6 +430,9 @@ private static void BuildBringerOfDeathSpell()
             serializedAI.FindProperty("_patrolSpeed").floatValue = cfg.PatrolSpeed;
             serializedAI.FindProperty("_chaseSpeed").floatValue = cfg.ChaseSpeed;
             serializedAI.FindProperty("_detectionRange").floatValue = cfg.DetectionRange;
+            // Reach the floor from DemonBoss's elevated pivot.
+            if (cfg.Name == "DemonBoss")
+                serializedAI.FindProperty("_groundCheckDistance").floatValue = 3f;
             serializedAI.FindProperty("_bringToFrontWhileAttacking").boolValue = cfg.Name == "BringerOfDeath" || cfg.Name == "Demon" || cfg.Name == "ArchDemon";
             serializedAI.FindProperty("_attackSortingOrder").intValue = 1;
             serializedAI.FindProperty("_attackSortingLayerName").stringValue = cfg.Name == "Demon" || cfg.Name == "ArchDemon" ? "Player" : string.Empty;
