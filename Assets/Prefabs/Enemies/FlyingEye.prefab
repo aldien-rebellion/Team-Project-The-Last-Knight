@@ -556,8 +556,9 @@ MonoBehaviour:
   _chaseSpeed: 4.2
   _patrolDistance: 3
   _isFlying: 1
-  _flyingChaseHeightOffset: -0.7
-  _flyingIdleHeightOffset: -0.7
+  _flyHorizontally: 1
+  _flyingChaseHeightOffset: -1.2
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
   _isBoss: 0

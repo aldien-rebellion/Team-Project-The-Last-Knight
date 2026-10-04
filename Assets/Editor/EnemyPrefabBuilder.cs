@@ -479,8 +479,9 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "Skeleton")
                 serializedAI.FindProperty("_projectileSpawnOffset").vector2Value = new Vector2(0.6f, 1.4f);
             serializedAI.FindProperty("_isFlying").boolValue = cfg.IsFlying;
-            serializedAI.FindProperty("_flyingChaseHeightOffset").floatValue = cfg.Name == "FlyingEye" ? -0.7f : 0f;
-            serializedAI.FindProperty("_flyingIdleHeightOffset").floatValue = cfg.Name == "FlyingEye" ? -0.7f : 0f;
+            serializedAI.FindProperty("_flyHorizontally").boolValue = cfg.Name == "FlyingEye";
+            serializedAI.FindProperty("_flyingChaseHeightOffset").floatValue = cfg.Name == "FlyingEye" ? -1.2f : 0f;
+            serializedAI.FindProperty("_flyingIdleHeightOffset").floatValue = 0f;
             serializedAI.FindProperty("_hasRangedAttack").boolValue = cfg.HasRanged;
             if (projPrefab != null) serializedAI.FindProperty("_projectilePrefab").objectReferenceValue = projPrefab;
             if (spellPrefab != null) serializedAI.FindProperty("_groundSpellPrefab").objectReferenceValue = spellPrefab;
