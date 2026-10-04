@@ -1215,8 +1215,6 @@ _rb = GetComponent<Rigidbody2D>();
             _satyrAudio?.PlaySkill(skill.skillName);
             _necromancerAudio?.PlayAttack();
             _moonstoneKeeperAudio?.PlaySwordSwing();
-            if (skill.skillName == "FullCombo" || skill.animationName == "FullCombo")
-                _skeletonKnightAudio?.PlayFullCombo();
             if (skill.skillName == "ParryBite")
                 _foxAudio?.PlayBite();
             if (skill.skillName == "FireBreath" || skill.skillName == "SmallFireBall")
@@ -1249,6 +1247,10 @@ _rb = GetComponent<Rigidbody2D>();
 
             if (skill.skillName == "AttackWithStun" || skill.animationName == "AttackWithStun")
                 _forestMushroomAudio?.PlayAttackWithStun();
+
+            // FullCombo uses one swing clip per strike, timed with its damage windows.
+            if (skill.skillName == "FullCombo" || skill.animationName == "FullCombo")
+                _skeletonKnightAudio?.PlayFullCombo();
 
             // Every attack window gets a fresh per-attack hit gate. Otherwise
             // the hitbox's 0.8s victim cooldown can suppress the next skill.
@@ -1312,6 +1314,9 @@ _rb = GetComponent<Rigidbody2D>();
                         _isActionLocked = false;
                         yield break;
                     }
+
+                    if (skill.skillName == "FullCombo" || skill.animationName == "FullCombo")
+                        _skeletonKnightAudio?.PlayFullCombo();
 
                     if (skill.dealDamageAsSingleHit)
                     {

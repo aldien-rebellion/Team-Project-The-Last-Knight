@@ -90,6 +90,8 @@ GameObject:
   - component: {fileID: 6616486443221967164}
   - component: {fileID: 3436741107080655852}
   - component: {fileID: 4631645671950882567}
+  - component: {fileID: 9100000000000000101}
+  - component: {fileID: 9100000000000000102}
   m_Layer: 0
   m_Name: SkeletonKnight
   m_TagString: Untagged
@@ -654,3 +656,48 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!82 &9100000000000000101
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2832432180080801224}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 2
+  MaxDistance: 24
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+--- !u!114 &9100000000000000102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2832432180080801224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd1886c2f1c47bdb9ec547a3cc810c1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.SkeletonKnightAudioController
+  _sideSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _forwardSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _downSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _fullComboClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
