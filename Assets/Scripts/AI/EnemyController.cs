@@ -65,6 +65,10 @@ namespace TheLastKnight.AI
         [SerializeField] private bool _useColliderEdgeAttackRanges;
         [Tooltip("When enabled, this enemy waits for configured skills instead of using the basic melee attack.")]
         [SerializeField] private bool _disableBasicAttack;
+        [Tooltip("Chase into melee range before using the basic attack, including while skills are cooling down.")]
+        [SerializeField] private bool _requireMeleeRangeForBasicAttack;
+        [Tooltip("Recheck the skill's minimum and maximum range before casting and releasing its attack.")]
+        [SerializeField] private bool _requireSkillRangeBeforeAttack;
 
         [Header("Ranged Combat")]
         [SerializeField] private bool _hasRangedAttack = false;
@@ -612,6 +616,7 @@ _rb = GetComponent<Rigidbody2D>();
             else if (withinDetectionRange && _playAttackStatesDirectly && readySkill == null
                 && _skills != null && _skills.Length > 0 && !_disableBasicAttack
                 && (meleeDistance <= _meleeRange || isTouching)
+                && !_requireMeleeRangeForBasicAttack
                 && Time.time >= _nextMeleeTime)
             {
                 // Keep this boss applying pressure with its basic attack while
@@ -1046,8 +1051,38 @@ _rb = GetComponent<Rigidbody2D>();
                 : 0f;
         }
 
+        private bool IsPlayerInSkillRange(TheLastKnight.Combat.EnemySkill skill)
+        {
+            if (_player == null || skill == null) return false;
+            float distance = IsTouchingPlayer() ? 0f
+                : (_useColliderEdgeAttackRanges || _useColliderEdgeAttackDistance
+                    || _cycleNonParryableSkills || _basicParryEveryNAttacks > 0)
+                    ? GetAttackDistance()
+                    : Vector2.Distance(transform.position, _player.transform.position);
+            return distance >= skill.minRange && distance <= skill.maxRange;
+        }
+
+        private void EndOutOfRangeSkill()
+        {
+            _parry?.FinishWindup();
+            _damageUntil = 0f;
+            _currentAttackMultiplier = _basicAttackMultiplier;
+            _currentState = EnemyAIState.Idle;
+            SetSkillSpriteHidden(false);
+            SetSkillHealthBarsHidden(false);
+            if (_animator != null)
+            {
+                if (_availableAnimParams.Contains("Attack")) _animator.ResetTrigger("Attack");
+                _animator.Play("Idle", 0, 0f);
+            }
+            _isActionLocked = false;
+        }
+
         private void PerformSkill(TheLastKnight.Combat.EnemySkill skill)
         {
+            if (_requireSkillRangeBeforeAttack && !IsPlayerInSkillRange(skill))
+                return;
+
             _currentState = EnemyAIState.Skill;
             _rb.linearVelocity = Vector2.zero;
             SetAnimBool("IsMoving", false);
@@ -1099,6 +1134,13 @@ _rb = GetComponent<Rigidbody2D>();
             bool waitForAnimation = (_cycleNonParryableSkills || _waitForAttackAnimationToFinish) && _animator != null
                 && (_animator.HasState(0, Animator.StringToHash(skill.animationName))
                     || _animator.HasState(0, Animator.StringToHash("Base Layer." + skill.animationName)));
+
+            // The player may have moved out of range during the parry windup.
+            if (_requireSkillRangeBeforeAttack && !IsPlayerInSkillRange(skill))
+            {
+                EndOutOfRangeSkill();
+                yield break;
+            }
 
             if (!string.IsNullOrEmpty(skill.preparationAnimationName))
             {
@@ -1305,6 +1347,13 @@ _rb = GetComponent<Rigidbody2D>();
             {
                 SetSkillHealthBarsHidden(false);
                 _isActionLocked = false;
+                yield break;
+            }
+
+            // Recheck at the damage frame too, before a projectile or hit is released.
+            if (_requireSkillRangeBeforeAttack && !IsPlayerInSkillRange(skill))
+            {
+                EndOutOfRangeSkill();
                 yield break;
             }
 
