@@ -108,12 +108,12 @@ MonoBehaviour:
   interactionRange: 2.5
   prompt: F  Interact
   lootTable: {fileID: 11400000, guid: f5a7b8751d592ec4a8ec78f31b668b28, type: 2}
-  minimumItems: 3
-  maximumItems: 6
-  commonWeight: 35
-  rareWeight: 45
-  epicWeight: 20
-  minimumGold: 100
+  minimumItems: 1
+  maximumItems: 3
+  commonWeight: 79
+  rareWeight: 20
+  epicWeight: 1
+  minimumGold: 200
   maximumGold: 300
   openingFrames:
   - {fileID: -4604928527198724257, guid: bf47f03b4e67f454480bf39085d253e9, type: 3}

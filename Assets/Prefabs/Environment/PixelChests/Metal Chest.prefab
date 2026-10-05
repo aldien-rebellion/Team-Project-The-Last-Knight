@@ -110,11 +110,11 @@ MonoBehaviour:
   lootTable: {fileID: 11400000, guid: f5a7b8751d592ec4a8ec78f31b668b28, type: 2}
   minimumItems: 2
   maximumItems: 4
-  commonWeight: 55
-  rareWeight: 35
-  epicWeight: 10
-  minimumGold: 40
-  maximumGold: 120
+  commonWeight: 47
+  rareWeight: 33
+  epicWeight: 20
+  minimumGold: 300
+  maximumGold: 500
   openingFrames:
   - {fileID: 8486432528384487284, guid: 9f5933d9abc8db842903c5ae5d5a2cd4, type: 3}
   - {fileID: 5510702147483751292, guid: fc7f80f325307b34eb7dfcd051116925, type: 3}
