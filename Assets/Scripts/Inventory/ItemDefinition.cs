@@ -4,7 +4,22 @@ using TheLastKnight.Stats;
 
 namespace TheLastKnight.Inventory
 {
-    public enum ItemUseEffect { None, Legacy, Heal, RestoreStamina, AddGold, AddStatPoints, MightBuff }
+    public enum ItemUseEffect
+    {
+        None,
+        Legacy,
+        Heal,
+        RestoreStamina,
+        AddGold,
+        AddStatPoints,
+        MightBuff,
+        SwiftnessBuff,
+        EnduranceBuff,
+        PurityBuff,
+        RegenBuff,
+        FortitudeBuff,
+        UndyingBuff
+    }
 
     [CreateAssetMenu(fileName = "new_item", menuName = "The Last Knight/Item Definition")]
     public class ItemDefinition : ScriptableObject
@@ -55,6 +70,24 @@ namespace TheLastKnight.Inventory
                     break;
                 case ItemUseEffect.MightBuff:
                     item.onUse = p => { if (p != null) p.ApplyMightBuff(); };
+                    break;
+                case ItemUseEffect.SwiftnessBuff:
+                    item.onUse = p => { if (p != null) p.ApplySwiftnessBuff(); };
+                    break;
+                case ItemUseEffect.EnduranceBuff:
+                    item.onUse = p => { if (p != null) p.ApplyEnduranceBuff(); };
+                    break;
+                case ItemUseEffect.PurityBuff:
+                    item.onUse = p => { if (p != null) p.ApplyPurityBuff(); };
+                    break;
+                case ItemUseEffect.RegenBuff:
+                    item.onUse = p => { if (p != null) p.ApplyRegenBuff(); };
+                    break;
+                case ItemUseEffect.FortitudeBuff:
+                    item.onUse = p => { if (p != null) p.ApplyFortitudeBuff(); };
+                    break;
+                case ItemUseEffect.UndyingBuff:
+                    item.onUse = p => { if (p != null) p.ApplyUndyingBuff(); };
                     break;
             }
             return item;

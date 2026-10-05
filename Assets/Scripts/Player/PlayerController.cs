@@ -198,7 +198,7 @@ namespace TheLastKnight.Player
         private bool _dashInvincible;
         private float _dashIFrameTimer = 0f;
         private float _parryInvincibleUntil;
-        public bool IsInvincible { get => _dashIFrameTimer > 0f || _dashInvincible || Time.time < _parryInvincibleUntil; private set => _dashInvincible = value; }
+        public bool IsInvincible { get => _dashIFrameTimer > 0f || _dashInvincible || Time.time < _parryInvincibleUntil || (GetComponent<TheLastKnight.Stats.PlayerStats>()?.HasUndyingBuff ?? false); private set => _dashInvincible = value; }
         private float _dashTimer = 0f;
         private float _dashCooldownTimer = 0f;
         private bool _hasDashedInAir = false;
@@ -1316,7 +1316,8 @@ namespace TheLastKnight.Player
         /// </summary>
         public void ApplyStun(float duration = 1.0f)
         {
-            if (AdminStatusImmunity) return;
+            var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
+            if (AdminStatusImmunity || (stats != null && stats.HasPurityBuff)) return;
             if (CurrentState == PlayerState.Excalibur)
             {
                 CancelExcalibur();
@@ -1329,7 +1330,6 @@ namespace TheLastKnight.Player
             else if (CurrentState == PlayerState.Buffing)
             {
                 _buffTimer = 0f;
-                var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
                 if (stats != null)
                 {
                     stats.RemoveSkill2Buff();
@@ -1356,7 +1356,8 @@ namespace TheLastKnight.Player
 
         public void ApplyStatus(TheLastKnight.Combat.StatusEffect effect, float duration)
         {
-            if (AdminStatusImmunity) return;
+            var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
+            if (AdminStatusImmunity || (stats != null && stats.HasPurityBuff)) return;
             if (effect == TheLastKnight.Combat.StatusEffect.Stunned)
             {
                 ApplyStun(duration);
@@ -1399,7 +1400,7 @@ namespace TheLastKnight.Player
             }
         }
 
-        private void EndHurt()
+        public void EndHurt()
         {
             _hurtTimer = 0f;
             if (_kinematicController.IsGrounded)

@@ -18,7 +18,7 @@ MonoBehaviour:
   description: Dropped by the Moonstone Keeper. Press F at the Pentagram chest to unlock it. Consumes one key on opening.
   icon: {fileID: 3878173990337384178, guid: 157b36494f28d55459d949dc6cbdee86, type: 3}
   category: 5
-  maxStack: 64
+  maxStack: 1
   isConsumable: 0
   useEffect: 0
   effectAmount: 1

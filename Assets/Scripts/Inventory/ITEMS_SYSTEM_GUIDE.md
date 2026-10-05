@@ -161,18 +161,21 @@ All items are statically registered in `ItemRegistry.cs`:
 
 | ID | Name | Category | Max Stack | Icon Path | Primary Effect / Function |
 | :--- | :--- | :--- | :---: | :--- | :--- |
-| `potion_heal` | `Healing Potion [Q]` | Consumable | 64 | `CharacterStatus/Item_RedPotion_Clean` | Restores 50 HP immediately. Wired to `[Q]` hotkey. |
-| `potion_stamina` | `Stamina Elixir` | Consumable | 64 | `CharacterStatus/Items/Item_GreenPotion` | Restores 100 Stamina immediately. |
-| `golden_seed` | `Golden Seed` | Consumable | 64 | `CharacterStatus/Items/Item_GoldenSeed` | Grants +1 Permanent Stat Point (SP). |
-| `potion_might` | `Potion of Might` | Consumable | 64 | `CharacterStatus/Items/Item_VioletPotion` | Temporary attack boost buff. |
-| `bread` | `Field Ration` | Consumable | 64 | `CharacterStatus/Items/Item_Herb` | Restores 25 HP. |
+| `potion_heal` | `Healing Potion` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-1` | Restores 30% Max HP + 50 HP immediately. Wired to `[Q]` hotkey. |
+| `potion_swiftness` | `Potion of Swiftness` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-2` | +25% Attack Speed & Movement Speed for 30 seconds. |
+| `potion_endurance` | `Potion of Endurance` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-3` | -25% all Stamina consumption for 30 seconds. |
+| `potion_purity` | `Potion of Purity` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-4` | Immunity to stun and status ailments for 30 seconds. |
+| `potion_regeneration` | `Potion of Regeneration` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-5` | Regenerates 5% Max HP/sec for 30 seconds. |
+| `potion_might` | `Potion of Might` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-6` | +25% Attack Power for 30 seconds. |
+| `potion_fortitude` | `Potion of Fortitude` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-7` | +25% Max HP & DEF for 30 seconds. |
+| `potion_undying` | `Potion of the Undying` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-8` | HP set to 1, no heal, absolute invincibility for 30 seconds. |
 | `gold_pouch` | `Gold Pouch` | Consumable | 64 | `CharacterStatus/Items/Item_Pouch` | Grants +500 Gold to player wallet. |
-| `smoke_bomb` | `Shadow Smoke Bomb` | Consumable | 64 | `CharacterStatus/Items/Item_SmokeBomb` | Tactical stealth / combat distraction. |
-| `throwing_dart` | `Hunting Dart` | Consumable | 64 | `CharacterStatus/Items/Item_Dart` | Ranged silent projectile weapon. |
-| `knight_sword` | `Arthur's Knight Sword` | Weapon | 1 | `CharacterStatus/Items/Item_KnightSword` | Base attack power increase. |
-| `silver_armor` | `Royal Silver Armor` | Armor | 1 | `CharacterStatus/Items/Item_SilverArmor` | Base physical damage reduction. |
-| `heavy_boots` | `Heavy Knight Greaves` | Boots | 1 | `CharacterStatus/Items/Item_HeavyBoots` | Poise and stability increase. |
 | `moonstone_shard`| `Moonstone Shard` | Material | 64 | `CharacterStatus/Items/Item_MoonstoneShard` | High-tier crafting ingredient. |
+| `church_key` | `Moonstone Keeper's Key` | Quest | 1 | `CharacterStatus/Items/Key 13 - GOLD - frame0026` | Unlocks Pentagram chest. |
+| `rune_pentagram`| `Pentagram Rune` | Quest | 1 | `CharacterStatus/Items/Item_RunePentagram` | Castle gate demon seal keystone. |
+| `rune_hand` | `Demon Hand Rune` | Quest | 1 | `CharacterStatus/Items/Item_RuneHand` | Castle gate demon seal keystone. |
+| `rune_eye` | `Evil Eye Rune` | Quest | 1 | `CharacterStatus/Items/Item_RuneEye` | Castle gate demon seal keystone. |
+| `rune_trident` | `Trident Rune` | Quest | 1 | `CharacterStatus/Items/Item_RuneTrident` | Castle gate demon seal keystone. |
 
 ---
 

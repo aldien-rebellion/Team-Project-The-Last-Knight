@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: potion_heal
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
   id: potion_heal
-  displayName: 'Healing Potion [Q]'
-  typeName: Consumable
-  description: Restores 50 HP immediately. Place in Quick Slot 1 to drink with [Q].
-  icon: {fileID: -1349915430289719932, guid: 4510bbd1345fbf245a6009620273761b, type: 3}
+  displayName: Healing Potion
+  typeName: Potion
+  description: Restores 30% Max HP + 50 HP immediately. Place in Quick Slot 1 to drink with [Q].
+  icon: {fileID: 8646018360407841495, guid: fb78c2b94aad2ee42a57536fe2e69b5c, type: 3}
   category: 0
   maxStack: 64
   isConsumable: 1

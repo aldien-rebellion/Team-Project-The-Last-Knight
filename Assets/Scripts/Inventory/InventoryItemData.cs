@@ -38,6 +38,12 @@ namespace TheLastKnight.Inventory
                 if (_cachedIcon == null && !string.IsNullOrEmpty(iconPath))
                 {
                     _cachedIcon = Resources.Load<Sprite>(iconPath);
+                    if (_cachedIcon == null)
+                    {
+                        var sprites = Resources.LoadAll<Sprite>(iconPath);
+                        if (sprites != null && sprites.Length > 0)
+                            _cachedIcon = sprites[0];
+                    }
                 }
                 return _cachedIcon;
             }

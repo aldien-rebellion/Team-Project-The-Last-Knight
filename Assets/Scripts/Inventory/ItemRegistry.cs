@@ -12,10 +12,10 @@ namespace TheLastKnight.Inventory
             ["potion_heal"] = () => new InventoryItemData
             {
                 id = "potion_heal",
-                name = "Healing Potion [Q]",
-                typeName = "Consumable",
-                description = "Restores 50 HP immediately. Place in Quick Slot 1 to drink with [Q].",
-                iconPath = "CharacterStatus/Item_RedPotion_Clean",
+                name = "Healing Potion",
+                typeName = "Potion",
+                description = "Restores 30% Max HP + 50 HP immediately. Place in Quick Slot 1 to drink with [Q].",
+                iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-1",
                 category = ItemCategory.Consumable,
                 maxStack = 64,
                 isConsumable = true,
@@ -23,43 +23,7 @@ namespace TheLastKnight.Inventory
                 {
                     if (player != null && player.CurrentHP < player.MaxHP)
                     {
-                        player.Heal(50f);
-                    }
-                }
-            },
-            ["potion_stamina"] = () => new InventoryItemData
-            {
-                id = "potion_stamina",
-                name = "Stamina Elixir",
-                typeName = "Consumable",
-                description = "Instantly replenishes 100 Stamina points.",
-                iconPath = "CharacterStatus/Items/Item_GreenPotion",
-                category = ItemCategory.Consumable,
-                maxStack = 64,
-                isConsumable = true,
-                onUse = player =>
-                {
-                    if (player != null)
-                    {
-                        player.RestoreStamina(100f);
-                    }
-                }
-            },
-            ["golden_seed"] = () => new InventoryItemData
-            {
-                id = "golden_seed",
-                name = "Golden Seed",
-                typeName = "Sacred Relic",
-                description = "A seed imbued with ancient holy light. Bestows +1 Attribute Stat Point (SP).",
-                iconPath = "CharacterStatus/Items/Item_GoldenSeed",
-                category = ItemCategory.Consumable,
-                maxStack = 64,
-                isConsumable = true,
-                onUse = player =>
-                {
-                    if (player != null)
-                    {
-                        player.AddStatPoints(1);
+                        player.Heal(player.MaxHP * 0.3f + 50f);
                     }
                 }
             },
@@ -67,9 +31,9 @@ namespace TheLastKnight.Inventory
             {
                 id = "potion_might",
                 name = "Potion of Might",
-                typeName = "Elixir",
+                typeName = "Potion",
                 description = "Increases attack power by 25% for 30 seconds. Using again refreshes the duration.",
-                iconPath = "CharacterStatus/Items/Item_VioletPotion",
+                iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-6",
                 category = ItemCategory.Consumable,
                 maxStack = 64,
                 isConsumable = true,
@@ -81,21 +45,111 @@ namespace TheLastKnight.Inventory
                     }
                 }
             },
-            ["bread"] = () => new InventoryItemData
+            ["potion_swiftness"] = () => new InventoryItemData
             {
-                id = "bread",
-                name = "Field Ration",
-                typeName = "Ration",
-                description = "A field ration. Restores 25 HP.",
-                iconPath = "CharacterStatus/Items/Item_Herb",
+                id = "potion_swiftness",
+                name = "Potion of Swiftness",
+                typeName = "Potion",
+                description = "Increases attack speed and movement speed (walk and sprint) by 25% for 30 seconds.",
+                iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-2",
                 category = ItemCategory.Consumable,
                 maxStack = 64,
                 isConsumable = true,
                 onUse = player =>
                 {
-                    if (player != null && player.CurrentHP < player.MaxHP)
+                    if (player != null)
                     {
-                        player.Heal(25f);
+                        player.ApplySwiftnessBuff();
+                    }
+                }
+            },
+            ["potion_endurance"] = () => new InventoryItemData
+            {
+                id = "potion_endurance",
+                name = "Potion of Endurance",
+                typeName = "Potion",
+                description = "Reduces all stamina consumption by 25% for 30 seconds.",
+                iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-3",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player =>
+                {
+                    if (player != null)
+                    {
+                        player.ApplyEnduranceBuff();
+                    }
+                }
+            },
+            ["potion_purity"] = () => new InventoryItemData
+            {
+                id = "potion_purity",
+                name = "Potion of Purity",
+                typeName = "Potion",
+                description = "Cleanses negative effects and grants complete immunity to stun and status ailments for 30 seconds.",
+                iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-4",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player =>
+                {
+                    if (player != null)
+                    {
+                        player.ApplyPurityBuff();
+                    }
+                }
+            },
+            ["potion_regeneration"] = () => new InventoryItemData
+            {
+                id = "potion_regeneration",
+                name = "Potion of Regeneration",
+                typeName = "Potion",
+                description = "Continuously regenerates 5% of Max HP per second for 30 seconds.",
+                iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-5",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player =>
+                {
+                    if (player != null)
+                    {
+                        player.ApplyRegenBuff();
+                    }
+                }
+            },
+            ["potion_fortitude"] = () => new InventoryItemData
+            {
+                id = "potion_fortitude",
+                name = "Potion of Fortitude",
+                typeName = "Potion",
+                description = "Bolsters defenses, increasing Max HP and DEF by 25% for 30 seconds.",
+                iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-7",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player =>
+                {
+                    if (player != null)
+                    {
+                        player.ApplyFortitudeBuff();
+                    }
+                }
+            },
+            ["potion_undying"] = () => new InventoryItemData
+            {
+                id = "potion_undying",
+                name = "Potion of the Undying",
+                typeName = "Potion",
+                description = "Forbidden elixir. Sets HP to 1 and prevents all healing, but grants complete invincibility for 30 seconds.",
+                iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-8",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player =>
+                {
+                    if (player != null)
+                    {
+                        player.ApplyUndyingBuff();
                     }
                 }
             },
@@ -116,61 +170,6 @@ namespace TheLastKnight.Inventory
                         player.AddGold(500);
                     }
                 }
-            },
-            ["smoke_bomb"] = () => new InventoryItemData
-            {
-                id = "smoke_bomb",
-                name = "Shadow Smoke Bomb",
-                typeName = "Tactical Tool",
-                description = "Conceals the user and creates distraction in combat.",
-                iconPath = "CharacterStatus/Items/Item_SmokeBomb",
-                category = ItemCategory.Consumable,
-                maxStack = 64,
-                isConsumable = true
-            },
-            ["throwing_dart"] = () => new InventoryItemData
-            {
-                id = "throwing_dart",
-                name = "Hunting Dart",
-                typeName = "Ranged Tool",
-                description = "Sharpened iron throwing dart crafted for silent attacks.",
-                iconPath = "CharacterStatus/Items/Item_Dart",
-                category = ItemCategory.Consumable,
-                maxStack = 64,
-                isConsumable = true
-            },
-            ["knight_sword"] = () => new InventoryItemData
-            {
-                id = "knight_sword",
-                name = "Arthur's Knight Sword",
-                typeName = "Weapon",
-                description = "A finely forged royal blade engraved with kingdom crests. Increases attack power.",
-                iconPath = "CharacterStatus/Items/Item_KnightSword",
-                category = ItemCategory.Weapon,
-                maxStack = 1,
-                isConsumable = false
-            },
-            ["silver_armor"] = () => new InventoryItemData
-            {
-                id = "silver_armor",
-                name = "Royal Silver Armor",
-                typeName = "Armor",
-                description = "Blessed silver plate armor forged to withstand dark demonic assaults.",
-                iconPath = "CharacterStatus/Items/Item_SilverArmor",
-                category = ItemCategory.Armor,
-                maxStack = 1,
-                isConsumable = false
-            },
-            ["heavy_boots"] = () => new InventoryItemData
-            {
-                id = "heavy_boots",
-                name = "Heavy Knight Greaves",
-                typeName = "Boots",
-                description = "Reinforced steel greaves granting stability and protection.",
-                iconPath = "CharacterStatus/Items/Item_HeavyBoots",
-                category = ItemCategory.Boots,
-                maxStack = 1,
-                isConsumable = false
             },
             ["moonstone_shard"] = () => new InventoryItemData
             {

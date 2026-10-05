@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: potion_purity
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: potion_purity
+  displayName: Potion of Purity
+  typeName: Potion
+  description: Cleanses negative effects and grants complete immunity to stun and status ailments for 30 seconds.
+  icon: {fileID: 1177614347668143351, guid: f8a122461c71e9d4399958a71cb76ab1, type: 3}
+  category: 0
+  maxStack: 64
+  isConsumable: 1
+  useEffect: 9
+  effectAmount: 50

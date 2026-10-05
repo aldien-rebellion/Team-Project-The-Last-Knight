@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
   id: potion_might
   displayName: Potion of Might
-  typeName: Elixir
+  typeName: Potion
   description: Increases attack power by 25% for 30 seconds. Using again refreshes
     the duration.
-  icon: {fileID: 21300000, guid: f78273071bc41894c8c55d70215d0ddf, type: 3}
+  icon: {fileID: -3670461564150518451, guid: 6a144a3e03a2ccf43ae77f4f3f6a84bd, type: 3}
   category: 0
   maxStack: 64
   isConsumable: 1
-  useEffect: 1
+  useEffect: 6
   effectAmount: 50

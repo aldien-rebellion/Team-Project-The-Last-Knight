@@ -7,6 +7,10 @@
 - Use `Packages/manifest.json` to understand dependencies. Editable package source belongs in `Packages/`; do not edit `Library/PackageCache/`.
 - Ignore generated `Library/` content unless a task specifically requires package-cache source. Treat `ProjectSettings/` changes as project-wide changes.
 
+## Mandatory Pre-Flight: Unity MCP Check
+
+- **Always verify Unity MCP is active before starting work in every chat**: If Unity MCP is not opened or connected yet, notify the user first before proceeding with any task in this project: *"กรุณาเปิด/เชื่อมต่อ Unity MCP ก่อนเริ่มทำงาน"* (Please open/connect Unity MCP).
+
 ## Working approach
 
 - Investigate only the files needed for the request. Prefer targeted searches over broad repository exploration.
