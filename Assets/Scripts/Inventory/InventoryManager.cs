@@ -220,8 +220,7 @@ namespace TheLastKnight.Inventory
             var item = GetSlot(SlotType.QuickSlot, index);
             if (player == null || player.IsDead || item == null || item.count <= 0 || !item.isConsumable || item.onUse == null) return false;
             if (item.canUse != null) return item.canUse(player);
-            if ((item.id == "potion_heal" || item.id == "bread") && player.CurrentHP >= player.MaxHP) return false;
-            if (item.id == "potion_stamina" && player.CurrentStamina >= player.MaxStamina) return false;
+            if (item.id == "potion_heal" && player.CurrentHP >= player.MaxHP) return false;
             return true;
         }
 

@@ -217,30 +217,80 @@ namespace TheLastKnight.UI
                 new ShopItemConfig
                 {
                     id = "HEAL",
-                    displayName = "Healing Potion [Q]",
-                    category = "Consumable Potion",
-                    description = "Restores 50 HP immediately. Place in Quick Slot to drink on demand with [Q].",
+                    displayName = "Healing Potion",
+                    category = "Potion",
+                    description = "Restores 30% Max HP + 50 HP immediately. Place in Quick Slot to drink on demand with [Q].",
                     buyPrice = 50,
                     initialStock = 10,
                     itemType = ShopItemType.InventoryItem
                 },
                 new ShopItemConfig
                 {
-                    id = "potion_stamina",
-                    displayName = "Stamina Elixir",
-                    category = "Consumable Potion",
-                    description = "Instantly replenishes 100 Stamina points. Crucial during intense boss combat.",
-                    buyPrice = 60,
+                    id = "potion_swiftness",
+                    displayName = "Potion of Swiftness",
+                    category = "Potion",
+                    description = "Increases attack speed and movement speed (walk and sprint) by 25% for 30 seconds.",
+                    buyPrice = 75,
                     initialStock = 5,
                     itemType = ShopItemType.InventoryItem
                 },
                 new ShopItemConfig
                 {
-                    id = "golden_seed",
-                    displayName = "Golden Seed (+1 SP)",
-                    category = "Sacred Relic",
-                    description = "A sacred seed imbued with ancient holy light. Bestows +1 Attribute Stat Point (SP).",
-                    buyPrice = 120,
+                    id = "potion_endurance",
+                    displayName = "Potion of Endurance",
+                    category = "Potion",
+                    description = "Reduces all stamina consumption by 25% for 30 seconds.",
+                    buyPrice = 75,
+                    initialStock = 5,
+                    itemType = ShopItemType.InventoryItem
+                },
+                new ShopItemConfig
+                {
+                    id = "potion_purity",
+                    displayName = "Potion of Purity",
+                    category = "Potion",
+                    description = "Cleanses negative effects and grants complete immunity to stun and status ailments for 30 seconds.",
+                    buyPrice = 80,
+                    initialStock = 5,
+                    itemType = ShopItemType.InventoryItem
+                },
+                new ShopItemConfig
+                {
+                    id = "potion_regeneration",
+                    displayName = "Potion of Regeneration",
+                    category = "Potion",
+                    description = "Continuously regenerates 5% of Max HP per second for 30 seconds.",
+                    buyPrice = 90,
+                    initialStock = 5,
+                    itemType = ShopItemType.InventoryItem
+                },
+                new ShopItemConfig
+                {
+                    id = "potion_might",
+                    displayName = "Potion of Might",
+                    category = "Potion",
+                    description = "Increases attack power by 25% for 30 seconds. Place in Quick Slot to drink on demand.",
+                    buyPrice = 75,
+                    initialStock = 5,
+                    itemType = ShopItemType.InventoryItem
+                },
+                new ShopItemConfig
+                {
+                    id = "potion_fortitude",
+                    displayName = "Potion of Fortitude",
+                    category = "Potion",
+                    description = "Bolsters defenses, increasing Max HP and DEF by 25% for 30 seconds.",
+                    buyPrice = 85,
+                    initialStock = 5,
+                    itemType = ShopItemType.InventoryItem
+                },
+                new ShopItemConfig
+                {
+                    id = "potion_undying",
+                    displayName = "Potion of the Undying",
+                    category = "Potion",
+                    description = "Forbidden elixir. Sets HP to 1 and prevents all healing, but grants complete invincibility for 30 seconds.",
+                    buyPrice = 150,
                     initialStock = 3,
                     itemType = ShopItemType.InventoryItem
                 },
@@ -254,70 +304,6 @@ namespace TheLastKnight.UI
                     initialStock = 1,
                     itemType = ShopItemType.RuneReward,
                     runeIndex = 3
-                },
-                new ShopItemConfig
-                {
-                    id = "STR",
-                    displayName = "Strength Potion (+1 STR)",
-                    category = "Attribute Elixir",
-                    description = "Permanently upgrades Strength by +1, increasing physical attack power and heavy blow impact.",
-                    buyPrice = 100,
-                    initialStock = 3,
-                    itemType = ShopItemType.StatPotion,
-                    statName = "STR"
-                },
-                new ShopItemConfig
-                {
-                    id = "VIT",
-                    displayName = "Vitality Potion (+1 VIT)",
-                    category = "Attribute Elixir",
-                    description = "Permanently upgrades Vitality by +1, elevating maximum Health (HP) and defense resistances.",
-                    buyPrice = 100,
-                    initialStock = 3,
-                    itemType = ShopItemType.StatPotion,
-                    statName = "VIT"
-                },
-                new ShopItemConfig
-                {
-                    id = "DEX",
-                    displayName = "Dexterity Potion (+1 DEX)",
-                    category = "Attribute Elixir",
-                    description = "Permanently upgrades Dexterity by +1, raising critical strike rate and offensive precision.",
-                    buyPrice = 100,
-                    initialStock = 3,
-                    itemType = ShopItemType.StatPotion,
-                    statName = "DEX"
-                },
-                new ShopItemConfig
-                {
-                    id = "AGI",
-                    displayName = "Agility Potion (+1 AGI)",
-                    category = "Attribute Elixir",
-                    description = "Permanently upgrades Agility by +1, accelerating stamina recovery and evasion finesse.",
-                    buyPrice = 100,
-                    initialStock = 3,
-                    itemType = ShopItemType.StatPotion,
-                    statName = "AGI"
-                },
-                new ShopItemConfig
-                {
-                    id = "bread",
-                    displayName = "Fresh Bread",
-                    category = "Rations",
-                    description = "Warm freshly baked tavern bread. Restores 35 HP on consumption.",
-                    buyPrice = 25,
-                    initialStock = -1,
-                    itemType = ShopItemType.InventoryItem
-                },
-                new ShopItemConfig
-                {
-                    id = "smoke_bomb",
-                    displayName = "Smoke Bomb",
-                    category = "Tactical Tool",
-                    description = "Detonates into a thick smoke cloud, obscuring enemy vision and aiding hasty retreats.",
-                    buyPrice = 50,
-                    initialStock = 5,
-                    itemType = ShopItemType.InventoryItem
                 }
             };
         }
@@ -325,7 +311,7 @@ namespace TheLastKnight.UI
         private void Awake()
         {
             if (Instance == null) Instance = this;
-            if (_shopCatalog == null || _shopCatalog.Count == 0)
+            if (_shopCatalog == null || _shopCatalog.Count < 9 || _shopCatalog.Exists(i => i.id == "STR" || i.id == "VIT" || i.id == "DEX" || i.id == "AGI"))
             {
                 PopulateDefaultCatalog();
             }
@@ -358,7 +344,7 @@ namespace TheLastKnight.UI
         {
             if (_panel != null) return;
 
-            if (_shopCatalog == null || _shopCatalog.Count == 0)
+            if (_shopCatalog == null || _shopCatalog.Count < 9 || _shopCatalog.Exists(i => i.id == "STR" || i.id == "VIT" || i.id == "DEX" || i.id == "AGI"))
             {
                 PopulateDefaultCatalog();
             }
@@ -1128,25 +1114,48 @@ namespace TheLastKnight.UI
 
             // Fallback from Resources
             if (config.id == "HEAL" || config.id == "potion_heal")
+            {
+                var sprites = Resources.LoadAll<Sprite>("CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-1");
+                if (sprites != null && sprites.Length > 0) return sprites[0];
                 return Resources.Load<Sprite>("CharacterStatus/Item_RedPotion_Clean") ?? Resources.Load<Sprite>("CharacterStatus/Item_RedPotion");
-            if (config.id == "potion_stamina")
-                return Resources.Load<Sprite>("CharacterStatus/Item_GreenPotion");
-            if (config.id == "golden_seed")
-                return Resources.Load<Sprite>("CharacterStatus/Items/Item_GoldenSeed") ?? Resources.Load<Sprite>("CharacterStatus/Item_GoldCoin");
+            }
+            if (config.id == "potion_swiftness")
+            {
+                var sprites = Resources.LoadAll<Sprite>("CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-2");
+                if (sprites != null && sprites.Length > 0) return sprites[0];
+            }
+            if (config.id == "potion_endurance")
+            {
+                var sprites = Resources.LoadAll<Sprite>("CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-3");
+                if (sprites != null && sprites.Length > 0) return sprites[0];
+            }
+            if (config.id == "potion_purity")
+            {
+                var sprites = Resources.LoadAll<Sprite>("CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-4");
+                if (sprites != null && sprites.Length > 0) return sprites[0];
+            }
+            if (config.id == "potion_regeneration")
+            {
+                var sprites = Resources.LoadAll<Sprite>("CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-5");
+                if (sprites != null && sprites.Length > 0) return sprites[0];
+            }
+            if (config.id == "potion_might")
+            {
+                var sprites = Resources.LoadAll<Sprite>("CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-6");
+                if (sprites != null && sprites.Length > 0) return sprites[0];
+            }
+            if (config.id == "potion_fortitude")
+            {
+                var sprites = Resources.LoadAll<Sprite>("CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-7");
+                if (sprites != null && sprites.Length > 0) return sprites[0];
+            }
+            if (config.id == "potion_undying")
+            {
+                var sprites = Resources.LoadAll<Sprite>("CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-8");
+                if (sprites != null && sprites.Length > 0) return sprites[0];
+            }
             if (config.id == "RUNE" || config.id == "rune_trident")
                 return Resources.Load<Sprite>("CharacterStatus/Item_RuneTrident");
-            if (config.id == "STR")
-                return Resources.Load<Sprite>("CharacterStatus/Item_RedPotion_Clean") ?? Resources.Load<Sprite>("CharacterStatus/Item_RedPotion");
-            if (config.id == "VIT")
-                return Resources.Load<Sprite>("CharacterStatus/Item_GreenPotion");
-            if (config.id == "DEX")
-                return Resources.Load<Sprite>("CharacterStatus/Item_BluePotion");
-            if (config.id == "AGI")
-                return Resources.Load<Sprite>("CharacterStatus/Item_BluePotion");
-            if (config.id == "bread")
-                return Resources.Load<Sprite>("CharacterStatus/Item_Bread");
-            if (config.id == "smoke_bomb")
-                return Resources.Load<Sprite>("CharacterStatus/Item_Scroll");
 
             return _spGoldCoin;
         }

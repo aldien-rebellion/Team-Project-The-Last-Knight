@@ -120,6 +120,10 @@ namespace TheLastKnight.Stats
 
         public bool TrySpendStamina(float amount)
         {
+            if (HasEnduranceBuff && amount > 0f)
+            {
+                amount *= 0.75f;
+            }
             if (amount < 0 || _currentStamina < amount || IsDead)
             {
                 if (amount > 0 && _currentStamina < amount && !IsDead)
@@ -136,14 +140,42 @@ namespace TheLastKnight.Stats
             return true;
         }
 
+        private bool _wasSwiftnessActive;
+        private bool _wasFortitudeActive;
+
         private void Update()
         {
             if (IsDead || _playerController == null) return;
             _regenAuras.RemoveWhere(source => source == null);
+
+            // Potion of Regeneration: heals +5% Max HP per second, blocked if Undying
+            if (HasRegenBuff && !HasUndyingBuff && _currentHP < MaxHP)
+            {
+                _currentHP = Mathf.Min(MaxHP, _currentHP + MaxHP * 0.05f * Time.deltaTime);
+            }
+
+            // Sync buff state changes
+            bool swiftActive = HasSwiftnessBuff;
+            if (_wasSwiftnessActive != swiftActive)
+            {
+                _wasSwiftnessActive = swiftActive;
+                RecalculateStats();
+            }
+
+            bool fortActive = HasFortitudeBuff;
+            if (_wasFortitudeActive != fortActive)
+            {
+                _wasFortitudeActive = fortActive;
+                RecalculateStats();
+            }
+
             if (_playerController.CurrentState == PlayerState.Idle || _playerController.CurrentState == PlayerState.Walking)
             {
                 RegenerateStamina(Time.deltaTime);
-                RegenerateHP(Time.deltaTime);
+                if (!HasUndyingBuff)
+                {
+                    RegenerateHP(Time.deltaTime);
+                }
             }
         }
 
@@ -160,7 +192,7 @@ namespace TheLastKnight.Stats
 
         public void RegenerateHP(float deltaTime)
         {
-            if (IsDead || _playerController == null) return;
+            if (IsDead || _playerController == null || HasUndyingBuff) return;
             if (_playerController.CurrentState != PlayerState.Idle && _playerController.CurrentState != PlayerState.Walking) return;
             if (_regenAuras.Count == 0) return;
             float maxRegenHP = MaxHP * MaxAuraHPPercent;
@@ -170,7 +202,11 @@ namespace TheLastKnight.Stats
             _currentHP = Mathf.Min(maxRegenHP, _currentHP + MaxHP * regenRate * deltaTime);
         }
 
-        public void Heal(float amount) => _currentHP = Mathf.Min(MaxHP, _currentHP + Mathf.Max(0, amount));
+        public void Heal(float amount)
+        {
+            if (HasUndyingBuff) return;
+            _currentHP = Mathf.Min(MaxHP, _currentHP + Mathf.Max(0, amount));
+        }
         public void Rest() { _currentHP = MaxHP; _currentStamina = MaxStamina; _lastDamageTime = -100f; _lastStaminaSpendTime = -100f; }
 
         // Derived calculations (cached for other systems to query)
@@ -219,6 +255,75 @@ namespace TheLastKnight.Stats
         public bool HasMightBuff => Time.time < _mightExpiresAt;
         public float MightBuffRemaining => Mathf.Max(0f, _mightExpiresAt - Time.time);
         public void SetMightBuffExpiresAtForTesting(float time) => _mightExpiresAt = time;
+
+        // Potion of Swiftness (Potion 1-2): +25% Attack Speed & Movement Speed for 30s
+        private float _swiftnessExpiresAt;
+        public const float SwiftnessBuffDuration = 30f;
+        public void ApplySwiftnessBuff() { _swiftnessExpiresAt = Time.time + SwiftnessBuffDuration; RecalculateStats(); }
+        public void RemoveSwiftnessBuff() { _swiftnessExpiresAt = 0f; RecalculateStats(); }
+        public bool HasSwiftnessBuff => Time.time < _swiftnessExpiresAt;
+        public float SwiftnessBuffRemaining => Mathf.Max(0f, _swiftnessExpiresAt - Time.time);
+
+        // Potion of Endurance (Potion 1-3): -25% all Stamina consumption for 30s
+        private float _enduranceExpiresAt;
+        public const float EnduranceBuffDuration = 30f;
+        public void ApplyEnduranceBuff() => _enduranceExpiresAt = Time.time + EnduranceBuffDuration;
+        public void RemoveEnduranceBuff() => _enduranceExpiresAt = 0f;
+        public bool HasEnduranceBuff => Time.time < _enduranceExpiresAt;
+        public float EnduranceBuffRemaining => Mathf.Max(0f, _enduranceExpiresAt - Time.time);
+
+        // Potion of Purity (Potion 1-4): Immune to stun and status ailments for 30s
+        private float _purityExpiresAt;
+        public const float PurityBuffDuration = 30f;
+        public void ApplyPurityBuff()
+        {
+            _purityExpiresAt = Time.time + PurityBuffDuration;
+            if (_playerController != null && _playerController.CurrentState == Player.PlayerState.Hurt)
+            {
+                _playerController.EndHurt();
+            }
+        }
+        public void RemovePurityBuff() => _purityExpiresAt = 0f;
+        public bool HasPurityBuff => Time.time < _purityExpiresAt;
+        public float PurityBuffRemaining => Mathf.Max(0f, _purityExpiresAt - Time.time);
+
+        // Potion of Regeneration (Potion 1-5): +5% Max HP/sec for 30s
+        private float _regenBuffExpiresAt;
+        public const float RegenBuffDuration = 30f;
+        public void ApplyRegenBuff() => _regenBuffExpiresAt = Time.time + RegenBuffDuration;
+        public void RemoveRegenBuff() => _regenBuffExpiresAt = 0f;
+        public bool HasRegenBuff => Time.time < _regenBuffExpiresAt;
+        public float RegenBuffRemaining => Mathf.Max(0f, _regenBuffExpiresAt - Time.time);
+
+        // Potion of Fortitude (Potion 1-7): +25% Max HP & DEF for 30s
+        private float _fortitudeExpiresAt;
+        public const float FortitudeBuffDuration = 30f;
+        public void ApplyFortitudeBuff()
+        {
+            bool hadBuff = HasFortitudeBuff;
+            _fortitudeExpiresAt = Time.time + FortitudeBuffDuration;
+            if (!hadBuff)
+            {
+                float prevMaxHP = MaxHP;
+                RecalculateStats();
+                _currentHP += Mathf.Max(0f, MaxHP - prevMaxHP);
+            }
+        }
+        public void RemoveFortitudeBuff() { _fortitudeExpiresAt = 0f; RecalculateStats(); }
+        public bool HasFortitudeBuff => Time.time < _fortitudeExpiresAt;
+        public float FortitudeBuffRemaining => Mathf.Max(0f, _fortitudeExpiresAt - Time.time);
+
+        // Potion of the Undying (Potion 1-8): HP becomes 1, no heal, invincible for 30s
+        private float _undyingExpiresAt;
+        public const float UndyingBuffDuration = 30f;
+        public void ApplyUndyingBuff()
+        {
+            _undyingExpiresAt = Time.time + UndyingBuffDuration;
+            _currentHP = 1f;
+        }
+        public void RemoveUndyingBuff() => _undyingExpiresAt = 0f;
+        public bool HasUndyingBuff => Time.time < _undyingExpiresAt;
+        public float UndyingBuffRemaining => Mathf.Max(0f, _undyingExpiresAt - Time.time);
 
         private float _skill2BuffExpiresAt;
         public const float Skill2BuffMultiplier = 0.22f; // +22% ATK
@@ -281,7 +386,121 @@ namespace TheLastKnight.Stats
                 });
             }
 
-            // 3. Medusa Sacred Fountain Aura
+            // 3. Potion of Swiftness
+            if (HasSwiftnessBuff)
+            {
+                float rem = SwiftnessBuffRemaining;
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "buff_swiftness",
+                    name = "Potion of Swiftness",
+                    category = "Elixir Enhancement",
+                    description = "Increases Attack Speed and Movement Speed (walk & sprint) by +25%.",
+                    remainingSeconds = rem,
+                    totalDuration = SwiftnessBuffDuration,
+                    formattedTime = FormatMinecraftTime(rem),
+                    icon = LoadPotionIcon("potion_swiftness", "CharacterStatus/Item_BluePotion"),
+                    isDebuff = false,
+                    themeColor = new Color(0.2f, 0.85f, 0.95f)
+                });
+            }
+
+            // 4. Potion of Endurance
+            if (HasEnduranceBuff)
+            {
+                float rem = EnduranceBuffRemaining;
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "buff_endurance",
+                    name = "Potion of Endurance",
+                    category = "Elixir Enhancement",
+                    description = "Reduces all Stamina consumption by 25%.",
+                    remainingSeconds = rem,
+                    totalDuration = EnduranceBuffDuration,
+                    formattedTime = FormatMinecraftTime(rem),
+                    icon = LoadPotionIcon("potion_endurance", "CharacterStatus/Item_GreenPotion"),
+                    isDebuff = false,
+                    themeColor = new Color(0.35f, 0.85f, 0.35f)
+                });
+            }
+
+            // 5. Potion of Purity
+            if (HasPurityBuff)
+            {
+                float rem = PurityBuffRemaining;
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "buff_purity",
+                    name = "Potion of Purity",
+                    category = "Elixir Enhancement",
+                    description = "Grants absolute immunity to Stun and all negative status effects.",
+                    remainingSeconds = rem,
+                    totalDuration = PurityBuffDuration,
+                    formattedTime = FormatMinecraftTime(rem),
+                    icon = LoadPotionIcon("potion_purity", "CharacterStatus/Item_RedPotion_Clean"),
+                    isDebuff = false,
+                    themeColor = new Color(0.95f, 0.95f, 0.45f)
+                });
+            }
+
+            // 6. Potion of Regeneration
+            if (HasRegenBuff)
+            {
+                float rem = RegenBuffRemaining;
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "buff_regeneration",
+                    name = "Potion of Regeneration",
+                    category = "Elixir Enhancement",
+                    description = "Rapidly regenerates +5% of Max HP per second.",
+                    remainingSeconds = rem,
+                    totalDuration = RegenBuffDuration,
+                    formattedTime = FormatMinecraftTime(rem),
+                    icon = LoadPotionIcon("potion_regeneration", "CharacterStatus/Item_RedPotion_Clean"),
+                    isDebuff = false,
+                    themeColor = new Color(0.3f, 0.95f, 0.55f)
+                });
+            }
+
+            // 7. Potion of Fortitude
+            if (HasFortitudeBuff)
+            {
+                float rem = FortitudeBuffRemaining;
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "buff_fortitude",
+                    name = "Potion of Fortitude",
+                    category = "Elixir Enhancement",
+                    description = "Bolsters defenses, increasing Max HP and Defense by +25%.",
+                    remainingSeconds = rem,
+                    totalDuration = FortitudeBuffDuration,
+                    formattedTime = FormatMinecraftTime(rem),
+                    icon = LoadPotionIcon("potion_fortitude", "CharacterStatus/Item_BluePotion"),
+                    isDebuff = false,
+                    themeColor = new Color(0.35f, 0.55f, 0.95f)
+                });
+            }
+
+            // 8. Potion of the Undying
+            if (HasUndyingBuff)
+            {
+                float rem = UndyingBuffRemaining;
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "buff_undying",
+                    name = "Potion of the Undying",
+                    category = "Forbidden Elixir",
+                    description = "Reduces HP to 1 and blocks all healing in exchange for absolute invincibility.",
+                    remainingSeconds = rem,
+                    totalDuration = UndyingBuffDuration,
+                    formattedTime = FormatMinecraftTime(rem),
+                    icon = LoadPotionIcon("potion_undying", "CharacterStatus/Item_RedPotion"),
+                    isDebuff = false,
+                    themeColor = new Color(0.95f, 0.2f, 0.2f)
+                });
+            }
+
+            // 9. Medusa Sacred Fountain Aura
             if (HasRegenAura)
             {
                 list.Add(new ActiveBuffInfo
@@ -299,7 +518,7 @@ namespace TheLastKnight.Stats
                 });
             }
 
-            // 4. Stunned Debuff (when player is in Hurt/Stunned state)
+            // 10. Stunned Debuff (when player is in Hurt/Stunned state)
             if (_playerController != null && _playerController.CurrentState == Player.PlayerState.Hurt)
             {
                 list.Add(new ActiveBuffInfo
@@ -316,6 +535,13 @@ namespace TheLastKnight.Stats
                     themeColor = new Color(1f, 0.25f, 0.25f) // Red
                 });
             }
+        }
+
+        private Sprite LoadPotionIcon(string potionId, string fallbackResource)
+        {
+            var def = Resources.Load<TheLastKnight.Inventory.ItemDefinition>("Items/Definitions/Consumables/" + potionId);
+            if (def != null && def.icon != null) return def.icon;
+            return Resources.Load<Sprite>(fallbackResource);
         }
 
         public static string FormatMinecraftTime(float seconds)
@@ -392,7 +618,9 @@ namespace TheLastKnight.Stats
             AttackPower = baseAtk + _strength * atkPerStr;
 
             // VIT -> Max HP and Max Stamina
-            MaxHP = _vitality * hpPerVit;
+            float calculatedMaxHP = _vitality * hpPerVit;
+            if (HasFortitudeBuff) calculatedMaxHP *= 1.25f;
+            MaxHP = calculatedMaxHP;
             MaxStamina = baseStam + Mathf.Max(0, _vitality - baseVit) * stamPerVit;
 
             // Clamp DEX to MaxDexterity limit
@@ -410,12 +638,16 @@ namespace TheLastKnight.Stats
             }
 
             // AGI -> Attack Speed, Movement Speed, Double Jump
-            AttackSpeedMultiplier = baseAtkSpd + Mathf.Max(0, _agility - baseAgi) * atkSpdPerAgi;
+            float baseAtkSpdMultiplier = baseAtkSpd + Mathf.Max(0, _agility - baseAgi) * atkSpdPerAgi;
+            if (HasSwiftnessBuff) baseAtkSpdMultiplier *= 1.25f;
+            AttackSpeedMultiplier = baseAtkSpdMultiplier;
 
             // DEF -> Level-based Defense (DEF = baseDEF + Level * defPerLevel)
             float baseDef = _statsTemplate != null ? _statsTemplate.baseDEF : 0f;
             float defPLv = _statsTemplate != null ? _statsTemplate.defPerLevel : 1f;
-            Defense = baseDef + _currentLevel * defPLv;
+            float calcDef = baseDef + _currentLevel * defPLv;
+            if (HasFortitudeBuff) calcDef *= 1.25f;
+            Defense = calcDef;
 
             // Adjust health and stamina when caps grow
             if (refillHealth)
@@ -443,10 +675,10 @@ namespace TheLastKnight.Stats
             // Sync stats to Arthur's PlayerController movement & combat logic
             if (_playerController != null)
             {
-                // Walk speed is fixed at BaseMoveSpeed (AGI does not affect walking speed)
-                _playerController.MoveSpeed = _playerController.BaseMoveSpeed;
+                float speedMod = HasSwiftnessBuff ? 1.25f : 1.0f;
+                _playerController.MoveSpeed = _playerController.BaseMoveSpeed * speedMod;
                 float sprintRatio = _playerController.BaseMoveSpeed > 0f ? (_playerController.BaseSprintSpeed / _playerController.BaseMoveSpeed) : 1.625f;
-                _playerController.SprintSpeed = _playerController.BaseSprintSpeed + (_agility - baseAgi) * (spdPerAgi * sprintRatio);
+                _playerController.SprintSpeed = (_playerController.BaseSprintSpeed + (_agility - baseAgi) * (spdPerAgi * sprintRatio)) * speedMod;
                 _playerController.DashSpeed = _playerController.BaseDashSpeed + (_agility - baseAgi) * dashSpdPerAgi;
                 _playerController.AttackSpeedMultiplier = AttackSpeedMultiplier;
                 _playerController.CanDoubleJump = CanDoubleJump;
@@ -559,7 +791,7 @@ namespace TheLastKnight.Stats
         /// </summary>
         public void TakeDamage(float damage)
         {
-            if (_adminInvincible) return;
+            if (_adminInvincible || HasUndyingBuff) return;
             if (_playerController != null && _playerController.IsInvincible)
             {
                 Debug.Log("[PlayerStats] Damage avoided! Arthur is invincible!");
@@ -603,7 +835,7 @@ namespace TheLastKnight.Stats
         public void TakeDamage(float damage, bool isStun, float stunDuration = 1.0f)
         {
             TakeDamage(damage);
-            if (isStun && !IsDead)
+            if (isStun && !IsDead && !HasPurityBuff)
             {
                 ApplyStun(stunDuration);
             }
@@ -611,6 +843,7 @@ namespace TheLastKnight.Stats
 
         public void ApplyStun(float duration = 1.0f)
         {
+            if (HasPurityBuff) return;
             if (_playerController != null)
             {
                 _playerController.ApplyStun(duration);
@@ -619,6 +852,7 @@ namespace TheLastKnight.Stats
 
         public void ApplyStatus(StatusEffect effect, float duration)
         {
+            if (HasPurityBuff) return;
             if (_playerController != null)
             {
                 _playerController.ApplyStatus(effect, duration);

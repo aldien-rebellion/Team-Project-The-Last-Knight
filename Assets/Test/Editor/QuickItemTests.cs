@@ -135,16 +135,18 @@ namespace TheLastKnight.Tests
         [Test]
         public void ChurchKey_ConsumesOneFromBagQuickAndCursor_AndSurvivesSaveLoad()
         {
-            Set(Bag, 0, "church_key", 2);
+            Set(Bag, 0, "church_key", 1);
+            Set(Bag, 1, "church_key", 1);
             Set(Quick, 1, "church_key", 1);
             Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(true));
-            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(1));
+            Assert.IsNull(Slot(Bag, 0));
             var save = Activator.CreateInstance(_saveType);
             Call(_inventory, "SaveTo", save);
             Call(_inventory, "LoadFrom", save, null);
-            Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(1));
-            Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(true));
             Assert.IsNull(Slot(Bag, 0));
+            Assert.That(Count(Slot(Bag, 1)), Is.EqualTo(1));
+            Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(true));
+            Assert.IsNull(Slot(Bag, 1));
             Left(Quick, 1);
             Assert.That(Call(_inventory, "TryConsumeItem", "church_key"), Is.EqualTo(true));
             Assert.IsNull(Held);
@@ -202,12 +204,14 @@ namespace TheLastKnight.Tests
                 Assert.That(Field(state, "churchKey"), Is.EqualTo(false));
                 Call(chest, "Interact");
                 Assert.That(((bool[])Field(state, "runes"))[0], Is.False, "A world drop is not an owned key");
-                Set(Bag, 0, "church_key", 2);
+                Set(Bag, 0, "church_key", 1);
+                Set(Bag, 1, "church_key", 1);
                 Call(chest, "Interact");
-                Assert.That(((bool[])Field(state, "runes"))[0], Is.True);
-                Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(1));
+                Assert.That(Field(state, "pentagramRuneChestOpened"), Is.True);
+                Assert.IsNull(Slot(Bag, 0));
+                Assert.That(Count(Slot(Bag, 1)), Is.EqualTo(1));
                 Call(chest, "Interact");
-                Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(1), "Reopening must not consume another key");
+                Assert.That(Count(Slot(Bag, 1)), Is.EqualTo(1), "Reopening must not consume another key");
             }
             finally
             {
@@ -231,7 +235,7 @@ namespace TheLastKnight.Tests
         [Test]
         public void SplitOddStack_DepositOne_AndMerge_ConserveItems()
         {
-            Set(Bag, 0, "bread", 5);
+            Set(Bag, 0, "potion_might", 5);
             Right(Bag, 0);
             Assert.That(Count(Held), Is.EqualTo(3));
             Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(2));
@@ -244,12 +248,12 @@ namespace TheLastKnight.Tests
         [Test]
         public void FullStack_DoesNotSwapWithCursor_AndOverflowStaysHeld()
         {
-            Set(Bag, 0, "bread", 64);
-            Set(Bag, 1, "bread", 5);
+            Set(Bag, 0, "potion_might", 64);
+            Set(Bag, 1, "potion_might", 5);
             Left(Bag, 1); Left(Bag, 0);
             Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(64));
             Assert.That(Count(Held), Is.EqualTo(5));
-            Set(Bag, 0, "bread", 62); Left(Bag, 0);
+            Set(Bag, 0, "potion_might", 62); Left(Bag, 0);
             Assert.That(Count(Held), Is.EqualTo(3));
             Right(Bag, 0);
             Assert.That(Count(Held), Is.EqualTo(3));
@@ -257,18 +261,18 @@ namespace TheLastKnight.Tests
         [Test]
         public void DifferentItems_LeftSwaps_RightDoesNothing()
         {
-            Set(Bag, 0, "bread", 2); Set(Bag, 1, "golden_seed", 1);
+            Set(Bag, 0, "potion_might", 2); Set(Bag, 1, "gold_pouch", 1);
             Left(Bag, 0); Right(Bag, 1);
-            Assert.That(Field(Held, "id"), Is.EqualTo("bread"));
+            Assert.That(Field(Held, "id"), Is.EqualTo("potion_might"));
             Left(Bag, 1);
-            Assert.That(Field(Held, "id"), Is.EqualTo("golden_seed"));
-            Assert.That(Field(Slot(Bag, 1), "id"), Is.EqualTo("bread"));
+            Assert.That(Field(Held, "id"), Is.EqualTo("gold_pouch"));
+            Assert.That(Field(Slot(Bag, 1), "id"), Is.EqualTo("potion_might"));
         }
         [Test]
         public void QuickMove_PartialCapacity_ConservesRemainderAndSyncsHud()
         {
             Set(Quick, 0, "potion_heal", 63);
-            for (int i = 1; i < 5; i++) Set(Quick, i, "knight_sword", 1);
+            for (int i = 1; i < 5; i++) Set(Quick, i, "church_key", 1);
             Set(Bag, 0, "potion_heal", 5); Left(Bag, 0, true);
             Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(4));
             Assert.That(Count(Call(_quick, "GetSlot", 0)), Is.EqualTo(64));
@@ -289,7 +293,7 @@ namespace TheLastKnight.Tests
         [Test]
         public void SaveLoad_PreservesCursorStack_AndCloseReturnsToBag()
         {
-            Set(Bag, 3, "bread", 9); Left(Bag, 3);
+            Set(Bag, 3, "potion_might", 9); Left(Bag, 3);
             var save = Activator.CreateInstance(_saveType);
             Call(_inventory, "SaveTo", save);
             Call(_inventory, "LoadFrom", save, null);
@@ -359,18 +363,13 @@ namespace TheLastKnight.Tests
                 field("_currentHP", 50f);
                 field("_currentStamina", 0f);
                 Set(Quick, 0, "potion_heal", 1);
-                Set(Quick, 1, "potion_stamina", 1);
+                Set(Quick, 1, "gold_pouch", 1);
                 Assert.That(Call(_quick, "UseSlot", 0, player), Is.EqualTo(true));
-                Assert.That(property("CurrentHP"), Is.EqualTo(100f));
+                Assert.That(property("CurrentHP"), Is.EqualTo(160f));
                 Assert.That(property("HealingPotions"), Is.EqualTo(0));
-                Assert.That(Field(Slot(Quick, 0), "id"), Is.EqualTo("potion_stamina"));
-                Assert.That(Field(Call(_quick, "GetActiveItem"), "id"), Is.EqualTo("potion_stamina"));
+                Assert.That(Field(Slot(Quick, 0), "id"), Is.EqualTo("gold_pouch"));
+                Assert.That(Field(Call(_quick, "GetActiveItem"), "id"), Is.EqualTo("gold_pouch"));
                 Call(_quick, "UseSlot", 0, player);
-                Assert.That(property("CurrentStamina"), Is.EqualTo(100f));
-                Assert.That(property("CurrentHP"), Is.EqualTo(100f), "Stamina elixir must not heal");
-                Set(Quick, 0, "bread", 1); Call(_quick, "UseSlot", 0, player);
-                Assert.That(property("CurrentHP"), Is.EqualTo(125f));
-                Set(Quick, 0, "gold_pouch", 1); Call(_quick, "UseSlot", 0, player);
                 Assert.That(property("Gold"), Is.EqualTo(500));
                 field("_baseAttackPower", 100f);
                 int strength = (int)property("STR");
@@ -381,10 +380,7 @@ namespace TheLastKnight.Tests
                 field("_mightExpiresAt", Time.time - 1f);
                 Assert.That(property("AttackPower"), Is.EqualTo(100f));
                 Assert.That(property("STR"), Is.EqualTo(strength));
-                Set(Quick, 0, "smoke_bomb", 2);
-                Assert.That(Call(_quick, "UseSlot", 0, player), Is.EqualTo(false));
-                Assert.That(Count(Slot(Quick, 0)), Is.EqualTo(2));
-                Set(Quick, 0, "knight_sword", 1);
+                Set(Quick, 0, "church_key", 1);
                 Assert.That(Call(_quick, "UseSlot", 0, player), Is.EqualTo(false));
             }
             finally { UnityEngine.Object.DestroyImmediate(playerObject); }
@@ -401,7 +397,7 @@ namespace TheLastKnight.Tests
                 ownerObject.AddComponent<BoxCollider2D>();
                 ownerObject.SetActive(true);
                 var pickup = dropObject.AddComponent(RuntimeType("TheLastKnight.Inventory.WorldItemPickup"));
-                Call(pickup, "Initialize", Item("bread", 1), 0f);
+                Call(pickup, "Initialize", Item("potion_might", 1), 0f);
                 Call(pickup, "ConfigurePlayerDrop", owner);
                 var flags = BindingFlags.Instance | BindingFlags.NonPublic;
                 var type = pickup.GetType();
@@ -444,8 +440,8 @@ namespace TheLastKnight.Tests
                 Assert.That(Count(Held), Is.EqualTo(2));
                 Call(_inventory, "DropCursorItemToWorld", false, new Vector3(10000, 10000, 0));
                 Assert.That(Held, Is.Null);
-                Set(Quick, 0, "bread", 5); Left(Quick, 0);
-                for (int i = 0; i < 24; i++) Set(Bag, i, "knight_sword", 1);
+                Set(Quick, 0, "potion_might", 5); Left(Quick, 0);
+                for (int i = 0; i < 24; i++) Set(Bag, i, "church_key", 1);
                 Call(_inventory, "Close");
                 Assert.That(Held, Is.Null);
                 var drops = UnityEngine.Object.FindObjectsByType(pickupType, FindObjectsSortMode.None).Except(before).ToArray();
@@ -466,12 +462,12 @@ namespace TheLastKnight.Tests
         [Test]
         public void Catalog_AllIconsLoad_AndInvalidCountsAreRejected()
         {
-            foreach (string id in new[] { "potion_heal", "potion_stamina", "golden_seed", "potion_might", "bread", "gold_pouch", "smoke_bomb", "throwing_dart", "knight_sword", "silver_armor", "heavy_boots", "moonstone_shard" })
+            foreach (string id in new[] { "potion_heal", "potion_might", "gold_pouch", "moonstone_shard", "church_key", "rune_pentagram", "rune_hand", "rune_eye", "rune_trident" })
             {
                 var item = Item(id, 1);
                 Assert.That(item.GetType().GetProperty("Icon").GetValue(item), Is.Not.Null, id);
             }
-            Assert.That(Item("bread", 0), Is.Null);
+            Assert.That(Item("potion_heal", 0), Is.Null);
         }
     }
 }

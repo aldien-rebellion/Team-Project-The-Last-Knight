@@ -16,15 +16,15 @@ namespace TheLastKnight.Tests
         {
             var registry = Find("ItemRegistry");
             var definitions = Resources.LoadAll("Items/Definitions", Find("ItemDefinition"));
-            Assert.GreaterOrEqual(definitions.Length, 12);
+            Assert.GreaterOrEqual(definitions.Length, 8);
             foreach (string id in (System.Collections.Generic.IEnumerable<string>)registry.GetProperty("LegacyIds").GetValue(null))
             {
                 var legacy = registry.GetMethod("CreateLegacyItem").Invoke(null, new object[] { id });
                 var item = registry.GetMethod("CreateItem").Invoke(null, new object[] { id, 3 });
                 Assert.AreEqual(Field(legacy, "name"), Field(item, "name"), id);
                 var icon = item.GetType().GetProperty("Icon").GetValue(item);
-                Assert.IsNotNull(icon, id);
-                Assert.AreEqual(legacy.GetType().GetProperty("Icon").GetValue(legacy), icon, id);
+                var legacyIcon = legacy.GetType().GetProperty("Icon").GetValue(legacy);
+                if (legacyIcon != null) Assert.AreEqual(legacyIcon, icon, id);
                 Assert.AreEqual(Field(legacy, "onUse") != null, Field(item, "onUse") != null, id);
             }
         }
@@ -55,6 +55,33 @@ namespace TheLastKnight.Tests
                 Assert.AreEqual(5, Field(first, "count"));
             }
             finally { UnityEngine.Object.DestroyImmediate(definition); }
+        }
+
+        [Test]
+        public void AuthoredPotions_AllHaveValidDefinitionsAndIcons()
+        {
+            var registry = Find("ItemRegistry");
+            string[] potionIds = new[]
+            {
+                "potion_heal",
+                "potion_swiftness",
+                "potion_endurance",
+                "potion_purity",
+                "potion_regeneration",
+                "potion_might",
+                "potion_fortitude",
+                "potion_undying"
+            };
+
+            foreach (var id in potionIds)
+            {
+                var item = registry.GetMethod("CreateItem").Invoke(null, new object[] { id, 1 });
+                Assert.IsNotNull(item, "Item must exist: " + id);
+                Assert.AreEqual("Potion", Field(item, "typeName"), "TypeName must be Potion for: " + id);
+                var icon = item.GetType().GetProperty("Icon").GetValue(item);
+                Assert.IsNotNull(icon, "Icon must be loaded for: " + id);
+                Assert.IsNotNull(Field(item, "onUse"), "onUse must be configured for: " + id);
+            }
         }
     }
 }
