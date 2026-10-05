@@ -19671,7 +19671,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0.9, y: -0.19547537, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19692,9 +19692,23 @@ MonoBehaviour:
   _target: {fileID: 883112212}
   _smoothTime: 0.2
   _offset: {x: 0, y: 0, z: -10}
+  _useFeetFraming: 1
+  _targetViewportY: 0.2
+  _enableLookAhead: 1
+  _lookAheadDistance: 4
+  _lookAheadSmoothTime: 1.2
+  _lookAheadReturnSmoothTime: 2
+  _lookAheadSpeedThreshold: 0.5
+  _enableZoom: 1
+  _baseOrthographicSize: 5
+  _minZoomMultiplier: 0.5
+  _maxZoomMultiplier: 2
+  _zoomStep: 0.5
+  _zoomSmoothTime: 0.15
   _deadzoneSize: {x: 1, y: 1}
   _useBoundaries: 0
   _boundaryBox: {fileID: 0}
+  _backgroundRenderer: {fileID: 0}
 --- !u!1 &558588673
 GameObject:
   m_ObjectHideFlags: 0
@@ -39493,6 +39507,9 @@ MonoBehaviour:
   _dexterity: 0
   _agility: 0
   _currentHP: 0
+  _currentStamina: 100
+  _gold: 0
+  _healingPotions: 3
 --- !u!114 &883112207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39531,6 +39548,7 @@ MonoBehaviour:
   _drinkCooldown: 1
   _hurtFrame1Duration: 0.25
   _hurtFrame2Duration: 0.17
+  _hurtVoiceCooldown: 0.6
   _baseMoveSpeed: 8
   _baseSprintSpeed: 13
   _acceleration: 50
@@ -39545,6 +39563,13 @@ MonoBehaviour:
   _baseDashSpeed: 20
   _baseDashDuration: 0.2
   _dashCooldown: 0.5
+  _dashIFrameDuration: 0.15
+  _platformDropDuration: 0.15
+  _attackSize: {x: 2.2, y: 2}
+  _attackOffset: {x: 1.1, y: 0}
+  _attackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!212 &883112208
 SpriteRenderer:
   serializedVersion: 3
@@ -39619,6 +39644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Physics.KinematicCharacterController2D
   _skinWidth: 0.015
   _maxSlopeAngle: 45
+  _stepOffset: 0.25
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 0

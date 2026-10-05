@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34097829a6157044f8fe03c3844f3d06, type: 3}
+  m_Name: ChestLootTable
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.ChestLootTable
+  items:
+  - enabled: 1
+    item: {fileID: 11400000, guid: f1d33737f5d3d79448351dedddfc1a11, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: 13e576fb9afcb7c459a636040f3a2983, type: 2}
+    rarity: 1
+  - enabled: 1
+    item: {fileID: 11400000, guid: 64b334597f0c59b448bacb734d020b1f, type: 2}
+    rarity: 1
+  - enabled: 1
+    item: {fileID: 11400000, guid: 18b0c31eeece4a6b9ecd5a2c46ea305e, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: dbcc1ce42e904936bb8d4a9237a2645a, type: 2}
+    rarity: 1
+  - enabled: 1
+    item: {fileID: 11400000, guid: 4dd8e1fc4c47e4b4aa804ad9912bf822, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: afdd11b54cfc5f34b8aa661aa8551367, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: bf14ef0fa53b4615a64e686601868254, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: caa0123c39ad4642bbd9bc16c366a736, type: 2}
+    rarity: 1
+  - enabled: 1
+    item: {fileID: 11400000, guid: f144cb8f344648e086fccabed2655ec5, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: 1697b331ecef4e1b8858cd2802009fc8, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: d81b75f3ff8ddf746a79f9735310cbe0, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 2c0b772be26949049aa07cfd901d6516, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: c53043541cf6eec499c1cbb5f7a8ab8f, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 60c7dd242908385468f4d30a3623a7d2, type: 2}
+    rarity: 2
