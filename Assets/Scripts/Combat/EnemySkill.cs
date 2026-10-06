@@ -31,6 +31,9 @@ namespace TheLastKnight.Combat
         [Tooltip("Optional total duration of the damaging animation.")]
         [Min(0f)] public float actionDurationOverride;
 
+        [Tooltip("Seconds spent idle with zero defense after this skill finishes.")]
+        [Min(0f)] public float vulnerableRecoveryDuration;
+
         public bool skipAnticipation;
         public bool teleportToPlayerAfterPreparation;
 

@@ -34,7 +34,12 @@ namespace TheLastKnight.Combat
 
         public float MaxHealth => _maxHealth;
         public float CurrentHealth { get; private set; }
-        public float Defense => _defense;
+        private bool _defenseSuppressed;
+        private float? _temporaryDefense;
+        public float Defense => _defenseSuppressed ? 0f : (_temporaryDefense ?? _defense);
+        public void SetDefenseSuppressed(bool suppressed) => _defenseSuppressed = suppressed;
+        public void SetTemporaryDefense(float defense) => _temporaryDefense = Mathf.Max(0f, defense);
+        public void ClearTemporaryDefense() => _temporaryDefense = null;
         public float AttackPower => _attackPower;
         public bool IsDead { get; private set; } = false;
         public StatusEffect CurrentStatus => _currentStatus;
@@ -100,7 +105,7 @@ namespace TheLastKnight.Combat
         {
             if (IsDead) return;
 
-            float actualDamage = Mathf.Max(1f, damageData.amount - _defense);
+            float actualDamage = Mathf.Max(1f, damageData.amount - Defense);
 
             // Apply Level Difference damage reduction when Monster Lv > Player Lv + 5, 10, 15, 20
             var player = damageData.attacker != null 
@@ -200,7 +205,7 @@ namespace TheLastKnight.Combat
             OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
         }
 
-        public void ApplyStatus(StatusEffect effect, float duration)
+        public void ApplyStatus(StatusEffect effect, float duration, bool cancelAttack = true)
         {
             if (IsDead) return;
             bool enteringStun = effect == StatusEffect.Stunned && _currentStatus != StatusEffect.Stunned;
@@ -212,8 +217,11 @@ namespace TheLastKnight.Combat
                 if (enteringStun)
                     GetComponent<TheLastKnight.AI.MechaStoneGolemAudioController>()?.PlayStunned();
 
-                GetComponent<TheLastKnight.AI.EnemyController>()?.CancelAttack();
-                GetComponent<SlimeController>()?.CancelAttack();
+                if (cancelAttack)
+                {
+                    GetComponent<TheLastKnight.AI.EnemyController>()?.CancelAttack();
+                    GetComponent<SlimeController>()?.CancelAttack();
+                }
                 var rb = GetComponent<Rigidbody2D>();
                 if (rb != null)
                 {

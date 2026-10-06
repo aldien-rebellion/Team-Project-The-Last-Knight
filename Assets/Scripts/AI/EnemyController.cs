@@ -1223,7 +1223,10 @@ _rb = GetComponent<Rigidbody2D>();
                 else
                     PlayAnimationAction(skill.animationName, skill.actionIndex);
                 if (skill.skillName == "StoneShield")
+                {
+                    _stats.SetTemporaryDefense(40f);
                     _mechaStoneGolemAudio?.PlayShieldCast();
+                }
                 if (skill.summonFireballRain)
                 {
                     _holdingFireballRain = true;
@@ -1238,7 +1241,15 @@ _rb = GetComponent<Rigidbody2D>();
                 }
                 else
                 {
-                    yield return new WaitForSeconds(skill.guardDuration);
+                    try
+                    {
+                        yield return new WaitForSeconds(skill.guardDuration);
+                    }
+                    finally
+                    {
+                        if (skill.skillName == "StoneShield")
+                            _stats.ClearTemporaryDefense();
+                    }
                 }
                 if (skill.summonFireballRain)
                 {
@@ -1446,6 +1457,29 @@ _rb = GetComponent<Rigidbody2D>();
                 _activeSkillProjectile = null;
             }
             if (_continuousActions && waitForAnimation) _animator.Play("Idle", 0, 0f);
+            if (skill.vulnerableRecoveryDuration > 0f && !_stats.IsDead
+                && (_parry == null || !_parry.IsStaggered))
+            {
+                _damageUntil = 0f;
+                _currentState = EnemyAIState.Idle;
+                _rb.linearVelocity = new Vector2(0f, _isFlying ? 0f : _rb.linearVelocity.y);
+                SetAnimBool("IsMoving", false);
+                SetAnimBool("IsChasing", false);
+                _animator.Play("Idle", 0, 0f);
+                _stats.SetDefenseSuppressed(true);
+                // Keep this routine alive so it restores defense after the stun.
+                _stats.ApplyStatus(StatusEffect.Stunned, skill.vulnerableRecoveryDuration, false);
+                _parry?.ShowVulnerableRecovery(skill.vulnerableRecoveryDuration);
+                try
+                {
+                    yield return new WaitForSeconds(skill.vulnerableRecoveryDuration);
+                }
+                finally
+                {
+                    _stats.SetDefenseSuppressed(false);
+                    _parry?.HideVulnerableRecovery();
+                }
+            }
             if (_waitForAttackAnimationToFinish) yield return null;
             _currentAttackMultiplier = _basicAttackMultiplier;
             skill.nextReadyTime = Time.time + skill.cooldown;
@@ -1798,6 +1832,9 @@ _rb = GetComponent<Rigidbody2D>();
         private void StopAttack()
         {
             StopAllCoroutines();
+            _stats?.SetDefenseSuppressed(false);
+            _stats?.ClearTemporaryDefense();
+            _parry?.HideVulnerableRecovery();
             _holdingFireballRain = false;
             SetSkillSpriteHidden(false);
             SetSkillHealthBarsHidden(false);

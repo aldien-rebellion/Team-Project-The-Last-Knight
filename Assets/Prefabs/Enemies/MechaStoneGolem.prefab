@@ -357,6 +357,7 @@ MonoBehaviour:
     reappearanceAnimationName: 
     reappearanceDurationOverride: 0
     actionDurationOverride: 0
+    vulnerableRecoveryDuration: 0
     skipAnticipation: 0
     teleportToPlayerAfterPreparation: 0
     preparationDamageDelay: -1
@@ -388,6 +389,7 @@ MonoBehaviour:
     reappearanceAnimationName: 
     reappearanceDurationOverride: 0
     actionDurationOverride: 0
+    vulnerableRecoveryDuration: 2
     skipAnticipation: 0
     teleportToPlayerAfterPreparation: 0
     preparationDamageDelay: -1
@@ -419,6 +421,7 @@ MonoBehaviour:
     reappearanceAnimationName: 
     reappearanceDurationOverride: 0
     actionDurationOverride: 0
+    vulnerableRecoveryDuration: 0
     skipAnticipation: 0
     teleportToPlayerAfterPreparation: 0
     preparationDamageDelay: -1
@@ -481,7 +484,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
   - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
   - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
-  _stunEffectDuration: 3
+  _stunEffectDuration: 2
   _stunEffectHeadXFraction: 0
   _stunEffectHeadXOffset: 0
   _stunEffectHeadYFraction: 0
