@@ -97,7 +97,7 @@ namespace TheLastKnight.UI
             // A null-sprite Image otherwise renders as a solid white full-screen panel.
             _storyBackground.enabled = false;
 
-            _menuPanel = CreatePanel(backdrop.transform, "Story Menu", new Color(0.02f, 0.025f, 0.035f, 0.55f), new Vector2(0.68f, 0.925f), new Vector2(0.985f, 0.985f), true);
+            _menuPanel = CreatePanel(backdrop.transform, "Story Menu", new Color(0.02f, 0.025f, 0.035f, 0.88f), new Vector2(0.68f, 0.925f), new Vector2(0.985f, 0.985f), true);
             CreateTopMenuButton(_menuPanel.transform, "SKIP", 0.04f, 0.32f, Finish);
             CreateTopMenuButton(_menuPanel.transform, "LOG", 0.36f, 0.64f, ToggleLog);
             _hideButtonText = CreateTopMenuButton(_menuPanel.transform, "HIDE", 0.68f, 0.96f, ToggleHideDialogue);
@@ -257,12 +257,13 @@ namespace TheLastKnight.UI
             var image = button.GetComponent<Image>();
             image.color = new Color(0f, 0f, 0f, 0f);
             var uiButton = button.GetComponent<Button>();
-            var text = CreateText(button.transform, label, 14, new Color(0.88f, 0.88f, 0.9f), TextAnchor.MiddleCenter, Vector2.zero, Vector2.one);
+            var text = CreateText(button.transform, label, 14, Color.white, TextAnchor.MiddleCenter, Vector2.zero, Vector2.one);
             uiButton.targetGraphic = text;
             var colors = uiButton.colors;
-            colors.normalColor = new Color(0.72f, 0.72f, 0.75f, 1f);
+            colors.normalColor = Color.white;
             colors.highlightedColor = new Color(1f, 0.9f, 0.58f, 1f);
-            colors.pressedColor = new Color(0.7f, 0.62f, 0.4f, 1f);
+            colors.pressedColor = new Color(0.9f, 0.8f, 0.55f, 1f);
+            colors.selectedColor = colors.highlightedColor;
             uiButton.colors = colors;
             uiButton.onClick.AddListener(action);
             return text;
