@@ -31,6 +31,63 @@ namespace TheLastKnight.UI
         private CanvasScaler _scaler;
         private GraphicRaycaster _raycaster;
         private RectTransform _windowRect;
+        private GameObject _itemUseMenu;
+
+        private void HideItemUseMenu()
+        {
+            if (_itemUseMenu == null) return;
+            _itemUseMenu.SetActive(false);
+            Destroy(_itemUseMenu);
+            _itemUseMenu = null;
+        }
+
+        public void ShowItemUseMenu(SlotType type, int index, Vector2 screenPosition)
+        {
+            HideItemUseMenu();
+            HideTooltip();
+            var inventory = InventoryManager.Instance;
+            var item = inventory?.GetSlot(type, index);
+            if (!_isOpen || _canvasObject == null || item == null || inventory.CursorHeldItem != null) return;
+
+            _itemUseMenu = new GameObject("ItemUseMenu", typeof(RectTransform), typeof(Image), typeof(Button));
+            _itemUseMenu.transform.SetParent(_canvasObject.transform, false);
+            var overlay = _itemUseMenu.GetComponent<RectTransform>();
+            overlay.anchorMin = Vector2.zero;
+            overlay.anchorMax = Vector2.one;
+            overlay.offsetMin = overlay.offsetMax = Vector2.zero;
+            _itemUseMenu.GetComponent<Image>().color = Color.clear;
+            _itemUseMenu.GetComponent<Button>().onClick.AddListener(HideItemUseMenu);
+
+            var buttonObject = new GameObject("Use", typeof(RectTransform), typeof(Image), typeof(Button));
+            buttonObject.transform.SetParent(overlay, false);
+            var rect = buttonObject.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0f, 1f);
+            rect.sizeDelta = new Vector2(120f, 40f);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(overlay, screenPosition, null, out var position);
+            rect.anchoredPosition = new Vector2(
+                Mathf.Clamp(position.x, overlay.rect.xMin, overlay.rect.xMax - rect.sizeDelta.x),
+                Mathf.Clamp(position.y, overlay.rect.yMin + rect.sizeDelta.y, overlay.rect.yMax));
+            buttonObject.GetComponent<Image>().color = new Color(0.12f, 0.10f, 0.07f, 0.98f);
+            var button = buttonObject.GetComponent<Button>();
+            button.interactable = inventory.CanUseSlot(type, index, GetPlayer());
+            button.onClick.AddListener(() =>
+            {
+                HideItemUseMenu();
+                // A stale menu must never consume a different item moved into the slot.
+                if (inventory.GetSlot(type, index) != item) return;
+                if (inventory.UseSlot(type, index, GetPlayer()))
+                {
+                    AudioManager.Instance?.PlaySfx("click");
+                    Refresh(true);
+                }
+            });
+            var label = CreateText(buttonObject.transform, "Label", "ใช้", 18f,
+                TextAlignmentOptions.Center, new Color(1f, 0.88f, 0.60f), FontStyles.Bold);
+            label.rectTransform.anchorMin = Vector2.zero;
+            label.rectTransform.anchorMax = Vector2.one;
+            label.rectTransform.offsetMin = label.rectTransform.offsetMax = Vector2.zero;
+        }
 
         // Header Elements
         private TextMeshProUGUI _txtLevel;
@@ -322,6 +379,7 @@ namespace TheLastKnight.UI
             }
             if (!visible)
             {
+                HideItemUseMenu();
                 HideTooltip();
             }
         }
@@ -1147,7 +1205,8 @@ namespace TheLastKnight.UI
             var canvasRt = _canvasObject.GetComponent<RectTransform>();
             if (canvasRt == null) return;
 
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, mousePos, null, out Vector2 localPoint))
+            var camera = _canvas != null && _canvas.renderMode != RenderMode.ScreenSpaceOverlay ? _canvas.worldCamera : null;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, mousePos, camera, out Vector2 localPoint))
             {
                 var tooltipRt = _tooltipBox.GetComponent<RectTransform>();
                 float tipW = tooltipRt.rect.width > 0 ? tooltipRt.rect.width : 240f;
@@ -1171,6 +1230,8 @@ namespace TheLastKnight.UI
                     posY = localPoint.y + tipH + 12f;
                 }
 
+                posX = Mathf.Clamp(posX, canvasRt.rect.xMin + 10f, Mathf.Max(canvasRt.rect.xMin + 10f, canvasRt.rect.xMax - tipW - 10f));
+                posY = Mathf.Clamp(posY, Mathf.Min(canvasRt.rect.yMax - 10f, canvasRt.rect.yMin + tipH + 10f), canvasRt.rect.yMax - 10f);
                 tooltipRt.anchoredPosition = new Vector2(posX, posY);
             }
         }

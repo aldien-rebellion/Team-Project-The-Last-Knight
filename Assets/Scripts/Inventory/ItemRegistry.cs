@@ -9,6 +9,90 @@ namespace TheLastKnight.Inventory
     {
         private static readonly Dictionary<string, Func<InventoryItemData>> _registry = new Dictionary<string, Func<InventoryItemData>>(StringComparer.OrdinalIgnoreCase)
         {
+            ["thunder_scroll"] = () => new InventoryItemData
+            {
+                id = "thunder_scroll",
+                name = "Thunder Scroll",
+                typeName = "Scroll",
+                description = "Increases AGI by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q].",
+                iconPath = "CharacterStatus/Items/Malicious_book&scrollset1/thunder scroll",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player => { if (player != null) player.AddAGI(5); }
+            },
+            ["light_scroll"] = () => new InventoryItemData
+            {
+                id = "light_scroll",
+                name = "Light Scroll",
+                typeName = "Scroll",
+                description = "Permanently increases DEX by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q].",
+                iconPath = "CharacterStatus/Items/Malicious_book&scrollset1/light scroll",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player => { if (player != null) player.AddDEX(5); }
+            },
+            ["fire_scroll"] = () => new InventoryItemData
+            {
+                id = "fire_scroll",
+                name = "Fire Scroll",
+                typeName = "Scroll",
+                description = "Permanently increases STR by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q].",
+                iconPath = "CharacterStatus/Items/Malicious_book&scrollset1/fire scroll",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player => { if (player != null) player.AddSTR(5); }
+            },
+            ["earth_scroll"] = () => new InventoryItemData
+            {
+                id = "earth_scroll",
+                name = "Earth Scroll",
+                typeName = "Scroll",
+                description = "Permanently increases VIT by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q].",
+                iconPath = "CharacterStatus/Items/Malicious_book&scrollset1/earth scroll",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player => { if (player != null) player.AddVIT(5); }
+            },
+            ["ice_spellbook"] = () => new InventoryItemData
+            {
+                id = "ice_spellbook",
+                name = "Ice Spellbook",
+                typeName = "Spellbook",
+                description = "Grants EXP equal to the amount required to advance from Lv.30 to Lv.31. Right-click in the status window and choose ใช้ to consume one book. Cannot be used with [Q].",
+                iconPath = "CharacterStatus/Items/Malicious_book&scrollset1/ice spellbook",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player => { if (player != null) player.AddEXP(player.IceSpellbookEXP); }
+            },
+            ["advanced_spellbook"] = () => new InventoryItemData
+            {
+                id = "advanced_spellbook",
+                name = "Advanced Spellbook",
+                typeName = "Spellbook",
+                description = "Grants EXP equal to the amount required to advance from Lv.20 to Lv.21. Right-click in the status window and choose ใช้ to consume one book. Cannot be used with [Q].",
+                iconPath = "CharacterStatus/Items/Malicious_book&scrollset1/advanced spellbook",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player => { if (player != null) player.AddEXP(player.AdvancedSpellbookEXP); }
+            },
+            ["earth_spellbook"] = () => new InventoryItemData
+            {
+                id = "earth_spellbook",
+                name = "Earth Spellbook",
+                typeName = "Spellbook",
+                description = "Grants EXP equal to the amount required to advance from Lv.10 to Lv.11. Right-click in the status window and choose ใช้ to consume one book.",
+                iconPath = "CharacterStatus/Items/Malicious_book&scrollset1/earth spellbook",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player => { if (player != null) player.AddEXP(player.EarthSpellbookEXP); }
+            },
             ["potion_heal"] = () => new InventoryItemData
             {
                 id = "potion_heal",

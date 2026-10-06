@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: fire_scroll
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: fire_scroll
+  displayName: Fire Scroll
+  typeName: Scroll
+  description: "Permanently increases STR by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q]."
+  icon: {fileID: -8861833057030891138, guid: f5c4ac3073f79f04e9c0d70221043fd7, type: 3}
+  category: 0
+  maxStack: 64
+  isConsumable: 1
+  sellPrice: 0
+  useEffect: 1
+  effectAmount: 50

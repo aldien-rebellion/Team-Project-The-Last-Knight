@@ -369,7 +369,9 @@ namespace TheLastKnight.Tests
                 Assert.That(property("HealingPotions"), Is.EqualTo(0));
                 Assert.That(Field(Slot(Quick, 0), "id"), Is.EqualTo("gold_pouch"));
                 Assert.That(Field(Call(_quick, "GetActiveItem"), "id"), Is.EqualTo("gold_pouch"));
-                Call(_quick, "UseSlot", 0, player);
+                Assert.That(Call(_quick, "UseSlot", 0, player), Is.EqualTo(false));
+                Assert.That(property("Gold"), Is.EqualTo(0));
+                Assert.That(Call(_inventory, "UseSlot", Quick, 0, player), Is.EqualTo(true));
                 Assert.That(property("Gold"), Is.EqualTo(500));
                 field("_baseAttackPower", 100f);
                 int strength = (int)property("STR");

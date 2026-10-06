@@ -77,6 +77,21 @@ namespace TheLastKnight.Stats
             _agility += Mathf.Max(0, amount);
             RecalculateStats();
         }
+        public void AddVIT(int amount)
+        {
+            _vitality += Mathf.Max(0, amount);
+            RecalculateStats();
+        }
+        public void AddSTR(int amount)
+        {
+            _strength += Mathf.Max(0, amount);
+            RecalculateStats();
+        }
+        public void AddDEX(int amount)
+        {
+            _dexterity += Mathf.Max(0, amount);
+            RecalculateStats();
+        }
         public void SetAGI(int value)
         {
             _agility = Mathf.Max(0, value);
@@ -222,6 +237,12 @@ namespace TheLastKnight.Stats
         public int EXP => _currentEXP;
         [CreateProperty]
         public int EXPNeeded => _statsTemplate != null ? _statsTemplate.GetExpNeededForLevel(_currentLevel) : 100;
+
+        public int EarthSpellbookEXP => _statsTemplate != null ? _statsTemplate.GetExpNeededForLevel(10) : 100;
+
+        public int AdvancedSpellbookEXP => _statsTemplate != null ? _statsTemplate.GetExpNeededForLevel(20) : 100;
+
+        public int IceSpellbookEXP => _statsTemplate != null ? _statsTemplate.GetExpNeededForLevel(30) : 100;
         [CreateProperty]
         public float EXPPercentage => EXPNeeded > 0 ? (float)_currentEXP / EXPNeeded : 0;
         [CreateProperty]
@@ -629,8 +650,7 @@ namespace TheLastKnight.Stats
             MaxHP = calculatedMaxHP;
             MaxStamina = baseStam + Mathf.Max(0, _vitality - baseVit) * stamPerVit;
 
-            // Clamp DEX to MaxDexterity limit
-            _dexterity = Mathf.Clamp(_dexterity, 0, MaxDexterity);
+            _dexterity = Mathf.Max(0, _dexterity);
 
             // DEX -> Linear Critical Chance: 200 DEX = 100% crit chance
             if (_statsTemplate != null)
@@ -886,7 +906,7 @@ namespace TheLastKnight.Stats
         public void Restore(TheLastKnight.Core.PlayerSaveData state)
         {
             _currentLevel = state.level; _currentEXP = state.exp; _availableStatPoints = state.statPoints;
-            _strength = state.strength; _vitality = state.vitality; _dexterity = Mathf.Clamp(state.dexterity, 0, MaxDexterity); _agility = state.agility;
+            _strength = state.strength; _vitality = state.vitality; _dexterity = Mathf.Max(0, state.dexterity); _agility = state.agility;
             _gold = state.gold; _healingPotions = state.potions;
             RecalculateStats();
             _currentHP = Mathf.Clamp(state.hp, 0, MaxHP);

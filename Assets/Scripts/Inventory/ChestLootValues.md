@@ -2,10 +2,20 @@
 
 Normal: 0–50 Gold. Rare: 51–100 Gold. Epic: 101+ Gold.
 
+Spellbooks have explicit tiers independent of sell price: Earth is Common (Normal in the loot system), Advanced is Rare, and Ice is Epic.
+Earth, Fire, Light, and Thunder Scrolls are explicitly Epic, independent of sell price.
+
 Potion value uses 50% of the shop buy price. Other item value uses authored sellPrice; Gold Pouch and Gold Bag use Gold awarded on use. Unset/zero sellPrice is reported as missing and remains Normal at value 0. Rune and boss rewards are excluded even when enabled manually.
 
 | Item | ID | Value | Tier | Chest loot | sellPrice |
 |---|---|---:|---|---|---:|
+| Advanced Spellbook | advanced_spellbook | 0 | Rare (explicit) | Eligible | 0 |
+| Earth Spellbook | earth_spellbook | 0 | Common (explicit) | Eligible | 0 |
+| Ice Spellbook | ice_spellbook | 0 | Epic (explicit) | Eligible | 0 |
+| Earth Scroll | earth_scroll | 0 | Epic (explicit) | Eligible | 0 |
+| Fire Scroll | fire_scroll | 0 | Epic (explicit) | Eligible | 0 |
+| Light Scroll | light_scroll | 0 | Epic (explicit) | Eligible | 0 |
+| Thunder Scroll | thunder_scroll | 0 | Epic (explicit) | Eligible | 0 |
 | Moonstone Keeper's Key | church_key | 0 | Normal | Excluded | 0 |
 | Archdemon Horn | drop_archdemon | 87 | Rare | Eligible | 87 |
 | Slime Jelly | drop_blueslime | 2 | Normal | Eligible | 2 |

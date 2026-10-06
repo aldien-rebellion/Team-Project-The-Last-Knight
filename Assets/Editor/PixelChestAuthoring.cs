@@ -25,7 +25,7 @@ namespace TheLastKnight.EditorTools.PixelChests
                 {
                     table.items.Add(new ChestLootTable.Entry { item = definition,
                         enabled = !ChestLootTable.IsExcluded(definition),
-                        rarity = ChestLootTable.RarityForValue(ChestLootTable.GetItemValue(definition)) });
+                        rarity = ChestLootTable.GetItemRarity(definition) });
                 }
                 AssetDatabase.CreateAsset(table, tablePath);
             }

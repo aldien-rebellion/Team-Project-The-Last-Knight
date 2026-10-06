@@ -13,6 +13,27 @@ MonoBehaviour:
   m_Name: ChestLootTable
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.ChestLootTable
   items:
+  - enabled: 1
+    item: {fileID: 11400000, guid: 2d6b4c5e99784aa4a19a28849ee1d130, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: a136f64e3cf04c8595ac59a681f6e0a4, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: b341b5b17e0c4dfcb26fcab95878f4f9, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 23a7f847591b423f90d9c2d20a7c6d18, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: d18a29ddfc7d485f8c5e043a49d679a8, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 6e58df0023da49bb8b56d6ab72309411, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: 4acf0768b5e4493a8901bcdd9e9cd501, type: 2}
+    rarity: 1
   - enabled: 0
     item: {fileID: 11400000, guid: f1d33737f5d3d79448351dedddfc1a11, type: 2}
     rarity: 0

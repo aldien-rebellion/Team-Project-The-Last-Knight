@@ -216,8 +216,12 @@ namespace TheLastKnight.Inventory
         }
 
         public bool CanUseQuickSlot(int index, PlayerStats player)
+            => GetSlot(SlotType.QuickSlot, index)?.HasStatusUseMenu == false &&
+                CanUseSlot(SlotType.QuickSlot, index, player);
+
+        public bool CanUseSlot(SlotType type, int index, PlayerStats player)
         {
-            var item = GetSlot(SlotType.QuickSlot, index);
+            var item = GetSlot(type, index);
             if (player == null || player.IsDead || item == null || item.count <= 0 || !item.isConsumable || item.onUse == null) return false;
             if (item.canUse != null) return item.canUse(player);
             if (item.id == "potion_heal" && player.CurrentHP >= player.MaxHP) return false;
@@ -225,14 +229,18 @@ namespace TheLastKnight.Inventory
         }
 
         public bool UseQuickSlot(int index, PlayerStats player)
+            => CanUseQuickSlot(index, player) && UseSlot(SlotType.QuickSlot, index, player);
+
+        public bool UseSlot(SlotType type, int index, PlayerStats player)
         {
-            if (!CanUseQuickSlot(index, player)) return false;
-            var item = _quickSlots[index];
+            if (CursorHeldItem != null || !CanUseSlot(type, index, player)) return false;
+            var slots = Slots(type);
+            var item = slots[index];
             item.onUse(player);
             if (--item.count <= 0)
             {
-                _quickSlots[index] = null;
-                if (index == 0)
+                slots[index] = null;
+                if (type == SlotType.QuickSlot && index == 0)
                 {
                     for (int i = 0; i < QuickSlotCount - 1; i++) _quickSlots[i] = _quickSlots[i + 1];
                     _quickSlots[QuickSlotCount - 1] = null;

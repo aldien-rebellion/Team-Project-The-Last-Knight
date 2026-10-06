@@ -113,6 +113,15 @@ namespace TheLastKnight.Inventory
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
+                var item = inv.GetSlot(slotType, slotIndex);
+                if (inv.CursorHeldItem == null && item != null &&
+                    item.HasStatusUseMenu &&
+                    UI.CharacterStatusUI.Instance != null)
+                {
+                    UI.CharacterStatusUI.Instance.ShowItemUseMenu(slotType, slotIndex, eventData.position);
+                    AudioManager.Instance?.PlaySfx("click");
+                    return;
+                }
                 inv.HandleRightClick(slotType, slotIndex, player);
                 AudioManager.Instance?.PlaySfx("click");
             }
@@ -153,6 +162,9 @@ namespace TheLastKnight.Inventory
                     ? (slotIndex == 0 ? $"{item.typeName} • Ready for [Q]" : $"{item.typeName} • Quick Slot {slotIndex + 1}")
                     : item.typeName;
 
+                if (item.HasStatusUseMenu)
+                    subtitle = $"{item.typeName} • ใช้ในหน้าสเตตัส";
+
                 string desc = item.description;
                 if (item.count > 1)
                 {
@@ -160,6 +172,12 @@ namespace TheLastKnight.Inventory
                 }
 
                 string hint = "<color=#98E498>[L-Click: Pick / Place]</color>   <color=#85C1E9>[R-Click: Split / Place 1]</color>\n<color=#F9E79F>[Shift + L-Click: Quick Move]</color>";
+
+                if (item.HasStatusUseMenu)
+                    hint = "<color=#98E498>[L-Click: Pick / Place]</color>   <color=#85C1E9>[R-Click: ใช้]</color>\n<color=#F9E79F>[Shift + L-Click: Quick Move]</color>";
+
+                if (item.HasStatusUseMenu)
+                    hint += "\n<color=#F9E79F>ใช้ด้วยปุ่ม Q ไม่ได้</color>";
 
                 UI.CharacterStatusUI.Instance?.ShowTooltip(item.name, subtitle, desc, hint);
             }
