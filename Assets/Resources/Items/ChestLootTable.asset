@@ -13,24 +13,108 @@ MonoBehaviour:
   m_Name: ChestLootTable
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.ChestLootTable
   items:
+  - enabled: 0
+    item: {fileID: 11400000, guid: f1d33737f5d3d79448351dedddfc1a11, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: a5b14c15142e8354f8c3052d11292caa, type: 2}
+    rarity: 1
+  - enabled: 1
+    item: {fileID: 11400000, guid: 5aa9037b8ed40d541ba3ebe6f13594a9, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: 0db3c84367d809e44b70163ec33d062f, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 0d4014dc4c134814facb366c27850260, type: 2}
+    rarity: 0
+  - enabled: 0
+    item: {fileID: 11400000, guid: bde65979c69922f408b2f000bd036c80, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 87c422f75d64226449ed7356f7ae14b3, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: eb597cbdbf1b74c459e2d7b339a132d2, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: e0688eef14119314fba8d43dbe8f98fe, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 1336dbca14b31d6409f9a14faaf3ae95, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 8e1cd77826403aa4f91d06815b75baf8, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 6c09d79427e089e4cac93bfde74632e5, type: 2}
+    rarity: 2
+  - enabled: 0
+    item: {fileID: 11400000, guid: 772c973f472958f459b53fe000038992, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: c0cdf8ddc5ea29c47a7c44b5af654ad0, type: 2}
+    rarity: 1
+  - enabled: 1
+    item: {fileID: 11400000, guid: b9c0260cf14e60f499935d1d25b3758c, type: 2}
+    rarity: 1
+  - enabled: 1
+    item: {fileID: 11400000, guid: 5fce7973b2e0e0446a9dd9248b6270b0, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: 02d68a9c5f2f2d948be1d152873efc8d, type: 2}
+    rarity: 0
+  - enabled: 0
+    item: {fileID: 11400000, guid: 5ec892fee913f7241817f8aeb6d9badf, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: d595f511f4e5e1145aec4e6c2fd9e901, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: 90d33b00e0dad594eabd51afde631e64, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: add5f9c823f7ce247a1846df61c247c7, type: 2}
+    rarity: 1
+  - enabled: 1
+    item: {fileID: 11400000, guid: 3157600ad66c6de49821c1dd08e64dbb, type: 2}
+    rarity: 1
+  - enabled: 1
+    item: {fileID: 11400000, guid: 622367ca606c39048acbe59b2730de1c, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 307c5e3d2a1262b4e90e6f2fd1d17f37, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: 81c6829e3b2cad745811f666bec0df67, type: 2}
+    rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: a15ad4f081855a84c9dbac78bf789ea6, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 776207890c448fc48b3b1b96cf0dc162, type: 2}
+    rarity: 2
+  - enabled: 1
+    item: {fileID: 11400000, guid: 85769aad130946446aed0c2db625a74c, type: 2}
+    rarity: 2
+  - enabled: 0
+    item: {fileID: 11400000, guid: 09684cfee6085a247b4fe39b5798eedb, type: 2}
+    rarity: 2
   - enabled: 1
     item: {fileID: 11400000, guid: 378132c645f94c9b933b9af06f2427aa, type: 2}
     rarity: 2
   - enabled: 1
-    item: {fileID: 11400000, guid: f1d33737f5d3d79448351dedddfc1a11, type: 2}
-    rarity: 0
-  - enabled: 1
     item: {fileID: 11400000, guid: 13e576fb9afcb7c459a636040f3a2983, type: 2}
-    rarity: 1
-  - enabled: 1
+    rarity: 2
+  - enabled: 0
     item: {fileID: 11400000, guid: 64b334597f0c59b448bacb734d020b1f, type: 2}
-    rarity: 1
+    rarity: 2
   - enabled: 1
     item: {fileID: 11400000, guid: 18b0c31eeece4a6b9ecd5a2c46ea305e, type: 2}
-    rarity: 0
+    rarity: 1
   - enabled: 1
     item: {fileID: 11400000, guid: dbcc1ce42e904936bb8d4a9237a2645a, type: 2}
-    rarity: 1
+    rarity: 0
   - enabled: 1
     item: {fileID: 11400000, guid: 4dd8e1fc4c47e4b4aa804ad9912bf822, type: 2}
     rarity: 0
@@ -39,7 +123,7 @@ MonoBehaviour:
     rarity: 0
   - enabled: 1
     item: {fileID: 11400000, guid: bf14ef0fa53b4615a64e686601868254, type: 2}
-    rarity: 0
+    rarity: 1
   - enabled: 1
     item: {fileID: 11400000, guid: caa0123c39ad4642bbd9bc16c366a736, type: 2}
     rarity: 1
@@ -49,15 +133,15 @@ MonoBehaviour:
   - enabled: 1
     item: {fileID: 11400000, guid: 1697b331ecef4e1b8858cd2802009fc8, type: 2}
     rarity: 2
-  - enabled: 1
+  - enabled: 0
     item: {fileID: 11400000, guid: d81b75f3ff8ddf746a79f9735310cbe0, type: 2}
-    rarity: 2
-  - enabled: 1
+    rarity: 0
+  - enabled: 0
     item: {fileID: 11400000, guid: 2c0b772be26949049aa07cfd901d6516, type: 2}
-    rarity: 2
-  - enabled: 1
+    rarity: 0
+  - enabled: 0
     item: {fileID: 11400000, guid: c53043541cf6eec499c1cbb5f7a8ab8f, type: 2}
-    rarity: 2
-  - enabled: 1
+    rarity: 0
+  - enabled: 0
     item: {fileID: 11400000, guid: 60c7dd242908385468f4d30a3623a7d2, type: 2}
-    rarity: 2
+    rarity: 0

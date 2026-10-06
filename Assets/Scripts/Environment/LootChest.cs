@@ -15,7 +15,7 @@ namespace TheLastKnight.Environment
         [Min(0)] public int minimumItems = 1;
         [Min(0)] public int maximumItems = 3;
         [Header("Rarity weights (normalized across non-empty tiers)")]
-        [Min(0)] public float commonWeight = 75;
+        [InspectorName("Normal Weight"), Min(0)] public float commonWeight = 75;
         [Min(0)] public float rareWeight = 20;
         [Min(0)] public float epicWeight = 5;
         [Header("Gold (inclusive)")]
@@ -46,7 +46,7 @@ namespace TheLastKnight.Environment
         {
             var result = new List<InventoryItemData>();
             if (lootTable == null) return result;
-            var pools = new[] { lootTable.GetPool(ChestItemRarity.Common), lootTable.GetPool(ChestItemRarity.Rare), lootTable.GetPool(ChestItemRarity.Epic) };
+            var pools = new[] { lootTable.GetPool(ChestItemRarity.Normal), lootTable.GetPool(ChestItemRarity.Rare), lootTable.GetPool(ChestItemRarity.Epic) };
             var weights = new[] { commonWeight, rareWeight, epicWeight };
             double total = 0;
             for (int tier = 0; tier < 3; tier++)

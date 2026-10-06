@@ -40,7 +40,8 @@ namespace TheLastKnight.Tests
                     foreach (var entry in entries)
                     {
                         var item = Field(entry, "item");
-                        rarityById[(string)Field(item, "id")] = Convert.ToInt32(Field(entry, "rarity"));
+                        if ((bool)Field(entry, "enabled"))
+                            rarityById[(string)Field(item, "id")] = Convert.ToInt32(Field(entry, "rarity"));
                     }
                     int min = (int)Field(chest, "minimumItems"), max = (int)Field(chest, "maximumItems");
                     int minGold = (int)Field(chest, "minimumGold"), maxGold = (int)Field(chest, "maximumGold");
@@ -63,9 +64,51 @@ namespace TheLastKnight.Tests
                     for (int tier = 0; tier < 3; tier++)
                         Assert.That((double)totals[tier] / totals.Sum(), Is.EqualTo(weights[tier] / weights.Sum()).Within(0.025), prefab.name);
                 }
-                Assert.AreEqual(16, allIds.Count, "Every eligible item must be reachable.");
+                var tableType = Find("ChestLootTable");
+                var catalog = AssetDatabase.LoadAssetAtPath("Assets/Resources/Items/ChestLootTable.asset", tableType);
+                var entriesInCatalog = ((IList)Field(catalog, "items")).Cast<object>();
+                var eligible = entriesInCatalog.Where(e => (bool)Field(e, "enabled")).Select(e => (string)Field(Field(e, "item"), "id")).ToArray();
+                CollectionAssert.AreEquivalent(eligible, allIds, "Every eligible item must be reachable.");
+                Assert.IsFalse(allIds.Any(id => id.StartsWith("rune_") || new[] { "church_key", "moonstone_shard", "drop_demonboss", "drop_fox", "drop_mechastonegolem", "drop_volcanox" }.Contains(id)));
             }
             finally { UnityEngine.Random.state = state; }
+        }
+
+        [Test]
+        public void PotionValues_UseHalfOfShopPurchasePrices()
+        {
+            var prices = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType("TheLastKnight.Inventory.PotionPrices")).First(t => t != null);
+            var definitionType = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType("TheLastKnight.Inventory.ItemDefinition")).First(t => t != null);
+            var ids = new[] { "potion_heal", "potion_might", "potion_swiftness", "potion_fortitude", "potion_regeneration", "potion_endurance", "potion_purity", "potion_undying" };
+            var buys = new[] { 50, 100, 100, 100, 200, 200, 200, 300 };
+            var definitions = Resources.LoadAll("Items/Definitions", definitionType);
+            for (int i = 0; i < ids.Length; i++)
+            {
+                Assert.AreEqual(buys[i], prices.GetMethod("GetBuyPrice").Invoke(null, new object[] { ids[i] }));
+                Assert.AreEqual(buys[i] / 2, prices.GetMethod("GetSellPrice").Invoke(null, new object[] { ids[i] }));
+                var item = definitions.First(d => (string)Field(d, "id") == ids[i]);
+                Assert.AreEqual(buys[i] / 2, Field(item, "sellPrice"));
+                Assert.AreEqual(buys[i] / 2, Find("ChestLootTable").GetMethod("GetItemValue").Invoke(null, new object[] { item }));
+            }
+        }
+
+        [Test]
+        public void PriceBoundaries_AndBossExclusionsAreEnforced()
+        {
+            var type = Find("ChestLootTable");
+            var classify = type.GetMethod("RarityForValue");
+            foreach (var pair in new[] { new[] { 0, 0 }, new[] { 50, 0 }, new[] { 51, 1 }, new[] { 100, 1 }, new[] { 101, 2 } })
+                Assert.AreEqual(pair[1], Convert.ToInt32(classify.Invoke(null, new object[] { pair[0] })));
+            var original = AssetDatabase.LoadAssetAtPath("Assets/Resources/Items/ChestLootTable.asset", type);
+            var clone = UnityEngine.Object.Instantiate(original);
+            try
+            {
+                foreach (var entry in (IList)Field(clone, "items")) entry.GetType().GetField("enabled").SetValue(entry, true);
+                foreach (var rarity in Enum.GetValues(Find("ChestItemRarity")))
+                    foreach (var item in (IList)type.GetMethod("GetPool").Invoke(clone, new[] { rarity }))
+                        Assert.IsFalse((bool)type.GetMethod("IsExcluded").Invoke(null, new[] { item }));
+            }
+            finally { UnityEngine.Object.DestroyImmediate(clone); }
         }
 
         [Test]
@@ -86,7 +129,7 @@ namespace TheLastKnight.Tests
             try
             {
                 var entries = (IList)Field(clone, "items");
-                var entry = entries[0];
+                var entry = entries.Cast<object>().First(e => (bool)Field(e, "enabled"));
                 entries.Clear(); entries.Add(entry); entries.Add(entry); entries.Add(null);
                 var rarity = Field(entry, "rarity");
                 var method = type.GetMethod("GetPool");
