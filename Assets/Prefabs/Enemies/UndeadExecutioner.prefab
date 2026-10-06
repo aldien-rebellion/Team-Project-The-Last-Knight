@@ -352,6 +352,7 @@ GameObject:
   - component: {fileID: 9010000000000000002}
   - component: {fileID: 6904085427721327393}
   - component: {fileID: 2048810011950464701}
+  - component: {fileID: 1100820217571107348}
   m_Layer: 0
   m_Name: UndeadExecutioner
   m_TagString: Untagged
@@ -558,6 +559,7 @@ MonoBehaviour:
   _chaseSpeed: 3.6
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -574,6 +576,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 8
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 1
   _useColliderEdgeAttackDistance: 1
@@ -583,6 +587,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -695,10 +701,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 6715231333313269192}
   _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 0
   _centerLocalOffset: {x: 0, y: 0}
   _stunEffectFrames: []
   _stunEffectDuration: 2
   _stunEffectHeadXFraction: 0
+  _stunEffectHeadXOffset: 0
   _stunEffectHeadYFraction: 0
   _stunEffectHeadYOffset: 0
   _stunEffectWorldScale: 0.5
@@ -842,9 +850,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfd1527dae41456082ee88bba14d8eb4, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.UndeadExecutionerAudioController
   _basicAttackClip: {fileID: 8300000, guid: f3f9d844ea901ad49a4a9c74b3375a94, type: 3}
   _spinningCleaveClip: {fileID: 8300000, guid: 6e78d67fafe1fdb4fa94836bd1e3a67a, type: 3}
   _darkSummonClip: {fileID: 8300000, guid: f4841b35d1f5ec5409bb98e5430b65b4, type: 3}
   _playerHitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!114 &1100820217571107348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9202071590010905333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: 85769aad130946446aed0c2db625a74c, type: 2}
+  _dropItemId: drop_undeadexecutioner
+  _isBoss: 0
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}

@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 9010000000000000002}
   - component: {fileID: 2399483056300773315}
   - component: {fileID: 2059654593588455083}
+  - component: {fileID: 8833654469559654652}
   m_Layer: 0
   m_Name: Reaper
   m_TagString: Untagged
@@ -288,11 +289,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 47
   _useLevelScaling: 1
-  _maxHealth: 3525
+  _maxHealth: 2350
   _defense: 47
-  _attackPower: 470
-  _goldReward: 1174
-  _expReward: 958
+  _attackPower: 329
+  _goldReward: 3670
+  _expReward: 1518
   _currentStatus: 0
 --- !u!114 &5522708467596627523
 MonoBehaviour:
@@ -310,6 +311,7 @@ MonoBehaviour:
   _chaseSpeed: 4.5
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -326,6 +328,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 8
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
@@ -335,6 +339,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 1
   _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -385,10 +391,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 4426489115621437184}
   _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 0
   _centerLocalOffset: {x: 0, y: 0}
   _stunEffectFrames: []
   _stunEffectDuration: 2
   _stunEffectHeadXFraction: 0
+  _stunEffectHeadXOffset: 0
   _stunEffectHeadYFraction: 0
   _stunEffectHeadYOffset: 0
   _stunEffectWorldScale: 0.5
@@ -499,11 +507,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9ca6ac977664b5185aedb46a2e3298c, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.ReaperAudioController
   _swordSlashClip: {fileID: 8300000, guid: cdfcb7b9979a70446b1b07fc877d5e4d, type: 3}
   _weaponDrawClip: {fileID: 8300000, guid: 4cb651edcee996a4ab083883692135ed, type: 3}
   _playerHitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!114 &8833654469559654652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6306785311533167210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: add5f9c823f7ce247a1846df61c247c7, type: 2}
+  _dropItemId: drop_reaper
+  _isBoss: 0
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &6765031090875817698
 GameObject:
   m_ObjectHideFlags: 0

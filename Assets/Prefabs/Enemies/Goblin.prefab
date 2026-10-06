@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 9010000000000000501}
   - component: {fileID: 273838192716187050}
   - component: {fileID: 1359778667012341164}
+  - component: {fileID: 6050897727812395625}
   m_Layer: 0
   m_Name: Goblin
   m_TagString: Untagged
@@ -352,11 +353,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 40
   _useLevelScaling: 1
-  _maxHealth: 3000
+  _maxHealth: 2000
   _defense: 40
-  _attackPower: 400
-  _goldReward: 1170
-  _expReward: 978
+  _attackPower: 280
+  _goldReward: 2078
+  _expReward: 2921
   _currentStatus: 0
 --- !u!114 &4321245110823902204
 MonoBehaviour:
@@ -374,6 +375,7 @@ MonoBehaviour:
   _chaseSpeed: 5
   _patrolDistance: 6
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -390,6 +392,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 13
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 1.5
   _useColliderEdgeAttackDistance: 1
@@ -399,6 +403,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 10
   _rangedCooldown: 3
@@ -480,6 +486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 6972004819961490791}
   _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 0
   _centerLocalOffset: {x: 0, y: 0}
   _stunEffectFrames:
   - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
@@ -489,6 +496,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
   _stunEffectDuration: 2
   _stunEffectHeadXFraction: 0
+  _stunEffectHeadXOffset: 0
   _stunEffectHeadYFraction: 0
   _stunEffectHeadYOffset: 0.25
   _stunEffectWorldScale: 0.5
@@ -604,6 +612,25 @@ MonoBehaviour:
   _basicAttackClip: {fileID: 8300000, guid: cdfcb7b9979a70446b1b07fc877d5e4d, type: 3}
   _bombThrowClip: {fileID: 8300000, guid: 4cb651edcee996a4ab083883692135ed, type: 3}
   _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!114 &6050897727812395625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7555023164342849216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: c0cdf8ddc5ea29c47a7c44b5af654ad0, type: 2}
+  _dropItemId: drop_goblin
+  _isBoss: 0
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &7956374769995559196
 GameObject:
   m_ObjectHideFlags: 0

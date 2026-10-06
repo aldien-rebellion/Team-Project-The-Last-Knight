@@ -159,7 +159,7 @@ namespace TheLastKnight.Inventory
                 name = "Gold Pouch",
                 typeName = "Valuables",
                 description = "A heavy pouch filled with gleaming coins. Grants 500 Gold.",
-                iconPath = "CharacterStatus/Items/Item_Pouch",
+                iconPath = "CharacterStatus/Items/Gold Pouch",
                 category = ItemCategory.Consumable,
                 maxStack = 64,
                 isConsumable = true,
@@ -177,7 +177,7 @@ namespace TheLastKnight.Inventory
                 name = "Moonstone Shard",
                 typeName = "Material",
                 description = "A rare lunar mineral glowing with primordial energy. Used for sacred crafting.",
-                iconPath = "CharacterStatus/Items/Item_MoonstoneShard",
+                iconPath = "CharacterStatus/Items/craftpix-net-924817-free-crystals-pixel-art-asset-pack/PNG/crystals_black/crystal_black1",
                 category = ItemCategory.Material,
                 maxStack = 64,
                 isConsumable = false
@@ -237,34 +237,86 @@ namespace TheLastKnight.Inventory
             }
         }
 
+        private static readonly Dictionary<string, int> _monsterDropSellPrices = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["drop_blueslime"] = 9,
+            ["drop_skeleton"] = 18,
+            ["drop_demonkin"] = 90,
+            ["drop_lizard"] = 90,
+            ["drop_dragon"] = 117,
+            ["drop_minotaur"] = 153,
+            ["drop_demon"] = 180,
+            ["drop_jinn"] = 225,
+            ["drop_skeletonknight"] = 288,
+            ["drop_goblin"] = 360,
+            ["drop_hoodedprotagonist"] = 405,
+            ["drop_reaper"] = 432,
+            ["drop_satyr"] = 477,
+            ["drop_archdemon"] = 522,
+            ["drop_fantasymushroom"] = 630,
+            ["drop_fireworm"] = 648,
+            ["drop_forestmushroom"] = 684,
+            ["drop_flyingeye"] = 693,
+            ["drop_undeadexecutioner"] = 711,
+            ["drop_skullwolf"] = 738,
+            ["drop_bringerofdeath"] = 810,
+            ["drop_necromancer"] = 837,
+            ["drop_smalldragon"] = 846,
+
+            // Boss drops (Equal to maximum gold drop of that boss: Level * 80)
+            ["drop_mechastonegolem"] = 1600,
+            ["drop_demonboss"] = 4800,
+            ["drop_fox"] = 6400,
+            ["drop_shadowdemondragon"] = 7680,
+            ["drop_volcanox"] = 8000,
+            ["moonstone_shard"] = 3200
+        };
+
+        public static int GetSellPrice(string itemId)
+        {
+            if (string.IsNullOrEmpty(itemId)) return 0;
+            if (_monsterDropSellPrices.TryGetValue(itemId, out int price)) return price;
+            return 0;
+        }
+
         public static InventoryItemData CreateItem(string id, int count = 1)
         {
             if (string.IsNullOrEmpty(id) || count <= 0) return null;
 
             LoadDefinitions();
+            InventoryItemData item = null;
             if (_definitions.TryGetValue(id, out var definition))
-                return definition.CreateItem(count, CreateLegacyItem(id));
-
-            if (_registry.TryGetValue(id, out var factory))
             {
-                var item = factory();
+                item = definition.CreateItem(count, CreateLegacyItem(id));
+            }
+            else if (_registry.TryGetValue(id, out var factory))
+            {
+                item = factory();
                 item.count = Mathf.Clamp(count, 1, item.maxStack);
-                return item;
+            }
+            else
+            {
+                // Fallback for custom or unknown items
+                item = new InventoryItemData
+                {
+                    id = id,
+                    name = id,
+                    typeName = "Item",
+                    description = "An item found in the world.",
+                    iconPath = "CharacterStatus/Items/Item_Pouch",
+                    count = Mathf.Clamp(count, 1, 64),
+                    maxStack = 64,
+                    category = ItemCategory.Material,
+                    isConsumable = false
+                };
             }
 
-            // Fallback for custom or unknown items
-            return new InventoryItemData
+            if (item != null && item.sellPrice <= 0 && _monsterDropSellPrices.TryGetValue(item.id, out int defaultSellPrice))
             {
-                id = id,
-                name = id,
-                typeName = "Item",
-                description = "An item found in the world.",
-                iconPath = "CharacterStatus/Items/Item_Pouch",
-                count = Mathf.Clamp(count, 1, 64),
-                maxStack = 64,
-                category = ItemCategory.Material,
-                isConsumable = false
-            };
+                item.sellPrice = defaultSellPrice;
+            }
+
+            return item;
         }
     }
 }

@@ -60433,6 +60433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.EnemyProgressionReward
   churchKey: 1
+  moonstoneShard: 1
   runeIndex: -1
   finalBoss: 0
 --- !u!1001 &1351423511

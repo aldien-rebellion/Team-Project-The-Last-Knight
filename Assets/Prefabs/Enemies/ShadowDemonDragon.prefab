@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 2306318584033488972}
   - component: {fileID: 7653207656683907803}
   - component: {fileID: 9010000000000000002}
+  - component: {fileID: 5913465476009433173}
   m_Layer: 0
   m_Name: ShadowDemonDragon
   m_TagString: Untagged
@@ -224,10 +225,14 @@ MonoBehaviour:
   _chaseSpeed: 3.8
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 1
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -237,31 +242,55 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 10
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 0
   _playAttackStatesDirectly: 0
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack_Left
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0
+  _basicAttackActionDuration: 0
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
   _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 2
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills: []
   _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 0
+  _waitForAttackProjectileToFinish: 0
+  _interruptAttackOnDamage: 0
   _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
+  _attackSortingLayerName: 
 --- !u!82 &2306318584033488972
 AudioSource:
   m_ObjectHideFlags: 0
@@ -389,7 +418,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 4930698062115012074}
   _useVisibleSpriteBounds: 1
@@ -407,6 +436,25 @@ MonoBehaviour:
   _stunEffectHeadYFraction: 0.18
   _stunEffectHeadYOffset: 0.45
   _stunEffectWorldScale: 0.5
+--- !u!114 &5913465476009433173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58124016860152406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: 622367ca606c39048acbe59b2730de1c, type: 2}
+  _dropItemId: drop_shadowdemondragon
+  _isBoss: 1
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &666402955352095712
 GameObject:
   m_ObjectHideFlags: 0
@@ -565,6 +613,7 @@ MonoBehaviour:
   _followSprite: {fileID: 4930698062115012074}
   _useVisibleSpriteBounds: 1
   _headGap: 0.08
+  _headHorizontalOffset: 0
   _followSpriteBounds: 0
   _headOffset: 0.12
 --- !u!1 &1601459811685508102

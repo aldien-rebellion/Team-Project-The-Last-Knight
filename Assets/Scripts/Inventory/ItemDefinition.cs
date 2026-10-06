@@ -34,6 +34,8 @@ namespace TheLastKnight.Inventory
         public ItemCategory category = ItemCategory.Material;
         [Min(1)] public int maxStack = 64;
         public bool isConsumable;
+        [Tooltip("Sell price in Gold when sold to merchant")]
+        [Min(0)] public int sellPrice;
         [Tooltip("Legacy preserves existing coded behavior for an existing item ID.")]
         public ItemUseEffect useEffect;
         [Min(1)] public int effectAmount = 50;
@@ -45,6 +47,7 @@ namespace TheLastKnight.Inventory
                 id = id, name = displayName, typeName = typeName, description = description,
                 category = category, maxStack = Mathf.Max(1, maxStack),
                 count = Mathf.Clamp(count, 1, Mathf.Max(1, maxStack)), isConsumable = isConsumable,
+                sellPrice = sellPrice,
                 Icon = icon
             };
             int amount = Mathf.Max(1, effectAmount);

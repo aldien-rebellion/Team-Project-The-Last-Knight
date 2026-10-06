@@ -63,7 +63,7 @@ namespace TheLastKnight.Tests
                     for (int tier = 0; tier < 3; tier++)
                         Assert.That((double)totals[tier] / totals.Sum(), Is.EqualTo(weights[tier] / weights.Sum()).Within(0.025), prefab.name);
                 }
-                Assert.AreEqual(15, allIds.Count, "Every eligible item must be reachable.");
+                Assert.AreEqual(16, allIds.Count, "Every eligible item must be reachable.");
             }
             finally { UnityEngine.Random.state = state; }
         }

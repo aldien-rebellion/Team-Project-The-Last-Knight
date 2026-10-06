@@ -158,6 +158,7 @@ MonoBehaviour:
   _followSprite: {fileID: 0}
   _useVisibleSpriteBounds: 0
   _headGap: 0.08
+  _headHorizontalOffset: 0
   _followSpriteBounds: 0
   _headOffset: 0.12
 --- !u!1 &2453469147326600073
@@ -252,6 +253,8 @@ GameObject:
   - component: {fileID: 6633631750662538358}
   - component: {fileID: 8844037711200554112}
   - component: {fileID: 7156238347901141932}
+  - component: {fileID: 8217018541561612521}
+  - component: {fileID: 6075786491786945806}
   m_Layer: 0
   m_Name: ArchDemon
   m_TagString: Untagged
@@ -458,6 +461,7 @@ MonoBehaviour:
   _chaseSpeed: 3.8
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -465,9 +469,6 @@ MonoBehaviour:
   _flipSpriteInsteadOfTransformScale: 1
   _facingFlipDeadZone: 0.1
   _avoidTeleportOnReturn: 1
-  _bringToFrontWhileAttacking: 1
-  _attackSortingOrder: 1
-  _attackSortingLayerName: Player
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -477,14 +478,19 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 8
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 0
   _playAttackStatesDirectly: 0
+  _useMovementAnimationStates: 0
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -495,13 +501,20 @@ MonoBehaviour:
   _basicAttackAnimState: BasicAtk
   _basicAttackAnimStates: []
   _basicAttackDamageDelay: 0.5833333
+  _basicAttackActionDuration: 0
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
   _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 4
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills: []
   _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 0
+  _waitForAttackProjectileToFinish: 0
+  _interruptAttackOnDamage: 0
   _continuousActions: 0
   _parryEveryNSkillUses: 1
   _deathDestroyDelay: 0.8
@@ -511,6 +524,9 @@ MonoBehaviour:
   _respawnTime: 0.5
   _requirePlayerAwayToRespawn: 0
   _respawnAtDeathPosition: 1
+  _bringToFrontWhileAttacking: 1
+  _attackSortingOrder: 1
+  _attackSortingLayerName: Player
 --- !u!114 &8844037711200554112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,9 +537,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b81bf34e7f64eacb9827f10418c602d, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.ArchDemonAudioController
   _basicAttackClip: {fileID: 8300000, guid: 3a2d3649b959df147b78614b022201b9, type: 3}
+  _skillClip: {fileID: 0}
   _resurrectionClip: {fileID: 8300000, guid: 41513875810968a4894b5e0af0feb976, type: 3}
   _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
 --- !u!114 &7156238347901141932
@@ -536,10 +553,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 1437028101314134755}
   _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 0
   _centerLocalOffset: {x: 0, y: 0}
   _stunEffectFrames:
   - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
@@ -549,8 +567,126 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
   _stunEffectDuration: 2
   _stunEffectHeadXFraction: 0
+  _stunEffectHeadXOffset: 0
   _stunEffectHeadYFraction: 0.3
+  _stunEffectHeadYOffset: 0
   _stunEffectWorldScale: 0.5
+--- !u!82 &8217018541561612521
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5409589368266035541}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &6075786491786945806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5409589368266035541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: a5b14c15142e8354f8c3052d11292caa, type: 2}
+  _dropItemId: drop_archdemon
+  _isBoss: 0
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &6751255952629736916
 GameObject:
   m_ObjectHideFlags: 0

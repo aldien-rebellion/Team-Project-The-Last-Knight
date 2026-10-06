@@ -83,6 +83,7 @@ MonoBehaviour:
   _followSprite: {fileID: 1793984283326286130}
   _useVisibleSpriteBounds: 1
   _headGap: 0.08
+  _headHorizontalOffset: 0
   _followSpriteBounds: 0
   _headOffset: 0.12
 --- !u!1 &2197084703549264098
@@ -351,6 +352,7 @@ GameObject:
   - component: {fileID: 9010000000000000011}
   - component: {fileID: 9010000000000000012}
   - component: {fileID: 9010000000000000014}
+  - component: {fileID: 1128330749567577776}
   m_Layer: 0
   m_Name: Small_dragon
   m_TagString: Untagged
@@ -557,8 +559,14 @@ MonoBehaviour:
   _chaseSpeed: 4.2
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
+  _flyingChaseHeightOffset: 0
+  _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -568,27 +576,52 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 7
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 5
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 1
   _playAttackStatesDirectly: 0
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
+  _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 720765408586947785, guid: 69f97e46a2d42fc41aae30e2e273a09b, type: 3}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0
+  _basicAttackActionDuration: 0
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
   _allowBasicParryWithSkills: 1
   _basicParryCooldown: 5
   _basicParryEveryNAttacks: 0
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills:
   - skillName: SmallFireBall
     animationName: Attack
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 1.3
     cooldown: 5
@@ -601,14 +634,28 @@ MonoBehaviour:
     damageDuration: 0.4
     dealDamageAsSingleHit: 0
     secondDamageHitTime: -1
+    additionalDamageHitTimes: []
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 720765408586947785, guid: 69f97e46a2d42fc41aae30e2e273a09b, type: 3}
+    requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 0
+  _waitForAttackProjectileToFinish: 0
+  _interruptAttackOnDamage: 0
   _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
+  _attackSortingLayerName: 
 --- !u!114 &9010000000000000001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -633,6 +680,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
   _stunEffectDuration: 2
   _stunEffectHeadXFraction: 0
+  _stunEffectHeadXOffset: 0
   _stunEffectHeadYFraction: 0
   _stunEffectHeadYOffset: 0.25
   _stunEffectWorldScale: 0.5
@@ -664,6 +712,75 @@ AudioSource:
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &9010000000000000012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -674,7 +791,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dea154cf1ac5442d8d88f9102be9456c, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.DragonSfxController
   _biteClip: {fileID: 8300000, guid: e3c232aa18fa52f469052ad465176fc8, type: 3}
   _fireBreathClip: {fileID: 8300000, guid: e3c232aa18fa52f469052ad465176fc8, type: 3}
@@ -715,3 +832,91 @@ AudioSource:
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1128330749567577776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6430512568723522769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: 776207890c448fc48b3b1b96cf0dc162, type: 2}
+  _dropItemId: drop_smalldragon
+  _isBoss: 0
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}

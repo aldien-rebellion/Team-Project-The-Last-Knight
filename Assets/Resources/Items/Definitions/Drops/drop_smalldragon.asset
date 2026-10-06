@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_smalldragon
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_smalldragon
+  displayName: Small Dragon Wing
+  typeName: Material
+  description: "A leathery young dragon wing imbued with dragon blood. (\u0E1B\u0E35\u0E01\u0E21\u0E31\u0E07\u0E01\u0E23\u0E19\u0E49\u0E2D\u0E22)"
+  icon: {fileID: -1258430076424526785, guid: 4ff0cc5505b7c9546b8a15d49b9ca4cc, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 846
+  useEffect: 0
+  effectAmount: 50

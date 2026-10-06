@@ -17,9 +17,10 @@ MonoBehaviour:
   typeName: Material
   description: A rare lunar mineral glowing with primordial energy. Used for sacred
     crafting.
-  icon: {fileID: 21300000, guid: 29be19e0377c2d141aa90b6644839a45, type: 3}
+  icon: {fileID: -8887977664506623870, guid: 1e403061d5d26c64fbc51a2492b2ab50, type: 3}
   category: 4
   maxStack: 64
   isConsumable: 0
+  sellPrice: 3200
   useEffect: 1
   effectAmount: 50

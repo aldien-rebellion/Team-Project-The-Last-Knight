@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 3960768102285067539}
   - component: {fileID: 1029724280088898339}
   - component: {fileID: 8440962336203901175}
+  - component: {fileID: 5901008805661318702}
   m_Layer: 10
   m_Name: Volcanox
   m_TagString: Untagged
@@ -351,11 +352,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 100
   _useLevelScaling: 1
-  _maxHealth: 7500
+  _maxHealth: 5000
   _defense: 100
-  _attackPower: 1000
-  _goldReward: 2754
-  _expReward: 2393
+  _attackPower: 700
+  _goldReward: 5716
+  _expReward: 6704
   _currentStatus: 0
 --- !u!114 &3960768102285067539
 MonoBehaviour:
@@ -373,6 +374,7 @@ MonoBehaviour:
   _chaseSpeed: 2.4
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -400,6 +402,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 1
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -543,10 +547,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 0}
   _useVisibleSpriteBounds: 0
+  _useEnemyFacingForStunEffect: 0
   _centerLocalOffset: {x: 0, y: 0}
   _stunEffectFrames: []
   _stunEffectDuration: 2
   _stunEffectHeadXFraction: 0
+  _stunEffectHeadXOffset: 0
   _stunEffectHeadYFraction: 0
   _stunEffectHeadYOffset: 0
   _stunEffectWorldScale: 0.5
@@ -560,13 +566,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4020974454745e09ced0a5129d6b7fa, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.VolcanoxAudioController
   _fireballReleaseClip: {fileID: 8300000, guid: 3a2d3649b959df147b78614b022201b9, type: 3}
   _windHitClip: {fileID: 8300000, guid: 6e78d67fafe1fdb4fa94836bd1e3a67a, type: 3}
   _infernalSlamPunchClip: {fileID: 8300000, guid: 1d94c50e4acde8741b105097623883db, type: 3}
   _rockBreakClip: {fileID: 8300000, guid: 9a857b1ac051c8543b315c41234e1adc, type: 3}
   _playerAttackHitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!114 &5901008805661318702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6892458311987200993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: 09684cfee6085a247b4fe39b5798eedb, type: 2}
+  _dropItemId: drop_volcanox
+  _isBoss: 1
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &7374440776577519503
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,5 +775,3 @@ MonoBehaviour:
   _headHorizontalOffset: 0
   _followSpriteBounds: 1
   _headOffset: 0.12
-
-

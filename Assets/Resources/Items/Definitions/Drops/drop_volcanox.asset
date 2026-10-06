@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_volcanox
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_volcanox
+  displayName: Sea of Fire Gem
+  typeName: Material
+  description: "A primordial volcanic core blazing with eternal magma from Volcanox.
+    (\u0E28\u0E34\u0E25\u0E32\u0E17\u0E30\u0E40\u0E25\u0E40\u0E1E\u0E25\u0E34\u0E07)"
+  icon: {fileID: 8826427370057731383, guid: 28eb38f053f75294daf46da5f171413e, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 8000
+  useEffect: 0
+  effectAmount: 50

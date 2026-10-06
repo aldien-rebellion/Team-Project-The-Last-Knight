@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Gold Pouch
   typeName: Valuables
   description: A heavy pouch filled with gleaming coins. Grants 500 Gold.
-  icon: {fileID: 21300000, guid: 7bc72779c2dae364da72caf6e73d5aea, type: 3}
+  icon: {fileID: -7604216942879233706, guid: d5713aff84a388c448dec68c0f037c8d, type: 3}
   category: 0
   maxStack: 64
   isConsumable: 1

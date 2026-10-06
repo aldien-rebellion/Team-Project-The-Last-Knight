@@ -1458,7 +1458,11 @@ namespace TheLastKnight.UI
                 _btnSellOne.gameObject.SetActive(true);
                 _btnSellAll.gameObject.SetActive(item.count > 1);
 
-                _txtSellUnitPrice.text = $"Sell Price: {unitSellPrice} Gold (75%)";
+                var config = FindCatalogItem(item.id);
+                if (config != null && config.customSellPrice <= 0)
+                    _txtSellUnitPrice.text = $"Sell Price: {unitSellPrice} Gold (75%)";
+                else
+                    _txtSellUnitPrice.text = $"Sell Price: {unitSellPrice} Gold";
 
                 if (item.count > 1)
                 {
@@ -1496,15 +1500,25 @@ namespace TheLastKnight.UI
         public int GetSellPrice(string itemId)
         {
             var config = FindCatalogItem(itemId);
-            if (config == null) return -1; // Merchant does not sell/buy this item
+            if (config != null)
+            {
+                if (config.customSellPrice > 0) return config.customSellPrice;
+                return Mathf.Max(1, Mathf.RoundToInt(config.buyPrice * _sellPriceMultiplier));
+            }
 
-            if (config.customSellPrice > 0) return config.customSellPrice;
+            var item = ItemRegistry.CreateItem(itemId, 1);
+            if (item != null && item.sellPrice > 0)
+            {
+                return item.sellPrice;
+            }
 
-            // 75% of buy price
-            return Mathf.Max(1, Mathf.RoundToInt(config.buyPrice * _sellPriceMultiplier));
+            int regPrice = ItemRegistry.GetSellPrice(itemId);
+            if (regPrice > 0) return regPrice;
+
+            return -1; // Merchant does not sell/buy this item
         }
 
-        private ShopItemConfig FindCatalogItem(string itemId)
+        public ShopItemConfig FindCatalogItem(string itemId)
         {
             if (string.IsNullOrEmpty(itemId)) return null;
 
@@ -2130,7 +2144,11 @@ namespace TheLastKnight.UI
                     int sellPrice = shopUI != null ? shopUI.GetSellPrice(item.id) : -1;
                     if (sellPrice > 0)
                     {
-                        desc += $"\n<color=#6DE383>Sell Value: {sellPrice} Gold each (75%)</color>";
+                        var config = shopUI != null ? shopUI.FindCatalogItem(item.id) : null;
+                        if (config != null && config.customSellPrice <= 0)
+                            desc += $"\n<color=#6DE383>Sell Value: {sellPrice} Gold each (75%)</color>";
+                        else
+                            desc += $"\n<color=#6DE383>Sell Value: {sellPrice} Gold each</color>";
                     }
                     else
                     {

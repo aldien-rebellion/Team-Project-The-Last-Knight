@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_lizard
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_lizard
+  displayName: Lizard Tail
+  typeName: Material
+  description: "Tough reptilian leather dropped by a Lizard. (\u0E2B\u0E32\u0E07\u0E01\u0E34\u0E49\u0E07\u0E01\u0E48\u0E32)"
+  icon: {fileID: -8496722142111697240, guid: 8b726639d1caead47a483d6e0b3fdecd, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 90
+  useEffect: 0
+  effectAmount: 50

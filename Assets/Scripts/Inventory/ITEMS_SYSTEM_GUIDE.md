@@ -170,7 +170,7 @@ All items are statically registered in `ItemRegistry.cs`:
 | `potion_fortitude` | `Potion of Fortitude` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-7` | +25% Max HP & DEF for 30 seconds. |
 | `potion_undying` | `Potion of the Undying` | Potion | 64 | `CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-8` | HP set to 1, no heal, absolute invincibility for 30 seconds. |
 | `gold_pouch` | `Gold Pouch` | Consumable | 64 | `CharacterStatus/Items/Item_Pouch` | Grants +500 Gold to player wallet. |
-| `moonstone_shard`| `Moonstone Shard` | Material | 64 | `CharacterStatus/Items/Item_MoonstoneShard` | High-tier crafting ingredient. |
+| `moonstone_shard`| `Moonstone Shard` | Material | 64 | `CharacterStatus/Items/craftpix-net-924817-free-crystals-pixel-art-asset-pack/PNG/crystals_black/crystal_black1` | High-tier crafting ingredient. Drops 1 from MoonstoneKeeper. |
 | `church_key` | `Moonstone Keeper's Key` | Quest | 1 | `CharacterStatus/Items/Key 13 - GOLD - frame0026` | Unlocks Pentagram chest. |
 | `rune_pentagram`| `Pentagram Rune` | Quest | 1 | `CharacterStatus/Items/Item_RunePentagram` | Castle gate demon seal keystone. |
 | `rune_hand` | `Demon Hand Rune` | Quest | 1 | `CharacterStatus/Items/Item_RuneHand` | Castle gate demon seal keystone. |

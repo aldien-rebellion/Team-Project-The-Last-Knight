@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_demonboss
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_demonboss
+  displayName: Demon Boss Core
+  typeName: Material
+  description: "The pulsating demonic core of the Demon Boss. (\u0E41\u0E01\u0E19\u0E1E\u0E25\u0E31\u0E07\u0E23\u0E32\u0E0A\u0E32\u0E1B\u0E35\u0E28\u0E32\u0E08)"
+  icon: {fileID: 2089536475553618797, guid: ff5ecce1d0394f749876f9984df29283, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 4800
+  useEffect: 0
+  effectAmount: 50

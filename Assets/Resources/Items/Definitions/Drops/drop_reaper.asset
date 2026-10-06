@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_reaper
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_reaper
+  displayName: Reaper's Shroud
+  typeName: Material
+  description: "A threadbare dark shroud left behind by the Grim Reaper. (\u0E1C\u0E49\u0E32\u0E04\u0E25\u0E38\u0E21\u0E23\u0E34\u0E1B\u0E40\u0E1B\u0E2D\u0E23\u0E4C)"
+  icon: {fileID: 860680929748622111, guid: 0a74d5c1a35b1f24498a055eede54e2a, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 432
+  useEffect: 0
+  effectAmount: 50
