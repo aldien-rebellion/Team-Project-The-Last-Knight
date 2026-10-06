@@ -18,6 +18,7 @@ namespace TheLastKnight.Inventory
         private const float GroundClearance = 0.01f;
         // Match the usual 32 px loot icons at 100 pixels per unit and 1.1 scale.
         private const float MaxIconWorldSize = 0.352f;
+        private const float DroppedIconSizeMultiplier = 2f;
         private const float PickupWorldRadius = 0.495f;
         private const float Gravity = -14f;
         private const float PickupDelay = 0.5f;
@@ -120,6 +121,8 @@ namespace TheLastKnight.Inventory
                 if (longestSide > 0f)
                     iconScale = Mathf.Min(iconScale, MaxIconWorldSize / longestSide);
             }
+            // Enlarge every world drop after normalizing its original icon size.
+            iconScale *= DroppedIconSizeMultiplier;
             transform.localScale = Vector3.one * iconScale;
 
             var col = GetComponent<CircleCollider2D>();
