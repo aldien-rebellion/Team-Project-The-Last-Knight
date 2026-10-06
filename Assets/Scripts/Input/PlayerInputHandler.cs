@@ -18,6 +18,22 @@ namespace TheLastKnight.Input
         private InputAction _nextAction;
         private InputAction _previousAction;
         private InputAction _useDrinkAction;
+        private int _uiSkillFrame = -1, _uiBuffFrame = -1, _uiExcaliburFrame = -1, _uiDrinkFrame = -1;
+
+        public void RequestUIAction(string action)
+        {
+            var manager = TheLastKnight.Core.GameManager.Instance;
+            if (!isActiveAndEnabled || manager == null || manager.InputBlocked || manager.Player == null || manager.Player.IsDead) return;
+            // UI callbacks may run after the player Update. Deliver once next frame.
+            int frame = Time.frameCount + 1;
+            switch (action)
+            {
+                case "UseSkill": _uiSkillFrame = frame; break;
+                case "UseBuff": _uiBuffFrame = frame; break;
+                case "UseExcalibur": _uiExcaliburFrame = frame; break;
+                case "UseDrink": _uiDrinkFrame = frame; break;
+            }
+        }
 
         private void Awake()
         {
@@ -34,6 +50,16 @@ namespace TheLastKnight.Input
         {
             InitializeActions();
             EnablePlayerActions();
+        }
+
+        private void Update()
+        {
+            // Unity's InputForUI provider disables the whole project action asset
+            // when it hands input to a runtime EventSystem. This component owns
+            // gameplay input while enabled; restore it after that UI handoff.
+            var manager = TheLastKnight.Core.GameManager.Instance;
+            if (manager != null && manager.InputBlocked) return;
+            if (_moveAction != null && !_moveAction.enabled) EnablePlayerActions();
         }
 
         private void InitializeActions()
@@ -134,12 +160,13 @@ namespace TheLastKnight.Input
         public bool SprintHeld => enabled && _sprintAction != null && _sprintAction.enabled && _sprintAction.IsPressed();
         public bool DashTriggered => enabled && ((_dashAction != null && _dashAction.enabled && _dashAction.WasPressedThisFrame()) ||
             (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame));
-        public bool AttackTriggered => enabled && _attackAction != null && _attackAction.enabled && _attackAction.WasPressedThisFrame();
+        public bool AttackTriggered => enabled && _attackAction != null && _attackAction.enabled && _attackAction.WasPressedThisFrame() &&
+            !(Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame && TheLastKnight.UI.UIInputLifetime.PointerOverGameplayControl());
         public bool CounterTriggered => enabled && _counterAttackAction != null && _counterAttackAction.enabled && _counterAttackAction.WasPressedThisFrame();
-        public bool UseSkillTriggered => enabled && _useSkillAction != null && _useSkillAction.enabled && _useSkillAction.WasPressedThisFrame();
-        public bool UseBuffTriggered => enabled && _useBuffAction != null && _useBuffAction.enabled && _useBuffAction.WasPressedThisFrame();
-        public bool UseExcaliburTriggered => enabled && _useExcaliburAction != null && _useExcaliburAction.enabled && _useExcaliburAction.WasPressedThisFrame();
-        public bool UseDrinkTriggered => enabled && _useDrinkAction != null && _useDrinkAction.enabled && _useDrinkAction.WasPressedThisFrame();
+        public bool UseSkillTriggered => enabled && (_uiSkillFrame == Time.frameCount || (_useSkillAction != null && _useSkillAction.enabled && _useSkillAction.WasPressedThisFrame()));
+        public bool UseBuffTriggered => enabled && (_uiBuffFrame == Time.frameCount || (_useBuffAction != null && _useBuffAction.enabled && _useBuffAction.WasPressedThisFrame()));
+        public bool UseExcaliburTriggered => enabled && (_uiExcaliburFrame == Time.frameCount || (_useExcaliburAction != null && _useExcaliburAction.enabled && _useExcaliburAction.WasPressedThisFrame()));
+        public bool UseDrinkTriggered => enabled && (_uiDrinkFrame == Time.frameCount || (_useDrinkAction != null && _useDrinkAction.enabled && _useDrinkAction.WasPressedThisFrame()));
 
         public float CycleSkillInput
         {

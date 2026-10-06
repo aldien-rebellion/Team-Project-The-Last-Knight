@@ -87,6 +87,11 @@ namespace TheLastKnight.UI
             _quickItemKey = root.Q<Label>("QuickItemKey");
             _potionIcon = root.Q<VisualElement>("PotionIcon");
             _quickItemSlot = root.Q<VisualElement>("QuickItemHUD");
+            if (_quickItemSlot != null)
+            {
+                _quickItemSlot.pickingMode = PickingMode.Position;
+                _quickItemSlot.RegisterCallback<ClickEvent>(OnQuickItemClicked);
+            }
 
             if (_potionIcon != null)
             {
@@ -185,6 +190,7 @@ namespace TheLastKnight.UI
 
         private void OnDisable()
         {
+            _quickItemSlot?.UnregisterCallback<ClickEvent>(OnQuickItemClicked);
             LocalizationManager.OnLanguageChanged -= RefreshLanguage;
             PlayerStats.OnInsufficientStaminaGlobal -= HandleInsufficientStamina;
             if (_staminaShakeCoroutine != null)
@@ -194,6 +200,22 @@ namespace TheLastKnight.UI
             }
             ResetStaminaBarEffect();
             if (Instance == this) Instance = null;
+        }
+
+        private void OnQuickItemClicked(ClickEvent evt)
+        {
+            if (evt.button != 0) return;
+            var player = GameManager.Instance?.Player;
+            player?.GetComponent<PlayerInputHandler>()?.RequestUIAction("UseDrink");
+        }
+
+        public bool PointerOverQuickItem()
+        {
+            if (_quickItemSlot == null || _quickItemSlot.panel == null || !isActiveAndEnabled ||
+                _quickItemSlot.resolvedStyle.display == DisplayStyle.None || UnityEngine.InputSystem.Mouse.current == null) return false;
+            Vector2 mouse = UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+            Vector2 point = RuntimePanelUtils.ScreenToPanel(_quickItemSlot.panel, new Vector2(mouse.x, Screen.height - mouse.y));
+            return _quickItemSlot.worldBound.Contains(point);
         }
 
         private void HandleInsufficientStamina()

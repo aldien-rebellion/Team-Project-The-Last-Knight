@@ -11,6 +11,9 @@ namespace TheLastKnight.Environment
         public float interactionRange = 2.5f;
         public string prompt = "F  Interact";
         protected float promptHeight = 2f;
+        protected virtual TextAnchor PromptAnchor => TextAnchor.MiddleCenter;
+        protected virtual void UpdateSelection(bool selected) { }
+        protected virtual bool UsesWorldPrompt => true;
         private TextMesh _prompt;
         protected virtual void OnEnable() { Active.Add(this); }
         protected virtual void OnDisable()
@@ -35,6 +38,12 @@ namespace TheLastKnight.Environment
                 if (candidate <= item.interactionRange && candidate < distance) { distance = candidate; closest = item; }
             }
             bool selected = closest == this && !manager.InputBlocked && !manager.Player.IsDead;
+            UpdateSelection(selected);
+            if (!UsesWorldPrompt)
+            {
+                if (selected && Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame) Interact();
+                return;
+            }
             if (_prompt == null)
             {
                 for (int i = transform.childCount - 1; i >= 0; i--)
@@ -44,7 +53,7 @@ namespace TheLastKnight.Environment
                 }
                 var go = new GameObject("Interaction prompt");
                 _prompt = go.AddComponent<TextMesh>(); _prompt.fontSize = 40; _prompt.characterSize = 0.055f;
-                _prompt.anchor = TextAnchor.MiddleCenter;
+                _prompt.anchor = PromptAnchor;
                 go.GetComponent<MeshRenderer>().sortingOrder = 110;
                 go.GetComponent<MeshRenderer>().sortingLayerName = "InGame_UI";
             }

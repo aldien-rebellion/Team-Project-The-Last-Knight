@@ -41,6 +41,7 @@ namespace TheLastKnight.Combat
         public Vector3 SpawnOffset { get => _spawnOffset; set => _spawnOffset = value; }
 
         private bool _hasDropped = false;
+        public void ResetForRespawn() => _hasDropped = false;
 
         private void Awake()
         {

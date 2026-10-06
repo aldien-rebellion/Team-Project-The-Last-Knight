@@ -2101,8 +2101,30 @@ _rb = GetComponent<Rigidbody2D>();
             }
             else
             {
-                Destroy(gameObject, _deathDestroyDelay);
+                if (_isBoss || (GetComponent<EnemyLootDrop>() is { IsBoss: true }))
+                    Destroy(gameObject, _deathDestroyDelay);
+                else
+                    StartCoroutine(HideUntilMedusaRespawn());
             }
+        }
+
+        private IEnumerator HideUntilMedusaRespawn()
+        {
+            yield return new WaitForSeconds(_deathDestroyDelay);
+            // Keep the authored enemy and its spawn point available for Medusa.
+            // Inactive enemies do not run AI, physics, or audio updates.
+            gameObject.SetActive(false);
+        }
+
+        public bool ForceRespawn()
+        {
+            if (_isBoss || _stats == null || !_stats.IsDead ||
+                (GetComponent<EnemyLootDrop>() is { IsBoss: true })) return false;
+            if (!gameObject.activeSelf) gameObject.SetActive(true);
+            StopAttack(); // Cancel any pending death or automatic respawn timer.
+            _respawnsUsed = 0;
+            RestoreAfterDeath(true);
+            return true;
         }
 
         private IEnumerator FitFlyingDeathColliderToSprite()
@@ -2163,8 +2185,14 @@ _rb = GetComponent<Rigidbody2D>();
                 yield return new WaitForSeconds(0.5f);
             }
 
-            // 5. Restore at the death location when this monster uses a revival life.
-            Vector3 respawnPosition = _respawnAtDeathPosition ? _deathPosition : _spawnPosition;
+            RestoreAfterDeath(false);
+        }
+
+        private void RestoreAfterDeath(bool forceAtSpawn)
+        {
+            // Medusa returns enemies to their original spawn; automatic revival
+            // retains authored death-position behavior.
+            Vector3 respawnPosition = !forceAtSpawn && _respawnAtDeathPosition ? _deathPosition : _spawnPosition;
             _archDemonAudio?.PlayResurrection();
             transform.position = respawnPosition;
             transform.rotation = _spawnRotation;
@@ -2190,6 +2218,7 @@ _rb = GetComponent<Rigidbody2D>();
             {
                 _stats.Revive();
             }
+            GetComponent<EnemyLootDrop>()?.ResetForRespawn();
 
             // 9. Reset animation
             SetAnimBool("IsDead", false);
@@ -2204,7 +2233,12 @@ _rb = GetComponent<Rigidbody2D>();
             }
             if (!playedRespawnEffect && _animator != null && _animator.runtimeAnimatorController != null)
             {
-                _animator.Play("Idle", 0, 0f);
+                if (!TryPlayAnimatorState("Idle"))
+                {
+                    // Some flying enemies use Flight as their default state.
+                    _animator.Rebind();
+                    _animator.Update(0f);
+                }
             }
 
             // 10. Re-enable visuals and floating UI

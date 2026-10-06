@@ -124,6 +124,7 @@ namespace TheLastKnight.UI
 
         private void BuildUI()
         {
+            RuntimeUI.EnsureEventSystem();
             _canvasObject = new GameObject("SkillCooldown_Canvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             _canvasObject.transform.SetParent(transform, false);
 
@@ -209,7 +210,15 @@ namespace TheLastKnight.UI
 
             var frameImg = frameGo.GetComponent<Image>();
             frameImg.color = new Color(0.18f, 0.22f, 0.28f, 1f); // Metallic slate-steel base
-            frameImg.raycastTarget = false;
+            frameImg.raycastTarget = true;
+            var button = slotGo.AddComponent<Button>();
+            button.navigation = new Navigation { mode = Navigation.Mode.None };
+            button.targetGraphic = frameImg;
+            button.onClick.AddListener(() =>
+            {
+                var player = TheLastKnight.Core.GameManager.Instance?.Player;
+                player?.GetComponent<PlayerInputHandler>()?.RequestUIAction(actionName);
+            });
 
             var frameOutline = frameGo.AddComponent<Outline>();
             frameOutline.effectColor = new Color(0.42f, 0.48f, 0.58f, 0.95f); // Distinct steel outline separating slots
