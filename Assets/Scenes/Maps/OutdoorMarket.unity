@@ -10047,8 +10047,8 @@ Transform:
   m_GameObject: {fileID: 200225266}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 11, y: 11, z: 0}
+  m_LocalScale: {x: 1, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 572685766}
@@ -80982,7 +80982,7 @@ MonoBehaviour:
   _baseSprintSpeed: 13
   _acceleration: 50
   _deceleration: 50
-  _baseJumpForce: 20
+  _baseJumpForce: 17.320507
   _gravity: 40
   _fallMultiplier: 1.5
   _jumpCutMultiplier: 3.125
