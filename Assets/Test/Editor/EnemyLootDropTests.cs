@@ -38,7 +38,7 @@ namespace TheLastKnight.Tests
             ("Necromancer", "drop_necromancer", "Free-Goblin-Loot-Icon39", false),
             ("Reaper", "drop_reaper", "Free-Goblin-Loot-Icon7", false),
             ("Satyr", "drop_satyr", "40", false),
-            ("ShadowDemonDragon", "drop_shadowdemondragon", "Free-Goblin-Loot-Icon9", true),
+            ("ShadowDemonDragon", "drop_shadowdemondragon", "Free-Goblin-Loot-Icon9", false),
             ("Skeleton", "drop_skeleton", "free-rpg-loot_Icon8", false),
             ("SkeletonKnight", "drop_skeletonknight", "free-rpg-loot_Icon20", false),
             ("Skullwolf", "drop_skullwolf", "free-rpg-loot_Icon32", false),
@@ -237,7 +237,8 @@ namespace TheLastKnight.Tests
                 ["drop_skullwolf"] = 738,
                 ["drop_bringerofdeath"] = 810,
                 ["drop_necromancer"] = 837,
-                ["drop_smalldragon"] = 846
+                ["drop_smalldragon"] = 846,
+                ["drop_shadowdemondragon"] = 864
             };
 
             foreach (var kvp in expectedPrices)
@@ -279,8 +280,6 @@ namespace TheLastKnight.Tests
                 ["drop_demonboss"] = 4800,
                 // Fox: Lv 80 -> MaxGold (80 * 80) = 6400
                 ["drop_fox"] = 6400,
-                // ShadowDemonDragon: Lv 96 -> MaxGold (96 * 80) = 7680
-                ["drop_shadowdemondragon"] = 7680,
                 // Volcanox: Lv 100 -> MaxGold (100 * 80) = 8000
                 ["drop_volcanox"] = 8000,
                 // MoonstoneKeeper: Lv 40 -> MaxGold (40 * 80) = 3200
