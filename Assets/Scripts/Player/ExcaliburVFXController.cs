@@ -305,7 +305,6 @@ namespace TheLastKnight.Player
         {
             isExecutingUltimate = true;
             Sprite originalSprite = (spriteRenderer != null) ? spriteRenderer.sprite : null;
-            Vector3 originalSpritePos = (spriteRenderer != null) ? spriteRenderer.transform.localPosition : Vector3.zero;
 
             #if UNITY_2D_LIGHTING
             if (globalLight2D != null)
@@ -421,12 +420,6 @@ namespace TheLastKnight.Player
                     currentActiveVortex.transform.position = GetAnchorPosition() + GetAnchorRotation() * phase2BladeOffset;
                 }
 
-                // Ensure player sprite remains completely steady during charge
-                if (spriteRenderer != null)
-                {
-                    spriteRenderer.transform.localPosition = originalSpritePos;
-                }
-
                 // Ramp emission rate from 20 to 300 over duration for all charge vortex systems (glowing + dark mana)
                 if (allVortexPS != null)
                 {
@@ -458,11 +451,6 @@ namespace TheLastKnight.Player
                 }
 
                 yield return null;
-            }
-
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.transform.localPosition = originalSpritePos;
             }
 
             if (currentActiveVortex != null)
@@ -555,7 +543,6 @@ namespace TheLastKnight.Player
 
             if (spriteRenderer != null)
             {
-                spriteRenderer.transform.localPosition = originalSpritePos;
                 if (originalSprite != null) spriteRenderer.sprite = originalSprite;
             }
 
@@ -719,11 +706,6 @@ namespace TheLastKnight.Player
             }
 
             StopAllChildParticleSystems();
-
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.transform.localPosition = Vector3.zero;
-            }
 
             isExecutingUltimate = false;
         }
