@@ -17,15 +17,15 @@ namespace TheLastKnight.Combat
         [Header("Level & Scaling Configuration")]
         [SerializeField, Min(1)] private int _level = 1;
         public int Level => _level;
-        [Tooltip("When enabled, changing Level in Inspector automatically scales MaxHealth, AttackPower, Defense, and EXP/Gold rewards based on project formula.")]
+        [Tooltip("When enabled, changing Level in Inspector automatically scales MaxHealth, AttackPower, Defense, based on project formula. Rewards always use Level and are rolled on every death.")]
         [SerializeField] private bool _useLevelScaling = false;
 
         [Header("Health & Defense")]
         [SerializeField] private float _maxHealth = 50f;
         [SerializeField] private float _defense = 0f;
         [SerializeField] private float _attackPower = 10f;
-        [SerializeField] private int _goldReward = 8;
-        [SerializeField] private int _expReward = 15;
+        [SerializeField, HideInInspector] private int _goldReward = 8;
+        [SerializeField, HideInInspector] private int _expReward = 15;
         public void SetRewards(int gold, int experience) { _goldReward = gold; _expReward = experience; }
 
         [Header("Status Effect")]
@@ -69,12 +69,6 @@ namespace TheLastKnight.Combat
             _maxHealth = _level * 50f;
             _attackPower = _level * 7f;
             _defense = _level * 1f;
-
-            int baseValue = _level * 100;
-            int minReward = Mathf.RoundToInt(baseValue * 0.30f);
-            int maxReward = Mathf.RoundToInt(baseValue * 0.80f);
-            _expReward = UnityEngine.Random.Range(minReward, maxReward + 1);
-            _goldReward = UnityEngine.Random.Range(minReward, maxReward + 1);
 
             CurrentHealth = _maxHealth;
         }
@@ -246,11 +240,9 @@ namespace TheLastKnight.Combat
 
         public void RollRewards()
         {
-            int baseValue = _level * 100;
-            int minReward = Mathf.RoundToInt(baseValue * 0.30f);
-            int maxReward = Mathf.RoundToInt(baseValue * 0.80f);
-            _expReward = UnityEngine.Random.Range(minReward, maxReward + 1);
-            _goldReward = UnityEngine.Random.Range(minReward, maxReward + 1);
+            int level = Mathf.Clamp(_level, 1, (int.MaxValue - 1) / 80);
+            _expReward = UnityEngine.Random.Range(level * 20, level * 80 + 1);
+            _goldReward = UnityEngine.Random.Range(level * 5, level * 10 + 1);
         }
 
         private void Die()
@@ -259,28 +251,11 @@ namespace TheLastKnight.Combat
             IsDead = true;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("enemy_death");
             CurrentHealth = 0f;
+            RollRewards();
             var player = FindAnyObjectByType<TheLastKnight.Stats.PlayerStats>();
             if (player != null)
             {
-                // Roll on each death so repeated enemy spawns do not always grant
-                // the same serialized reward values.
-                RollRewards();
-
                 int finalExp = _expReward;
-                // Level Difference EXP Penalty when Player Lv > Monster Lv + 5, 10
-                if (_useLevelScaling)
-                {
-                    int playerAdvantage = player.Level - _level;
-                    if (playerAdvantage >= 10)
-                    {
-                        finalExp = Mathf.Max(1, Mathf.RoundToInt(_expReward * 0.80f)); // ลด 20%
-                    }
-                    else if (playerAdvantage >= 5)
-                    {
-                        finalExp = Mathf.Max(1, Mathf.RoundToInt(_expReward * 0.90f)); // ลด 10%
-                    }
-                }
-
                 player.AddGold(_goldReward);
                 player.AddEXP(finalExp);
                 FloatingCombatText.Show(transform.position, $"+{_goldReward} Gold / +{finalExp} EXP", Color.yellow);

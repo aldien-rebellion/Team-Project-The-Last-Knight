@@ -237,39 +237,41 @@ namespace TheLastKnight.Inventory
             }
         }
 
+        // Derived from placed enemies in Assets/Scenes/Maps only; see SceneEnemyDropPrices.json.
+        // Normal loot = 30% of minimum Gold (lowest scene Level * 5), rounded .5 upward.
         private static readonly Dictionary<string, int> _monsterDropSellPrices = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
         {
-            ["drop_blueslime"] = 9,
-            ["drop_skeleton"] = 18,
-            ["drop_demonkin"] = 90,
-            ["drop_lizard"] = 90,
-            ["drop_dragon"] = 117,
-            ["drop_minotaur"] = 153,
-            ["drop_demon"] = 180,
-            ["drop_jinn"] = 225,
-            ["drop_skeletonknight"] = 288,
-            ["drop_goblin"] = 360,
-            ["drop_hoodedprotagonist"] = 405,
-            ["drop_reaper"] = 432,
-            ["drop_satyr"] = 477,
-            ["drop_archdemon"] = 522,
-            ["drop_fantasymushroom"] = 630,
-            ["drop_fireworm"] = 648,
-            ["drop_forestmushroom"] = 684,
-            ["drop_flyingeye"] = 693,
-            ["drop_undeadexecutioner"] = 711,
-            ["drop_skullwolf"] = 738,
-            ["drop_bringerofdeath"] = 810,
-            ["drop_necromancer"] = 837,
-            ["drop_smalldragon"] = 846,
-            ["drop_shadowdemondragon"] = 864,
+            ["drop_blueslime"] = 2,
+            ["drop_skeleton"] = 3,
+            ["drop_demonkin"] = 15,
+            ["drop_lizard"] = 15,
+            ["drop_dragon"] = 20,
+            ["drop_minotaur"] = 26,
+            ["drop_demon"] = 30,
+            ["drop_jinn"] = 38,
+            ["drop_skeletonknight"] = 48,
+            ["drop_goblin"] = 60,
+            ["drop_hoodedprotagonist"] = 68,
+            ["drop_reaper"] = 72,
+            ["drop_satyr"] = 80,
+            ["drop_archdemon"] = 87,
+            ["drop_fantasymushroom"] = 105,
+            ["drop_fireworm"] = 108,
+            ["drop_forestmushroom"] = 114,
+            ["drop_flyingeye"] = 116,
+            ["drop_undeadexecutioner"] = 119,
+            ["drop_skullwolf"] = 123,
+            ["drop_bringerofdeath"] = 135,
+            ["drop_necromancer"] = 140,
+            ["drop_smalldragon"] = 141,
+            ["drop_shadowdemondragon"] = 144,
 
-            // Boss drops (Equal to maximum gold drop of that boss: Level * 80)
-            ["drop_mechastonegolem"] = 1600,
-            ["drop_demonboss"] = 4800,
-            ["drop_fox"] = 6400,
-            ["drop_volcanox"] = 8000,
-            ["moonstone_shard"] = 3200
+            // Scene boss drops: maximum Gold = scene Level * 10
+            ["drop_mechastonegolem"] = 200,
+            ["drop_demonboss"] = 600,
+            ["drop_fox"] = 800,
+            ["drop_volcanox"] = 1000,
+            ["moonstone_shard"] = 400
         };
 
         public static int GetSellPrice(string itemId)

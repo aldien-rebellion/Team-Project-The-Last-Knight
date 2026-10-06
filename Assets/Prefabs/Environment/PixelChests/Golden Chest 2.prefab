@@ -113,8 +113,8 @@ MonoBehaviour:
   commonWeight: 55
   rareWeight: 40
   epicWeight: 5
-  minimumGold: 1000
-  maximumGold: 1500
+  minimumGold: 300
+  maximumGold: 450
   openingFrames:
   - {fileID: 1550362531420313822, guid: 1b1853b6a1b8f76499f1a6cfa692e406, type: 3}
   - {fileID: -3475325655549925826, guid: 3ae2221be341921478160a4ded1bd7d1, type: 3}
