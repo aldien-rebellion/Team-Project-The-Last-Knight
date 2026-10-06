@@ -106665,9 +106665,7 @@ MonoBehaviour:
   shockwaveRingPrefab: {fileID: 4124616164992726272, guid: e94ea1e7f8c61644c8b908479abafcf2, type: 3}
   shockwaveRingCount: 3
   shockwaveRingDelay: 0.05
-  groundScorchPrefab: {fileID: 8191783212911515485, guid: a854dadc51acb1f4d9f2a9bb16c0da82, type: 3}
   residualSmokePrefab: {fileID: 5477275208970478861, guid: e99e9dd55cece1c48a701524519f6459, type: 3}
-  scorchFadeDuration: 3
   phase2BladeOffset: {x: 0, y: 3.8, z: 0}
   phase3BeamOffset: {x: 1.5, y: 1.47, z: 0}
   darkScreenOverlay: {fileID: 0}
@@ -106767,7 +106765,7 @@ MonoBehaviour:
   _excaliburDamageDelay: 3.3
   _excaliburStunDuration: 2
   _excaliburVFXController: {fileID: 1794657360}
-  _drinkDuration: 2.5
+  _drinkDuration: 1.5
   _drinkCooldown: 1
   _hurtFrame1Duration: 0.25
   _hurtFrame2Duration: 0.17
@@ -106776,10 +106774,10 @@ MonoBehaviour:
   _baseSprintSpeed: 13
   _acceleration: 50
   _deceleration: 50
-  _baseJumpForce: 16
+  _baseJumpForce: 20
   _gravity: 40
   _fallMultiplier: 1.5
-  _jumpCutMultiplier: 2.5
+  _jumpCutMultiplier: 3.125
   _maxFallSpeed: 20
   _jumpBufferTime: 0.15
   _coyoteTime: 0.15

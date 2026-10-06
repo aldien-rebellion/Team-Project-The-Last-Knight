@@ -612,7 +612,7 @@ namespace TheLastKnight.Stats
             float atkSpdPerAgi = _statsTemplate != null ? _statsTemplate.attackSpeedPerAGI : 0.004f;
             int baseAgi = _statsTemplate != null ? _statsTemplate.baseAGI : 10;
             float spdPerAgi = _statsTemplate != null ? _statsTemplate.speedPerAGI : 0.12f;
-            float dashSpdPerAgi = _statsTemplate != null ? _statsTemplate.dashSpeedPerAGI : 0.15f;
+            float dashSpdPerAgi = _statsTemplate != null ? _statsTemplate.dashSpeedPerAGI : 0.05f;
 
             // STR -> ATK
             AttackPower = baseAtk + _strength * atkPerStr;

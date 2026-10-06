@@ -581,16 +581,17 @@ MonoBehaviour:
   _baseMoveSpeed: 8
   _acceleration: 50
   _deceleration: 50
-  _baseJumpForce: 16
+  _baseJumpForce: 20
   _gravity: 40
   _fallMultiplier: 1.5
-  _jumpCutMultiplier: 2.5
+  _jumpCutMultiplier: 3.125
   _maxFallSpeed: 20
   _jumpBufferTime: 0.15
   _coyoteTime: 0.15
   _baseDashSpeed: 20
   _baseDashDuration: 0.2
   _dashCooldown: 0.5
+  _drinkDuration: 1.5
 --- !u!212 &883112208
 SpriteRenderer:
   serializedVersion: 3

@@ -20,7 +20,7 @@ namespace VFX
     /// Controller for the Excalibur Morgan 5-phase Ultimate Attack sequence inspired by Fate/stay night: Heaven's Feel.
     /// Manages sprite frame swapping, background dimming, anticipation aura, ground crack sigil, charge vortex streaks, 
     /// arcing red lightning, cape turbulence/vibration, vertical climax pillar, flying debris, hit-stop, white screen flash, 
-    /// horizontal energy beam, expanding shockwave rings, ground scorch, and Cinemachine camera shake.
+    /// horizontal energy beam, expanding shockwave rings, and Cinemachine camera shake.
     /// Positioned accurately based on sprite pixel analysis for Frame 2 blade and Frame 3 thrust tip.
     /// Supports execution both in Play Mode and Edit Mode context menu cleanly.
     /// </summary>
@@ -82,9 +82,7 @@ namespace VFX
         [SerializeField] private float shockwaveRingDelay = 0.05f;
 
         [Header("Phase 5 - Post-Attack Residuals")]
-        [SerializeField] private GameObject groundScorchPrefab;
         [SerializeField] private GameObject residualSmokePrefab;
-        [SerializeField] private float scorchFadeDuration = 3.0f;
 
         [Header("Sword Blade Position Adjustments")]
         [Tooltip("Blade center offset for Phase 2 charge vortex gathering point (matches player-excalibur2.png raised sword blade height)")]
@@ -182,8 +180,6 @@ namespace VFX
                 debrisParticlesPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DebrisParticles.prefab");
             if (shockwaveRingPrefab == null)
                 shockwaveRingPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/ShockwaveRing.prefab");
-            if (groundScorchPrefab == null)
-                groundScorchPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GroundScorch.prefab");
             if (residualSmokePrefab == null)
                 residualSmokePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/ResidualSmoke.prefab");
 #endif
@@ -509,20 +505,14 @@ namespace VFX
             }
 
             // ==========================================
-            // PHASE 5: Ground Scorch & Residual Smoke (Post-Attack)
+            // PHASE 5: Residual Smoke (Post-Attack)
             // ==========================================
-            Vector3 scorchPos = GetAnchorPosition() + GetAnchorRotation() * new Vector3(phase3BeamOffset.x, -0.5f, 0f);
-
-            if (groundScorchPrefab != null)
-            {
-                GameObject activeScorch = Instantiate(groundScorchPrefab, scorchPos, GetAnchorRotation());
-                StartCoroutine(FadeScorchRoutine(activeScorch));
-            }
+            Vector3 smokePos = GetAnchorPosition() + GetAnchorRotation() * new Vector3(phase3BeamOffset.x, -0.5f, 0f);
 
             if (residualSmokePrefab != null)
             {
-                GameObject smoke1 = Instantiate(residualSmokePrefab, scorchPos, GetAnchorRotation());
-                Vector3 midPoint = scorchPos + GetAnchorRotation() * new Vector3(8f, 0f, 0f);
+                GameObject smoke1 = Instantiate(residualSmokePrefab, smokePos, GetAnchorRotation());
+                Vector3 midPoint = smokePos + GetAnchorRotation() * new Vector3(8f, 0f, 0f);
                 GameObject smoke2 = Instantiate(residualSmokePrefab, midPoint, GetAnchorRotation());
 
                 ParticleSystem[] smokePS1 = smoke1.GetComponentsInChildren<ParticleSystem>(true);
@@ -587,27 +577,6 @@ namespace VFX
                 yield return null;
             }
             SafeDestroy(ring);
-        }
-
-        private IEnumerator FadeScorchRoutine(GameObject scorch)
-        {
-            SpriteRenderer sr = scorch.GetComponent<SpriteRenderer>();
-            if (sr == null)
-            {
-                SafeDestroy(scorch, scorchFadeDuration);
-                yield break;
-            }
-
-            Color startColor = sr.color;
-            float elapsed = 0f;
-            while (elapsed < scorchFadeDuration)
-            {
-                elapsed += Time.deltaTime;
-                float t = elapsed / scorchFadeDuration;
-                sr.color = new Color(startColor.r, startColor.g, startColor.b, Mathf.Lerp(startColor.a, 0f, t));
-                yield return null;
-            }
-            SafeDestroy(scorch);
         }
 
         private IEnumerator TriggerScreenFlashRoutine()
