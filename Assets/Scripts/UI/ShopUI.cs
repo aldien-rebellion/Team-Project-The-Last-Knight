@@ -220,7 +220,8 @@ namespace TheLastKnight.UI
                     displayName = "Healing Potion",
                     category = "Potion",
                     description = "Restores 30% Max HP + 50 HP immediately. Place in Quick Slot to drink on demand with [Q].",
-                    buyPrice = 50,
+                    buyPrice = PotionPrices.GetBuyPrice("potion_heal"),
+                    customSellPrice = PotionPrices.GetSellPrice("potion_heal"),
                     initialStock = 10,
                     itemType = ShopItemType.InventoryItem
                 },
@@ -230,7 +231,8 @@ namespace TheLastKnight.UI
                     displayName = "Potion of Swiftness",
                     category = "Potion",
                     description = "Increases attack speed and movement speed (walk and sprint) by 25% for 30 seconds.",
-                    buyPrice = 75,
+                    buyPrice = PotionPrices.GetBuyPrice("potion_swiftness"),
+                    customSellPrice = PotionPrices.GetSellPrice("potion_swiftness"),
                     initialStock = 5,
                     itemType = ShopItemType.InventoryItem
                 },
@@ -240,7 +242,8 @@ namespace TheLastKnight.UI
                     displayName = "Potion of Endurance",
                     category = "Potion",
                     description = "Reduces all stamina consumption by 25% for 30 seconds.",
-                    buyPrice = 75,
+                    buyPrice = PotionPrices.GetBuyPrice("potion_endurance"),
+                    customSellPrice = PotionPrices.GetSellPrice("potion_endurance"),
                     initialStock = 5,
                     itemType = ShopItemType.InventoryItem
                 },
@@ -250,7 +253,8 @@ namespace TheLastKnight.UI
                     displayName = "Potion of Purity",
                     category = "Potion",
                     description = "Cleanses negative effects and grants complete immunity to stun and status ailments for 30 seconds.",
-                    buyPrice = 80,
+                    buyPrice = PotionPrices.GetBuyPrice("potion_purity"),
+                    customSellPrice = PotionPrices.GetSellPrice("potion_purity"),
                     initialStock = 5,
                     itemType = ShopItemType.InventoryItem
                 },
@@ -260,7 +264,8 @@ namespace TheLastKnight.UI
                     displayName = "Potion of Regeneration",
                     category = "Potion",
                     description = "Continuously regenerates 5% of Max HP per second for 30 seconds.",
-                    buyPrice = 90,
+                    buyPrice = PotionPrices.GetBuyPrice("potion_regeneration"),
+                    customSellPrice = PotionPrices.GetSellPrice("potion_regeneration"),
                     initialStock = 5,
                     itemType = ShopItemType.InventoryItem
                 },
@@ -270,7 +275,8 @@ namespace TheLastKnight.UI
                     displayName = "Potion of Might",
                     category = "Potion",
                     description = "Increases attack power by 25% for 30 seconds. Place in Quick Slot to drink on demand.",
-                    buyPrice = 75,
+                    buyPrice = PotionPrices.GetBuyPrice("potion_might"),
+                    customSellPrice = PotionPrices.GetSellPrice("potion_might"),
                     initialStock = 5,
                     itemType = ShopItemType.InventoryItem
                 },
@@ -280,7 +286,8 @@ namespace TheLastKnight.UI
                     displayName = "Potion of Fortitude",
                     category = "Potion",
                     description = "Bolsters defenses, increasing Max HP and DEF by 25% for 30 seconds.",
-                    buyPrice = 85,
+                    buyPrice = PotionPrices.GetBuyPrice("potion_fortitude"),
+                    customSellPrice = PotionPrices.GetSellPrice("potion_fortitude"),
                     initialStock = 5,
                     itemType = ShopItemType.InventoryItem
                 },
@@ -290,7 +297,8 @@ namespace TheLastKnight.UI
                     displayName = "Potion of the Undying",
                     category = "Potion",
                     description = "Forbidden elixir. Sets HP to 1 and prevents all healing, but grants complete invincibility for 30 seconds.",
-                    buyPrice = 150,
+                    buyPrice = PotionPrices.GetBuyPrice("potion_undying"),
+                    customSellPrice = PotionPrices.GetSellPrice("potion_undying"),
                     initialStock = 3,
                     itemType = ShopItemType.InventoryItem
                 },
@@ -300,7 +308,7 @@ namespace TheLastKnight.UI
                     displayName = "Rune of the Trident",
                     category = "Demonic Keystone",
                     description = "Ancient demon relic imbued with oceanic depths. Key required to unlock the Demon Castle Gate.",
-                    buyPrice = 150,
+                    buyPrice = 1000,
                     initialStock = 1,
                     itemType = ShopItemType.RuneReward,
                     runeIndex = 3
@@ -317,6 +325,13 @@ namespace TheLastKnight.UI
             }
             foreach (var item in _shopCatalog)
             {
+                if (item.itemType == ShopItemType.RuneReward) item.buyPrice = 1000;
+                int potionBuyPrice = PotionPrices.GetBuyPrice(item.id);
+                if (potionBuyPrice > 0)
+                {
+                    item.buyPrice = potionBuyPrice;
+                    item.customSellPrice = PotionPrices.GetSellPrice(item.id);
+                }
                 item.EnsureStockInitialized();
             }
             LoadSprites();
@@ -350,6 +365,13 @@ namespace TheLastKnight.UI
             }
             foreach (var item in _shopCatalog)
             {
+                if (item.itemType == ShopItemType.RuneReward) item.buyPrice = 1000;
+                int potionBuyPrice = PotionPrices.GetBuyPrice(item.id);
+                if (potionBuyPrice > 0)
+                {
+                    item.buyPrice = potionBuyPrice;
+                    item.customSellPrice = PotionPrices.GetSellPrice(item.id);
+                }
                 item.EnsureStockInitialized();
             }
 
@@ -1499,6 +1521,8 @@ namespace TheLastKnight.UI
 
         public int GetSellPrice(string itemId)
         {
+            int potionPrice = PotionPrices.GetSellPrice(itemId);
+            if (potionPrice > 0) return potionPrice;
             var config = FindCatalogItem(itemId);
             if (config != null)
             {

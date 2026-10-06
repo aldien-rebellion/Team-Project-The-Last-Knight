@@ -23,10 +23,9 @@ namespace TheLastKnight.EditorTools.PixelChests
                 result.RegisterObjectCreation(table);
                 foreach (var definition in Resources.LoadAll<ItemDefinition>("Items/Definitions").OrderBy(d => d.id))
                 {
-                    var rarity = ChestItemRarity.Common;
-                    if (definition.id == "moonstone_shard" || definition.id == "gold_pouch" || definition.id == "potion_regeneration" || definition.id == "potion_fortitude") rarity = ChestItemRarity.Rare;
-                    if (definition.id == "potion_undying" || definition.id.StartsWith("rune_")) rarity = ChestItemRarity.Epic;
-                    table.items.Add(new ChestLootTable.Entry { item = definition, rarity = rarity });
+                    table.items.Add(new ChestLootTable.Entry { item = definition,
+                        enabled = !ChestLootTable.IsExcluded(definition),
+                        rarity = ChestLootTable.RarityForValue(ChestLootTable.GetItemValue(definition)) });
                 }
                 AssetDatabase.CreateAsset(table, tablePath);
             }
