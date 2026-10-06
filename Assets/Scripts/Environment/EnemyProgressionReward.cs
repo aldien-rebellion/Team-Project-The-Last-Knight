@@ -9,6 +9,7 @@ namespace TheLastKnight.Environment
     public class EnemyProgressionReward : MonoBehaviour
     {
         public bool churchKey;
+        public bool moonstoneShard;
         public int runeIndex = -1;
         public bool finalBoss;
         private void OnEnable() { GetComponent<EnemyStats>().OnDeath += Award; }
@@ -26,6 +27,10 @@ namespace TheLastKnight.Environment
                         gameManager.State.defeatedAreaBosses = defeated = new System.Collections.Generic.List<string>();
                     if (!defeated.Contains("Church")) defeated.Add("Church");
                 }
+            }
+            if (moonstoneShard || (name != null && name.IndexOf("MoonstoneKeeper", System.StringComparison.OrdinalIgnoreCase) >= 0))
+            {
+                WorldItemPickup.Spawn(ItemRegistry.CreateItem("moonstone_shard", 1), transform.position);
             }
             if (runeIndex >= 0) DemonRuneManager.Instance.DropRune(runeIndex, transform.position);
             if (finalBoss)

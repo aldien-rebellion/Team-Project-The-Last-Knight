@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_shadowdemondragon
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_shadowdemondragon
+  displayName: Shadow Demon Eye
+  typeName: Material
+  description: "A sinister draconic eye radiating abyss energy. (\u0E14\u0E27\u0E07\u0E15\u0E32\u0E21\u0E31\u0E07\u0E01\u0E23\u0E40\u0E07\u0E32\u0E1B\u0E35\u0E28\u0E32\u0E08)"
+  icon: {fileID: -8779334188805106925, guid: a1d6fa3273953cc45a2bf4e5f92ae8ba, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 7680
+  useEffect: 0
+  effectAmount: 50

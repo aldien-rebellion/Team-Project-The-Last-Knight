@@ -46,6 +46,10 @@ namespace TheLastKnight.Combat
         private void Awake()
         {
             CurrentHealth = _maxHealth;
+            if (GetComponent<EnemyLootDrop>() == null)
+            {
+                gameObject.AddComponent<EnemyLootDrop>();
+            }
         }
 
 #if UNITY_EDITOR

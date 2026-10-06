@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_skeleton
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_skeleton
+  displayName: Skeleton Bone
+  typeName: Material
+  description: "Ancient bone shards collected from a fallen skeleton. (\u0E01\u0E23\u0E30\u0E14\u0E39\u0E01\u0E2A\u0E40\u0E01\u0E40\u0E25\u0E15\u0E31\u0E19)"
+  icon: {fileID: 4755174262664988384, guid: 28909645c060b1c44b810ee216f7b25f, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 18
+  useEffect: 0
+  effectAmount: 50

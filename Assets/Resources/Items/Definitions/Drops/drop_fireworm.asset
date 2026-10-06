@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_fireworm
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_fireworm
+  displayName: Fireworm Ember
+  typeName: Material
+  description: "A smoldering ember dropped by a Fire Worm. (\u0E40\u0E28\u0E29\u0E40\u0E1E\u0E25\u0E34\u0E07\u0E2B\u0E19\u0E2D\u0E19\u0E44\u0E1F)"
+  icon: {fileID: -8833928814623233873, guid: 0d45952a2be51e44c9a23d9cd558985a, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 648
+  useEffect: 0
+  effectAmount: 50

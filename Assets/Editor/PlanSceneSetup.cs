@@ -72,7 +72,9 @@ public static class PlanSceneSetup
         else if (name == "Church")
         {
             var boss = Enemy(root.transform, "MoonstoneKeeper", 60, -4.5f, 250, 25);
-            boss.gameObject.AddComponent<EnemyProgressionReward>().churchKey = true;
+            var reward = boss.gameObject.AddComponent<EnemyProgressionReward>();
+            reward.churchKey = true;
+            reward.moonstoneShard = true;
             var chest = Prop(root.transform, "Pentagram Chest", "Assets/sprites/Progression/RuneChest.png", 76, 16.75f);
             chest.AddComponent<RuneChest>();
         }

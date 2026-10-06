@@ -343,7 +343,7 @@ namespace TheLastKnight.Tests
                 Assert.That(Call(_quick, "GetActiveSlotIndex"), Is.EqualTo(-1));
                 Assert.That(Call(_quick, "GetActiveItem"), Is.Null);
                 Assert.That(Call(player, "CompletePotionDrink"), Is.EqualTo(false));
-                Assert.That(type.GetProperty("CurrentHP").GetValue(player), Is.EqualTo(200f));
+                Assert.That(type.GetProperty("CurrentHP").GetValue(player), Is.EqualTo(500f));
             }
             finally { UnityEngine.Object.DestroyImmediate(playerObject); }
         }

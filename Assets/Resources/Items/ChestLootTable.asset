@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.ChestLootTable
   items:
   - enabled: 1
+    item: {fileID: 11400000, guid: 378132c645f94c9b933b9af06f2427aa, type: 2}
+    rarity: 2
+  - enabled: 1
     item: {fileID: 11400000, guid: f1d33737f5d3d79448351dedddfc1a11, type: 2}
     rarity: 0
   - enabled: 1

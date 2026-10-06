@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_mechastonegolem
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_mechastonegolem
+  displayName: White-Gold Core Crystal
+  typeName: Material
+  description: "A luminous white-gold crystal powering the Mecha Stone Golem. (\u0E1C\u0E25\u0E36\u0E01\u0E04\u0E23\u0E34\u0E2A\u0E15\u0E31\u0E25\u0E17\u0E2D\u0E07\u0E04\u0E33\u0E02\u0E32\u0E27)"
+  icon: {fileID: -5553548636791380804, guid: d48153287227a3f469fa8c370a500ec4, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 1600
+  useEffect: 0
+  effectAmount: 50

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: drop_skeletonknight
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: drop_skeletonknight
+  displayName: Knight's Bone Crest
+  typeName: Material
+  description: "An armored bone fragment from an undead Skeleton Knight. (\u0E15\u0E23\u0E32\u0E01\u0E23\u0E30\u0E14\u0E39\u0E01\u0E2D\u0E31\u0E28\u0E27\u0E34\u0E19)"
+  icon: {fileID: 6877643313655226743, guid: 231e0e8588cf4074ca81d874d95e032b, type: 3}
+  category: 4
+  maxStack: 64
+  isConsumable: 0
+  sellPrice: 288
+  useEffect: 0
+  effectAmount: 50

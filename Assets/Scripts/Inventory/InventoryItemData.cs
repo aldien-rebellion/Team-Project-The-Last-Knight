@@ -28,6 +28,7 @@ namespace TheLastKnight.Inventory
         public int maxStack = 64;
         public ItemCategory category = ItemCategory.Consumable;
         public bool isConsumable = true;
+        public int sellPrice;
 
         [NonSerialized]
         private Sprite _cachedIcon;
@@ -67,6 +68,7 @@ namespace TheLastKnight.Inventory
                 maxStack = this.maxStack,
                 category = this.category,
                 isConsumable = this.isConsumable,
+                sellPrice = this.sellPrice,
                 onUse = this.onUse,
                 canUse = this.canUse
             };
