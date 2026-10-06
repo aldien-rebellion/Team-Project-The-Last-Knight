@@ -122,7 +122,7 @@ namespace TheLastKnight.Stats
         {
             if (HasEnduranceBuff && amount > 0f)
             {
-                amount *= 0.75f;
+                amount *= 0.5f;
             }
             if (amount < 0 || _currentStamina < amount || IsDead)
             {
@@ -264,7 +264,7 @@ namespace TheLastKnight.Stats
         public bool HasSwiftnessBuff => Time.time < _swiftnessExpiresAt;
         public float SwiftnessBuffRemaining => Mathf.Max(0f, _swiftnessExpiresAt - Time.time);
 
-        // Potion of Endurance (Potion 1-3): -25% all Stamina consumption for 30s
+        // Potion of Endurance (Potion 1-3): -50% all Stamina consumption for 90s
         private float _enduranceExpiresAt;
         public const float EnduranceBuffDuration = 90f;
         public void ApplyEnduranceBuff() => _enduranceExpiresAt = Time.time + EnduranceBuffDuration;
@@ -414,7 +414,7 @@ namespace TheLastKnight.Stats
                     id = "buff_endurance",
                     name = "Potion of Endurance",
                     category = "Elixir Enhancement",
-                    description = "Reduces all Stamina consumption by 25%.",
+                    description = "Reduces all Stamina consumption by 50%.",
                     remainingSeconds = rem,
                     totalDuration = EnduranceBuffDuration,
                     formattedTime = FormatMinecraftTime(rem),
