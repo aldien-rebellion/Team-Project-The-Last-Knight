@@ -89,6 +89,20 @@ public class ScenePortal : MonoBehaviour
         TheLastKnight.UI.LocalizedText.BindPrompt(popupUI);
     }
 
+    private bool IsArrivalPortal()
+    {
+        // Every portal runs Start. A lower-priority fallback must not claim an
+        // arrival meant for another portal before that portal gets its turn.
+        if (!string.IsNullOrEmpty(targetPortalExpected))
+            return string.Equals(gameObject.name, targetPortalExpected, System.StringComparison.OrdinalIgnoreCase);
+
+        if (!string.IsNullOrEmpty(lastSceneLoaded))
+            return string.Equals(targetSceneName, lastSceneLoaded, System.StringComparison.OrdinalIgnoreCase);
+
+        return (gameObject.name == "Portal_Left" && lastPortalUsed == "Portal_Right") ||
+               (gameObject.name == "Portal_Right" && lastPortalUsed == "Portal_Left");
+    }
+
     void Start()
     {
         ApplyVisibility();
@@ -101,26 +115,7 @@ public class ScenePortal : MonoBehaviour
         // Handle spawning player
         if (!string.IsNullOrEmpty(lastPortalUsed) || !string.IsNullOrEmpty(lastSceneLoaded) || !string.IsNullOrEmpty(targetPortalExpected))
         {
-            bool isMatchingPortal = false;
-
-            // 1. Explicit expected portal name match
-            if (!string.IsNullOrEmpty(targetPortalExpected) && string.Equals(this.gameObject.name, targetPortalExpected, System.StringComparison.OrdinalIgnoreCase))
-            {
-                isMatchingPortal = true;
-            }
-            // 2. Exact match if this portal points back to the scene we just came from
-            else if (string.IsNullOrEmpty(targetPortalExpected) && !string.IsNullOrEmpty(lastSceneLoaded) && string.Equals(this.targetSceneName, lastSceneLoaded, System.StringComparison.OrdinalIgnoreCase))
-            {
-                isMatchingPortal = true;
-            }
-            // 3. Classic opposite name match: Left <-> Right
-            else if ((this.gameObject.name == "Portal_Left" && lastPortalUsed == "Portal_Right") ||
-                     (this.gameObject.name == "Portal_Right" && lastPortalUsed == "Portal_Left"))
-            {
-                isMatchingPortal = true;
-            }
-
-            if (isMatchingPortal)
+            if (IsArrivalPortal())
             {
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 if (player != null)
