@@ -31,6 +31,8 @@ namespace TheLastKnight.Combat
         private EnemyController _enemyController;
         private float _stunEffectStart;
         private float _stunEffectUntil;
+        private LineRenderer[] _defenseDownArrows;
+        private float _recoveryUntil;
         public bool IsStaggered => Time.time < _staggerUntil;
         public bool IsWindingUp => _windingUp;
         public float Progress => Mathf.Clamp01((Time.time - _start) / WindupDuration);
@@ -93,6 +95,7 @@ namespace TheLastKnight.Combat
         private void LateUpdate()
         {
             UpdateStunEffect();
+            UpdateDefenseDownArrows();
             bool visible = _windingUp && !GetComponent<EnemyStats>().IsDead && TheLastKnight.Core.GameDifficultyManager.ShowHelpers;
             if (_ring == null && visible)
             {
@@ -105,7 +108,56 @@ namespace TheLastKnight.Combat
             DrawRing(_target, 0.35f);
         }
 
-        private void StartStunEffect()
+        public void ShowVulnerableRecovery(float duration)
+        {
+            _recoveryUntil = Time.time + duration;
+            StartStunEffect(duration);
+            if (_defenseDownArrows == null)
+            {
+                _defenseDownArrows = new LineRenderer[3];
+                for (int i = 0; i < _defenseDownArrows.Length; i++)
+                {
+                    var arrow = CreateRing("Defense down arrow " + (i + 1));
+                    arrow.loop = false;
+                    arrow.positionCount = 5;
+                    arrow.widthMultiplier = 0.055f;
+                    arrow.startColor = arrow.endColor = Color.red;
+                    _defenseDownArrows[i] = arrow;
+                }
+            }
+            UpdateDefenseDownArrows();
+        }
+
+        public void HideVulnerableRecovery()
+        {
+            if (_recoveryUntil > Time.time) _stunEffectUntil = Time.time;
+            _recoveryUntil = 0f;
+            UpdateStunEffect();
+            UpdateDefenseDownArrows();
+        }
+
+        private void UpdateDefenseDownArrows()
+        {
+            if (_defenseDownArrows == null) return;
+            bool active = isActiveAndEnabled && Time.time < _recoveryUntil
+                && !GetComponent<EnemyStats>().IsDead;
+            Vector3 center = GetVisualCenter();
+            for (int i = 0; i < _defenseDownArrows.Length; i++)
+            {
+                var arrow = _defenseDownArrows[i];
+                arrow.enabled = active;
+                if (!active) continue;
+                Vector3 tip = center + new Vector3((i - 1) * 0.3f,
+                    -0.15f + Mathf.Sin(Time.time * 6f) * 0.04f, 0f);
+                arrow.SetPosition(0, tip + Vector3.up * 0.4f);
+                arrow.SetPosition(1, tip);
+                arrow.SetPosition(2, tip + new Vector3(-0.11f, 0.14f, 0f));
+                arrow.SetPosition(3, tip);
+                arrow.SetPosition(4, tip + new Vector3(0.11f, 0.14f, 0f));
+            }
+        }
+
+        private void StartStunEffect(float duration = -1f)
         {
             if (_stunEffectFrames == null || _stunEffectFrames.Length == 0) return;
             if (_stunSprites == null)
@@ -129,7 +181,7 @@ namespace TheLastKnight.Combat
                 _stunRenderer.sortingOrder = 102;
             }
             _stunEffectStart = Time.time;
-            _stunEffectUntil = Time.time + _stunEffectDuration;
+            _stunEffectUntil = Time.time + (duration >= 0f ? duration : _stunEffectDuration);
             UpdateStunEffect();
         }
 
@@ -189,6 +241,9 @@ namespace TheLastKnight.Combat
 
         private void OnDestroy()
         {
+            if (_defenseDownArrows != null)
+                foreach (var arrow in _defenseDownArrows)
+                    if (arrow != null) Destroy(arrow.sharedMaterial);
             if (_ring != null) Destroy(_ring.sharedMaterial);
             if (_target != null) Destroy(_target.sharedMaterial);
             if (_stunSprites != null)
