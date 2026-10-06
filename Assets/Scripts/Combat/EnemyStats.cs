@@ -24,6 +24,10 @@ namespace TheLastKnight.Combat
         [SerializeField] private float _maxHealth = 50f;
         [SerializeField] private float _defense = 0f;
         [SerializeField] private float _attackPower = 10f;
+        [Tooltip("Max health fraction consumed once when an attack starts. Zero disables the cost.")]
+        [SerializeField, Range(0f, 1f)] private float _attackHealthCostPercent;
+        [Tooltip("Attack health costs cannot reduce health below this fraction of max health.")]
+        [SerializeField, Range(0f, 1f)] private float _attackHealthCostFloorPercent = 0.3f;
         [Tooltip("Increase damage received from players by their missing HP percentage (50% HP remaining = 50% more damage).")]
         [SerializeField] private bool _scalePlayerDamageWithMissingHealth;
         [SerializeField, HideInInspector] private int _goldReward = 8;
@@ -101,6 +105,19 @@ namespace TheLastKnight.Combat
                     ClearStatus();
                 }
             }
+        }
+
+        public void ConsumeAttackHealth()
+        {
+            if (IsDead || _attackHealthCostPercent <= 0f || _maxHealth <= 0f) return;
+
+            float healthFloor = _maxHealth * Mathf.Clamp01(_attackHealthCostFloorPercent);
+            if (CurrentHealth <= healthFloor) return;
+
+            CurrentHealth = Mathf.Max(healthFloor,
+                CurrentHealth - _maxHealth * Mathf.Clamp01(_attackHealthCostPercent));
+            // This is an attack cost, so it must not trigger hit reactions or defense reduction.
+            OnHealthChanged?.Invoke(CurrentHealth, _maxHealth);
         }
 
         public void TakeDamage(DamageData damageData)
