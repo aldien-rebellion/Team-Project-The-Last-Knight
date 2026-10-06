@@ -106774,7 +106774,7 @@ MonoBehaviour:
   _baseSprintSpeed: 13
   _acceleration: 50
   _deceleration: 50
-  _baseJumpForce: 20
+  _baseJumpForce: 17.320507
   _gravity: 40
   _fallMultiplier: 1.5
   _jumpCutMultiplier: 3.125
