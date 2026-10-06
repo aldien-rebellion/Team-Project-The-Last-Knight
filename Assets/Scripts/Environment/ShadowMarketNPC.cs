@@ -9,7 +9,6 @@ namespace TheLastKnight.Environment
     {
         private Animator _traderAnimator;
         private bool _openingShop;
-        private bool _greetingShown;
 
         private void Awake()
         {
@@ -37,12 +36,12 @@ namespace TheLastKnight.Environment
         {
             if (GameManager.Instance.InputBlocked || _openingShop) return;
 
-            if (!_greetingShown)
+            if (!GameManager.Instance.State.shadowMarketGreetingSeen)
             {
-                _greetingShown = true;
                 var dialogue = GameManager.Instance.GetComponent<StoryDialogueUI>();
                 if (dialogue != null)
                 {
+                    GameManager.Instance.State.shadowMarketGreetingSeen = true;
                     _openingShop = true;
                     dialogue.Show("THE SHADOW MARKET", new[]
                     {

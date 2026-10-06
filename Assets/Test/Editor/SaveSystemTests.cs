@@ -48,6 +48,7 @@ namespace TheLastKnight.Tests
         public void AtomicSave_RoundTripsEveryProgressionField()
         {
             var original = State();
+            _dataType.GetField("shadowMarketGreetingSeen").SetValue(original, true);
             Assert.That(Save(original), Is.True);
             Assert.That(File.Exists(_path + ".tmp"), Is.False);
             Assert.That(Load(out var loaded), Is.True);

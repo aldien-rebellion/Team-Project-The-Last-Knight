@@ -41,6 +41,7 @@ namespace TheLastKnight.Core
         public bool pentagramRuneChestOpened;
         public List<string> openedLootChests = new List<string>();
         public bool churchKey, introSeen, victory, demonCastleGateUnlocked;
+        public bool shadowMarketGreetingSeen;
         public GameDifficulty difficulty;
         public bool inventoryInitialized;
         public SavedItemData cursorItem;
