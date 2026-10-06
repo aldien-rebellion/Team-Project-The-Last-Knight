@@ -1,0 +1,294 @@
+{
+  "rows": [
+    {
+      "id": "drop_archdemon",
+      "scene": "Assets/Scenes/Maps/OutdoorMarket.unity",
+      "enemy": "ArchDemon",
+      "level": 58,
+      "maximumLevel": 58,
+      "count": 1,
+      "price": 87,
+      "boss": false
+    },
+    {
+      "id": "drop_blueslime",
+      "scene": "Assets/Scenes/Maps/CityCenter.unity",
+      "enemy": "BlueSlime (1)",
+      "level": 1,
+      "maximumLevel": 5,
+      "count": 4,
+      "price": 2,
+      "boss": false
+    },
+    {
+      "id": "drop_bringerofdeath",
+      "scene": "Assets/Scenes/Maps/DemonCastle.unity",
+      "enemy": "BringerOfDeath",
+      "level": 90,
+      "maximumLevel": 90,
+      "count": 1,
+      "price": 135,
+      "boss": false
+    },
+    {
+      "id": "drop_demon",
+      "scene": "Assets/Scenes/Maps/Church.unity",
+      "enemy": "Demon",
+      "level": 20,
+      "maximumLevel": 20,
+      "count": 1,
+      "price": 30,
+      "boss": false
+    },
+    {
+      "id": "drop_demonboss",
+      "scene": "Assets/Scenes/Maps/OutdoorMarket.unity",
+      "enemy": "DemonBoss",
+      "level": 60,
+      "maximumLevel": 60,
+      "count": 1,
+      "price": 600,
+      "boss": true
+    },
+    {
+      "id": "drop_demonkin",
+      "scene": "Assets/Scenes/Maps/CityCenter.unity",
+      "enemy": "DemonKin",
+      "level": 10,
+      "maximumLevel": 16,
+      "count": 4,
+      "price": 15,
+      "boss": false
+    },
+    {
+      "id": "drop_dragon",
+      "scene": "Assets/Scenes/Maps/CityCenter.unity",
+      "enemy": "Dragon",
+      "level": 13,
+      "maximumLevel": 37,
+      "count": 2,
+      "price": 20,
+      "boss": false
+    },
+    {
+      "id": "drop_fantasymushroom",
+      "scene": "Assets/Scenes/Maps/SuburbToForest.unity",
+      "enemy": "FantasyMushroom",
+      "level": 70,
+      "maximumLevel": 96,
+      "count": 2,
+      "price": 105,
+      "boss": false
+    },
+    {
+      "id": "drop_fireworm",
+      "scene": "Assets/Scenes/Maps/SuburbToForest.unity",
+      "enemy": "FireWorm",
+      "level": 72,
+      "maximumLevel": 85,
+      "count": 2,
+      "price": 108,
+      "boss": false
+    },
+    {
+      "id": "drop_flyingeye",
+      "scene": "Assets/Scenes/Maps/SuburbToForest.unity",
+      "enemy": "FlyingEye",
+      "level": 77,
+      "maximumLevel": 84,
+      "count": 2,
+      "price": 116,
+      "boss": false
+    },
+    {
+      "id": "drop_forestmushroom",
+      "scene": "Assets/Scenes/Maps/SuburbToForest.unity",
+      "enemy": "ForestMushroom",
+      "level": 76,
+      "maximumLevel": 76,
+      "count": 1,
+      "price": 114,
+      "boss": false
+    },
+    {
+      "id": "drop_fox",
+      "scene": "Assets/Scenes/Maps/SuburbToForest.unity",
+      "enemy": "Fox",
+      "level": 80,
+      "maximumLevel": 80,
+      "count": 1,
+      "price": 800,
+      "boss": true
+    },
+    {
+      "id": "drop_goblin",
+      "scene": "Assets/Scenes/Maps/OutdoorMarket.unity",
+      "enemy": "Goblin",
+      "level": 40,
+      "maximumLevel": 95,
+      "count": 4,
+      "price": 60,
+      "boss": false
+    },
+    {
+      "id": "drop_hoodedprotagonist",
+      "scene": "Assets/Scenes/Maps/OutdoorMarket.unity",
+      "enemy": "HoodedProtagonist",
+      "level": 45,
+      "maximumLevel": 45,
+      "count": 1,
+      "price": 68,
+      "boss": false
+    },
+    {
+      "id": "drop_jinn",
+      "scene": "Assets/Scenes/Maps/Church.unity",
+      "enemy": "Jinn",
+      "level": 25,
+      "maximumLevel": 25,
+      "count": 1,
+      "price": 38,
+      "boss": false
+    },
+    {
+      "id": "drop_lizard",
+      "scene": "Assets/Scenes/Maps/CityCenter.unity",
+      "enemy": "Lizard",
+      "level": 10,
+      "maximumLevel": 15,
+      "count": 2,
+      "price": 15,
+      "boss": false
+    },
+    {
+      "id": "drop_mechastonegolem",
+      "scene": "Assets/Scenes/Maps/CityCenter.unity",
+      "enemy": "MechaStoneGolem",
+      "level": 20,
+      "maximumLevel": 20,
+      "count": 1,
+      "price": 200,
+      "boss": true
+    },
+    {
+      "id": "drop_minotaur",
+      "scene": "Assets/Scenes/Maps/CityCenter.unity",
+      "enemy": "Minotaur_1",
+      "level": 17,
+      "maximumLevel": 67,
+      "count": 4,
+      "price": 26,
+      "boss": false
+    },
+    {
+      "id": "drop_necromancer",
+      "scene": "Assets/Scenes/Maps/DemonCastle.unity",
+      "enemy": "Necromancer",
+      "level": 93,
+      "maximumLevel": 93,
+      "count": 1,
+      "price": 140,
+      "boss": false
+    },
+    {
+      "id": "drop_reaper",
+      "scene": "Assets/Scenes/Maps/OutdoorMarket.unity",
+      "enemy": "Reaper",
+      "level": 48,
+      "maximumLevel": 48,
+      "count": 1,
+      "price": 72,
+      "boss": false
+    },
+    {
+      "id": "drop_satyr",
+      "scene": "Assets/Scenes/Maps/OutdoorMarket.unity",
+      "enemy": "Satyr",
+      "level": 53,
+      "maximumLevel": 53,
+      "count": 1,
+      "price": 80,
+      "boss": false
+    },
+    {
+      "id": "drop_shadowdemondragon",
+      "scene": "Assets/Scenes/Maps/DemonCastle.unity",
+      "enemy": "ShadowDemonDragon",
+      "level": 96,
+      "maximumLevel": 96,
+      "count": 1,
+      "price": 144,
+      "boss": false
+    },
+    {
+      "id": "drop_skeleton",
+      "scene": "Assets/Scenes/Maps/CityCenter.unity",
+      "enemy": "Skeleton",
+      "level": 2,
+      "maximumLevel": 7,
+      "count": 4,
+      "price": 3,
+      "boss": false
+    },
+    {
+      "id": "drop_skeletonknight",
+      "scene": "Assets/Scenes/Maps/Church.unity",
+      "enemy": "SkeletonKnight",
+      "level": 32,
+      "maximumLevel": 96,
+      "count": 2,
+      "price": 48,
+      "boss": false
+    },
+    {
+      "id": "drop_skullwolf",
+      "scene": "Assets/Scenes/Maps/DemonCastle.unity",
+      "enemy": "Skullwolf (1)",
+      "level": 82,
+      "maximumLevel": 94,
+      "count": 2,
+      "price": 123,
+      "boss": false
+    },
+    {
+      "id": "drop_smalldragon",
+      "scene": "Assets/Scenes/Maps/DemonCastle.unity",
+      "enemy": "Small_dragon",
+      "level": 94,
+      "maximumLevel": 94,
+      "count": 1,
+      "price": 141,
+      "boss": false
+    },
+    {
+      "id": "drop_undeadexecutioner",
+      "scene": "Assets/Scenes/Maps/SuburbToForest.unity",
+      "enemy": "UndeadExecutioner",
+      "level": 79,
+      "maximumLevel": 79,
+      "count": 1,
+      "price": 119,
+      "boss": false
+    },
+    {
+      "id": "drop_volcanox",
+      "scene": "Assets/Scenes/Maps/DemonCastle.unity",
+      "enemy": "Volcanox",
+      "level": 100,
+      "maximumLevel": 100,
+      "count": 1,
+      "price": 1000,
+      "boss": true
+    },
+    {
+      "id": "moonstone_shard",
+      "scene": "Assets/Scenes/Maps/Church.unity",
+      "enemy": "MoonstoneKeeper",
+      "level": 40,
+      "maximumLevel": 40,
+      "count": 1,
+      "price": 400,
+      "boss": true
+    }
+  ]
+}

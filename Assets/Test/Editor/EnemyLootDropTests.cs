@@ -9,6 +9,45 @@ namespace TheLastKnight.Tests
 {
     public class EnemyLootDropTests
     {
+        [TestCase(1)]
+        [TestCase(40)]
+        [TestCase(100)]
+        public void EveryDeath_RollsRewardsFromCurrentInstanceLevel(int level)
+        {
+            var randomState = UnityEngine.Random.state;
+            var go = new GameObject("Reward test");
+            try
+            {
+                var type = FindType("TheLastKnight.Combat.EnemyStats");
+                var stats = go.AddComponent(type);
+                type.GetField("_level", InstanceMembers).SetValue(stats, level);
+                var goldField = type.GetField("_goldReward", InstanceMembers);
+                var expField = type.GetField("_expReward", InstanceMembers);
+                var pairs = new HashSet<string>();
+                UnityEngine.Random.InitState(915);
+                for (int i = 0; i < 50; i++)
+                {
+                    type.GetMethod("Revive").Invoke(stats, null);
+                    goldField.SetValue(stats, -1);
+                    expField.SetValue(stats, -1);
+                    type.GetMethod("Die", InstanceMembers).Invoke(stats, null);
+                    int gold = (int)goldField.GetValue(stats);
+                    int exp = (int)expField.GetValue(stats);
+                    Assert.That(gold, Is.InRange(level * 5, level * 10));
+                    Assert.That(exp, Is.InRange(level * 20, level * 80));
+                    pairs.Add(gold + ":" + exp);
+                    type.GetMethod("Die", InstanceMembers).Invoke(stats, null);
+                    Assert.That(goldField.GetValue(stats), Is.EqualTo(gold), "Dead enemies cannot roll twice.");
+                }
+                Assert.Greater(pairs.Count, 1, "Rewards must vary across kills.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+                UnityEngine.Random.state = randomState;
+            }
+        }
+
         private const BindingFlags InstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         private const BindingFlags StaticMembers = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -203,7 +242,7 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
-        public void All23NormalMonsterDropItems_HaveExpectedSellPrices()
+        public void All24NormalMonsterDropItems_HaveSceneBasedSellPrices()
         {
             var registryType = FindType("TheLastKnight.Inventory.ItemRegistry");
             Assert.IsNotNull(registryType, "ItemRegistry type must exist.");
@@ -215,30 +254,30 @@ namespace TheLastKnight.Tests
 
             var expectedPrices = new Dictionary<string, int>
             {
-                ["drop_blueslime"] = 9,
-                ["drop_skeleton"] = 18,
-                ["drop_demonkin"] = 90,
-                ["drop_lizard"] = 90,
-                ["drop_dragon"] = 117,
-                ["drop_minotaur"] = 153,
-                ["drop_demon"] = 180,
-                ["drop_jinn"] = 225,
-                ["drop_skeletonknight"] = 288,
-                ["drop_goblin"] = 360,
-                ["drop_hoodedprotagonist"] = 405,
-                ["drop_reaper"] = 432,
-                ["drop_satyr"] = 477,
-                ["drop_archdemon"] = 522,
-                ["drop_fantasymushroom"] = 630,
-                ["drop_fireworm"] = 648,
-                ["drop_forestmushroom"] = 684,
-                ["drop_flyingeye"] = 693,
-                ["drop_undeadexecutioner"] = 711,
-                ["drop_skullwolf"] = 738,
-                ["drop_bringerofdeath"] = 810,
-                ["drop_necromancer"] = 837,
-                ["drop_smalldragon"] = 846,
-                ["drop_shadowdemondragon"] = 864
+                ["drop_blueslime"] = 2,
+                ["drop_skeleton"] = 3,
+                ["drop_demonkin"] = 15,
+                ["drop_lizard"] = 15,
+                ["drop_dragon"] = 20,
+                ["drop_minotaur"] = 26,
+                ["drop_demon"] = 30,
+                ["drop_jinn"] = 38,
+                ["drop_skeletonknight"] = 48,
+                ["drop_goblin"] = 60,
+                ["drop_hoodedprotagonist"] = 68,
+                ["drop_reaper"] = 72,
+                ["drop_satyr"] = 80,
+                ["drop_archdemon"] = 87,
+                ["drop_fantasymushroom"] = 105,
+                ["drop_fireworm"] = 108,
+                ["drop_forestmushroom"] = 114,
+                ["drop_flyingeye"] = 116,
+                ["drop_undeadexecutioner"] = 119,
+                ["drop_skullwolf"] = 123,
+                ["drop_bringerofdeath"] = 135,
+                ["drop_necromancer"] = 140,
+                ["drop_smalldragon"] = 141,
+                ["drop_shadowdemondragon"] = 144
             };
 
             foreach (var kvp in expectedPrices)
@@ -274,16 +313,11 @@ namespace TheLastKnight.Tests
 
             var expectedBossPrices = new Dictionary<string, int>
             {
-                // MechaStoneGolem: Lv 20 -> MaxGold (20 * 80) = 1600
-                ["drop_mechastonegolem"] = 1600,
-                // DemonBoss: Lv 60 -> MaxGold (60 * 80) = 4800
-                ["drop_demonboss"] = 4800,
-                // Fox: Lv 80 -> MaxGold (80 * 80) = 6400
-                ["drop_fox"] = 6400,
-                // Volcanox: Lv 100 -> MaxGold (100 * 80) = 8000
-                ["drop_volcanox"] = 8000,
-                // MoonstoneKeeper: Lv 40 -> MaxGold (40 * 80) = 3200
-                ["moonstone_shard"] = 3200
+                ["drop_mechastonegolem"] = 200,
+                ["drop_demonboss"] = 600,
+                ["drop_fox"] = 800,
+                ["drop_volcanox"] = 1000,
+                ["moonstone_shard"] = 400
             };
 
             foreach (var kvp in expectedBossPrices)

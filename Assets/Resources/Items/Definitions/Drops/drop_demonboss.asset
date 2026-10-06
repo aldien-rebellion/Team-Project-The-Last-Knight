@@ -20,6 +20,6 @@ MonoBehaviour:
   category: 4
   maxStack: 64
   isConsumable: 0
-  sellPrice: 4800
+  sellPrice: 600
   useEffect: 0
   effectAmount: 50
