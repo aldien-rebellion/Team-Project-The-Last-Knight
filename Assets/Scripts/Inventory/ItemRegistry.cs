@@ -262,12 +262,12 @@ namespace TheLastKnight.Inventory
             ["drop_bringerofdeath"] = 810,
             ["drop_necromancer"] = 837,
             ["drop_smalldragon"] = 846,
+            ["drop_shadowdemondragon"] = 864,
 
             // Boss drops (Equal to maximum gold drop of that boss: Level * 80)
             ["drop_mechastonegolem"] = 1600,
             ["drop_demonboss"] = 4800,
             ["drop_fox"] = 6400,
-            ["drop_shadowdemondragon"] = 7680,
             ["drop_volcanox"] = 8000,
             ["moonstone_shard"] = 3200
         };

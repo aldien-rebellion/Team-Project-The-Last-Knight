@@ -143,7 +143,6 @@ namespace TheLastKnight.Combat
             return clean.Equals("DemonBoss", StringComparison.OrdinalIgnoreCase)
                 || clean.Equals("Volcanox", StringComparison.OrdinalIgnoreCase)
                 || clean.Equals("MechaStoneGolem", StringComparison.OrdinalIgnoreCase)
-                || clean.Equals("ShadowDemonDragon", StringComparison.OrdinalIgnoreCase)
                 || clean.Equals("Fox", StringComparison.OrdinalIgnoreCase)
                 || clean.IndexOf("Boss", StringComparison.OrdinalIgnoreCase) >= 0;
         }

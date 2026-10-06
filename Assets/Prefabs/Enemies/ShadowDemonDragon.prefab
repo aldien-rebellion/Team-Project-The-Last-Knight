@@ -233,7 +233,7 @@ MonoBehaviour:
   _flipSpriteInsteadOfTransformScale: 0
   _facingFlipDeadZone: 0
   _avoidTeleportOnReturn: 0
-  _isBoss: 1
+  _isBoss: 0
   _leashRangeMultiplier: 2
   _groundLayer:
     serializedVersion: 2
@@ -450,7 +450,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
   _dropItem: {fileID: 11400000, guid: 622367ca606c39048acbe59b2730de1c, type: 2}
   _dropItemId: drop_shadowdemondragon
-  _isBoss: 1
+  _isBoss: 0
   _dropChance: 0.33
   _dropRolls: 3
   _bossGuaranteedCount: 1
