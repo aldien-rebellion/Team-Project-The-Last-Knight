@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7356394897853624703}
   - component: {fileID: 9020000000000000000}
   - component: {fileID: 9010000000000000002}
+  - component: {fileID: 9045771545483662430}
   m_Layer: 0
   m_Name: DemonBoss
   m_TagString: Untagged
@@ -223,6 +224,7 @@ MonoBehaviour:
   _chaseSpeed: 3.6
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -239,6 +241,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 20
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
@@ -248,6 +252,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -258,6 +264,7 @@ MonoBehaviour:
   _basicAttackAnimState: Attack_01
   _basicAttackAnimStates: []
   _basicAttackDamageDelay: 0
+  _basicAttackActionDuration: 0
   _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
@@ -269,6 +276,17 @@ MonoBehaviour:
   _skills:
   - skillName: DualClawCleave
     animationName: Attack_02
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 1.8
     cooldown: 6
@@ -285,9 +303,21 @@ MonoBehaviour:
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
     requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   - skillName: EarthquakeJump
     animationName: Jump
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 1.6
     cooldown: 10
@@ -304,9 +334,21 @@ MonoBehaviour:
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
     requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   - skillName: TerrifyingRoar
     animationName: Shout
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 0.8
     cooldown: 15
@@ -323,6 +365,7 @@ MonoBehaviour:
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
     requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   _cycleNonParryableSkills: 0
   _waitForAttackAnimationToFinish: 1
@@ -340,6 +383,23 @@ MonoBehaviour:
   _bringToFrontWhileAttacking: 1
   _attackSortingOrder: 10
   _attackSortingLayerName: Player
+--- !u!114 &9020000000000000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2162868096805359234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b54256f4fcb42b5b03258f650efb949, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.DemonBossAudioController
+  _attackClip: {fileID: 8300000, guid: 1b5360df786674f45add5196e803266b, type: 3}
+  _roarClip: {fileID: 8300000, guid: e0c79a0c82c30b841b0eb3d9cac72c25, type: 3}
+  _footstepClip: {fileID: 8300000, guid: 80cf83038e96c32468e73ecef7d8c3ab, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+  _footstepInterval: 0.55
 --- !u!114 &9010000000000000002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,23 +414,112 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 4803261529313453536}
   _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 0
   _centerLocalOffset: {x: 0, y: 0}
---- !u!114 &9020000000000000000
-MonoBehaviour:
+  _stunEffectFrames: []
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0
+  _stunEffectHeadXOffset: 0
+  _stunEffectHeadYFraction: 0
+  _stunEffectHeadYOffset: 0
+  _stunEffectWorldScale: 0.5
+--- !u!82 &9045771545483662430
+AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2162868096805359234}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b54256f4fcb42b5b03258f650efb949, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.DemonBossAudioController
-  _attackClip: {fileID: 8300000, guid: 1b5360df786674f45add5196e803266b, type: 3}
-  _roarClip: {fileID: 8300000, guid: e0c79a0c82c30b841b0eb3d9cac72c25, type: 3}
-  _footstepClip: {fileID: 8300000, guid: 80cf83038e96c32468e73ecef7d8c3ab, type: 3}
-  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2397213924959086363
 GameObject:
   m_ObjectHideFlags: 0

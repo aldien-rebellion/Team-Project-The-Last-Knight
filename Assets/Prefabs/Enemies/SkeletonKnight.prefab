@@ -276,11 +276,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 32
   _useLevelScaling: 1
-  _maxHealth: 2400
+  _maxHealth: 1600
   _defense: 32
-  _attackPower: 320
-  _goldReward: 955
-  _expReward: 905
+  _attackPower: 224
+  _goldReward: 2125
+  _expReward: 989
   _currentStatus: 0
 --- !u!114 &4631645671950882567
 MonoBehaviour:
@@ -298,6 +298,7 @@ MonoBehaviour:
   _chaseSpeed: 4.2
   _patrolDistance: 5
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -314,6 +315,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 7
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
@@ -323,6 +326,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -398,6 +403,120 @@ MonoBehaviour:
   _bringToFrontWhileAttacking: 0
   _attackSortingOrder: 1
   _attackSortingLayerName: 
+--- !u!82 &9100000000000000101
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2832432180080801224}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 2
+  MaxDistance: 24
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &9100000000000000102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2832432180080801224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd1886c2f1c47bdb9ec547a3cc810c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.SkeletonKnightAudioController
+  _sideSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _forwardSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _downSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _fullComboClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
 --- !u!1 &6384791484603017950
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,48 +775,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!82 &9100000000000000101
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2832432180080801224}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 0
-  MinDistance: 2
-  MaxDistance: 24
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
---- !u!114 &9100000000000000102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2832432180080801224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbd1886c2f1c47bdb9ec547a3cc810c1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.SkeletonKnightAudioController
-  _sideSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
-  _forwardSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
-  _downSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
-  _fullComboClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
-  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}

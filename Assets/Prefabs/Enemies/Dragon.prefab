@@ -120,7 +120,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage:
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca6a776f8acda4148b73e8d3a2398074, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 1
   _useLevelScaling: 0
@@ -219,12 +219,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a223c0ce5d98f3a4c88422488ea4ea4a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.EnemyController
   _patrolSpeed: 2
   _chaseSpeed: 4
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -241,6 +242,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 9
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 1.6
   _useColliderEdgeAttackDistance: 1
@@ -250,6 +253,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -260,6 +265,7 @@ MonoBehaviour:
   _basicAttackAnimState: Attack
   _basicAttackAnimStates: []
   _basicAttackDamageDelay: 0.25
+  _basicAttackActionDuration: 0
   _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
@@ -267,10 +273,21 @@ MonoBehaviour:
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 0
   _basicGuardEveryNAttacks: 0
-  _basicGuardSkillName:
+  _basicGuardSkillName: 
   _skills:
   - skillName: FireBreath
     animationName: FireBreath
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
+    skipAnticipation: 0
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 1.5
     cooldown: 4.5
@@ -287,6 +304,7 @@ MonoBehaviour:
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
     requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   _cycleNonParryableSkills: 0
   _waitForAttackAnimationToFinish: 1
@@ -303,7 +321,7 @@ MonoBehaviour:
   _respawnAtDeathPosition: 0
   _bringToFrontWhileAttacking: 0
   _attackSortingOrder: 1
-  _attackSortingLayerName:
+  _attackSortingLayerName: 
 --- !u!114 &9010000000000000002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,10 +332,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 7772889898294196300}
   _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 0
   _centerLocalOffset: {x: 0, y: 0}
   _stunEffectFrames:
   - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
@@ -327,6 +346,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
   _stunEffectDuration: 2
   _stunEffectHeadXFraction: 0.3
+  _stunEffectHeadXOffset: 0
   _stunEffectHeadYFraction: 0.4
   _stunEffectHeadYOffset: 0.65
   _stunEffectWorldScale: 0.5
@@ -339,7 +359,7 @@ AudioSource:
   m_GameObject: {fileID: 495584277032447069}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -437,7 +457,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dea154cf1ac5442d8d88f9102be9456c, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.DragonSfxController
   _biteClip: {fileID: 8300000, guid: a29029daae673b04a93b6a5a5a0ef96a, type: 3}
   _fireBreathClip: {fileID: 8300000, guid: e3c232aa18fa52f469052ad465176fc8, type: 3}
@@ -445,6 +465,11 @@ MonoBehaviour:
   _biteVolume: 1
   _fireBreathVolume: 1
   _playerHitVolume: 0.9
+  _attackAudioSource: {fileID: 0}
+  _attackStartOffset: 0
+  _attackEndOffset: 3
+  _attackFadeOutDuration: 0.3
+  _attackPitch: 1
 --- !u!1 &4723490944389159455
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +559,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b524f0b391f3dc54c8511d3f68d030c2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyHitbox2D
   _damage: 35
   _damageType: 0
@@ -597,7 +622,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.75}
@@ -690,7 +715,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 731b67cd6340d6b4c936763f3fac4db7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.FloatingHealthBar
   _targetStats: {fileID: 9180951498586121379}
   _healthBarFill: {fileID: 8975489093641923817}
@@ -758,7 +783,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.9, g: 0.15, b: 0.15, a: 1}
@@ -778,7 +803,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-
 --- !u!1 &9010000000000000201
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,6 +892,6 @@ SpriteRenderer:
   m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []

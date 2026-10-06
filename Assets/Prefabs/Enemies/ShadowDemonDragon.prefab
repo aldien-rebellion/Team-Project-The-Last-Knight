@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 8689095165794648457}
   - component: {fileID: 4160659262322428855}
   - component: {fileID: 4943072264429293147}
-  - component: {fileID: 2306318584033488972}
   - component: {fileID: 7653207656683907803}
   - component: {fileID: 9010000000000000002}
+  - component: {fileID: 8859382146900635491}
   m_Layer: 0
   m_Name: ShadowDemonDragon
   m_TagString: Untagged
@@ -224,10 +224,14 @@ MonoBehaviour:
   _chaseSpeed: 3.8
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
   _initialFacingRight: 1
+  _flipSpriteInsteadOfTransformScale: 0
+  _facingFlipDeadZone: 0
+  _avoidTeleportOnReturn: 0
   _isBoss: 1
   _leashRangeMultiplier: 2
   _groundLayer:
@@ -237,32 +241,104 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 10
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
   _requireCloseRangeForContactSkills: 0
   _playAttackStatesDirectly: 0
+  _useMovementAnimationStates: 0
+  _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
   _projectilePrefab: {fileID: 0}
   _projectileSpawnOffset: {x: 0.6, y: 0.2}
+  _useProjectileSpawnOffset: 0
   _groundSpellPrefab: {fileID: 0}
   _basicAttackAnimState: Attack_Left
+  _basicAttackAnimStates: []
+  _basicAttackDamageDelay: 0
+  _basicAttackActionDuration: 0
+  _basicAttackDamageStartDelays: []
   _basicAttackMultiplier: 1
   _basicAttackCanParry: 1
   _allowBasicParryWithSkills: 0
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 2
+  _basicGuardEveryNAttacks: 0
+  _basicGuardSkillName: 
   _skills: []
   _cycleNonParryableSkills: 0
+  _waitForAttackAnimationToFinish: 0
+  _waitForAttackProjectileToFinish: 0
+  _interruptAttackOnDamage: 0
   _continuousActions: 0
+  _parryEveryNSkillUses: 1
   _deathDestroyDelay: 1.5
   _canRespawn: 0
+  _maxRespawns: -1
+  _respawnsUsed: 0
   _respawnTime: 30
---- !u!82 &2306318584033488972
+  _requirePlayerAwayToRespawn: 1
+  _respawnAtDeathPosition: 0
+  _bringToFrontWhileAttacking: 0
+  _attackSortingOrder: 1
+  _attackSortingLayerName: 
+--- !u!114 &7653207656683907803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58124016860152406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec70aac1ced5a104a8799f9d4bb5ac01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.DragonAudioController
+  _idleClip: {fileID: 8300000, guid: fcba12482f1cc624280ad96abf7e8f68, type: 3}
+  _footstepClip: {fileID: 8300000, guid: 138b2e5189eeb1f4b9e40229fec9386d, type: 3}
+  _attackClip: {fileID: 8300000, guid: 5a9667ccae01de34bb96e3b0134771e4, type: 3}
+  _hitClip: {fileID: 8300000, guid: 87cc494b97e12324c96ac332b63302a5, type: 3}
+  _playerAttackHitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+  _deathClip: {fileID: 8300000, guid: b0379b40b41742840a665aec1391d970, type: 3}
+  _deathFallClip: {fileID: 8300000, guid: 4d87a870923c9034d92fef87e9a18557, type: 3}
+  _idleSoundInterval: 8
+--- !u!114 &9010000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58124016860152406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 4930698062115012074}
+  _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 1
+  _centerLocalOffset: {x: 0, y: 0}
+  _stunEffectFrames:
+  - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
+  - {fileID: 2800000, guid: f9d72ddb787e9a142bf7fc9974eb9b0d, type: 3}
+  - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
+  - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
+  - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0.38
+  _stunEffectHeadXOffset: 0.12
+  _stunEffectHeadYFraction: 0.18
+  _stunEffectHeadYOffset: 0.45
+  _stunEffectWorldScale: 0.5
+--- !u!82 &8859382146900635491
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -271,10 +347,10 @@ AudioSource:
   m_GameObject: {fileID: 58124016860152406}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -283,8 +359,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 3
-  MaxDistance: 25
+  MinDistance: 1
+  MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -319,7 +395,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -359,54 +435,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7653207656683907803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 58124016860152406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec70aac1ced5a104a8799f9d4bb5ac01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.DragonAudioController
-  _idleClip: {fileID: 8300000, guid: fcba12482f1cc624280ad96abf7e8f68, type: 3}
-  _footstepClip: {fileID: 8300000, guid: 138b2e5189eeb1f4b9e40229fec9386d, type: 3}
-  _attackClip: {fileID: 8300000, guid: 5a9667ccae01de34bb96e3b0134771e4, type: 3}
-  _hitClip: {fileID: 8300000, guid: 87cc494b97e12324c96ac332b63302a5, type: 3}
-  _playerAttackHitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
-  _deathClip: {fileID: 8300000, guid: b0379b40b41742840a665aec1391d970, type: 3}
-  _deathFallClip: {fileID: 8300000, guid: 4d87a870923c9034d92fef87e9a18557, type: 3}
-  _idleSoundInterval: 8
---- !u!114 &9010000000000000002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 58124016860152406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
-  _centerSprite: {fileID: 4930698062115012074}
-  _useVisibleSpriteBounds: 1
-  _useEnemyFacingForStunEffect: 1
-  _centerLocalOffset: {x: 0, y: 0}
-  _stunEffectFrames:
-  - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
-  - {fileID: 2800000, guid: f9d72ddb787e9a142bf7fc9974eb9b0d, type: 3}
-  - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
-  - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
-  - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
-  _stunEffectDuration: 2
-  _stunEffectHeadXFraction: 0.38
-  _stunEffectHeadXOffset: 0.12
-  _stunEffectHeadYFraction: 0.18
-  _stunEffectHeadYOffset: 0.45
-  _stunEffectWorldScale: 0.5
 --- !u!1 &666402955352095712
 GameObject:
   m_ObjectHideFlags: 0
@@ -565,6 +593,7 @@ MonoBehaviour:
   _followSprite: {fileID: 4930698062115012074}
   _useVisibleSpriteBounds: 1
   _headGap: 0.08
+  _headHorizontalOffset: 0
   _followSpriteBounds: 0
   _headOffset: 0.12
 --- !u!1 &1601459811685508102

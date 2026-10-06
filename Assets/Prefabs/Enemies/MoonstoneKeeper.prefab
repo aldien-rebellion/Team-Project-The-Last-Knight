@@ -348,8 +348,8 @@ GameObject:
   - component: {fileID: 7925780363749162548}
   - component: {fileID: 4851102697083955173}
   - component: {fileID: 8789570380798454756}
-  - component: {fileID: 8911677789252977848}
   - component: {fileID: 3368811662526457131}
+  - component: {fileID: 5701832292747780064}
   m_Layer: 0
   m_Name: MoonstoneKeeper
   m_TagString: Untagged
@@ -534,11 +534,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 40
   _useLevelScaling: 1
-  _maxHealth: 3000
+  _maxHealth: 2000
   _defense: 40
-  _attackPower: 400
-  _goldReward: 1189
-  _expReward: 852
+  _attackPower: 280
+  _goldReward: 1391
+  _expReward: 1945
   _currentStatus: 0
 --- !u!114 &8789570380798454756
 MonoBehaviour:
@@ -556,6 +556,7 @@ MonoBehaviour:
   _chaseSpeed: 4.5
   _patrolDistance: 4
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -572,6 +573,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 20
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
@@ -581,6 +584,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -679,7 +684,21 @@ MonoBehaviour:
   _bringToFrontWhileAttacking: 0
   _attackSortingOrder: 1
   _attackSortingLayerName: 
---- !u!82 &8911677789252977848
+--- !u!114 &3368811662526457131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8724567091690321362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 575704ea389fb7c4490d3f20a9eab73a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.MoonstoneKeeperAudioController
+  _swordSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!82 &5701832292747780064
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -688,10 +707,10 @@ AudioSource:
   m_GameObject: {fileID: 8724567091690321362}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -699,9 +718,9 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 0
-  MinDistance: 2
-  MaxDistance: 24
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -736,7 +755,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -776,17 +795,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3368811662526457131
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8724567091690321362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 575704ea389fb7c4490d3f20a9eab73a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.MoonstoneKeeperAudioController
-  _swordSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
-  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}

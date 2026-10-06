@@ -102,8 +102,8 @@ GameObject:
   - component: {fileID: 3622548920129109940}
   - component: {fileID: 5522708467596627523}
   - component: {fileID: 9010000000000000002}
-  - component: {fileID: 2399483056300773315}
   - component: {fileID: 2059654593588455083}
+  - component: {fileID: 1253188592861110376}
   m_Layer: 0
   m_Name: Reaper
   m_TagString: Untagged
@@ -288,11 +288,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyStats
   _level: 47
   _useLevelScaling: 1
-  _maxHealth: 3525
+  _maxHealth: 2350
   _defense: 47
-  _attackPower: 470
-  _goldReward: 1174
-  _expReward: 958
+  _attackPower: 329
+  _goldReward: 2593
+  _expReward: 2840
   _currentStatus: 0
 --- !u!114 &5522708467596627523
 MonoBehaviour:
@@ -310,6 +310,7 @@ MonoBehaviour:
   _chaseSpeed: 4.5
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -326,6 +327,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 8
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 0
   _useColliderEdgeAttackDistance: 1
@@ -335,6 +338,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 1
   _useColliderEdgeAttackRanges: 0
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -385,14 +390,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
   _centerSprite: {fileID: 4426489115621437184}
   _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 0
   _centerLocalOffset: {x: 0, y: 0}
   _stunEffectFrames: []
   _stunEffectDuration: 2
   _stunEffectHeadXFraction: 0
+  _stunEffectHeadXOffset: 0
   _stunEffectHeadYFraction: 0
   _stunEffectHeadYOffset: 0
   _stunEffectWorldScale: 0.5
---- !u!82 &2399483056300773315
+--- !u!114 &2059654593588455083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6306785311533167210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ca6ac977664b5185aedb46a2e3298c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.ReaperAudioController
+  _swordSlashClip: {fileID: 8300000, guid: cdfcb7b9979a70446b1b07fc877d5e4d, type: 3}
+  _weaponDrawClip: {fileID: 8300000, guid: 4cb651edcee996a4ab083883692135ed, type: 3}
+  _playerHitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!82 &1253188592861110376
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -401,10 +423,10 @@ AudioSource:
   m_GameObject: {fileID: 6306785311533167210}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -413,8 +435,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 2
-  MaxDistance: 24
+  MinDistance: 1
+  MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -449,7 +471,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -489,21 +511,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2059654593588455083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6306785311533167210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9ca6ac977664b5185aedb46a2e3298c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.ReaperAudioController
-  _swordSlashClip: {fileID: 8300000, guid: cdfcb7b9979a70446b1b07fc877d5e4d, type: 3}
-  _weaponDrawClip: {fileID: 8300000, guid: 4cb651edcee996a4ab083883692135ed, type: 3}
-  _playerHitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
 --- !u!1 &6765031090875817698
 GameObject:
   m_ObjectHideFlags: 0

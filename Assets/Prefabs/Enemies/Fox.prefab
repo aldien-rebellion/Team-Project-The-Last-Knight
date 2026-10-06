@@ -300,6 +300,7 @@ MonoBehaviour:
   _chaseSpeed: 7.5
   _patrolDistance: 3
   _isFlying: 0
+  _flyHorizontally: 0
   _flyingChaseHeightOffset: 0
   _flyingIdleHeightOffset: 0
   _avoidLedges: 1
@@ -316,6 +317,8 @@ MonoBehaviour:
   _wallCheckDistance: 0.6
   _ledgeForwardOffset: 0.5
   _detectionRange: 20
+  _rectangularDetectionGizmo: 0
+  _detectionGizmoAspectRatio: 2
   _meleeRange: 0.05
   _meleeCooldown: 0.65
   _useColliderEdgeAttackDistance: 1
@@ -325,6 +328,8 @@ MonoBehaviour:
   _usePassiveStanceAnimations: 0
   _useColliderEdgeAttackRanges: 1
   _disableBasicAttack: 0
+  _requireMeleeRangeForBasicAttack: 0
+  _requireSkillRangeBeforeAttack: 0
   _hasRangedAttack: 0
   _rangedRange: 8
   _rangedCooldown: 3
@@ -343,11 +348,22 @@ MonoBehaviour:
   _basicParryCooldown: 4
   _basicParryEveryNAttacks: 0
   _basicGuardEveryNAttacks: 0
-  _basicGuardSkillName:
+  _basicGuardSkillName: 
   _skills:
   - skillName: HowlFireRain
     animationName: Howl
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
+    actionDurationOverride: 0
     skipAnticipation: 1
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
+    actionIndex: -1
     damageMultiplier: 0.8
     cooldown: 9
     minRange: 0
@@ -357,12 +373,19 @@ MonoBehaviour:
     guardDuration: 4
     damageStartDelay: 0
     damageDuration: 0
+    dealDamageAsSingleHit: 0
+    secondDamageHitTime: -1
+    additionalDamageHitTimes: []
+    requireSpriteBoundsOverlap: 0
+    projectilePrefab: {fileID: 0}
+    requireLineOfSight: 0
     summonFireballRain: 1
+    groundSpellPrefab: {fileID: 0}
   - skillName: VanishingStrike
     animationName: Attack
-    reappearanceAnimationName: Appear
     preparationAnimationName: Disappear
     preparationDurationOverride: 0.15
+    reappearanceAnimationName: Appear
     reappearanceDurationOverride: 0.15
     actionDurationOverride: 0.46
     skipAnticipation: 1
@@ -387,11 +410,21 @@ MonoBehaviour:
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
     requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   - skillName: ParryBite
     animationName: Attack
+    preparationAnimationName: 
+    preparationDurationOverride: 0
+    reappearanceAnimationName: 
+    reappearanceDurationOverride: 0
     actionDurationOverride: 0.46
     skipAnticipation: 1
+    teleportToPlayerAfterPreparation: 0
+    preparationDamageDelay: -1
+    hideHealthBarDuringSkill: 0
+    approachPlayerWhileHidden: 0
+    hiddenApproachTimeout: 3
     actionIndex: -1
     damageMultiplier: 1.5
     cooldown: 5
@@ -408,6 +441,7 @@ MonoBehaviour:
     requireSpriteBoundsOverlap: 0
     projectilePrefab: {fileID: 0}
     requireLineOfSight: 0
+    summonFireballRain: 0
     groundSpellPrefab: {fileID: 0}
   _cycleNonParryableSkills: 0
   _waitForAttackAnimationToFinish: 0
@@ -424,7 +458,35 @@ MonoBehaviour:
   _respawnAtDeathPosition: 0
   _bringToFrontWhileAttacking: 0
   _attackSortingOrder: 1
-  _attackSortingLayerName:
+  _attackSortingLayerName: 
+--- !u!114 &9010000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977028967647500468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
+  _centerSprite: {fileID: 744025015606745033}
+  _useVisibleSpriteBounds: 1
+  _useEnemyFacingForStunEffect: 0
+  _centerLocalOffset: {x: 0, y: 0}
+  _stunEffectFrames:
+  - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
+  - {fileID: 2800000, guid: f9d72ddb787e9a142bf7fc9974eb9b0d, type: 3}
+  - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
+  - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
+  - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
+  _stunEffectDuration: 2
+  _stunEffectHeadXFraction: 0.38
+  _stunEffectHeadXOffset: 0
+  _stunEffectHeadYFraction: 0.3
+  _stunEffectHeadYOffset: 0
+  _stunEffectWorldScale: 0.5
 --- !u!114 &9010000000000000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,7 +497,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25a6f8deb7d84043afb1aa31a634cf57, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.FoxFireballRain
   _fallFrames:
   - {fileID: 3058095610567952157, guid: 3911ecbeda672af4abe2be61864ca092, type: 3}
@@ -454,6 +516,121 @@ MonoBehaviour:
   _spreadRadius: 7
   _rainDuration: 4
   _spawnInterval: 0.08
+--- !u!82 &9010000000000000004
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977028967647500468}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 2
+  MaxDistance: 20
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &9010000000000000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977028967647500468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1743adbe160f4bfc8995f548b6f09b91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.FoxAudioController
+  _biteClip: {fileID: 8300000, guid: a29029daae673b04a93b6a5a5a0ef96a, type: 3}
+  _howlClip: {fileID: 8300000, guid: dd5c7cd2334d19b4b8cd3dfc766960a0, type: 3}
+  _fireballLaunchClip: {fileID: 8300000, guid: 3a2d3649b959df147b78614b022201b9, type: 3}
+  _fireballImpactClip: {fileID: 8300000, guid: 6e70dc4d8425a774389b5e93d37058e6, type: 3}
+  _vanishClip: {fileID: 8300000, guid: 1dbd28f273bb2c44c8ec728666003085, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
 --- !u!1 &1582050896545754977
 GameObject:
   m_ObjectHideFlags: 0
@@ -712,74 +889,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9010000000000000002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 977028967647500468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6a415bdd3871fa44a2ee9a7e869b7d3, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.ParryReceiver
-  _centerSprite: {fileID: 744025015606745033}
-  _useVisibleSpriteBounds: 1
-  _centerLocalOffset: {x: 0, y: 0}
-  _stunEffectFrames:
-  - {fileID: 2800000, guid: e327fc332d450f647a707760a20471a7, type: 3}
-  - {fileID: 2800000, guid: f9d72ddb787e9a142bf7fc9974eb9b0d, type: 3}
-  - {fileID: 2800000, guid: 9fcd6e43dcb08fd47b20b652fb17083d, type: 3}
-  - {fileID: 2800000, guid: e806ba3f86b57fa46b1e872a261e677f, type: 3}
-  - {fileID: 2800000, guid: 57853902b50da2549a60e7acc47a50fd, type: 3}
-  _stunEffectDuration: 2
-  _stunEffectHeadXFraction: 0.38
-  _stunEffectHeadYFraction: 0.3
-  _stunEffectWorldScale: 0.5
---- !u!82 &9010000000000000004
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 977028967647500468}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 0
-  MinDistance: 2
-  MaxDistance: 20
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
---- !u!114 &9010000000000000005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 977028967647500468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1743adbe160f4bfc8995f548b6f09b91, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.FoxAudioController
-  _biteClip: {fileID: 8300000, guid: a29029daae673b04a93b6a5a5a0ef96a, type: 3}
-  _howlClip: {fileID: 8300000, guid: dd5c7cd2334d19b4b8cd3dfc766960a0, type: 3}
-  _fireballLaunchClip: {fileID: 8300000, guid: 3a2d3649b959df147b78614b022201b9, type: 3}
-  _fireballImpactClip: {fileID: 8300000, guid: 6e70dc4d8425a774389b5e93d37058e6, type: 3}
-  _vanishClip: {fileID: 8300000, guid: 1dbd28f273bb2c44c8ec728666003085, type: 3}
-  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
