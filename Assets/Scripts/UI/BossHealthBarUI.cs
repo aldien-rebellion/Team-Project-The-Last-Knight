@@ -58,7 +58,7 @@ namespace TheLastKnight.UI
             titleRect.pivot = new Vector2(0.5f, 1f);
             titleRect.anchoredPosition = new Vector2(0f, -5f);
             titleRect.sizeDelta = new Vector2(0f, 38f);
-            _title.text = $"{DisplayName(boss.name)}   Lv. {boss.Level}";
+            TheLastKnight.UI.LocalizedText.Set(_title, $"{DisplayName(boss.name)}   Lv. {boss.Level}");
 
             var background = CreateImage("Health Background", panel.transform, new Color(0.12f, 0.12f, 0.15f, 1f));
             var backgroundRect = background.rectTransform;

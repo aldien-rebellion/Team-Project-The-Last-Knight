@@ -91,7 +91,7 @@ namespace TheLastKnight.Core
             { "BRIGHTNESS", "Game Brightness" },
             { "LANGUAGE_LABEL", "Language" },
             { "LANGUAGE_CURRENT", "English" },
-            { "LANGUAGE_CHANGE_PROMPT", "Click to switch to ภาษาไทย" },
+            { "LANGUAGE_CHANGE_PROMPT", "Click to switch to Thai" },
             { "BTN_CONTROLS", "Customize Player Controls" },
             { "BTN_BACK", "[1]  Back" },
 
@@ -118,7 +118,7 @@ namespace TheLastKnight.Core
         private static readonly Dictionary<string, string> ThTexts = new Dictionary<string, string>
         {
             // Main Menu
-            { "MAIN_TITLE", "THE LAST KNIGHT" },
+            { "MAIN_TITLE", "อัศวินคนสุดท้าย" },
             { "MAIN_SUBTITLE", "อาณาจักรที่ล่มสลาย สี่ผนึก หนึ่งคำสาบานสุดท้าย" },
             { "MAIN_PLAY", "เริ่มเกม" },
             { "MAIN_CONTINUE", "เล่นต่อ" },
@@ -169,7 +169,7 @@ namespace TheLastKnight.Core
             { "BRIGHTNESS", "ความสว่างทั้งเกม" },
             { "LANGUAGE_LABEL", "ภาษา" },
             { "LANGUAGE_CURRENT", "ภาษาไทย" },
-            { "LANGUAGE_CHANGE_PROMPT", "คลิกเพื่อเปลี่ยนเป็น English" },
+            { "LANGUAGE_CHANGE_PROMPT", "คลิกเพื่อเปลี่ยนเป็นภาษาอังกฤษ" },
             { "BTN_CONTROLS", "ปรับปุ่มควบคุมตัวละคร" },
             { "BTN_BACK", "[1]  ย้อนกลับ" },
 
@@ -183,11 +183,11 @@ namespace TheLastKnight.Core
             { "ACTION_JUMP", "กระโดด" },
             { "ACTION_ATTACK", "โจมตี" },
             { "ACTION_DASH", "พุ่งตัว" },
-            { "ACTION_PARRY", "ปัดการโจมตี (Parry)" },
+            { "ACTION_PARRY", "ปัดการโจมตี / สวนกลับ" },
             { "ACTION_DRINK", "ดื่มยาฟื้นฟู" },
-            { "ACTION_SKILL", "สกิล: Carnage Burst" },
-            { "ACTION_BUFF", "สกิล: Iron Will" },
-            { "ACTION_EXCALIBUR", "สกิล: Excalibur" },
+            { "ACTION_SKILL", "ทักษะ: พายุดาบ" },
+            { "ACTION_BUFF", "ทักษะ: เจตจำนงเหล็กกล้า" },
+            { "ACTION_EXCALIBUR", "ทักษะ: ดาบศักดิ์สิทธิ์" },
             { "ACTION_INTERACT", "โต้ตอบ" },
             { "ACTION_ADMIN_MODIFIER", "ปุ่มเสริมโหมดแอดมิน" },
             { "ACTION_ADMIN_KEY", "ปุ่มเปิดโหมดแอดมิน" }
@@ -209,6 +209,22 @@ namespace TheLastKnight.Core
         public static void ToggleLanguage()
         {
             Current = (Current == GameLanguage.Thai) ? GameLanguage.English : GameLanguage.Thai;
+        }
+
+        private static readonly Dictionary<string, string> TranslationKeys = BuildTranslationKeys();
+
+        private static Dictionary<string, string> BuildTranslationKeys()
+        {
+            var keys = new Dictionary<string, string>();
+            foreach (var pair in EnTexts) keys[pair.Value] = pair.Key;
+            foreach (var pair in ThTexts) keys[pair.Value] = pair.Key;
+            return keys;
+        }
+
+        public static string Translate(string source)
+        {
+            if (source != null && TranslationKeys.TryGetValue(source, out var key)) return Get(key);
+            return LocalizedTextCatalog.Translate(source, Current);
         }
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using TheLastKnight.Stats;
 using TheLastKnight.Input;
+using TheLastKnight.Core;
 
 namespace TheLastKnight.UI
 {
@@ -66,6 +67,9 @@ namespace TheLastKnight.UI
             if (_uiDocument == null) _uiDocument = GetComponent<UIDocument>();
             if (_uiDocument == null) return;
             var root = _uiDocument.rootVisualElement;
+            root.style.unityFont = LocalizedText.Font;
+            LocalizationManager.OnLanguageChanged += RefreshLanguage;
+            RefreshLanguage(LocalizationManager.Current);
             
             // Find fill elements (Top-Left)
             _healthFill = root.Q<VisualElement>("HealthFill");
@@ -167,8 +171,21 @@ namespace TheLastKnight.UI
             }
         }
 
+        private void RefreshLanguage(GameLanguage language)
+        {
+            if (_uiDocument == null) return;
+            var root = _uiDocument.rootVisualElement;
+            var level = root.Q<Label>("LevelTag");
+            var health = root.Q<Label>("HealthTag");
+            var stamina = root.Q<Label>("StaminaTag");
+            if (level != null) level.text = LocalizationManager.Translate("LVL");
+            if (health != null) health.text = LocalizationManager.Translate("HP");
+            if (stamina != null) stamina.text = LocalizationManager.Translate("STA");
+        }
+
         private void OnDisable()
         {
+            LocalizationManager.OnLanguageChanged -= RefreshLanguage;
             PlayerStats.OnInsufficientStaminaGlobal -= HandleInsufficientStamina;
             if (_staminaShakeCoroutine != null)
             {

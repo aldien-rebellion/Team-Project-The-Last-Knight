@@ -213,7 +213,7 @@ namespace TheLastKnight.UI
             var go = new GameObject(name, typeof(RectTransform), typeof(TextMeshProUGUI));
             go.transform.SetParent(parent, false);
             var tmp = go.GetComponent<TextMeshProUGUI>();
-            tmp.text = text;
+            TheLastKnight.UI.LocalizedText.Set(tmp, text);
             tmp.fontSize = size;
             tmp.alignment = align;
             tmp.color = color;
@@ -259,7 +259,7 @@ namespace TheLastKnight.UI
             var nameRt = nameGo.GetComponent<RectTransform>();
             nameRt.sizeDelta = Vector2.zero;
             var nameText = nameGo.GetComponent<TextMeshProUGUI>();
-            nameText.text = "";
+            TheLastKnight.UI.LocalizedText.Set(nameText, "");
             nameText.raycastTarget = false;
             nameGo.SetActive(false);
 
@@ -325,14 +325,14 @@ namespace TheLastKnight.UI
             }
 
             var info = card.CurrentInfo;
-            if (_txtTipTitle != null) _txtTipTitle.text = info.name;
-            if (_txtTipSubtitle != null) _txtTipSubtitle.text = info.category;
-            if (_txtTipDesc != null) _txtTipDesc.text = info.description;
+            if (_txtTipTitle != null) TheLastKnight.UI.LocalizedText.Set(_txtTipTitle, info.name);
+            if (_txtTipSubtitle != null) TheLastKnight.UI.LocalizedText.Set(_txtTipSubtitle, info.category);
+            if (_txtTipDesc != null) TheLastKnight.UI.LocalizedText.Set(_txtTipDesc, info.description);
             if (_txtTipTime != null)
             {
-                _txtTipTime.text = info.remainingSeconds >= 0f
+                TheLastKnight.UI.LocalizedText.Set(_txtTipTime, info.remainingSeconds >= 0f
                     ? $"Time Remaining: {info.formattedTime} ({info.remainingSeconds:0.0}s)"
-                    : "Continuous Blessing (Sacred Area)";
+                    : "Continuous Blessing (Sacred Area)");
             }
 
             if (_tooltipBox != null)
@@ -425,9 +425,9 @@ namespace TheLastKnight.UI
                     if (_txtTipTime != null)
                     {
                         var info = _currentHoveredCard.CurrentInfo;
-                        _txtTipTime.text = info.remainingSeconds >= 0f
+                        TheLastKnight.UI.LocalizedText.Set(_txtTipTime, info.remainingSeconds >= 0f
                             ? $"Time Remaining: {info.formattedTime} ({info.remainingSeconds:0.0}s)"
-                            : "Continuous Blessing (Sacred Area)";
+                            : "Continuous Blessing (Sacred Area)");
                     }
                     UpdateTooltipPosition();
                 }
@@ -455,7 +455,7 @@ namespace TheLastKnight.UI
 
                 if (NameText != null)
                 {
-                    NameText.text = ""; // Requirement: do not display name text on play HUD
+                    TheLastKnight.UI.LocalizedText.Set(NameText, ""); // Requirement: do not display name text on play HUD
                     if (NameText.gameObject.activeSelf)
                         NameText.gameObject.SetActive(false);
                 }
@@ -468,7 +468,7 @@ namespace TheLastKnight.UI
 
                 if (TimeText != null)
                 {
-                    TimeText.text = info.formattedTime;
+                    TheLastKnight.UI.LocalizedText.Set(TimeText, info.formattedTime);
 
                     // Minecraft warning: pulses when < 5 seconds remaining
                     if (info.remainingSeconds >= 0f && info.remainingSeconds <= 5f)

@@ -84,6 +84,11 @@ public class ScenePortal : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        TheLastKnight.UI.LocalizedText.BindPrompt(popupUI);
+    }
+
     void Start()
     {
         ApplyVisibility();

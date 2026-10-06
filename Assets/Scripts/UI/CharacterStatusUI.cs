@@ -438,7 +438,7 @@ namespace TheLastKnight.UI
             _windowRect.sizeDelta = new Vector2(805, 466);
 
             var winImg = winGo.GetComponent<Image>();
-            var winSprite = Resources.Load<Sprite>("CharacterStatus/Window_Mockup");
+            var winSprite = Resources.Load<Sprite>("CharacterStatus/Window_Localized");
             if (winSprite != null)
             {
                 winImg.sprite = winSprite;
@@ -463,6 +463,7 @@ namespace TheLastKnight.UI
 
             // Close Button [X] at Top-Right (built after overlays to stay topmost)
             BuildCloseButton(_windowRect);
+            BuildLocalizedLabels(_windowRect);
 
             // Floating Tooltip Box (follows cursor on Canvas)
             BuildTooltipBox(_canvasObject.transform);
@@ -519,7 +520,7 @@ namespace TheLastKnight.UI
                     }
                     if (_cursorCount != null)
                     {
-                        _cursorCount.text = inv.CursorHeldItem.count > 1 ? inv.CursorHeldItem.count.ToString() : "";
+                        TheLastKnight.UI.LocalizedText.Set(_cursorCount, inv.CursorHeldItem.count > 1 ? inv.CursorHeldItem.count.ToString() : "");
                     }
 
                     Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)UnityEngine.Input.mousePosition;
@@ -560,6 +561,46 @@ namespace TheLastKnight.UI
             btn.onClick.AddListener(Close);
 
             AddHoverHighlight(btnGo, img);
+        }
+
+        private void BuildLocalizedLabels(RectTransform parent)
+        {
+            // The background has no baked lettering; render localized text directly on the wood.
+            LocalizedArtworkLabel(parent, "Arthur Reuven", 403, 392, 250, 32, 22);
+            var pointsLabel = LocalizedArtworkLabel(parent, "Status Points", 666, 420, 173, 23, 14);
+            pointsLabel.rectTransform.offsetMax = new Vector2(-48, 0);
+            _txtStatusPoints.transform.parent.SetAsLastSibling();
+            LocalizedArtworkLabel(parent, "Gold", 350, 249, 65, 21, 14);
+            LocalizedArtworkLabel(parent, "Skill 1", 329, 221, 67, 21, 13);
+            LocalizedArtworkLabel(parent, "Skill 2", 413, 221, 67, 21, 13);
+            LocalizedArtworkLabel(parent, "Skill 3", 499, 221, 67, 21, 13);
+            LocalizedArtworkLabel(parent, "Quick Items", 421, 112, 146, 22, 15);
+            string[] attributes = { "STR", "AGI", "VIT", "DEX" };
+            float[] positions = { 388, 359, 330, 302 };
+            for (int i = 0; i < attributes.Length; i++)
+            {
+                LocalizedArtworkLabel(parent, attributes[i], 606, positions[i], 48, 24, 14);
+                LocalizedArtworkLabel(parent, "MAX", 737, positions[i], 37, 17, 10);
+            }
+        }
+
+        private TextMeshProUGUI LocalizedArtworkLabel(Transform parent, string source, float x, float y,
+            float width, float height, float size)
+        {
+            var cover = new GameObject("Localized " + source, typeof(RectTransform));
+            cover.transform.SetParent(parent, false);
+            var rect = cover.GetComponent<RectTransform>();
+            rect.anchoredPosition = ToUI(x, y);
+            rect.sizeDelta = new Vector2(width, height);
+            var label = CreateText(cover.transform, "Label", source, size, TextAlignmentOptions.Center,
+                new Color(0.94f, 0.82f, 0.65f), FontStyles.Bold);
+            label.rectTransform.anchorMin = Vector2.zero;
+            label.rectTransform.anchorMax = Vector2.one;
+            label.rectTransform.offsetMin = label.rectTransform.offsetMax = Vector2.zero;
+            label.enableAutoSizing = true;
+            label.fontSizeMin = size - 3;
+            label.fontSizeMax = size;
+            return label;
         }
 
         private void BuildCenterOverlays(RectTransform parent)
@@ -754,18 +795,21 @@ namespace TheLastKnight.UI
 
         private void BuildRightOverlays(RectTransform parent)
         {
-            // 1. Status Points Number overlay (Clean text directly on wood, extending to the right without wrapping)
+            // Keep the points value in its own column to the right of the heading.
             var spGo = new GameObject("Txt_SP", typeof(RectTransform));
             spGo.transform.SetParent(parent, false);
             var spRt = spGo.GetComponent<RectTransform>();
-            spRt.anchoredPosition = ToUI(736, 420);
+            spRt.anchoredPosition = ToUI(715, 420);
             spRt.pivot = new Vector2(0f, 0.5f);
-            spRt.sizeDelta = new Vector2(100, 22);
+            spRt.sizeDelta = new Vector2(45, 22);
 
-            _txtStatusPoints = CreateText(spGo.transform, "Label", "0", 17, TextAlignmentOptions.MidlineLeft,
+            _txtStatusPoints = CreateText(spGo.transform, "Label", "0", 17, TextAlignmentOptions.MidlineRight,
                 Color.white, FontStyles.Bold);
             _txtStatusPoints.enableWordWrapping = false;
-            _txtStatusPoints.overflowMode = TextOverflowModes.Overflow;
+            _txtStatusPoints.overflowMode = TextOverflowModes.Truncate;
+            _txtStatusPoints.enableAutoSizing = true;
+            _txtStatusPoints.fontSizeMin = 10;
+            _txtStatusPoints.fontSizeMax = 17;
             var sptRt = _txtStatusPoints.rectTransform;
             sptRt.anchorMin = Vector2.zero; sptRt.anchorMax = Vector2.one;
             sptRt.offsetMin = sptRt.offsetMax = Vector2.zero;
@@ -803,16 +847,19 @@ namespace TheLastKnight.UI
             valRt.anchoredPosition = ToUI(631, py);
             valRt.sizeDelta = new Vector2(98, 24);
 
-            valueTxt = CreateText(valGo.transform, "Label", "10", 16, TextAlignmentOptions.MidlineLeft,
+            valueTxt = CreateText(valGo.transform, "Label", "10", 16, TextAlignmentOptions.MidlineRight,
                 Color.white, FontStyles.Bold);
             valueTxt.enableWordWrapping = false;
-            valueTxt.overflowMode = TextOverflowModes.Overflow;
+            valueTxt.overflowMode = TextOverflowModes.Truncate;
+            valueTxt.enableAutoSizing = true;
+            valueTxt.fontSizeMin = 10;
+            valueTxt.fontSizeMax = 16;
             var vtRt = valueTxt.rectTransform;
             vtRt.anchorMin = new Vector2(0f, 0f);
             vtRt.anchorMax = new Vector2(1f, 1f);
             vtRt.pivot = new Vector2(0f, 0.5f);
-            vtRt.offsetMin = new Vector2(49f, 0f); // Space after baked "STR:" label
-            vtRt.offsetMax = new Vector2(40f, 0f); // Extends cleanly to the right without wrapping
+            vtRt.offsetMin = new Vector2(52f, 0f); // Label ends at x=630; value starts at x=634.
+            vtRt.offsetMax = Vector2.zero; // Value ends at x=680, before the [+] button at x=685.
             AddHoverTrigger(valGo, () => ShowStatTooltip(label), () => HideTooltip());
 
             // [+] Button
@@ -981,7 +1028,7 @@ namespace TheLastKnight.UI
             var go = new GameObject(name, typeof(RectTransform), typeof(TextMeshProUGUI));
             go.transform.SetParent(parent, false);
             var tmp = go.GetComponent<TextMeshProUGUI>();
-            tmp.text = text;
+            TheLastKnight.UI.LocalizedText.Set(tmp, text);
             tmp.fontSize = size;
             tmp.alignment = align;
             tmp.color = color;
@@ -1027,7 +1074,7 @@ namespace TheLastKnight.UI
             string newTitle = title ?? "";
             if (_txtTooltipTitle != null && _txtTooltipTitle.text != newTitle)
             {
-                _txtTooltipTitle.text = newTitle;
+                TheLastKnight.UI.LocalizedText.Set(_txtTooltipTitle, newTitle);
                 changed = true;
             }
 
@@ -1035,21 +1082,21 @@ namespace TheLastKnight.UI
             {
                 bool hasSub = !string.IsNullOrEmpty(subtitle);
                 if (_txtTooltipSubtitle.gameObject.activeSelf != hasSub) { _txtTooltipSubtitle.gameObject.SetActive(hasSub); changed = true; }
-                if (hasSub && _txtTooltipSubtitle.text != subtitle) { _txtTooltipSubtitle.text = subtitle; changed = true; }
+                if (hasSub && _txtTooltipSubtitle.text != subtitle) { TheLastKnight.UI.LocalizedText.Set(_txtTooltipSubtitle, subtitle); changed = true; }
             }
 
             if (_txtTooltipDesc != null)
             {
                 bool hasDesc = !string.IsNullOrEmpty(description);
                 if (_txtTooltipDesc.gameObject.activeSelf != hasDesc) { _txtTooltipDesc.gameObject.SetActive(hasDesc); changed = true; }
-                if (hasDesc && _txtTooltipDesc.text != description) { _txtTooltipDesc.text = description; changed = true; }
+                if (hasDesc && _txtTooltipDesc.text != description) { TheLastKnight.UI.LocalizedText.Set(_txtTooltipDesc, description); changed = true; }
             }
 
             if (_txtTooltipHint != null)
             {
                 bool hasHint = !string.IsNullOrEmpty(hint);
                 if (_txtTooltipHint.gameObject.activeSelf != hasHint) { _txtTooltipHint.gameObject.SetActive(hasHint); changed = true; }
-                if (hasHint && _txtTooltipHint.text != hint) { _txtTooltipHint.text = hint; changed = true; }
+                if (hasHint && _txtTooltipHint.text != hint) { TheLastKnight.UI.LocalizedText.Set(_txtTooltipHint, hint); changed = true; }
             }
 
             if (!_tooltipBox.activeSelf)
@@ -1286,29 +1333,29 @@ namespace TheLastKnight.UI
             int potions = player != null ? player.HealingPotions : 3;
 
             // Header
-            if (_txtLevel != null) _txtLevel.text = $"LV.{level}";
+            if (_txtLevel != null) TheLastKnight.UI.LocalizedText.Set(_txtLevel, $"LV.{level}");
 
             // Bars
             if (_imgXpFill != null) _imgXpFill.fillAmount = expPct;
-            if (_txtXp != null) _txtXp.text = $"XP: {exp}/{expNeeded}";
+            if (_txtXp != null) TheLastKnight.UI.LocalizedText.Set(_txtXp, $"XP: {exp}/{expNeeded}");
 
             if (_imgHpFill != null) _imgHpFill.fillAmount = hpPct;
-            if (_txtHp != null) _txtHp.text = $"HP: {curHp}/{maxHp}";
+            if (_txtHp != null) TheLastKnight.UI.LocalizedText.Set(_txtHp, $"HP: {curHp}/{maxHp}");
 
             if (_imgStmFill != null) _imgStmFill.fillAmount = stmPct;
-            if (_txtStm != null) _txtStm.text = $"STM: {curStm}/{maxStm}";
+            if (_txtStm != null) TheLastKnight.UI.LocalizedText.Set(_txtStm, $"STM: {curStm}/{maxStm}");
 
             // Gold
-            if (_txtGold != null) _txtGold.text = $"{gold:N0}";
+            if (_txtGold != null) TheLastKnight.UI.LocalizedText.Set(_txtGold, $"{gold:N0}");
 
             // Status Points
-            if (_txtStatusPoints != null) _txtStatusPoints.text = statPoints.ToString();
+            if (_txtStatusPoints != null) TheLastKnight.UI.LocalizedText.Set(_txtStatusPoints, statPoints.ToString());
 
             // Attributes
-            if (_txtStrValue != null) _txtStrValue.text = str.ToString();
-            if (_txtAgiValue != null) _txtAgiValue.text = agi.ToString();
-            if (_txtVitValue != null) _txtVitValue.text = vit.ToString();
-            if (_txtDexValue != null) _txtDexValue.text = dex.ToString();
+            if (_txtStrValue != null) TheLastKnight.UI.LocalizedText.Set(_txtStrValue, str.ToString());
+            if (_txtAgiValue != null) TheLastKnight.UI.LocalizedText.Set(_txtAgiValue, agi.ToString());
+            if (_txtVitValue != null) TheLastKnight.UI.LocalizedText.Set(_txtVitValue, vit.ToString());
+            if (_txtDexValue != null) TheLastKnight.UI.LocalizedText.Set(_txtDexValue, dex.ToString());
 
             // Keep upgrade buttons always interactable for responsive hover & click feedback
             if (_btnStrPlus != null) _btnStrPlus.interactable = true;
@@ -1692,7 +1739,7 @@ namespace TheLastKnight.UI
 
             if (_txtSideToggleArrow != null)
             {
-                _txtSideToggleArrow.text = open ? "«" : "»";
+                TheLastKnight.UI.LocalizedText.Set(_txtSideToggleArrow, open ? "«" : "»");
             }
 
             if (_windowRect != null)
@@ -1879,7 +1926,7 @@ namespace TheLastKnight.UI
 
                 if (NameText != null)
                 {
-                    NameText.text = info.name;
+                    TheLastKnight.UI.LocalizedText.Set(NameText, info.name);
                     NameText.color = info.themeColor;
                 }
 
@@ -1891,7 +1938,7 @@ namespace TheLastKnight.UI
 
                 if (TimeText != null)
                 {
-                    TimeText.text = info.formattedTime;
+                    TheLastKnight.UI.LocalizedText.Set(TimeText, info.formattedTime);
 
                     if (info.remainingSeconds >= 0f && info.remainingSeconds <= 5f)
                     {

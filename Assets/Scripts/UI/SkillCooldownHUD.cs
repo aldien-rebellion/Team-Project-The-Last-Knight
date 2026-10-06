@@ -298,7 +298,7 @@ namespace TheLastKnight.UI
             txtRt.offsetMin = txtRt.offsetMax = Vector2.zero;
 
             var cdText = txtGo.GetComponent<TextMeshProUGUI>();
-            cdText.text = "";
+            TheLastKnight.UI.LocalizedText.Set(cdText, "");
             cdText.fontSize = 18f;
             cdText.alignment = TextAlignmentOptions.Center;
             cdText.color = Color.white;
@@ -330,7 +330,7 @@ namespace TheLastKnight.UI
             badgeTxtRt.offsetMin = badgeTxtRt.offsetMax = Vector2.zero;
 
             var badgeText = badgeTxtGo.GetComponent<TextMeshProUGUI>();
-            badgeText.text = defaultKey;
+            TheLastKnight.UI.LocalizedText.Set(badgeText, defaultKey);
             badgeText.fontSize = 11f;
             badgeText.alignment = TextAlignmentOptions.Center;
             badgeText.color = new Color(1f, 0.9f, 0.45f);
@@ -427,9 +427,9 @@ namespace TheLastKnight.UI
 
                     if (CooldownText != null)
                     {
-                        CooldownText.text = currentTimer >= 10f
+                        TheLastKnight.UI.LocalizedText.Set(CooldownText, currentTimer >= 10f
                             ? Mathf.CeilToInt(currentTimer).ToString()
-                            : currentTimer.ToString("0.0");
+                            : currentTimer.ToString("0.0"));
                     }
 
                     if (IconImage != null)
@@ -450,7 +450,7 @@ namespace TheLastKnight.UI
 
                     if (CooldownText != null)
                     {
-                        CooldownText.text = "";
+                        TheLastKnight.UI.LocalizedText.Set(CooldownText, "");
                     }
 
                     if (IconImage != null)
@@ -472,7 +472,7 @@ namespace TheLastKnight.UI
                 if (KeyBadgeText != null && !string.IsNullOrEmpty(ActionName))
                 {
                     string key = KeyRebindManager.GetCurrentBindingDisplay(ActionName, 0);
-                    KeyBadgeText.text = (!string.IsNullOrEmpty(key) && key != "Unknown" && key != "N/A") ? key : DefaultKey;
+                    TheLastKnight.UI.LocalizedText.Set(KeyBadgeText, (!string.IsNullOrEmpty(key) && key != "Unknown" && key != "N/A") ? key : DefaultKey);
                 }
             }
 

@@ -4,19 +4,19 @@
     <!-- Top-Left: Mini HUD (Flush against top-left edge) -->
     <ui:VisualElement name="HUD" class="hud-root" picking-mode="Ignore">
         <ui:VisualElement class="level-container" picking-mode="Ignore">
-            <ui:Label text="LVL  " class="level-text" />
+            <ui:Label name="LevelTag" text="LVL  " class="level-text" />
             <ui:Label name="LevelValue" text="1" class="level-text" binding-path="Level" />
         </ui:VisualElement>
         
         <ui:VisualElement name="HealthBar" class="bar-container" picking-mode="Ignore">
             <ui:VisualElement name="HealthFill" class="bar-fill health-fill" picking-mode="Ignore" />
-            <ui:Label text="HP" class="bar-tag" picking-mode="Ignore" />
+            <ui:Label name="HealthTag" text="HP" class="bar-tag" picking-mode="Ignore" />
             <ui:Label name="HealthText" text="100 / 100" class="hp-value-text" binding-path="HPText" picking-mode="Ignore" />
         </ui:VisualElement>
 
         <ui:VisualElement name="StaminaBar" class="bar-container" picking-mode="Ignore">
             <ui:VisualElement name="StaminaFill" class="bar-fill stamina-fill" picking-mode="Ignore" />
-            <ui:Label text="STA" class="bar-tag" picking-mode="Ignore" />
+            <ui:Label name="StaminaTag" text="STA" class="bar-tag" picking-mode="Ignore" />
         </ui:VisualElement>
     </ui:VisualElement>
 
