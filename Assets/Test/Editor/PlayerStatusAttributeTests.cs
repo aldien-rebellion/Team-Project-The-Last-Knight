@@ -50,6 +50,52 @@ namespace TheLastKnight.Tests
             }
         }
 
+        [TestCase(0, "StartSkill", "IsSkill1Unlocked", "SkillCooldownTimer", "UsingSkill", false)]
+        [TestCase(1, "StartSkill", "IsSkill1Unlocked", "SkillCooldownTimer", "UsingSkill", true)]
+        [TestCase(1, "StartBuff", "IsSkill2Unlocked", "BuffCooldownTimer", "Buffing", false)]
+        [TestCase(9, "StartBuff", "IsSkill2Unlocked", "BuffCooldownTimer", "Buffing", false)]
+        [TestCase(10, "StartBuff", "IsSkill2Unlocked", "BuffCooldownTimer", "Buffing", true)]
+        [TestCase(19, "StartExcalibur", "IsSkill3Unlocked", "ExcaliburCooldownTimer", "Excalibur", false)]
+        [TestCase(20, "StartExcalibur", "IsSkill3Unlocked", "ExcaliburCooldownTimer", "Excalibur", true)]
+        [TestCase(21, "StartExcalibur", "IsSkill3Unlocked", "ExcaliburCooldownTimer", "Excalibur", true)]
+        public void Skills_RequireUnlockLevel(int level, string startMethod, string unlockedProperty,
+            string cooldownProperty, string activeState, bool unlocked)
+        {
+            SetField(_stats, "_currentLevel", level);
+            float staminaBefore = (float)GetProp(_stats, "CurrentStamina");
+            string stateBefore = GetProp(_controller, "CurrentState").ToString();
+
+            Assert.That((bool)GetProp(_controller, unlockedProperty), Is.EqualTo(unlocked));
+            Invoke(_controller, startMethod);
+
+            Assert.That(GetProp(_controller, "CurrentState").ToString(),
+                Is.EqualTo(unlocked ? activeState : stateBefore));
+            if (unlocked)
+            {
+                Assert.That((float)GetProp(_controller, cooldownProperty), Is.GreaterThan(0f));
+            }
+            else
+            {
+                Assert.That((float)GetProp(_controller, cooldownProperty), Is.Zero);
+                Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(staminaBefore));
+                Assert.That((bool)GetProp(_stats, "HasSkill2Buff"), Is.False);
+            }
+        }
+
+        [Test]
+        public void Skills_UnlockImmediatelyWhenLevelChanges()
+        {
+            SetField(_stats, "_currentLevel", 1);
+            Assert.That((bool)GetProp(_controller, "IsSkill1Unlocked"), Is.True);
+            Assert.That((bool)GetProp(_controller, "IsSkill2Unlocked"), Is.False);
+            Assert.That((bool)GetProp(_controller, "IsSkill3Unlocked"), Is.False);
+            SetField(_stats, "_currentLevel", 10);
+            Assert.That((bool)GetProp(_controller, "IsSkill2Unlocked"), Is.True);
+            Assert.That((bool)GetProp(_controller, "IsSkill3Unlocked"), Is.False);
+            SetField(_stats, "_currentLevel", 20);
+            Assert.That((bool)GetProp(_controller, "IsSkill3Unlocked"), Is.True);
+        }
+
         [Test]
         public void STR_IncreasesAttackPower()
         {
@@ -549,6 +595,7 @@ namespace TheLastKnight.Tests
             float baseAtk = (float)GetProp(_stats, "AttackPower");
 
             // Cast Buff skill
+            SetField(_stats, "_currentLevel", 10);
             Invoke(_controller, "StartBuff");
 
             // Verify state
@@ -623,6 +670,7 @@ namespace TheLastKnight.Tests
         public void AnimationCancel_CanCancelSkills_IntoDashJumpAndAttack()
         {
             // 1. Start Buff (Skill 2)
+            SetField(_stats, "_currentLevel", 10);
             Invoke(_controller, "StartBuff");
             Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Buffing"));
             Assert.IsTrue((bool)GetProp(_controller, "CanCancelCurrentAnimation"), "Buffing must be cancellable");
@@ -710,6 +758,7 @@ namespace TheLastKnight.Tests
             Assert.IsFalse((bool)GetProp(_stats, "HasSkill2Buff"));
 
             // Start Buff
+            SetField(_stats, "_currentLevel", 10);
             Invoke(_controller, "StartBuff");
             Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Buffing"));
             // While buffing before completion, buff is not yet applied
@@ -722,6 +771,7 @@ namespace TheLastKnight.Tests
             Assert.That((float)GetProp(_stats, "AttackPower"), Is.EqualTo(baseAtk).Within(0.001f));
 
             // Now test natural completion: StartBuff and call EndBuff
+            SetField(_stats, "_currentLevel", 10);
             Invoke(_controller, "StartBuff");
             Invoke(_controller, "EndBuff");
             Assert.IsTrue((bool)GetProp(_stats, "HasSkill2Buff"), "Buff must be applied upon successful completion");
@@ -732,6 +782,7 @@ namespace TheLastKnight.Tests
         public void AnimationCancel_ExcaliburCancelled_ClearsTargetsAndStopsAction()
         {
             SetField(_stats, "_currentStamina", 100f);
+            SetField(_stats, "_currentLevel", 20);
             Invoke(_controller, "StartExcalibur");
             Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Excalibur"));
             Assert.IsTrue((bool)GetProp(_controller, "CanCancelCurrentAnimation"), "Excalibur must be cancellable");

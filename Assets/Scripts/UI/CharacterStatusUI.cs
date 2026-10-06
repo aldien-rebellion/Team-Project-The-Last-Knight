@@ -658,6 +658,8 @@ namespace TheLastKnight.UI
                 "Channel the full radiance of the holy blade, unleashing a piercing holy beam across the battlefield. Hotkey [T]."
             };
             float[] skillXs = { 328f, 418f, 502f };
+            int[] unlockLevels = { Player.PlayerController.Skill1UnlockLevel,
+                Player.PlayerController.Skill2UnlockLevel, Player.PlayerController.Skill3UnlockLevel };
 
             for (int i = 0; i < 3; i++)
             {
@@ -674,16 +676,20 @@ namespace TheLastKnight.UI
                 var btn = slotGo.GetComponent<Button>();
                 btn.onClick.AddListener(() =>
                 {
-                    ShowTooltip(skillNames[index], "Arthur's Combat Skill", skillDescs[index]);
+                    ShowSkillTooltip(index);
                     AudioManager.Instance?.PlaySfx("click");
                 });
 
                 AddHoverHighlight(slotGo, img);
                 AddHoverTrigger(slotGo,
-                    () => ShowTooltip(skillNames[index], "Arthur's Combat Skill", skillDescs[index]),
+                    () => ShowSkillTooltip(index),
                     HideTooltip);
 
-                _skillSlots.Add(new SkillSlotUI { button = btn, icon = img, name = skillNames[i], description = skillDescs[i] });
+                var lockOverlay = SkillCooldownHUD.CreateLockOverlay(slotGo.transform, unlockLevels[i]);
+                lockOverlay.transform.localScale = Vector3.one * (54f / 48f);
+                lockOverlay.SetActive(i > 0);
+                _skillSlots.Add(new SkillSlotUI { button = btn, icon = img, name = skillNames[i],
+                    description = skillDescs[i], lockOverlay = lockOverlay, unlockLevel = unlockLevels[i] });
             }
 
             // 5. Quick Items Section (5 Slots) - Priority Queue 1 to 5
@@ -1066,6 +1072,15 @@ namespace TheLastKnight.UI
         #endregion
 
         #region Tooltip
+        private void ShowSkillTooltip(int index)
+        {
+            var slot = _skillSlots[index];
+            var player = GetPlayer();
+            bool unlocked = player != null && player.Level >= slot.unlockLevel;
+            string hint = $"Unlocks at Level {slot.unlockLevel}\n" + (unlocked ? "Unlocked" : "Locked");
+            ShowTooltip(slot.name, "Arthur's Combat Skill", slot.description, hint);
+        }
+
         public void ShowTooltip(string title, string subtitle, string description, string hint = null)
         {
             if (_tooltipBox == null) return;
@@ -1315,6 +1330,8 @@ namespace TheLastKnight.UI
             var player = GetPlayer();
 
             int level = player != null ? player.Level : 1;
+            foreach (var slot in _skillSlots)
+                slot.lockOverlay.SetActive(level < slot.unlockLevel);
             float expPct = player != null ? player.EXPPercentage : 0f;
             int exp = player != null ? player.EXP : 0;
             int expNeeded = player != null ? player.EXPNeeded : 100;
@@ -1966,6 +1983,8 @@ namespace TheLastKnight.UI
             public Image icon;
             public string name;
             public string description;
+            public GameObject lockOverlay;
+            public int unlockLevel;
         }
         #endregion
     }

@@ -239,5 +239,98 @@ namespace TheLastKnight.Tests
                 if (statusObj != null) UnityEngine.Object.DestroyImmediate(statusObj);
             }
         }
+
+        [Test]
+        public void CharacterStatusUI_SkillLocksAndHoverHints_FollowPlayerLevel()
+        {
+            var playerObj = UnityEngine.Object.Instantiate(UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+            var statusObj = new GameObject("Test_CharacterStatusUI_SkillLocks");
+            GameObject canvasObj = null;
+            try
+            {
+                var stats = playerObj.GetComponent(_playerStatsType);
+                Invoke(stats, "Awake");
+                var status = statusObj.AddComponent(_characterStatusType);
+                Invoke(status, "Awake");
+                canvasObj = GetProp(status, "CanvasObject") as GameObject;
+                canvasObj.SetActive(true);
+                _characterStatusType.GetField("_cachedStats", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(status, stats);
+                var slots = GetField(status, "_skillSlots") as IList;
+                var levelField = _playerStatsType.GetField("_currentLevel", BindingFlags.Instance | BindingFlags.NonPublic);
+                foreach (int level in new[] { 1, 9, 10, 19, 20 })
+                {
+                    levelField.SetValue(stats, level);
+                    Invoke(status, "Refresh", false);
+                    for (int i = 0; i < 3; i++)
+                    {
+                        int requiredLevel = i == 0 ? 1 : i == 1 ? 10 : 20;
+                        bool locked = level < requiredLevel;
+                        Assert.That(((GameObject)GetField(slots[i], "lockOverlay")).activeSelf, Is.EqualTo(locked));
+                        var button = (Button)GetField(slots[i], "button");
+                        UnityEngine.EventSystems.ExecuteEvents.Execute(button.gameObject,
+                            new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current),
+                            UnityEngine.EventSystems.ExecuteEvents.pointerEnterHandler);
+                        var tooltip = (GameObject)GetField(status, "_tooltipBox");
+                        Assert.That(tooltip.activeSelf, Is.True);
+                        var hint = GetField(status, "_txtTooltipHint");
+                        string text = (string)hint.GetType().GetProperty("text").GetValue(hint);
+                        var localization = RuntimeType("TheLastKnight.Core.LocalizationManager");
+                        string expected = (string)localization.GetMethod("Translate").Invoke(null,
+                            new object[] { $"Unlocks at Level {requiredLevel}\n" + (locked ? "Locked" : "Unlocked") });
+                        Assert.That(text, Is.EqualTo(expected));
+                        UnityEngine.EventSystems.ExecuteEvents.Execute(button.gameObject,
+                            new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current),
+                            UnityEngine.EventSystems.ExecuteEvents.pointerExitHandler);
+                        Assert.That(tooltip.activeSelf, Is.False);
+                    }
+                }
+                levelField.SetValue(stats, 1);
+                Invoke(status, "Refresh", false);
+                Invoke(status, "ShowSkillTooltip", 1);
+                CaptureSkillLockPreview(canvasObj);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(statusObj);
+                if (canvasObj != null) UnityEngine.Object.DestroyImmediate(canvasObj);
+                UnityEngine.Object.DestroyImmediate(playerObj);
+            }
+        }
+
+        private static void CaptureSkillLockPreview(GameObject canvasObj)
+        {
+            var cameraObj = new GameObject("SkillLockPreviewCamera");
+            var texture = new RenderTexture(1280, 800, 24);
+            var image = new Texture2D(1280, 800, TextureFormat.RGB24, false);
+            var previous = RenderTexture.active;
+            try
+            {
+                var camera = cameraObj.AddComponent<Camera>();
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.08f, 0.08f, 0.1f);
+                camera.cullingMask = ~0;
+                camera.transform.position = new Vector3(0f, 0f, -10000f);
+                camera.targetTexture = texture;
+                var canvas = canvasObj.GetComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                canvas.worldCamera = camera;
+                canvas.planeDistance = 1f;
+                Canvas.ForceUpdateCanvases();
+                camera.Render();
+                RenderTexture.active = texture;
+                image.ReadPixels(new Rect(0, 0, 1280, 800), 0, 0);
+                image.Apply();
+                System.IO.Directory.CreateDirectory("Temp/SkillLockPreview");
+                System.IO.File.WriteAllBytes("Temp/SkillLockPreview/status-lock-test.png", image.EncodeToPNG());
+            }
+            finally
+            {
+                RenderTexture.active = previous;
+                UnityEngine.Object.DestroyImmediate(cameraObj);
+                UnityEngine.Object.DestroyImmediate(image);
+                texture.Release();
+                UnityEngine.Object.DestroyImmediate(texture);
+            }
+        }
     }
 }

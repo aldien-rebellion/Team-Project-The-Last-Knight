@@ -262,6 +262,7 @@ namespace TheLastKnight.Tests
                 Physics2D.SyncTransforms();
 
                 SetProp(controller, "ExcaliburDamageMultiplier", 5.0f);
+                SetField(stats, "_currentLevel", 20);
                 Invoke(controller, "StartExcalibur");
                 Invoke(controller, "ApplyExcaliburHits");
 
@@ -308,6 +309,7 @@ namespace TheLastKnight.Tests
                 Physics2D.SyncTransforms();
 
                 SetProp(controller, "ExcaliburDamageMultiplier", 4.0f);
+                SetField(stats, "_currentLevel", 20);
                 Invoke(controller, "StartExcalibur");
                 Invoke(controller, "ApplyExcaliburHits");
 
@@ -364,6 +366,7 @@ namespace TheLastKnight.Tests
                 Physics2D.SyncTransforms();
 
                 SetProp(controller, "ExcaliburDamageMultiplier", 4.0f);
+                SetField(stats, "_currentLevel", 20);
                 Invoke(controller, "StartExcalibur");
                 Invoke(controller, "ApplyExcaliburHits");
 
@@ -407,6 +410,7 @@ namespace TheLastKnight.Tests
                 float initialHP = (float)GetProp(stats, "CurrentHP");
 
                 // Start Excalibur
+                SetField(stats, "_currentLevel", 20);
                 Invoke(controller, "StartExcalibur");
 
                 Assert.That(GetProp(controller, "CurrentState").ToString(), Is.EqualTo("Excalibur"));

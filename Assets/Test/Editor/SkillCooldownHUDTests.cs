@@ -169,6 +169,48 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
+        public void LockedSkills_ShowChainsUntilTheirUnlockLevel()
+        {
+            var playerGo = new GameObject("TestPlayer_LockLevels");
+            try
+            {
+                var player = playerGo.AddComponent(_playerType);
+                var statsType = RuntimeType("TheLastKnight.Stats.PlayerStats");
+                var stats = playerGo.GetComponent(statsType) ?? playerGo.AddComponent(statsType);
+                var levelField = statsType.GetField("_currentLevel", BindingFlags.Instance | BindingFlags.NonPublic);
+                Invoke(_hud, "BindPlayer", player);
+                var slots = GetProp(_hud, "Slots") as IList;
+                foreach (int level in new[] { 1, 9, 10, 19, 20 })
+                {
+                    levelField.SetValue(stats, level);
+                    Invoke(_hud, "LateUpdate");
+                    for (int i = 0; i < 3; i++)
+                    {
+                        bool locked = level < (i == 0 ? 1 : i == 1 ? 10 : 20);
+                        var overlay = GetField(slots[i], "LockOverlay") as GameObject;
+                        Assert.That(overlay.activeSelf, Is.EqualTo(locked), $"Slot {i}, level {level}");
+                        Assert.That(overlay.transform.Find("Lock_Body"), Is.Not.Null);
+                        foreach (var graphic in overlay.GetComponentsInChildren<Graphic>(true))
+                            Assert.That(graphic.raycastTarget, Is.False);
+                        if (locked)
+                        {
+                            Assert.That(((Image)GetField(slots[i], "ShadowOverlay")).gameObject.activeSelf, Is.False);
+                            Assert.That(((Image)GetField(slots[i], "IconImage")).color.r, Is.LessThan(1f));
+                        }
+                        else
+                        {
+                            Assert.That(((Image)GetField(slots[i], "IconImage")).color, Is.EqualTo(Color.white));
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(playerGo);
+            }
+        }
+
+        [Test]
         public void LateUpdate_SynchronizesWithPlayerController()
         {
             GameObject playerGo = null;
@@ -176,6 +218,9 @@ namespace TheLastKnight.Tests
             {
                 playerGo = new GameObject("TestPlayer");
                 var player = playerGo.AddComponent(_playerType);
+                var statsType = RuntimeType("TheLastKnight.Stats.PlayerStats");
+                var stats = playerGo.GetComponent(statsType) ?? playerGo.AddComponent(statsType);
+                statsType.GetField("_currentLevel", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(stats, 20);
                 SetProp(player, "SkillCooldownTimer", 2.5f);
                 SetProp(player, "SkillCooldown", 5.0f);
                 SetProp(player, "BuffCooldownTimer", 4.0f);

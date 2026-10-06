@@ -337,6 +337,11 @@ namespace TheLastKnight.UI
             badgeText.fontStyle = FontStyles.Bold;
             badgeText.raycastTarget = false;
 
+            var lockOverlay = CreateLockOverlay(slotGo.transform, index == 0 ? PlayerController.Skill1UnlockLevel
+                : index == 1 ? PlayerController.Skill2UnlockLevel : PlayerController.Skill3UnlockLevel);
+            lockOverlay.transform.SetSiblingIndex(badgeGo.transform.GetSiblingIndex());
+            lockOverlay.SetActive(false);
+
             return new SkillSlotHUD
             {
                 SlotRoot = slotGo,
@@ -345,10 +350,67 @@ namespace TheLastKnight.UI
                 CooldownText = cdText,
                 KeyBadgeText = badgeText,
                 FlashImage = flashImg,
+                LockOverlay = lockOverlay,
                 SkillName = skillName,
                 ActionName = actionName,
                 DefaultKey = defaultKey
             };
+        }
+
+        internal static GameObject CreateLockOverlay(Transform parent, int requiredLevel)
+        {
+            var shade = CreateLockPart(parent, "Skill_Lock", Vector2.zero, new Vector2(48f, 48f),
+                new Color(0f, 0f, 0f, 0.65f));
+            Color steel = new Color(0.72f, 0.77f, 0.84f);
+            // Two crossing chains; each hollow link has four metal edges.
+            foreach (float angle in new[] { -35f, 35f })
+            {
+                var chain = new GameObject("Chain", typeof(RectTransform));
+                chain.transform.SetParent(shade.transform, false);
+                chain.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
+                for (int i = -2; i <= 2; i++)
+                {
+                    float x = i * 10f;
+                    CreateLockPart(chain.transform, "Link_Top", new Vector2(x, 3f), new Vector2(11f, 2f), steel);
+                    CreateLockPart(chain.transform, "Link_Bottom", new Vector2(x, -3f), new Vector2(11f, 2f), steel);
+                    CreateLockPart(chain.transform, "Link_Left", new Vector2(x - 4.5f, 0f), new Vector2(2f, 6f), steel);
+                    CreateLockPart(chain.transform, "Link_Right", new Vector2(x + 4.5f, 0f), new Vector2(2f, 6f), steel);
+                }
+            }
+            CreateLockPart(shade.transform, "Shackle_Top", new Vector2(0f, 9f), new Vector2(12f, 3f), steel);
+            CreateLockPart(shade.transform, "Shackle_Left", new Vector2(-5f, 5f), new Vector2(3f, 9f), steel);
+            CreateLockPart(shade.transform, "Shackle_Right", new Vector2(5f, 5f), new Vector2(3f, 9f), steel);
+            CreateLockPart(shade.transform, "Lock_Border", new Vector2(0f, -3f), new Vector2(22f, 18f), new Color(0.15f, 0.12f, 0.06f));
+            CreateLockPart(shade.transform, "Lock_Body", new Vector2(0f, -3f), new Vector2(18f, 14f), new Color(0.88f, 0.70f, 0.30f));
+            CreateLockPart(shade.transform, "Keyhole", new Vector2(0f, -3f), new Vector2(3f, 6f), new Color(0.15f, 0.12f, 0.06f));
+
+            var labelGo = new GameObject("Unlock_Level", typeof(RectTransform), typeof(TextMeshProUGUI));
+            labelGo.transform.SetParent(shade.transform, false);
+            var labelRt = labelGo.GetComponent<RectTransform>();
+            labelRt.sizeDelta = new Vector2(48f, 12f);
+            labelRt.anchoredPosition = new Vector2(0f, -19f);
+            var label = labelGo.GetComponent<TextMeshProUGUI>();
+            LocalizedText.Set(label, $"Lv.{requiredLevel}");
+            label.fontSize = 10f;
+            label.fontStyle = FontStyles.Bold;
+            label.alignment = TextAlignmentOptions.Center;
+            label.color = Color.white;
+            label.raycastTarget = false;
+            return shade.gameObject;
+        }
+
+        private static Image CreateLockPart(Transform parent, string name, Vector2 position, Vector2 size, Color color)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(parent, false);
+            var rt = go.GetComponent<RectTransform>();
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = position;
+            rt.sizeDelta = size;
+            var img = go.GetComponent<Image>();
+            img.color = color;
+            img.raycastTarget = false;
+            return img;
         }
 
         private void LateUpdate()
@@ -365,6 +427,7 @@ namespace TheLastKnight.UI
                 // No active player: hide cooldowns, show full icons
                 for (int i = 0; i < _slots.Count; i++)
                 {
+                    _slots[i].UpdateLockState(false);
                     _slots[i].UpdateCooldown(0f, 1f);
                     _slots[i].UpdateKeyBinding();
                 }
@@ -374,6 +437,7 @@ namespace TheLastKnight.UI
             // Slot 0: Skill 1 (Carnage Burst)
             if (_slots.Count > 0)
             {
+                _slots[0].UpdateLockState(!_cachedPlayer.IsSkill1Unlocked);
                 _slots[0].UpdateCooldown(_cachedPlayer.SkillCooldownTimer, _cachedPlayer.SkillMaxCooldown);
                 _slots[0].UpdateKeyBinding();
             }
@@ -381,6 +445,7 @@ namespace TheLastKnight.UI
             // Slot 1: Skill 2 (Buff / Iron Will)
             if (_slots.Count > 1)
             {
+                _slots[1].UpdateLockState(!_cachedPlayer.IsSkill2Unlocked);
                 _slots[1].UpdateCooldown(_cachedPlayer.BuffCooldownTimer, _cachedPlayer.BuffMaxCooldown);
                 _slots[1].UpdateKeyBinding();
             }
@@ -388,6 +453,7 @@ namespace TheLastKnight.UI
             // Slot 2: Skill 3 (Excalibur)
             if (_slots.Count > 2)
             {
+                _slots[2].UpdateLockState(!_cachedPlayer.IsSkill3Unlocked);
                 _slots[2].UpdateCooldown(_cachedPlayer.ExcaliburCooldownTimer, _cachedPlayer.ExcaliburMaxCooldown);
                 _slots[2].UpdateKeyBinding();
             }
@@ -403,15 +469,33 @@ namespace TheLastKnight.UI
             public TextMeshProUGUI CooldownText;
             public TextMeshProUGUI KeyBadgeText;
             public Image FlashImage;
+            public GameObject LockOverlay;
             public string SkillName;
             public string ActionName;
             public string DefaultKey;
 
             private bool _wasOnCooldown;
             private Coroutine _flashRoutine;
+            private bool _isLocked;
+
+            public void UpdateLockState(bool locked)
+            {
+                _isLocked = locked;
+                if (LockOverlay != null) LockOverlay.SetActive(locked);
+                if (!locked) return;
+                _wasOnCooldown = false;
+                if (_flashRoutine != null && Instance != null)
+                    Instance.StopCoroutine(_flashRoutine);
+                _flashRoutine = null;
+                if (FlashImage != null) FlashImage.color = Color.clear;
+                if (ShadowOverlay != null) ShadowOverlay.gameObject.SetActive(false);
+                if (CooldownText != null) LocalizedText.Set(CooldownText, "");
+                if (IconImage != null) IconImage.color = new Color(0.3f, 0.3f, 0.3f, 1f);
+            }
 
             public void UpdateCooldown(float currentTimer, float maxTimer)
             {
+                if (_isLocked) return;
                 bool onCooldown = currentTimer > 0.01f;
                 float normalized = maxTimer > 0.001f ? Mathf.Clamp01(currentTimer / maxTimer) : 0f;
 

@@ -155,6 +155,19 @@ namespace TheLastKnight.Player
         public float BaseDashSpeed => _baseDashSpeed;
         public float BaseDashDuration => _baseDashDuration;
 
+        public const int Skill1UnlockLevel = 1;
+        public const int Skill2UnlockLevel = 10;
+        public const int Skill3UnlockLevel = 20;
+        public bool IsSkill1Unlocked => HasSkillLevel(Skill1UnlockLevel);
+        public bool IsSkill2Unlocked => HasSkillLevel(Skill2UnlockLevel);
+        public bool IsSkill3Unlocked => HasSkillLevel(Skill3UnlockLevel);
+
+        private bool HasSkillLevel(int requiredLevel)
+        {
+            var stats = GetComponent<PlayerStats>();
+            return stats != null && stats.Level >= requiredLevel;
+        }
+
         // Cooldown and multiplier properties (accessible for tests/UI)
         public float DashCooldown { get => _dashCooldown; set => _dashCooldown = value; }
         public float DashIFrameDuration { get => _dashIFrameDuration; set => _dashIFrameDuration = value; }
@@ -460,7 +473,7 @@ namespace TheLastKnight.Player
                 }
             }
             // Check for Skill Trigger (Carnage Burst - Key E)
-            else if (_inputHandler != null && _inputHandler.UseSkillTriggered && _skillCooldownTimer <= 0f)
+            else if (_inputHandler != null && _inputHandler.UseSkillTriggered && IsSkill1Unlocked && _skillCooldownTimer <= 0f)
             {
                 if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill)
                 {
@@ -479,7 +492,7 @@ namespace TheLastKnight.Player
                 }
             }
             // Check for Buff Trigger (Key R)
-            else if (_inputHandler != null && _inputHandler.UseBuffTriggered && _buffCooldownTimer <= 0f)
+            else if (_inputHandler != null && _inputHandler.UseBuffTriggered && IsSkill2Unlocked && _buffCooldownTimer <= 0f)
             {
                 if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.Buffing)
                 {
@@ -491,7 +504,7 @@ namespace TheLastKnight.Player
                 }
             }
             // Check for Excalibur Trigger (Key T)
-            else if (_inputHandler != null && _inputHandler.UseExcaliburTriggered && _excaliburCooldownTimer <= 0f)
+            else if (_inputHandler != null && _inputHandler.UseExcaliburTriggered && IsSkill3Unlocked && _excaliburCooldownTimer <= 0f)
             {
                 if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.Excalibur)
                 {
@@ -780,6 +793,7 @@ namespace TheLastKnight.Player
 
         private void StartSkill()
         {
+            if (!IsSkill1Unlocked) return;
             if (!GetComponent<PlayerStats>().TrySpendStamina(25f)) return;
             _skillTargets.Clear();
             CurrentState = PlayerState.UsingSkill;
@@ -984,6 +998,7 @@ namespace TheLastKnight.Player
 
         private void StartBuff()
         {
+            if (!IsSkill2Unlocked) return;
             CurrentState = PlayerState.Buffing;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("buff");
             _buffTimer = _buffDuration;
@@ -1049,6 +1064,7 @@ namespace TheLastKnight.Player
 
         private void StartExcalibur()
         {
+            if (!IsSkill3Unlocked) return;
             if (!GetComponent<PlayerStats>().TrySpendStamina(50f)) return;
             StopExcaliburSetupSounds();
             _excaliburTargets.Clear();
