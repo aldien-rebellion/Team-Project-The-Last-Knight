@@ -9,6 +9,18 @@ namespace TheLastKnight.Inventory
     {
         private static readonly Dictionary<string, Func<InventoryItemData>> _registry = new Dictionary<string, Func<InventoryItemData>>(StringComparer.OrdinalIgnoreCase)
         {
+            ["earth_spellbook"] = () => new InventoryItemData
+            {
+                id = "earth_spellbook",
+                name = "Earth Spellbook",
+                typeName = "Spellbook",
+                description = "Grants EXP equal to the amount required to advance from Lv.10 to Lv.11. Right-click in the status window and choose ใช้ to consume one book.",
+                iconPath = "CharacterStatus/Items/Malicious_book&scrollset1/earth spellbook",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                onUse = player => { if (player != null) player.AddEXP(player.EarthSpellbookEXP); }
+            },
             ["potion_heal"] = () => new InventoryItemData
             {
                 id = "potion_heal",

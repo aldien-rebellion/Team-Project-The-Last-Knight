@@ -7,9 +7,112 @@ namespace TheLastKnight.Tests
 {
     public class ItemAuthoringTests
     {
+        [TestCase(10, 0)]
+        [TestCase(20, 37)]
+        public void EarthSpellbook_GrantsLevelTenThresholdAndPreservesExistingEXP(int level, int startingEXP)
+        {
+            var playerType = FindType("TheLastKnight.Stats.PlayerStats");
+            var template = ScriptableObject.CreateInstance(FindType("TheLastKnight.Stats.CharacterStatsSO"));
+            var go = new GameObject("EarthSpellbookTest");
+            go.SetActive(false);
+            try
+            {
+                template.GetType().GetField("baseExpNeeded").SetValue(template, 100);
+                template.GetType().GetField("expGrowthMultiplier").SetValue(template, 1.25f);
+                var player = go.AddComponent(playerType);
+                var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+                playerType.GetField("_statsTemplate", flags).SetValue(player, template);
+                playerType.GetField("_currentLevel", flags).SetValue(player, level);
+                playerType.GetField("_currentEXP", flags).SetValue(player, startingEXP);
+                var item = Find("ItemRegistry").GetMethod("CreateItem").Invoke(null, new object[] { "earth_spellbook", 2 });
+                Assert.IsNotNull(item.GetType().GetProperty("Icon").GetValue(item));
+                Assert.IsTrue((bool)Field(item, "isConsumable"));
+                ((Delegate)Field(item, "onUse")).DynamicInvoke(player);
+                int expected = Mathf.RoundToInt(100f * Mathf.Pow(1.25f, 9));
+                Assert.AreEqual(745, expected);
+                Assert.AreEqual(level == 10 ? 11 : 20, playerType.GetProperty("Level").GetValue(player));
+                Assert.AreEqual(level == 10 ? 0 : startingEXP + expected, playerType.GetProperty("EXP").GetValue(player));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+                UnityEngine.Object.DestroyImmediate(template);
+            }
+        }
+
         private static Type Find(string name) => AppDomain.CurrentDomain.GetAssemblies()
             .Select(a => a.GetType("TheLastKnight.Inventory." + name)).First(t => t != null);
         private static object Field(object item, string name) => item.GetType().GetField(name).GetValue(item);
+
+        [Test]
+        public void EarthSpellbook_MenuShowsUseAndConsumptionRemovesOneBook()
+        {
+            var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+            var inventoryType = Find("InventoryManager");
+            var singleton = inventoryType.GetField("_instance", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            var previousInventory = singleton.GetValue(null);
+            var owner = new GameObject("EarthSpellbookMenuTest");
+            owner.SetActive(false);
+            var playerObject = new GameObject("EarthSpellbookMenuPlayer");
+            var canvasObject = new GameObject("EarthSpellbookMenuCanvas", typeof(Canvas), typeof(UnityEngine.UI.GraphicRaycaster));
+            var cameraObject = new GameObject("EarthSpellbookMenuCamera", typeof(Camera));
+            var texture = new RenderTexture(640, 360, 24);
+            var previousRT = RenderTexture.active;
+            Texture2D image = null;
+            try
+            {
+                var playerType = FindType("TheLastKnight.Stats.PlayerStats");
+                var player = playerObject.AddComponent(playerType);
+                playerType.GetField("_currentHP", flags).SetValue(player, 100f);
+                var inventory = owner.AddComponent(inventoryType);
+                singleton.SetValue(null, inventory);
+                var item = Find("ItemRegistry").GetMethod("CreateItem").Invoke(null, new object[] { "earth_spellbook", 2 });
+                var slots = (Array)inventoryType.GetField("_inventorySlots", flags).GetValue(inventory);
+                slots.SetValue(item, 0);
+                var uiType = FindType("TheLastKnight.UI.CharacterStatusUI");
+                var ui = owner.AddComponent(uiType);
+                uiType.GetField("_canvasObject", flags).SetValue(ui, canvasObject);
+                uiType.GetField("_cachedStats", flags).SetValue(ui, player);
+                uiType.GetField("_isOpen", flags).SetValue(ui, true);
+                var camera = cameraObject.GetComponent<Camera>();
+                camera.enabled = false;
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.15f, 0.18f, 0.22f);
+                camera.targetTexture = texture;
+                var canvas = canvasObject.GetComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                canvas.worldCamera = camera;
+                canvas.planeDistance = 1f;
+                Canvas.ForceUpdateCanvases();
+                var slotType = Enum.Parse(Find("SlotType"), "Inventory");
+                uiType.GetMethod("ShowItemUseMenu").Invoke(ui, new object[] { slotType, 0, new Vector2(320, 180) });
+                var use = canvasObject.transform.Find("ItemUseMenu/Use");
+                Assert.IsNotNull(use);
+                Assert.IsTrue(use.GetComponent<UnityEngine.UI.Button>().interactable);
+                Assert.AreEqual(2, Field(item, "count"), "Opening the menu must not split or consume the stack.");
+                Canvas.ForceUpdateCanvases();
+                camera.Render();
+                RenderTexture.active = texture;
+                image = new Texture2D(640, 360, TextureFormat.RGB24, false);
+                image.ReadPixels(new Rect(0, 0, 640, 360), 0, 0);
+                image.Apply();
+                System.IO.Directory.CreateDirectory("Temp");
+                System.IO.File.WriteAllBytes("Temp/EarthSpellbookMenu.png", image.EncodeToPNG());
+                Assert.IsTrue((bool)inventoryType.GetMethod("UseSlot").Invoke(inventory, new object[] { slotType, 0, player }));
+                Assert.AreEqual(1, Field(item, "count"));
+            }
+            finally
+            {
+                singleton.SetValue(null, previousInventory);
+                RenderTexture.active = previousRT;
+                UnityEngine.Object.DestroyImmediate(owner);
+                UnityEngine.Object.DestroyImmediate(playerObject);
+                UnityEngine.Object.DestroyImmediate(canvasObject);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+                UnityEngine.Object.DestroyImmediate(texture);
+                if (image != null) UnityEngine.Object.DestroyImmediate(image);
+            }
+        }
 
         [Test]
         public void AuthoredCatalog_PreservesLegacyIconsAndCallbacks()

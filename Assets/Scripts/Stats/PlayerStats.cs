@@ -216,6 +216,8 @@ namespace TheLastKnight.Stats
         public int EXP => _currentEXP;
         [CreateProperty]
         public int EXPNeeded => _statsTemplate != null ? _statsTemplate.GetExpNeededForLevel(_currentLevel) : 100;
+
+        public int EarthSpellbookEXP => _statsTemplate != null ? _statsTemplate.GetExpNeededForLevel(10) : 100;
         [CreateProperty]
         public float EXPPercentage => EXPNeeded > 0 ? (float)_currentEXP / EXPNeeded : 0;
         [CreateProperty]
