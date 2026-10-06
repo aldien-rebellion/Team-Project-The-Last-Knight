@@ -356,6 +356,8 @@ MonoBehaviour:
   _maxHealth: 5000
   _defense: 100
   _attackPower: 700
+  _attackHealthCostPercent: 0.02
+  _attackHealthCostFloorPercent: 0.3
   _goldReward: 4998
   _expReward: 3175
   _currentStatus: 0

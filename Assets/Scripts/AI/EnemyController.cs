@@ -920,6 +920,7 @@ _rb = GetComponent<Rigidbody2D>();
                 yield break;
             }
 
+            _stats.ConsumeAttackHealth();
             if (dragonAudio != null && !ranged)
                 dragonAudio.PlayAttackAnimation();
             else
@@ -1280,6 +1281,7 @@ _rb = GetComponent<Rigidbody2D>();
                 yield break;
             }
 
+            _stats.ConsumeAttackHealth();
             if (waitForAnimation && _cycleNonParryableSkills)
                 _animator.Play(skill.animationName, 0, 0f);
             else
