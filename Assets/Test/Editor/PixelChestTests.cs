@@ -13,6 +13,37 @@ namespace TheLastKnight.Tests
             .Select(a => a.GetType("TheLastKnight.Environment." + name)).First(t => t != null);
         private static object Field(object value, string name) => value.GetType().GetField(name).GetValue(value);
 
+        [TestCase("earth_spellbook", 0)]
+        [TestCase("advanced_spellbook", 1)]
+        [TestCase("ice_spellbook", 2)]
+        [TestCase("earth_scroll", 2)]
+        [TestCase("fire_scroll", 2)]
+        [TestCase("light_scroll", 2)]
+        [TestCase("thunder_scroll", 2)]
+        public void StatusConsumable_IsEnabledOnlyInAssignedPoolAndRetainsUseEffect(string id, int tier)
+        {
+            var type = Find("ChestLootTable");
+            var table = AssetDatabase.LoadAssetAtPath("Assets/Resources/Items/ChestLootTable.asset", type);
+            var entry = ((IList)Field(table, "items")).Cast<object>()
+                .Single(e => (string)Field(Field(e, "item"), "id") == id);
+            Assert.IsTrue((bool)Field(entry, "enabled"));
+            Assert.AreEqual(tier, Convert.ToInt32(Field(entry, "rarity")));
+            var item = Field(entry, "item");
+            Assert.NotNull(Field(item, "icon"));
+            foreach (var rarity in Enum.GetValues(Find("ChestItemRarity")))
+            {
+                var ids = ((IList)type.GetMethod("GetPool").Invoke(table, new[] { rarity }))
+                    .Cast<object>().Select(i => (string)Field(i, "id"));
+                Assert.AreEqual(Convert.ToInt32(rarity) == tier, ids.Contains(id));
+            }
+            var registry = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(a => a.GetType("TheLastKnight.Inventory.ItemRegistry")).First(t => t != null);
+            var created = registry.GetMethod("CreateItem").Invoke(null, new object[] { id, 1 });
+            Assert.NotNull(Field(created, "onUse"));
+            Assert.IsTrue((bool)Field(created, "isConsumable"));
+            Assert.IsTrue((bool)created.GetType().GetProperty("HasStatusUseMenu").GetValue(created));
+        }
+
         [Test]
         public void OpenedChest_SurvivesSaveReloadAndRecreatedMapInstance()
         {

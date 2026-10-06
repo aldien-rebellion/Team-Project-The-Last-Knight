@@ -84,6 +84,35 @@ namespace TheLastKnight.UI
         [SerializeField] private List<ShopItemConfig> _shopCatalog = new List<ShopItemConfig>();
         public List<ShopItemConfig> Catalog => _shopCatalog;
 
+        private readonly RandomMerchantOffer _localRandomOffer = new RandomMerchantOffer();
+        private ShopItemConfig _randomOfferConfig;
+        private RandomMerchantOffer RandomOffer
+        {
+            get
+            {
+                var state = GameManager.Instance != null ? GameManager.Instance.State : null;
+                if (state == null) return _localRandomOffer;
+                if (state.randomMerchantOffer == null) state.randomMerchantOffer = new RandomMerchantOffer();
+                return state.randomMerchantOffer;
+            }
+        }
+
+        private void SyncRandomOffer()
+        {
+            var offer = RandomOffer;
+            offer.EnsureInitialized();
+            var item = ItemRegistry.CreateItem(offer.itemId);
+            if (_randomOfferConfig == null) _randomOfferConfig = new ShopItemConfig();
+            _randomOfferConfig.id = item.id;
+            _randomOfferConfig.displayName = item.name;
+            _randomOfferConfig.category = "สินค้าสุ่ม • โอกาสเท่ากัน 1/7";
+            _randomOfferConfig.description = item.description + "\nซื้อสำเร็จแล้วสุ่มไอเท็มถัดไป และราคาเพิ่มขึ้น 10%";
+            _randomOfferConfig.customIcon = item.Icon;
+            _randomOfferConfig.buyPrice = offer.price;
+            _randomOfferConfig.initialStock = -1;
+            _randomOfferConfig.itemType = ShopItemType.InventoryItem;
+        }
+
         [Header("Sell Settings")]
         [Range(0.1f, 1.0f)]
         [SerializeField] private float _sellPriceMultiplier = 0.75f; // 75% of buy price
@@ -891,6 +920,8 @@ namespace TheLastKnight.UI
             scroll.content = contentRt;
 
             // Instantiate rows for each shop item
+            SyncRandomOffer();
+            _shopRowViews.Add(CreateShopItemRow(contentGo.transform, _randomOfferConfig));
             foreach (var item in _shopCatalog)
             {
                 var rowView = CreateShopItemRow(contentGo.transform, item);
@@ -1667,7 +1698,7 @@ namespace TheLastKnight.UI
             vGroup.spacing = 4f;
             vGroup.childControlWidth = true;
             vGroup.childForceExpandWidth = true;
-            vGroup.childControlHeight = false;
+            vGroup.childControlHeight = true;
             vGroup.childForceExpandHeight = false;
 
             var fitter = _tooltipGo.GetComponent<ContentSizeFitter>();
@@ -1710,6 +1741,8 @@ namespace TheLastKnight.UI
             TheLastKnight.UI.LocalizedText.Set(_txtTooltipCategory, category);
             TheLastKnight.UI.LocalizedText.Set(_txtTooltipDesc, desc);
             _tooltipGo.SetActive(true);
+            _tooltipGo.GetComponent<VerticalLayoutGroup>().childControlHeight = true;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_tooltipRect);
             UpdateTooltipPosition();
         }
 
@@ -1723,15 +1756,19 @@ namespace TheLastKnight.UI
             if (_tooltipGo == null || !_tooltipGo.activeSelf) return;
 
             Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
-            Vector2 offset = new Vector2(18f, -18f);
-
-            float screenW = Screen.width;
-            float screenH = Screen.height;
-
-            if (mousePos.x + 280f > screenW) offset.x = -280f;
-            if (mousePos.y - 140f < 0) offset.y = 140f;
-
-            _tooltipRect.position = mousePos + offset;
+            var parent = _tooltipRect.parent as RectTransform;
+            var canvas = _tooltipGo.GetComponentInParent<Canvas>();
+            var camera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+            if (parent == null || !RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, mousePos, camera, out var point)) return;
+            float width = _tooltipRect.rect.width;
+            float height = _tooltipRect.rect.height;
+            float x = point.x + 18f;
+            float y = point.y - 18f;
+            if (x + width > parent.rect.xMax - 10f) x = point.x - width - 18f;
+            if (y - height < parent.rect.yMin + 10f) y = point.y + height + 18f;
+            x = Mathf.Clamp(x, parent.rect.xMin + 10f, Mathf.Max(parent.rect.xMin + 10f, parent.rect.xMax - width - 10f));
+            y = Mathf.Clamp(y, Mathf.Min(parent.rect.yMax - 10f, parent.rect.yMin + height + 10f), parent.rect.yMax - 10f);
+            _tooltipRect.anchoredPosition = new Vector2(x, y);
         }
 
         private void AddHoverHandlers(GameObject target, Action onEnter, Action onExit)
@@ -1773,6 +1810,11 @@ namespace TheLastKnight.UI
         public void BuyItem(ShopItemConfig config)
         {
             if (config == null) return;
+            if (ReferenceEquals(config, _randomOfferConfig))
+            {
+                TryBuyRandomOffer(Player, Inventory);
+                return;
+            }
 
             config.EnsureStockInitialized();
 
@@ -1859,6 +1901,51 @@ namespace TheLastKnight.UI
         }
 
         // Backward compatibility method
+        private bool TryBuyRandomOffer(PlayerStats player, InventoryManager inventory)
+        {
+            SyncRandomOffer();
+            var offer = RandomOffer;
+            if (player == null || inventory == null) return false;
+            if (player.Gold < offer.price)
+            {
+                ShowToast("Not enough Gold!", new Color(1f, 0.35f, 0.35f));
+                return false;
+            }
+            bool hasSpace = false;
+            foreach (var type in new[] { SlotType.Inventory, SlotType.QuickSlot })
+            {
+                int count = type == SlotType.Inventory ? InventoryManager.InventorySlotCount : InventoryManager.QuickSlotCount;
+                for (int i = 0; i < count; i++)
+                {
+                    var slot = inventory.GetSlot(type, i);
+                    if (slot == null || (string.Equals(slot.id, offer.itemId, StringComparison.OrdinalIgnoreCase) && slot.count < slot.maxStack))
+                        hasSpace = true;
+                }
+            }
+            if (!hasSpace)
+            {
+                ShowToast("Inventory is full!", new Color(1f, 0.75f, 0.35f));
+                return false;
+            }
+            int price = offer.price;
+            var item = ItemRegistry.CreateItem(offer.itemId);
+            if (!player.TrySpendGold(price)) return false;
+            if (inventory.AddItem(item) > 0)
+            {
+                player.AddGold(price);
+                return false;
+            }
+            string purchasedName = _randomOfferConfig.displayName;
+            offer.AdvanceAfterPurchase();
+            SyncRandomOffer();
+            HideTooltip();
+            AudioManager.Instance?.PlaySfx("click");
+            GameManager.Instance?.Capture();
+            ShowToast($"Purchased {purchasedName}!", new Color(0.35f, 1f, 0.45f));
+            Refresh();
+            return true;
+        }
+
         public bool TryPurchase(string item)
         {
             var match = FindCatalogItem(item);
@@ -1874,6 +1961,7 @@ namespace TheLastKnight.UI
 
         public void Refresh()
         {
+            if (_randomOfferConfig != null) SyncRandomOffer();
             var player = Player;
 
             // 1. Update Currency Text
@@ -1904,6 +1992,12 @@ namespace TheLastKnight.UI
             {
                 var cfg = row.config;
                 cfg.EnsureStockInitialized();
+                if (ReferenceEquals(cfg, _randomOfferConfig))
+                {
+                    row.imgIcon.sprite = ResolveItemIcon(cfg);
+                    LocalizedText.Set(row.txtName, cfg.displayName);
+                    LocalizedText.Set(row.txtPrice, cfg.buyPrice.ToString("N0"));
+                }
 
                 // Stock & Sold-out calculation
                 bool isSoldOut = cfg.initialStock >= 0 && cfg.currentStock <= 0;
@@ -1923,7 +2017,7 @@ namespace TheLastKnight.UI
                 }
                 else
                 {
-                    TheLastKnight.UI.LocalizedText.Set(row.txtStock, "");
+                    TheLastKnight.UI.LocalizedText.Set(row.txtStock, ReferenceEquals(cfg, _randomOfferConfig) ? "สุ่มใหม่ • +10%" : "");
                 }
 
                 // Can buy validation

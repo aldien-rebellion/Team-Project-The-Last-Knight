@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47353162cf0eda479617806d03bc5cd, type: 3}
+  m_Name: earth_scroll
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Inventory.ItemDefinition
+  id: earth_scroll
+  displayName: Earth Scroll
+  typeName: Scroll
+  description: "Permanently increases VIT by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q]."
+  icon: {fileID: -6674826455981463842, guid: 8f1c4a21e8c663840a5aa6ed5d2d5dfe, type: 3}
+  category: 0
+  maxStack: 64
+  isConsumable: 1
+  sellPrice: 0
+  useEffect: 1
+  effectAmount: 50

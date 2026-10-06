@@ -30,6 +30,19 @@ namespace TheLastKnight.Inventory
         public bool isConsumable = true;
         public int sellPrice;
 
+        public bool IsCurrencyContainer =>
+            string.Equals(id, "gold_pouch", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(id, "gold_bag", StringComparison.OrdinalIgnoreCase);
+
+        public bool HasStatusUseMenu => IsCurrencyContainer ||
+            string.Equals(id, "earth_spellbook", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(id, "advanced_spellbook", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(id, "ice_spellbook", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(id, "earth_scroll", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(id, "fire_scroll", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(id, "light_scroll", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(id, "thunder_scroll", StringComparison.OrdinalIgnoreCase);
+
         [NonSerialized]
         private Sprite _cachedIcon;
         public Sprite Icon

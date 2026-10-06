@@ -216,7 +216,8 @@ namespace TheLastKnight.Inventory
         }
 
         public bool CanUseQuickSlot(int index, PlayerStats player)
-            => CanUseSlot(SlotType.QuickSlot, index, player);
+            => GetSlot(SlotType.QuickSlot, index)?.HasStatusUseMenu == false &&
+                CanUseSlot(SlotType.QuickSlot, index, player);
 
         public bool CanUseSlot(SlotType type, int index, PlayerStats player)
         {
@@ -228,7 +229,7 @@ namespace TheLastKnight.Inventory
         }
 
         public bool UseQuickSlot(int index, PlayerStats player)
-            => UseSlot(SlotType.QuickSlot, index, player);
+            => CanUseQuickSlot(index, player) && UseSlot(SlotType.QuickSlot, index, player);
 
         public bool UseSlot(SlotType type, int index, PlayerStats player)
         {

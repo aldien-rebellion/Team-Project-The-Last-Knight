@@ -45,6 +45,7 @@ namespace TheLastKnight.Core
         public bool inventoryInitialized;
         public SavedItemData cursorItem;
         public List<SavedItemData> inventory = new List<SavedItemData>();
+        public RandomMerchantOffer randomMerchantOffer = new RandomMerchantOffer();
         public PlayerSaveData Copy() => JsonUtility.FromJson<PlayerSaveData>(JsonUtility.ToJson(this));
     }
 }

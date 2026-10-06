@@ -1190,7 +1190,8 @@ namespace TheLastKnight.UI
             var canvasRt = _canvasObject.GetComponent<RectTransform>();
             if (canvasRt == null) return;
 
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, mousePos, null, out Vector2 localPoint))
+            var camera = _canvas != null && _canvas.renderMode != RenderMode.ScreenSpaceOverlay ? _canvas.worldCamera : null;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, mousePos, camera, out Vector2 localPoint))
             {
                 var tooltipRt = _tooltipBox.GetComponent<RectTransform>();
                 float tipW = tooltipRt.rect.width > 0 ? tooltipRt.rect.width : 240f;
@@ -1214,6 +1215,8 @@ namespace TheLastKnight.UI
                     posY = localPoint.y + tipH + 12f;
                 }
 
+                posX = Mathf.Clamp(posX, canvasRt.rect.xMin + 10f, Mathf.Max(canvasRt.rect.xMin + 10f, canvasRt.rect.xMax - tipW - 10f));
+                posY = Mathf.Clamp(posY, Mathf.Min(canvasRt.rect.yMax - 10f, canvasRt.rect.yMin + tipH + 10f), canvasRt.rect.yMax - 10f);
                 tooltipRt.anchoredPosition = new Vector2(posX, posY);
             }
         }

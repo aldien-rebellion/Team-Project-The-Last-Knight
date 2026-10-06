@@ -44,12 +44,27 @@ namespace TheLastKnight.Environment
             return value <= 50 ? ChestItemRarity.Normal : value <= 100 ? ChestItemRarity.Rare : ChestItemRarity.Epic;
         }
 
+        public static ChestItemRarity GetItemRarity(ItemDefinition item)
+        {
+            if (item != null && string.Equals(item.id, "earth_spellbook", StringComparison.OrdinalIgnoreCase))
+                return ChestItemRarity.Normal;
+            if (item != null && string.Equals(item.id, "advanced_spellbook", StringComparison.OrdinalIgnoreCase))
+                return ChestItemRarity.Rare;
+            if (item != null && (string.Equals(item.id, "ice_spellbook", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(item.id, "earth_scroll", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(item.id, "fire_scroll", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(item.id, "light_scroll", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(item.id, "thunder_scroll", StringComparison.OrdinalIgnoreCase)))
+                return ChestItemRarity.Epic;
+            return RarityForValue(GetItemValue(item));
+        }
+
         private void OnValidate()
         {
             foreach (var entry in items)
             {
                 if (entry == null) continue;
-                entry.rarity = RarityForValue(GetItemValue(entry.item));
+                entry.rarity = GetItemRarity(entry.item);
                 if (IsExcluded(entry.item)) entry.enabled = false;
             }
         }
@@ -59,7 +74,7 @@ namespace TheLastKnight.Environment
             var pool = new List<ItemDefinition>();
             var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var entry in items)
-                if (entry != null && entry.enabled && !IsExcluded(entry.item) && RarityForValue(GetItemValue(entry.item)) == rarity && entry.item != null &&
+                if (entry != null && entry.enabled && !IsExcluded(entry.item) && GetItemRarity(entry.item) == rarity && entry.item != null &&
                     !string.IsNullOrWhiteSpace(entry.item.id) && ids.Add(entry.item.id)) pool.Add(entry.item);
             return pool;
         }
