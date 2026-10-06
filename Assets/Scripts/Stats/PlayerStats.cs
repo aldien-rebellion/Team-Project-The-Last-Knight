@@ -207,7 +207,13 @@ namespace TheLastKnight.Stats
             if (HasUndyingBuff) return;
             _currentHP = Mathf.Min(MaxHP, _currentHP + Mathf.Max(0, amount));
         }
-        public void Rest() { _currentHP = MaxHP; _currentStamina = MaxStamina; _lastDamageTime = -100f; _lastStaminaSpendTime = -100f; }
+        public void Rest()
+        {
+            _currentHP = Mathf.Max(_currentHP, MaxHP * MaxAuraHPPercent);
+            _currentStamina = MaxStamina;
+            _lastDamageTime = -100f;
+            _lastStaminaSpendTime = -100f;
+        }
 
         // Derived calculations (cached for other systems to query)
         [CreateProperty]
