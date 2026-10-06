@@ -290,7 +290,8 @@ namespace TheLastKnight.Tests
                 "potion_regeneration",
                 "potion_might",
                 "potion_fortitude",
-                "potion_undying"
+                "potion_undying",
+                "potion_crit_damage"
             };
 
             foreach (var id in potionIds)

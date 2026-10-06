@@ -649,6 +649,58 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
+        public void CharacterStatusUI_AttributeUpgradesStayInMainValues_WithTemporaryBuffs()
+        {
+            var go = new GameObject("Test_StatusUI_PermanentValues");
+            try
+            {
+                var ui = go.AddComponent(RuntimeType("TheLastKnight.UI.CharacterStatusUI"));
+                Invoke(ui, "Awake");
+                SetField(ui, "_cachedStats", _stats);
+                _stats.GetType().GetMethod("AddStatPoints").Invoke(_stats, new object[] { 103 });
+                foreach (string stat in new[] { "STR", "VIT", "DEX", "AGI" })
+                    _stats.GetType().GetMethod("UpgradeStatAmount").Invoke(_stats,
+                        new object[] { stat, stat == "AGI" ? 100 : 1 });
+
+                float hp = (float)GetProp(_stats, "MaxHP");
+                float attackSpeed = (float)GetProp(_stats, "AttackSpeedMultiplier");
+                float sprintSpeed = (float)GetProp(_controller, "SprintSpeed");
+                var format = ui.GetType().GetMethod("FormatStatWithBonus", BindingFlags.Public | BindingFlags.Static);
+                var tooltip = ui.GetType().GetMethod("ShowStatTooltip", BindingFlags.Instance | BindingFlags.NonPublic);
+
+                foreach (bool buffed in new[] { false, true, false })
+                {
+                    foreach (string buff in new[] { "Fortitude", "Swiftness", "Skill2", "Might" })
+                        Invoke(_stats, (buffed ? "Apply" : "Remove") + buff + "Buff");
+
+                    Assert.That((float)GetProp(_stats, "BaseMaxHP"), Is.EqualTo(hp));
+                    Assert.That((float)GetProp(_stats, "BaseAttackSpeedMultiplier"), Is.EqualTo(attackSpeed));
+                    Assert.That((float)GetProp(_stats, "BaseSprintSpeed"), Is.EqualTo(sprintSpeed));
+                    string hpDisplay = (string)format.Invoke(null, new object[] { hp, GetProp(_stats, "MaxHP") });
+                    string atkDisplay = (string)format.Invoke(null, new object[] {
+                        GetProp(_stats, "BaseAttackPower"), GetProp(_stats, "AttackPower") });
+                    ui.GetType().GetMethod("Refresh").Invoke(ui, new object[] { false });
+                    Assert.That((string)GetProp(GetField(ui, "_txtHp"), "text"), Does.EndWith("/" + hpDisplay));
+                    tooltip.Invoke(ui, new object[] { "VIT", null });
+                    Assert.That((string)GetProp(GetField(ui, "_txtTooltipDesc"), "text"), Does.Contain(": " + hpDisplay));
+                    tooltip.Invoke(ui, new object[] { "STR", null });
+                    Assert.That((string)GetProp(GetField(ui, "_txtTooltipDesc"), "text"), Does.Contain(": " + atkDisplay));
+                    tooltip.Invoke(ui, new object[] { "AGI", null });
+                    string agiDesc = (string)GetProp(GetField(ui, "_txtTooltipDesc"), "text");
+                    Assert.That(agiDesc, Does.Contain(": " + attackSpeed.ToString("F2")));
+                    Assert.That(agiDesc.Contains("(+"), Is.EqualTo(buffed));
+                    tooltip.Invoke(ui, new object[] { "DEX", null });
+                    Assert.That((string)GetProp(GetField(ui, "_txtTooltipDesc"), "text"),
+                        Does.Contain(((float)GetProp(_stats, "CriticalChance")).ToString("F1") + "%"));
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
         public void LevelUp_Grants10StatPointsPerLevel()
         {
             int initialPoints = (int)GetProp(_stats, "StatPoints");
@@ -905,6 +957,114 @@ namespace TheLastKnight.Tests
             finally
             {
                 UnityEngine.Object.DestroyImmediate(enemy);
+            }
+        }
+
+        [TestCase("ApplyAttackHits", "StartAttack", null, false, false)]
+        [TestCase("ApplyAttackHits", "StartAttack", null, true, false)]
+        [TestCase("ApplyAttackHits", "StartAttack", null, false, true)]
+        [TestCase("ApplyAttackHits", "StartAttack", null, true, true)]
+        [TestCase("ApplySkillHits", "StartSkill", "_skillDamageMultiplier", false, false)]
+        [TestCase("ApplySkillHits", "StartSkill", "_skillDamageMultiplier", true, false)]
+        [TestCase("ApplySkillHits", "StartSkill", "_skillDamageMultiplier", false, true)]
+        [TestCase("ApplySkillHits", "StartSkill", "_skillDamageMultiplier", true, true)]
+        [TestCase("ApplyExcaliburHits", null, "_excaliburDamageMultiplier", false, false)]
+        [TestCase("ApplyExcaliburHits", null, "_excaliburDamageMultiplier", true, false)]
+        [TestCase("ApplyExcaliburHits", null, "_excaliburDamageMultiplier", false, true)]
+        [TestCase("ApplyExcaliburHits", null, "_excaliburDamageMultiplier", true, true)]
+        public void CritDamagePotion_AttacksAndSkills_UseDexOrParryMultiplier(
+            string hitMethod, string startMethod, string skillMultiplierField, bool parried, bool buffed)
+        {
+            SetField(_stats, "_dexterity", 200); // Guaranteed DEX crit; Parry takes priority.
+            _stats.GetType().GetMethod("RecalculateStats").Invoke(_stats, new object[] { true });
+            if (buffed) Invoke(_stats, "ApplyCritDamageBuff");
+            var enemy = new GameObject("CritDamagePotion_Target", typeof(BoxCollider2D));
+            try
+            {
+                enemy.transform.position = _player.transform.position + Vector3.right;
+                var target = enemy.AddComponent(RuntimeType("TheLastKnight.Combat.EnemyStats"));
+                SetField(target, "_maxHealth", 10000f);
+                Invoke(target, "Awake");
+                if (parried)
+                {
+                    var parry = enemy.AddComponent(RuntimeType("TheLastKnight.Combat.ParryReceiver"));
+                    SetField(parry, "_staggerUntil", Time.time + 10f);
+                }
+                Physics2D.SyncTransforms();
+                float before = (float)GetProp(target, "CurrentHealth");
+                if (startMethod != null) Invoke(_controller, startMethod);
+                Invoke(_controller, hitMethod);
+                float criticalMultiplier = parried ? (buffed ? 5f : 2f) : (buffed ? 3f : 1.5f);
+                float skillMultiplier = skillMultiplierField == null ? 1f : (float)GetField(_controller, skillMultiplierField);
+                var difficulty = RuntimeType("TheLastKnight.Core.GameDifficultyManager");
+                float difficultyMultiplier = (float)difficulty.GetProperty("PlayerDamage").GetValue(null);
+                Assert.That(before - (float)GetProp(target, "CurrentHealth"),
+                    Is.EqualTo((float)GetProp(_stats, "AttackPower") * skillMultiplier * criticalMultiplier * difficultyMultiplier).Within(0.02f));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(enemy);
+            }
+        }
+
+        [Test]
+        public void CritDamagePotion_ConsumptionRefreshExpiry_AndBuffIcon()
+        {
+            var item = RuntimeType("TheLastKnight.Inventory.ItemRegistry").GetMethod("CreateItem")
+                .Invoke(null, new object[] { "potion_crit_damage", 1 });
+            var use = (Delegate)GetField(item, "onUse");
+            Assert.That(GetProp(item, "Icon"), Is.Not.Null);
+            use.DynamicInvoke(_stats);
+            Assert.That((float)GetProp(_stats, "CritDamageBuffRemaining"), Is.EqualTo(90f).Within(0.1f));
+            SetField(_stats, "_critDamageExpiresAt", Time.time + 10f);
+            use.DynamicInvoke(_stats);
+            Assert.That((float)GetProp(_stats, "CritDamageBuffRemaining"), Is.EqualTo(90f).Within(0.1f));
+            Assert.That(_stats.GetType().GetMethod("GetCriticalDamageMultiplier").Invoke(_stats, new object[] { false, false }), Is.EqualTo(1f));
+            var listType = typeof(System.Collections.Generic.List<>).MakeGenericType(RuntimeType("TheLastKnight.Stats.ActiveBuffInfo"));
+            var buffs = (System.Collections.IList)Activator.CreateInstance(listType);
+            _stats.GetType().GetMethod("GetActiveBuffs").Invoke(_stats, new object[] { buffs });
+            var buff = buffs.Cast<object>().Single(b => (string)GetField(b, "id") == "buff_crit_damage");
+            Assert.That((Sprite)GetField(buff, "icon"), Is.SameAs(Resources.Load<Sprite>("BuffIcons/buff_crit_damage")));
+            Assert.That(GetField(buff, "formattedTime"), Is.EqualTo("1:30"));
+            SetField(_stats, "_critDamageExpiresAt", Time.time - 1f);
+            Assert.That(GetProp(_stats, "HasCritDamageBuff"), Is.False);
+            Assert.That(GetProp(_stats, "DexCriticalDamageMultiplier"), Is.EqualTo(1.5f));
+            Assert.That(GetProp(_stats, "ParryCriticalDamageMultiplier"), Is.EqualTo(2f));
+            _stats.GetType().GetMethod("GetActiveBuffs").Invoke(_stats, new object[] { buffs });
+            Assert.That(buffs.Cast<object>().Any(b => (string)GetField(b, "id") == "buff_crit_damage"), Is.False);
+        }
+
+        [Test]
+        public void CritDamagePotion_ShopMigratesExistingCatalog_AndLootIsEpic()
+        {
+            var shopGo = new GameObject("CritDamagePotion_Shop");
+            try
+            {
+                var shop = shopGo.AddComponent(RuntimeType("TheLastKnight.UI.ShopUI"));
+                shop.GetType().GetMethod("PopulateDefaultCatalog").Invoke(shop, null);
+                var catalog = (System.Collections.IList)GetProp(shop, "Catalog");
+                var newEntry = catalog.Cast<object>().Single(i => (string)GetField(i, "id") == "potion_crit_damage");
+                catalog.Remove(newEntry);
+                var existing = catalog[0];
+                existing.GetType().GetField("initialStock").SetValue(existing, 17);
+                Invoke(shop, "Awake");
+                Invoke(shop, "Awake");
+                Assert.That(catalog.Cast<object>().Count(i => (string)GetField(i, "id") == "potion_crit_damage"), Is.EqualTo(1));
+                Assert.That(GetField(existing, "initialStock"), Is.EqualTo(17));
+                var entry = catalog.Cast<object>().Single(i => (string)GetField(i, "id") == "potion_crit_damage");
+                Assert.That(GetField(entry, "buyPrice"), Is.EqualTo(300));
+                Assert.That(GetField(entry, "customSellPrice"), Is.EqualTo(150));
+                var iconMethod = shop.GetType().GetMethod("ResolveItemIcon", BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert.That(iconMethod.Invoke(shop, new[] { entry }), Is.Not.Null);
+                var lootType = RuntimeType("TheLastKnight.Environment.ChestLootTable");
+                var loot = Resources.Load("Items/ChestLootTable", lootType);
+                var rarity = Enum.Parse(RuntimeType("TheLastKnight.Environment.ChestItemRarity"), "Epic");
+                var pool = (System.Collections.IList)lootType.GetMethod("GetPool").Invoke(loot, new[] { rarity });
+                Assert.That(pool.Cast<object>().Count(i => (string)GetField(i, "id") == "potion_crit_damage"), Is.EqualTo(1));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(shopGo);
             }
         }
 
