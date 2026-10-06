@@ -21,6 +21,9 @@ namespace TheLastKnight.Core
         public bool InputBlocked { get; private set; }
         public bool ArenaLocked { get; set; }
         private PlayerSaveData _checkpoint;
+        private bool _hasRecallPoint;
+        public bool CanRecall => _hasRecallPoint && _checkpoint != null && !_restoring &&
+            Player != null && !Player.IsDead && !InputBlocked && !ArenaLocked && Time.timeScale > 0f;
         private bool _restoring, _restorePosition, _deathShown;
         private GameObject _deathPanel;
 
@@ -75,6 +78,7 @@ namespace TheLastKnight.Core
                 }
                 if (_restorePosition) Player.transform.position = State.position;
                 Player.GetComponent<PlayerController>().ResetVelocity();
+                if (Player.GetComponent<PlayerRecall>() == null) Player.gameObject.AddComponent<PlayerRecall>();
                 if (!State.initialized)
                 {
                     TheLastKnight.Inventory.InventoryManager.Instance?.InitializeDefaultInventory(Player);
@@ -168,6 +172,7 @@ namespace TheLastKnight.Core
             SaveSystem.ActiveWorldId = worldId;
             GameDifficultyManager.Current = difficulty;
             _checkpoint = null;
+            _hasRecallPoint = false;
             ClearPortalArrival();
             Load("CityCenter", false);
         }
@@ -190,6 +195,7 @@ namespace TheLastKnight.Core
         {
             State = checkpoint.Copy();
             _checkpoint = checkpoint.Copy();
+            _hasRecallPoint = true;
             GameDifficultyManager.Current = State.difficulty;
             _restorePosition = true;
             ClearPortalArrival();
@@ -203,6 +209,32 @@ namespace TheLastKnight.Core
             State.position = position;
             if (!SaveSystem.Save(State, out error)) return false;
             _checkpoint = State.Copy();
+            _hasRecallPoint = true;
+            return true;
+        }
+
+        // Recall changes only location; death/continue restore the saved snapshot instead.
+        public bool RecallToLastSave()
+        {
+            if (!CanRecall) return false;
+            string scene = _checkpoint.scene;
+            Vector3 position = _checkpoint.position;
+            ClearPortalArrival();
+            if (SceneManager.GetActiveScene().name == scene)
+            {
+                Player.GetComponent<PlayerController>().ResetVelocity();
+                Player.transform.position = position;
+                Physics2D.SyncTransforms();
+                Capture();
+            }
+            else
+            {
+                Capture();
+                State.scene = scene;
+                State.position = position;
+                _restorePosition = true;
+                Load(scene, false);
+            }
             return true;
         }
 
