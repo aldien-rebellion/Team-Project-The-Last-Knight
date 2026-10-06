@@ -25,7 +25,7 @@ MonoBehaviour:
   baseAttackSpeed: 1
   attackSpeedPerAGI: 0.01
   speedPerAGI: 0.02
-  dashSpeedPerAGI: 0.1
+  dashSpeedPerAGI: 0.05
   doubleJumpAgiThreshold: 250
   baseSTR: 10
   baseVIT: 10

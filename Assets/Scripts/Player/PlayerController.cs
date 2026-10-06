@@ -82,7 +82,7 @@ namespace TheLastKnight.Player
 
         [Header("Drink Settings (Key Q)")]
         [SerializeField, Tooltip("Drink skill duration.")]
-        private float _drinkDuration = 2.5f;
+        private float _drinkDuration = 1.5f;
         [SerializeField, Tooltip("Cooldown between drink uses.")]
         private float _drinkCooldown = 1.0f;
 

@@ -50,7 +50,7 @@ namespace TheLastKnight.Stats
         public float speedPerAGI = 0.02f;
 
         [Tooltip("Dash velocity gained per point of AGI.")]
-        public float dashSpeedPerAGI = 0.15f;
+        public float dashSpeedPerAGI = 0.05f;
 
         [Tooltip("AGI required to unlock double jump capability (default: 250).")]
         public int doubleJumpAgiThreshold = 250;
