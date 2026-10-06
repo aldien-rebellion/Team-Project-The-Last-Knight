@@ -14,7 +14,7 @@ namespace TheLastKnight.AI
         [Tooltip("Patrol distance walking shortly around the spawn point.")]
         [SerializeField] private float _patrolDistance = 3f;
         [SerializeField] private bool _isFlying = false;
-        [Tooltip("Align once with the player's body, then fly horizontally at that fixed height (including when the player jumps).")]
+        [Tooltip("Restrict flying movement to the horizontal axis when enabled.")]
         [SerializeField] private bool _flyHorizontally;
         [Tooltip("Vertical offset from the target collider center while chasing as a flying enemy.")]
         [SerializeField] private float _flyingChaseHeightOffset;
@@ -151,7 +151,6 @@ private Rigidbody2D _rb;
         private Collider2D[] _colliders;
         private Collider2D _attackHitbox;
         private GameObject _player;
-        private bool _horizontalFlightHeightInitialized;
 
         // Spawn / Respawn Tracking
         private Vector3 _spawnPosition;
@@ -379,36 +378,6 @@ _rb = GetComponent<Rigidbody2D>();
         private void Start()
         {
             FindPlayer();
-            InitializeHorizontalFlightHeight();
-        }
-
-        private void InitializeHorizontalFlightHeight()
-        {
-            if (!_isFlying || !_flyHorizontally || _horizontalFlightHeightInitialized || _player == null)
-                return;
-
-            foreach (var playerBody in _player.GetComponentsInChildren<Collider2D>())
-            {
-                if (!playerBody.enabled || playerBody.isTrigger) continue;
-
-                // Match body centers rather than sprite pivots, which may sit at the feet.
-                float ownCenterOffset = 0f;
-                foreach (var ownBody in _colliders)
-                {
-                    if (ownBody == null || !ownBody.enabled || ownBody.isTrigger) continue;
-                    ownCenterOffset = ownBody.bounds.center.y - transform.position.y;
-                    break;
-                }
-
-                Vector3 position = transform.position;
-                position.y = playerBody.bounds.center.y + _flyingChaseHeightOffset - ownCenterOffset;
-                transform.position = position;
-                _rb.position = position;
-                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0f);
-                _spawnPosition.y = position.y;
-                _horizontalFlightHeightInitialized = true;
-                return;
-            }
         }
 
         private void OnEnable()
@@ -493,8 +462,6 @@ _rb = GetComponent<Rigidbody2D>();
                     return;
                 }
             }
-
-            InitializeHorizontalFlightHeight();
 
             // Check if current animation state locks movement (e.g. hurt or attacking)
             var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
