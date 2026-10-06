@@ -101,6 +101,115 @@ public static class LocalizationChecks
 
     [MenuItem("The Last Knight/Localization/Preview Thai")]
     private static void PreviewThai() => Preview(GameLanguage.Thai);
+
+    [MenuItem("The Last Knight/Localization/Verify Font")]
+    public static void VerifyFont()
+    {
+        var original = LocalizationManager.Current;
+        GameObject holder = null;
+        try
+        {
+            LocalizationManager.Current = GameLanguage.Thai;
+            holder = new GameObject("Thai font check", typeof(RectTransform), typeof(TextMeshProUGUI));
+            var label = holder.GetComponent<TextMeshProUGUI>();
+            const string sample = "กิ กี กึ กื กุ กู กี่ กี้ กึ่ กื้ กุ่ ปี่ ปู่ น้ำ ผู้ใช้ ยาฟื้นฟู ABC xyz 0123456789";
+            LocalizedText.Set(label, sample);
+            foreach (char character in sample)
+                if (!char.IsWhiteSpace(character) && !label.font.HasCharacter(character, false, true))
+                    throw new Exception("Missing font glyph: " + character);
+            if (label.font.fontFeatureTable.MarkToBaseAdjustmentRecords.Count == 0)
+                throw new Exception("Missing mark-to-base positioning.");
+            if (label.font.fontFeatureTable.MarkToMarkAdjustmentRecords.Count == 0)
+                throw new Exception("Missing mark-to-mark positioning.");
+            LocalizationManager.Current = GameLanguage.English;
+            LocalizedText.Set(label, "Healing Potion");
+            Equal(label.text, "Healing Potion");
+            LocalizationManager.Current = GameLanguage.Thai;
+            Equal(label.text, "ยาฟื้นฟูพลังชีวิต");
+            var canvasObject = new GameObject("Legacy font checks", typeof(RectTransform), typeof(Canvas));
+            canvasObject.transform.SetParent(holder.transform, false);
+            canvasObject.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+            foreach (string text in new[] { "กี่", "<color=#FFD56B>กี่</color>\n\nน้ำ", "ปี่ ผู้ใช้" })
+            {
+                var row = new GameObject("Legacy sample", typeof(RectTransform), typeof(Text), typeof(Outline), typeof(ThaiTextMarks));
+                row.transform.SetParent(canvasObject.transform, false);
+                var legacy = row.GetComponent<Text>();
+                legacy.rectTransform.sizeDelta = new Vector2(1000, 300);
+                legacy.font = LocalizedText.Font;
+                legacy.fontSize = 48;
+                legacy.text = text;
+                Canvas.ForceUpdateCanvases();
+                var mesh = legacy.canvasRenderer.GetMesh();
+                var positions = mesh.vertices;
+                int blockSize = legacy.cachedTextGenerator.vertexCount / 4 * 6;
+                if (blockSize == 0 || positions.Length != blockSize * 5)
+                    throw new Exception("Legacy outline mesh was not generated.");
+                // First word is consonant, upper vowel, tone; original glyphs follow outline copies.
+                int first = positions.Length - blockSize;
+                float vowelTop = float.NegativeInfinity, toneBottom = float.PositiveInfinity;
+                for (int i = 0; i < 6; i++)
+                {
+                    vowelTop = Mathf.Max(vowelTop, positions[first + 6 + i].y);
+                    toneBottom = Mathf.Min(toneBottom, positions[first + 12 + i].y);
+                }
+                if (toneBottom <= vowelTop) throw new Exception("Legacy vowel/tone collision: " + text);
+                UnityEngine.Object.DestroyImmediate(row);
+            }
+            Debug.Log("[ThaiFontCheck] PASS: Thai/Latin glyphs, positioning tables, legacy rich text/outline/newline geometry and language switching.");
+        }
+        finally
+        {
+            if (holder != null) UnityEngine.Object.DestroyImmediate(holder);
+            LocalizationManager.Current = original;
+        }
+    }
+
+    [MenuItem("The Last Knight/Localization/Preview Font")]
+    private static void PreviewFont()
+    {
+        CleanupPreview(true);
+        _preview = new GameObject("Localization Preview", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+        var canvas = _preview.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        canvas.worldCamera = Camera.main;
+        canvas.planeDistance = 1f;
+        canvas.sortingOrder = 1000;
+        var scaler = _preview.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1280, 800);
+        var panel = new GameObject("Font samples", typeof(RectTransform), typeof(Image));
+        panel.transform.SetParent(_preview.transform, false);
+        var rect = panel.GetComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(1240, 660);
+        panel.GetComponent<Image>().color = new Color(0.035f, 0.045f, 0.065f, 1f);
+        for (int i = 0; i < 2; i++)
+        {
+            var row = new GameObject(i == 0 ? "Legacy Text" : "TextMeshPro", typeof(RectTransform));
+            row.transform.SetParent(panel.transform, false);
+            var rowRect = row.GetComponent<RectTransform>();
+            rowRect.sizeDelta = new Vector2(1160, 280);
+            rowRect.anchoredPosition = new Vector2(0, i == 0 ? 160 : -160);
+            string sample = row.name + " — Sarabun\nกี่ กี้ กึ่ กื้ กุ่ ปี่ ปู่ น้ำ ผู้ใช้\nยาฟื้นฟูพลังชีวิต ตั้งค่า พื้นที่\nABC xyz 0123456789";
+            if (i == 0)
+            {
+                var label = row.AddComponent<Text>();
+                row.AddComponent<ThaiTextMarks>();
+                label.font = LocalizedText.Font;
+                label.fontSize = 44;
+                label.text = sample;
+                label.color = Color.white;
+                label.verticalOverflow = VerticalWrapMode.Overflow;
+            }
+            else
+            {
+                var label = row.AddComponent<TextMeshProUGUI>();
+                LocalizedText.Set(label, sample);
+                label.fontSize = 44;
+                label.color = Color.white;
+            }
+        }
+        Canvas.ForceUpdateCanvases();
+    }
     [MenuItem("The Last Knight/Localization/Preview English")]
     private static void PreviewEnglish() => Preview(GameLanguage.English);
 
@@ -168,7 +277,11 @@ public static class LocalizationChecks
 
     private static void CleanupPreview(bool restore)
     {
-        if (_preview != null) UnityEngine.Object.DestroyImmediate(_preview);
+        // Static references are cleared by script reload while preview objects remain.
+        foreach (var root in UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            if (root != null && root.parent == null && root.name == "Localization Preview")
+                UnityEngine.Object.DestroyImmediate(root.gameObject);
+        _preview = null;
         if (restore && _previewing) { LocalizationManager.Current = _previewOriginal; _previewing = false; }
     }
 }

@@ -98,7 +98,7 @@ namespace TheLastKnight.UI
 
         public static Text Label(Transform parent, string text, int size = 20, Color? color = null, bool localize = true)
         {
-            var go = new GameObject("Label", typeof(RectTransform), typeof(Text), typeof(LayoutElement));
+            var go = new GameObject("Label", typeof(RectTransform), typeof(Text), typeof(ThaiTextMarks), typeof(LayoutElement));
             go.transform.SetParent(parent, false);
             var label = go.GetComponent<Text>();
             label.font = Font;
@@ -227,7 +227,7 @@ namespace TheLastKnight.UI
             TheLastKnight.UI.LocalizedText.Set(phText, placeholderText);
 
             // Input Text
-            var textGo = new GameObject("Text", typeof(RectTransform), typeof(Text));
+            var textGo = new GameObject("Text", typeof(RectTransform), typeof(Text), typeof(ThaiTextMarks));
             textGo.transform.SetParent(go.transform, false);
             var textRect = textGo.GetComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero; textRect.anchorMax = Vector2.one;
