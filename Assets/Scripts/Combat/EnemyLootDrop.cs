@@ -125,9 +125,10 @@ namespace TheLastKnight.Combat
 
             if (template == null) return;
 
+            Vector3 dropPosition = WorldItemPickup.GetDropPosition(transform) + _spawnOffset;
             for (int i = 0; i < count; i++)
             {
-                Vector3 spawnPos = transform.position + _spawnOffset;
+                Vector3 spawnPos = dropPosition;
                 if (count > 1)
                 {
                     spawnPos.x += UnityEngine.Random.Range(-0.2f, 0.2f);
