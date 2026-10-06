@@ -39,6 +39,7 @@ namespace TheLastKnight.Core
         // Area-boss identifiers (currently the scene name) that this world has cleared.
         public List<string> defeatedAreaBosses = new List<string>();
         public bool pentagramRuneChestOpened;
+        public List<string> openedLootChests = new List<string>();
         public bool churchKey, introSeen, victory, demonCastleGateUnlocked;
         public GameDifficulty difficulty;
         public bool inventoryInitialized;

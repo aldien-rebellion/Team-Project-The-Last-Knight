@@ -14,6 +14,52 @@ namespace TheLastKnight.Tests
         private static object Field(object value, string name) => value.GetType().GetField(name).GetValue(value);
 
         [Test]
+        public void OpenedChest_SurvivesSaveReloadAndRecreatedMapInstance()
+        {
+            var chestType = Find("LootChest");
+            var saveType = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(a => a.GetType("TheLastKnight.Core.PlayerSaveData")).First(t => t != null);
+            var systemType = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(a => a.GetType("TheLastKnight.Core.SaveSystem")).First(t => t != null);
+            var root = new GameObject("Chest persistence test");
+            string file = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid() + ".json");
+            try
+            {
+                var first = new GameObject("Chest"); first.transform.SetParent(root.transform);
+                var chest = first.AddComponent(chestType);
+                string id = (string)chestType.GetProperty("PersistentId").GetValue(chest);
+                var other = new GameObject("Chest"); other.transform.SetParent(root.transform);
+                var otherChest = other.AddComponent(chestType);
+                Assert.AreNotEqual(id, chestType.GetProperty("PersistentId").GetValue(otherChest));
+                var state = Activator.CreateInstance(saveType);
+                saveType.GetField("initialized").SetValue(state, true);
+                ((IList)Field(state, "openedLootChests")).Add(id);
+                object[] saveArgs = { state, null, file };
+                Assert.IsTrue((bool)systemType.GetMethod("Save").Invoke(null, saveArgs), (string)saveArgs[1]);
+                object[] loadArgs = { null, file };
+                Assert.IsTrue((bool)systemType.GetMethod("TryLoad").Invoke(null, loadArgs));
+                UnityEngine.Object.DestroyImmediate(first);
+                var restored = new GameObject("Chest"); restored.transform.SetParent(root.transform);
+                restored.transform.SetSiblingIndex(0);
+                var restoredChest = restored.AddComponent(chestType);
+                Assert.AreEqual(id, chestType.GetProperty("PersistentId").GetValue(restoredChest));
+                var restore = chestType.GetMethod("RestoreOpenedState", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                Assert.IsTrue((bool)restore.Invoke(restoredChest, new[] { loadArgs[0] }));
+                Assert.IsTrue((bool)chestType.GetProperty("IsOpened").GetValue(restoredChest));
+                Assert.Less((float)Field(restoredChest, "interactionRange"), 0);
+                Assert.IsFalse((bool)restore.Invoke(otherChest, new[] { loadArgs[0] }));
+                // Old saves and new worlds have no opened-chest record.
+                var legacy = JsonUtility.FromJson("{\"version\":1}", saveType);
+                Assert.IsFalse((bool)restore.Invoke(otherChest, new[] { legacy }));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(root);
+                if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
+            }
+        }
+
+        [Test]
         public void AllEightPrefabs_HaveFramesAndRollWithinTheirBounds()
         {
             var state = UnityEngine.Random.state;

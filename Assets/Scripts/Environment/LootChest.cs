@@ -26,8 +26,45 @@ namespace TheLastKnight.Environment
         [Min(0.01f)] public float frameDuration = 0.1f;
         public Vector2 dropOffset = new Vector2(0, 0.5f);
         public bool IsOpened { get; private set; }
+        private string _persistentId;
 
-        private void Awake() { prompt = "F  Open chest"; promptHeight = 1.2f; }
+        // Scene and authored hierarchy identify each placed instance, including copies of a prefab.
+        // Cache before rewards/prompt objects can alter the runtime hierarchy.
+        public string PersistentId
+        {
+            get
+            {
+                if (_persistentId != null) return _persistentId;
+                string path = "";
+                for (var node = transform; node != null; node = node.parent)
+                    path = "/" + node.GetSiblingIndex() + ":" + node.name + path;
+                return _persistentId = gameObject.scene.path + path;
+            }
+        }
+
+        private void Awake() { prompt = "F  Open chest"; promptHeight = 1.2f; _ = PersistentId; }
+        private void Start() { RestoreOpenedState(GameManager.Instance?.State); }
+
+        private bool RestoreOpenedState(PlayerSaveData state)
+        {
+            if (state?.openedLootChests == null || !state.openedLootChests.Contains(PersistentId)) return false;
+            SetOpened();
+            if (openingFrames != null)
+                for (int i = openingFrames.Length - 1; i >= 0; i--)
+                    if (openingFrames[i] != null)
+                    {
+                        GetComponent<SpriteRenderer>().sprite = openingFrames[i];
+                        break;
+                    }
+            return true;
+        }
+
+        private void SetOpened()
+        {
+            IsOpened = true;
+            interactionRange = -1;
+            prompt = "Opened";
+        }
         private void OnValidate()
         {
             minimumItems = Mathf.Max(0, minimumItems); maximumItems = Mathf.Max(minimumItems, maximumItems);
@@ -76,15 +113,17 @@ namespace TheLastKnight.Environment
         public override void Interact()
         {
             if (IsOpened || GameManager.Instance == null || GameManager.Instance.Player == null) return;
+            var state = GameManager.Instance.State;
+            if (RestoreOpenedState(state)) return;
             var items = RollItems();
             if (maximumItems > 0 && items.Count == 0 && minimumItems > 0)
             {
                 Debug.LogWarning("Chest needs an enabled loot item with a positive rarity weight.", this);
                 return;
             }
-            IsOpened = true;
-            interactionRange = -1; // Opened chests no longer intercept nearby interaction prompts.
-            prompt = "Opened";
+            if (state.openedLootChests == null) state.openedLootChests = new List<string>();
+            state.openedLootChests.Add(PersistentId);
+            SetOpened();
             foreach (var item in items) WorldItemPickup.Spawn(item, transform.position + (Vector3)dropOffset);
             int gold = RollInclusive(minimumGold, maximumGold);
             GameManager.Instance.Player.AddGold(gold);
