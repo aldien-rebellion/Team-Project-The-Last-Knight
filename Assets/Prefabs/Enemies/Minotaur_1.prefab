@@ -252,8 +252,8 @@ GameObject:
   - component: {fileID: 2544350457315019962}
   - component: {fileID: 5919406314728429344}
   - component: {fileID: 9010000000000000007}
-  - component: {fileID: 9010000000000000010}
   - component: {fileID: 9010000000000000011}
+  - component: {fileID: 3402954883298685225}
   - component: {fileID: 7397409309314232319}
   m_Layer: 0
   m_Name: Minotaur_1
@@ -555,7 +555,21 @@ MonoBehaviour:
   _stunEffectHeadYFraction: 0
   _stunEffectHeadYOffset: 0.25
   _stunEffectWorldScale: 0.5
---- !u!82 &9010000000000000010
+--- !u!114 &9010000000000000011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6776928882810634575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5f246bb1254ef3b08e58a928c7d8a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.MinotaurAudioController
+  _basicAttackClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!82 &3402954883298685225
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -564,10 +578,10 @@ AudioSource:
   m_GameObject: {fileID: 6776928882810634575}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -575,9 +589,9 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 0
-  MinDistance: 2
-  MaxDistance: 20
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -652,39 +666,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &9010000000000000011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6776928882810634575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e5f246bb1254ef3b08e58a928c7d8a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.MinotaurAudioController
-  _basicAttackClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
-  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
---- !u!114 &7397409309314232319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6776928882810634575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
-  _dropItem: {fileID: 11400000, guid: d595f511f4e5e1145aec4e6c2fd9e901, type: 2}
-  _dropItemId: drop_minotaur
-  _isBoss: 0
-  _dropChance: 0.33
-  _dropRolls: 3
-  _bossGuaranteedCount: 1
-  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &7170239611102831118
 GameObject:
   m_ObjectHideFlags: 0
@@ -782,3 +763,22 @@ MonoBehaviour:
   _hitCooldown: 0.8
   _activeOnlyDuringAttack: 0
   _isActive: 1
+--- !u!114 &7397409309314232319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6776928882810634575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: d595f511f4e5e1145aec4e6c2fd9e901, type: 2}
+  _dropItemId: drop_minotaur
+  _isBoss: 0
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}

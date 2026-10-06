@@ -206,8 +206,8 @@ MonoBehaviour:
   _maxHealth: 2250
   _defense: 45
   _attackPower: 315
-  _goldReward: 2855
-  _expReward: 1609
+  _goldReward: 2663
+  _expReward: 3285
   _currentStatus: 0
 --- !u!114 &2028784599983360218
 MonoBehaviour:
@@ -421,7 +421,7 @@ AudioSource:
   m_GameObject: {fileID: 1650700729064546569}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -526,25 +526,6 @@ MonoBehaviour:
   _slash2Clip: {fileID: 8300000, guid: 1056d45f0565e794b807009358bfb223, type: 3}
   _natureCastClip: {fileID: 8300000, guid: 5a46c6b8a77fabc44b1a90d658fd67ac, type: 3}
   _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
---- !u!114 &3809103462327427917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1650700729064546569}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
-  _dropItem: {fileID: 11400000, guid: 3157600ad66c6de49821c1dd08e64dbb, type: 2}
-  _dropItemId: drop_satyr
-  _isBoss: 0
-  _dropChance: 0.33
-  _dropRolls: 3
-  _bossGuaranteedCount: 1
-  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &4549858075668376642
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,3 +859,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3809103462327427917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650700729064546569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: 3157600ad66c6de49821c1dd08e64dbb, type: 2}
+  _dropItemId: drop_satyr
+  _isBoss: 0
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}

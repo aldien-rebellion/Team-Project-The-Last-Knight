@@ -177,8 +177,8 @@ GameObject:
   - component: {fileID: 4167955264493237057}
   - component: {fileID: 4211774737546589458}
   - component: {fileID: 9010000000000000001}
-  - component: {fileID: 8902166374086860027}
   - component: {fileID: 3021446106952871271}
+  - component: {fileID: -1850353637127421361}
   - component: {fileID: 1911898551194364104}
   m_Layer: 0
   m_Name: Skeleton
@@ -367,8 +367,8 @@ MonoBehaviour:
   _maxHealth: 100
   _defense: 2
   _attackPower: 14
-  _goldReward: 76
-  _expReward: 119
+  _goldReward: 97
+  _expReward: 84
   _currentStatus: 0
 --- !u!114 &4211774737546589458
 MonoBehaviour:
@@ -599,7 +599,23 @@ MonoBehaviour:
   _stunEffectHeadYFraction: 0
   _stunEffectHeadYOffset: 0
   _stunEffectWorldScale: 0.5
---- !u!82 &8902166374086860027
+--- !u!114 &3021446106952871271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2923911752621517954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8a61e4ca25def8469c2a249e07cf7e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.SkeletonAudioController
+  _normalAttackClip: {fileID: 8300000, guid: f3f9d844ea901ad49a4a9c74b3375a94, type: 3}
+  _shieldHitClip: {fileID: 8300000, guid: 395243ecf2494a04aa9e80e8cbf16214, type: 3}
+  _swordThrowClip: {fileID: 8300000, guid: 4cb651edcee996a4ab083883692135ed, type: 3}
+  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
+--- !u!82 &-1850353637127421361
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -608,10 +624,10 @@ AudioSource:
   m_GameObject: {fileID: 2923911752621517954}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -620,8 +636,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 2
-  MaxDistance: 20
+  MinDistance: 1
+  MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -656,7 +672,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -696,41 +712,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3021446106952871271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2923911752621517954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8a61e4ca25def8469c2a249e07cf7e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.AI.SkeletonAudioController
-  _normalAttackClip: {fileID: 8300000, guid: f3f9d844ea901ad49a4a9c74b3375a94, type: 3}
-  _shieldHitClip: {fileID: 8300000, guid: 395243ecf2494a04aa9e80e8cbf16214, type: 3}
-  _swordThrowClip: {fileID: 8300000, guid: 4cb651edcee996a4ab083883692135ed, type: 3}
-  _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
---- !u!114 &1911898551194364104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2923911752621517954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
-  _dropItem: {fileID: 11400000, guid: 307c5e3d2a1262b4e90e6f2fd1d17f37, type: 2}
-  _dropItemId: drop_skeleton
-  _isBoss: 0
-  _dropChance: 0.33
-  _dropRolls: 3
-  _bossGuaranteedCount: 1
-  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &3229889955927744741
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,3 +884,22 @@ MonoBehaviour:
   _hitCooldown: 0.8
   _activeOnlyDuringAttack: 0
   _isActive: 1
+--- !u!114 &1911898551194364104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2923911752621517954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: 307c5e3d2a1262b4e90e6f2fd1d17f37, type: 2}
+  _dropItemId: drop_skeleton
+  _isBoss: 0
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}

@@ -526,7 +526,7 @@ AudioSource:
   m_GameObject: {fileID: 977028967647500468}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -632,25 +632,6 @@ MonoBehaviour:
   _fireballImpactClip: {fileID: 8300000, guid: 6e70dc4d8425a774389b5e93d37058e6, type: 3}
   _vanishClip: {fileID: 8300000, guid: 1dbd28f273bb2c44c8ec728666003085, type: 3}
   _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
---- !u!114 &6532494157434198367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 977028967647500468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
-  _dropItem: {fileID: 11400000, guid: 772c973f472958f459b53fe000038992, type: 2}
-  _dropItemId: drop_fox
-  _isBoss: 1
-  _dropChance: 0.33
-  _dropRolls: 3
-  _bossGuaranteedCount: 1
-  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &1582050896545754977
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,3 +890,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6532494157434198367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977028967647500468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: 772c973f472958f459b53fe000038992, type: 2}
+  _dropItemId: drop_fox
+  _isBoss: 1
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}

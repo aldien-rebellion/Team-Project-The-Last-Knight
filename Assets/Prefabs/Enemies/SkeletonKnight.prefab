@@ -280,8 +280,8 @@ MonoBehaviour:
   _maxHealth: 1600
   _defense: 32
   _attackPower: 224
-  _goldReward: 1154
-  _expReward: 1563
+  _goldReward: 2125
+  _expReward: 989
   _currentStatus: 0
 --- !u!114 &4631645671950882567
 MonoBehaviour:
@@ -413,7 +413,7 @@ AudioSource:
   m_GameObject: {fileID: 2832432180080801224}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -518,25 +518,6 @@ MonoBehaviour:
   _downSwingClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
   _fullComboClip: {fileID: 8300000, guid: c75d03bcaa571264ebcdbdc02228778d, type: 3}
   _hitClip: {fileID: 8300000, guid: 985c65f3419347445abd107db586540f, type: 3}
---- !u!114 &8173965227268892932
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2832432180080801224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
-  _dropItem: {fileID: 11400000, guid: 81c6829e3b2cad745811f666bec0df67, type: 2}
-  _dropItemId: drop_skeletonknight
-  _isBoss: 0
-  _dropChance: 0.33
-  _dropRolls: 3
-  _bossGuaranteedCount: 1
-  _spawnOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &6384791484603017950
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,3 +776,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8173965227268892932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2832432180080801224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395c53093b25164a96c5b8aee63df7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Combat.EnemyLootDrop
+  _dropItem: {fileID: 11400000, guid: 81c6829e3b2cad745811f666bec0df67, type: 2}
+  _dropItemId: drop_skeletonknight
+  _isBoss: 0
+  _dropChance: 0.33
+  _dropRolls: 3
+  _bossGuaranteedCount: 1
+  _spawnOffset: {x: 0, y: 0, z: 0}

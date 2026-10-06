@@ -281,8 +281,8 @@ MonoBehaviour:
   _maxHealth: 1000
   _defense: 20
   _attackPower: 140
-  _goldReward: 762
-  _expReward: 1312
+  _goldReward: 1491
+  _expReward: 1267
   _currentStatus: 0
 --- !u!114 &3759819579243811750
 MonoBehaviour:
@@ -496,7 +496,7 @@ AudioSource:
   m_GameObject: {fileID: 2819804112159387095}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2572460914332566449, guid: cda7431d24627a048b2c0bb74c453986, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
