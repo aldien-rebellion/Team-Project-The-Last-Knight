@@ -326,6 +326,7 @@ namespace TheLastKnight.Combat.Projectiles
             if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
             audioSource.spatialBlend = 0f;
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(audioSource);
             audioSource.PlayOneShot(clip, volume);
         }
     }

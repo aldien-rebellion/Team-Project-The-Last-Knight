@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,48 @@ namespace TheLastKnight.Audio
     public class AudioManager : MonoBehaviour
     {
         public static AudioManager Instance { get; private set; }
+        private static readonly Dictionary<AudioSource, float> EffectsSources = new Dictionary<AudioSource, float>();
+        private static readonly List<AudioSource> DestroyedSources = new List<AudioSource>();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetEffectsSources()
+        {
+            EffectsSources.Clear();
+            DestroyedSources.Clear();
+        }
+
+        // Keep the authored source gain separate from the player's settings.
+        // Registration can happen before the persistent manager's Awake.
+        public static void RegisterEffectsSource(AudioSource source)
+        {
+            if (source == null || EffectsSources.ContainsKey(source)) return;
+            SetEffectsSourceVolume(source, source.volume);
+        }
+
+        public static void SetEffectsSourceVolume(AudioSource source, float volume)
+        {
+            if (source == null) return;
+            float baseVolume = Mathf.Clamp01(volume);
+            EffectsSources[source] = baseVolume;
+            source.volume = baseVolume * EffectsGain;
+        }
+
+        private static float EffectsGain => Instance != null
+            ? Instance.Master * Instance.Effects
+            : Mathf.Clamp01(PlayerPrefs.GetFloat("MasterVolume", 1f))
+                * Mathf.Clamp01(PlayerPrefs.GetFloat("EffectsVolume", 1f));
+
+        private static void ApplyEffectsVolumes()
+        {
+            float gain = EffectsGain;
+            foreach (var entry in EffectsSources)
+            {
+                if (entry.Key == null) DestroyedSources.Add(entry.Key);
+                else entry.Key.volume = entry.Value * gain;
+            }
+            foreach (var source in DestroyedSources) EffectsSources.Remove(source);
+            DestroyedSources.Clear();
+        }
         [SerializeField] private AudioCatalog _catalog;
         private AudioSource _bgmA, _bgmB, _sfx, _loopingSfx, _stoppableSfx;
         private string _loopingSfxId;
@@ -40,7 +83,11 @@ namespace TheLastKnight.Audio
             if (Instance == this) Instance = null;
         }
 
-        private void SceneChanged(Scene scene, LoadSceneMode mode) => PlaySceneMusic(scene.name);
+        private void SceneChanged(Scene scene, LoadSceneMode mode)
+        {
+            ApplyEffectsVolumes();
+            PlaySceneMusic(scene.name);
+        }
         public void PlaySceneMusic(string sceneName)
         {
             string musicId = sceneName switch
@@ -149,6 +196,7 @@ namespace TheLastKnight.Audio
             Master = Mathf.Clamp01(master); Music = Mathf.Clamp01(music); Effects = Mathf.Clamp01(effects);
             PlayerPrefs.SetFloat("MasterVolume", Master); PlayerPrefs.SetFloat("MusicVolume", Music); PlayerPrefs.SetFloat("EffectsVolume", Effects);
             ApplyVolumes();
+            ApplyEffectsVolumes();
         }
         private void ApplyVolumes()
         {

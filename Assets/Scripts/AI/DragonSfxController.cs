@@ -38,6 +38,8 @@ namespace TheLastKnight.AI
                 _attackAudioSource.spatialBlend = 0.8f;
             }
             _stats = GetComponent<EnemyStats>();
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_attackAudioSource);
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_audioSource);
         }
 
         private void OnEnable()
@@ -66,7 +68,7 @@ namespace TheLastKnight.AI
             if (fadeDuration > 0f && currentOffset >= fadeStartOffset)
             {
                 float fade = Mathf.Clamp01((endOffset - currentOffset) / fadeDuration);
-                _attackAudioSource.volume = _attackBaseVolume * fade;
+                TheLastKnight.Audio.AudioManager.SetEffectsSourceVolume(_attackAudioSource, _attackBaseVolume * fade);
             }
 
             if (currentOffset >= endOffset)
@@ -109,7 +111,7 @@ namespace TheLastKnight.AI
             _attackAudioSource.Stop();
             _attackAudioSource.clip = clip;
             _attackBaseVolume = volume;
-            _attackAudioSource.volume = _attackBaseVolume;
+            TheLastKnight.Audio.AudioManager.SetEffectsSourceVolume(_attackAudioSource, _attackBaseVolume);
             _attackAudioSource.pitch = _attackPitch;
             _attackAudioSource.loop = false;
             float startOffset = Mathf.Clamp(_attackStartOffset, 0f, clip.length);

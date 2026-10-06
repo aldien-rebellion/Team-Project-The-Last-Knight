@@ -29,6 +29,9 @@ namespace TheLastKnight.AI
             Configure(_hitAudioSource);
             Configure(_magmaAudioSource);
             _stats = GetComponent<EnemyStats>();
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_skillAudioSource);
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_magmaAudioSource);
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_hitAudioSource);
         }
 
         private void OnEnable()

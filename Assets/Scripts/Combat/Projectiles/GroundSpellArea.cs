@@ -127,6 +127,7 @@ private IEnumerator SpellRoutine()
             if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
             audioSource.spatialBlend = 0f;
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(audioSource);
             audioSource.PlayOneShot(_impactAudioClip, _impactAudioVolume);
         }
     

@@ -26,6 +26,7 @@ namespace TheLastKnight.AI
             _audioSource.spatialBlend = 0.8f;
             _audioSource.minDistance = 2f;
             _audioSource.maxDistance = 20f;
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_audioSource);
         }
 
         private void OnEnable()

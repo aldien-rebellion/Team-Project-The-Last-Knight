@@ -34,6 +34,8 @@ namespace TheLastKnight.AI
             _howlSource.outputAudioMixerGroup = _audioSource.outputAudioMixerGroup;
             _howlSource.volume = _audioSource.volume;
             _stats = GetComponent<EnemyStats>();
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_audioSource);
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_howlSource);
         }
 
         private void OnEnable()

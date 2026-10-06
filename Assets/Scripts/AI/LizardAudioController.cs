@@ -21,6 +21,7 @@ namespace TheLastKnight.AI
             _audioSource.minDistance = 2f;
             _audioSource.maxDistance = 20f;
             _stats = GetComponent<EnemyStats>();
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_audioSource);
         }
 
         private void OnEnable()

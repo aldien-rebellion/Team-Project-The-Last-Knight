@@ -30,6 +30,7 @@ namespace TheLastKnight.AI
             _ai = GetComponent<EnemyController>();
             _body = GetComponent<Rigidbody2D>();
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_audioSource);
         }
 
         private void OnEnable()

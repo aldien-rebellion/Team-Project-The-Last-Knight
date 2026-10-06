@@ -19,6 +19,7 @@ namespace TheLastKnight.AI
             _audioSource.playOnAwake = false;
             _audioSource.spatialBlend = 0.8f;
             _stats = GetComponent<EnemyStats>();
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_audioSource);
         }
 
         private void OnEnable()

@@ -39,6 +39,8 @@ namespace TheLastKnight.AI
             _stats = GetComponent<EnemyStats>();
             _enemyController = GetComponent<EnemyController>();
             _body = GetComponent<Rigidbody2D>();
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_oneShotSource);
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_movementSource);
         }
 
         private void OnEnable()

@@ -21,6 +21,7 @@ namespace TheLastKnight.AI
             if (_audioSource == null) _audioSource = gameObject.AddComponent<AudioSource>();
             _audioSource.playOnAwake = false;
             _stats = GetComponent<EnemyStats>();
+            TheLastKnight.Audio.AudioManager.RegisterEffectsSource(_audioSource);
         }
 
         private void OnEnable()
