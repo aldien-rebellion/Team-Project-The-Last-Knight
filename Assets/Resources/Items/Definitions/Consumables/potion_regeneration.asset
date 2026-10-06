@@ -15,7 +15,7 @@ MonoBehaviour:
   id: potion_regeneration
   displayName: Potion of Regeneration
   typeName: Potion
-  description: Continuously regenerates 5% of Max HP per second for 30 seconds.
+  description: Continuously regenerates 5% of Max HP per second for 90 seconds.
   icon: {fileID: 4642234658121397712, guid: 6db7f1f398d352540a4a6d338753eae7, type: 3}
   category: 0
   maxStack: 64

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: potion_undying
   displayName: Potion of the Undying
   typeName: Potion
-  description: Forbidden elixir. Sets HP to 1 and prevents all healing, but grants complete invincibility for 30 seconds.
+  description: Forbidden elixir. Sets HP to 1 and prevents all healing, but grants complete invincibility for 90 seconds.
   icon: {fileID: 2567611823625943195, guid: 1070b0166951d2645ba03f1ba01f2291, type: 3}
   category: 0
   maxStack: 64

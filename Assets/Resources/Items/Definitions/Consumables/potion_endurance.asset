@@ -15,7 +15,7 @@ MonoBehaviour:
   id: potion_endurance
   displayName: Potion of Endurance
   typeName: Potion
-  description: Reduces all stamina consumption by 25% for 30 seconds.
+  description: Reduces all stamina consumption by 25% for 90 seconds.
   icon: {fileID: 7986458913924483566, guid: c152c0887a215e748a906e7de70b2407, type: 3}
   category: 0
   maxStack: 64

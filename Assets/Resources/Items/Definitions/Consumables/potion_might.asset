@@ -15,7 +15,7 @@ MonoBehaviour:
   id: potion_might
   displayName: Potion of Might
   typeName: Potion
-  description: Increases attack power by 25% for 30 seconds. Using again refreshes
+  description: Increases attack power by 25% for 90 seconds. Using again refreshes
     the duration.
   icon: {fileID: -3670461564150518451, guid: 6a144a3e03a2ccf43ae77f4f3f6a84bd, type: 3}
   category: 0

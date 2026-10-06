@@ -15,7 +15,7 @@ MonoBehaviour:
   id: potion_purity
   displayName: Potion of Purity
   typeName: Potion
-  description: Cleanses negative effects and grants complete immunity to stun and status ailments for 30 seconds.
+  description: Cleanses negative effects and grants complete immunity to stun and status ailments for 90 seconds.
   icon: {fileID: 1177614347668143351, guid: f8a122461c71e9d4399958a71cb76ab1, type: 3}
   category: 0
   maxStack: 64

@@ -249,7 +249,7 @@ namespace TheLastKnight.Stats
         private float _baseAttackPower;
         private float _mightExpiresAt;
         public const float MightBuffMultiplier = 0.25f; // +25% ATK
-        public const float MightBuffDuration = 30f; // 30 seconds
+        public const float MightBuffDuration = 90f; // 1 minute 30 seconds
         public void ApplyMightBuff() => _mightExpiresAt = Time.time + MightBuffDuration;
         public void RemoveMightBuff() => _mightExpiresAt = 0f;
         public bool HasMightBuff => Time.time < _mightExpiresAt;
@@ -258,7 +258,7 @@ namespace TheLastKnight.Stats
 
         // Potion of Swiftness (Potion 1-2): +25% Attack Speed & Movement Speed for 30s
         private float _swiftnessExpiresAt;
-        public const float SwiftnessBuffDuration = 30f;
+        public const float SwiftnessBuffDuration = 90f;
         public void ApplySwiftnessBuff() { _swiftnessExpiresAt = Time.time + SwiftnessBuffDuration; RecalculateStats(); }
         public void RemoveSwiftnessBuff() { _swiftnessExpiresAt = 0f; RecalculateStats(); }
         public bool HasSwiftnessBuff => Time.time < _swiftnessExpiresAt;
@@ -266,7 +266,7 @@ namespace TheLastKnight.Stats
 
         // Potion of Endurance (Potion 1-3): -25% all Stamina consumption for 30s
         private float _enduranceExpiresAt;
-        public const float EnduranceBuffDuration = 30f;
+        public const float EnduranceBuffDuration = 90f;
         public void ApplyEnduranceBuff() => _enduranceExpiresAt = Time.time + EnduranceBuffDuration;
         public void RemoveEnduranceBuff() => _enduranceExpiresAt = 0f;
         public bool HasEnduranceBuff => Time.time < _enduranceExpiresAt;
@@ -274,7 +274,7 @@ namespace TheLastKnight.Stats
 
         // Potion of Purity (Potion 1-4): Immune to stun and status ailments for 30s
         private float _purityExpiresAt;
-        public const float PurityBuffDuration = 30f;
+        public const float PurityBuffDuration = 90f;
         public void ApplyPurityBuff()
         {
             _purityExpiresAt = Time.time + PurityBuffDuration;
@@ -289,7 +289,7 @@ namespace TheLastKnight.Stats
 
         // Potion of Regeneration (Potion 1-5): +5% Max HP/sec for 30s
         private float _regenBuffExpiresAt;
-        public const float RegenBuffDuration = 30f;
+        public const float RegenBuffDuration = 90f;
         public void ApplyRegenBuff() => _regenBuffExpiresAt = Time.time + RegenBuffDuration;
         public void RemoveRegenBuff() => _regenBuffExpiresAt = 0f;
         public bool HasRegenBuff => Time.time < _regenBuffExpiresAt;
@@ -297,7 +297,7 @@ namespace TheLastKnight.Stats
 
         // Potion of Fortitude (Potion 1-7): +25% Max HP & DEF for 30s
         private float _fortitudeExpiresAt;
-        public const float FortitudeBuffDuration = 30f;
+        public const float FortitudeBuffDuration = 90f;
         public void ApplyFortitudeBuff()
         {
             bool hadBuff = HasFortitudeBuff;
@@ -315,7 +315,7 @@ namespace TheLastKnight.Stats
 
         // Potion of the Undying (Potion 1-8): HP becomes 1, no heal, invincible for 30s
         private float _undyingExpiresAt;
-        public const float UndyingBuffDuration = 30f;
+        public const float UndyingBuffDuration = 90f;
         public void ApplyUndyingBuff()
         {
             _undyingExpiresAt = Time.time + UndyingBuffDuration;

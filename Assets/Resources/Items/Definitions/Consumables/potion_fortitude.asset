@@ -15,7 +15,7 @@ MonoBehaviour:
   id: potion_fortitude
   displayName: Potion of Fortitude
   typeName: Potion
-  description: Bolsters defenses, increasing Max HP and DEF by 25% for 30 seconds.
+  description: Bolsters defenses, increasing Max HP and DEF by 25% for 90 seconds.
   icon: {fileID: -2812735740395434264, guid: fa9d7818e4adf4b428df0fa32e1ac3c3, type: 3}
   category: 0
   maxStack: 64
