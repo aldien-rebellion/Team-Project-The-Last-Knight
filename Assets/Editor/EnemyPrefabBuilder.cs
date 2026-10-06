@@ -461,7 +461,7 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             serializedAI.FindProperty("_flipSpriteInsteadOfTransformScale").boolValue = cfg.Name == "Demon";
             serializedAI.FindProperty("_flipSpriteInsteadOfTransformScale").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "SkeletonKnight";
             serializedAI.FindProperty("_facingFlipDeadZone").floatValue = cfg.Name == "SkeletonKnight" ? 0.12f : cfg.Name == "ArchDemon" ? 0.1f : 0f;
-            serializedAI.FindProperty("_avoidTeleportOnReturn").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "SkeletonKnight";
+            serializedAI.FindProperty("_avoidTeleportOnReturn").boolValue = cfg.Name == "ArchDemon" || cfg.Name == "SkeletonKnight" || cfg.Name == "FlyingEye";
             if (cfg.Name == "UndeadExecutioner")
                 serializedAI.FindProperty("_deathDestroyDelay").floatValue = 2.2f;
             else if (cfg.Name == "ArchDemon")
@@ -484,8 +484,8 @@ serializedAI.FindProperty("_initialFacingRight").boolValue = cfg.Name != "Bringe
             if (cfg.Name == "Skeleton")
                 serializedAI.FindProperty("_projectileSpawnOffset").vector2Value = new Vector2(0.6f, 1.4f);
             serializedAI.FindProperty("_isFlying").boolValue = cfg.IsFlying;
-            serializedAI.FindProperty("_flyHorizontally").boolValue = cfg.Name == "FlyingEye";
-            serializedAI.FindProperty("_flyingChaseHeightOffset").floatValue = cfg.Name == "FlyingEye" ? -1.2f : 0f;
+            serializedAI.FindProperty("_flyHorizontally").boolValue = false;
+            serializedAI.FindProperty("_flyingChaseHeightOffset").floatValue = 0f;
             serializedAI.FindProperty("_flyingIdleHeightOffset").floatValue = 0f;
             serializedAI.FindProperty("_hasRangedAttack").boolValue = cfg.HasRanged;
             if (projPrefab != null) serializedAI.FindProperty("_projectilePrefab").objectReferenceValue = projPrefab;
