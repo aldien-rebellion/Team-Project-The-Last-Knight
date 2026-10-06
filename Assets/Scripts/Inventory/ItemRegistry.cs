@@ -68,7 +68,7 @@ namespace TheLastKnight.Inventory
                 id = "potion_endurance",
                 name = "Potion of Endurance",
                 typeName = "Potion",
-                description = "Reduces all stamina consumption by 25% for 90 seconds.",
+                description = "Reduces all stamina consumption by 50% for 90 seconds.",
                 iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion 1-3",
                 category = ItemCategory.Consumable,
                 maxStack = 64,

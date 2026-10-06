@@ -241,7 +241,7 @@ namespace TheLastKnight.UI
                     id = "potion_endurance",
                     displayName = "Potion of Endurance",
                     category = "Potion",
-                    description = "Reduces all stamina consumption by 25% for 90 seconds.",
+                    description = "Reduces all stamina consumption by 50% for 90 seconds.",
                     buyPrice = PotionPrices.GetBuyPrice("potion_endurance"),
                     customSellPrice = PotionPrices.GetSellPrice("potion_endurance"),
                     initialStock = 5,
