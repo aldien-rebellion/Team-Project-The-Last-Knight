@@ -1265,15 +1265,22 @@ namespace TheLastKnight.UI
 
         public static string FormatStatWithBonus(float baseValue, float totalValue)
         {
+            return FormatStatWithBonus(baseValue, totalValue, null);
+        }
+
+        private static string FormatStatWithBonus(float baseValue, float totalValue, string numberFormat)
+        {
             float diff = totalValue - baseValue;
-            string baseStr = FormatStatNumber(baseValue);
-            if (diff > 0.05f)
+            string baseStr = numberFormat == null ? FormatStatNumber(baseValue) : baseValue.ToString(numberFormat);
+            float threshold = numberFormat == "F2" ? 0.005f : 0.05f;
+            string bonusStr = numberFormat == null ? FormatStatNumber(diff) : diff.ToString(numberFormat);
+            if (diff > threshold)
             {
-                return $"{baseStr}(+{FormatStatNumber(diff)})";
+                return $"{baseStr}(+{bonusStr})";
             }
-            else if (diff < -0.05f)
+            else if (diff < -threshold)
             {
-                return $"{baseStr}({FormatStatNumber(diff)})";
+                return $"{baseStr}({bonusStr})";
             }
             return baseStr;
         }
@@ -1296,22 +1303,28 @@ namespace TheLastKnight.UI
                     float baseMoveSpd = ctrl != null ? ctrl.BaseMoveSpeed : 8f;
                     float sprintSpd = ctrl != null ? ctrl.SprintSpeed : 13f;
                     float atkSpd = player != null ? player.AttackSpeedMultiplier : 1f;
+                    float permanentAtkSpd = player != null ? player.BaseAttackSpeedMultiplier : 1f;
+                    float moveSpd = ctrl != null ? ctrl.MoveSpeed : baseMoveSpd;
+                    float permanentSprintSpd = player != null ? player.BaseSprintSpeed : sprintSpd;
                     bool canDoubleJump = player != null && player.CanDoubleJump;
                     string djStatus = canDoubleJump ? "<color=green>Unlocked</color>" : "Locked";
-                    desc = $"Attack Speed: {atkSpd:F2}x\nMove Speed: {FormatStatNumber(baseMoveSpd)} (Fixed)";
-                    if (ctrl != null) desc += $"\nSprint Speed: {FormatStatNumber(sprintSpd)}\nDash Speed: {ctrl.DashSpeed:F1}";
+                    desc = $"Attack Speed: {FormatStatWithBonus(permanentAtkSpd, atkSpd, "F2")}x\nMove Speed: {FormatStatWithBonus(baseMoveSpd, moveSpd)} (Fixed)";
+                    if (ctrl != null) desc += $"\nSprint Speed: {FormatStatWithBonus(permanentSprintSpd, sprintSpd)}\nDash Speed: {ctrl.DashSpeed:F1}";
                     desc += $"\nDouble Jump: {djStatus}";
                     break;
                 case "VIT":
                     float maxHp = player != null ? player.MaxHP : 100f;
+                    float permanentMaxHp = player != null ? player.BaseMaxHP : maxHp;
                     float maxStm = player != null ? player.MaxStamina : 100f;
-                    desc = $"Max HP: {Mathf.CeilToInt(maxHp)}\nMax Stamina: {Mathf.CeilToInt(maxStm)}\nIncreases health and stamina capacity.";
+                    desc = $"Max HP: {FormatStatWithBonus(permanentMaxHp, maxHp)}\nMax Stamina: {Mathf.CeilToInt(maxStm)}\nIncreases health and stamina capacity.";
                     break;
                 case "DEX":
                     float crit = player != null ? player.CriticalChance : 5f;
                     int dexVal = player != null ? player.DEX : 10;
                     string maxNotice = dexVal >= TheLastKnight.Stats.PlayerStats.MaxDexterity ? " (MAX)" : "";
-                    desc = $"Critical Chance: {crit:F1}%{maxNotice}\n(Linear: 200 DEX = 100% Crit)\nDEX Crit Damage: 150%\nParry Crit Damage: 200%";
+                    float dexCritDamage = player != null ? player.DexCriticalDamageMultiplier * 100f : 150f;
+                    float parryCritDamage = player != null ? player.ParryCriticalDamageMultiplier * 100f : 200f;
+                    desc = $"Critical Chance: {crit:F1}%{maxNotice}\n(Linear: 200 DEX = 100% Crit)\nDEX Crit Damage: {FormatStatWithBonus(150f, dexCritDamage)}%\nParry Crit Damage: {FormatStatWithBonus(200f, parryCritDamage)}%";
                     break;
             }
 
@@ -1338,6 +1351,9 @@ namespace TheLastKnight.UI
             float hpPct = (player != null && player.MaxHP > 0) ? player.HealthPercentage : 0.67f;
             int curHp = (player != null && player.MaxHP > 0) ? Mathf.CeilToInt(player.CurrentHP) : 100;
             int maxHp = (player != null && player.MaxHP > 0) ? Mathf.CeilToInt(player.MaxHP) : 150;
+            string maxHpDisplay = player != null && player.MaxHP > 0
+                ? FormatStatWithBonus(player.BaseMaxHP, player.MaxHP)
+                : maxHp.ToString();
             float stmPct = (player != null && player.MaxStamina > 0) ? player.StaminaPercentage : 0.3f;
             int curStm = (player != null && player.MaxStamina > 0) ? Mathf.CeilToInt(player.CurrentStamina) : 30;
             int maxStm = (player != null && player.MaxStamina > 0) ? Mathf.CeilToInt(player.MaxStamina) : 100;
@@ -1357,7 +1373,7 @@ namespace TheLastKnight.UI
             if (_txtXp != null) TheLastKnight.UI.LocalizedText.Set(_txtXp, $"XP: {exp}/{expNeeded}");
 
             if (_imgHpFill != null) _imgHpFill.fillAmount = hpPct;
-            if (_txtHp != null) TheLastKnight.UI.LocalizedText.Set(_txtHp, $"HP: {curHp}/{maxHp}");
+            if (_txtHp != null) TheLastKnight.UI.LocalizedText.Set(_txtHp, $"HP: {curHp}/{maxHpDisplay}");
 
             if (_imgStmFill != null) _imgStmFill.fillAmount = stmPct;
             if (_txtStm != null) TheLastKnight.UI.LocalizedText.Set(_txtStm, $"STM: {curStm}/{maxStm}");

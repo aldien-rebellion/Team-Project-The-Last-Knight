@@ -784,7 +784,7 @@ namespace TheLastKnight.Player
                 bool isParryStagger = parry != null && parry.IsStaggered;
                 bool isDexCrit = Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
                 bool critical = isParryStagger || isDexCrit;
-                float critMultiplier = isParryStagger ? 2f : (isDexCrit ? 1.5f : 1f);
+                float critMultiplier = stats.GetCriticalDamageMultiplier(isParryStagger, isDexCrit);
                 float damage = stats.AttackPower * critMultiplier * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
                 target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));
@@ -876,7 +876,7 @@ namespace TheLastKnight.Player
                 bool isParryStagger = parry != null && parry.IsStaggered;
                 bool isDexCrit = Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
                 bool critical = isParryStagger || isDexCrit;
-                float critMultiplier = isParryStagger ? 2f : (isDexCrit ? 1.5f : 1f);
+                float critMultiplier = stats.GetCriticalDamageMultiplier(isParryStagger, isDexCrit);
                 float damage = stats.AttackPower * _skillDamageMultiplier * critMultiplier * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
 
@@ -1187,7 +1187,7 @@ namespace TheLastKnight.Player
                 bool isParryStagger = parry != null && parry.IsStaggered;
                 bool isDexCrit = Random.value * 100f < Mathf.Clamp(stats.CriticalChance, 0f, 100f);
                 bool critical = isParryStagger || isDexCrit;
-                float critMultiplier = isParryStagger ? 2f : (isDexCrit ? 1.5f : 1f);
+                float critMultiplier = stats.GetCriticalDamageMultiplier(isParryStagger, isDexCrit);
                 float damage = stats.AttackPower * _excaliburDamageMultiplier * critMultiplier * TheLastKnight.Core.GameDifficultyManager.PlayerDamage;
                 Vector2 point = collider.ClosestPoint(center);
                 target.TakeDamage(new DamageData(damage, gameObject, hitPoint: point));

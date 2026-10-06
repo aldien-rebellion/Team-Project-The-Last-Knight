@@ -302,6 +302,7 @@ namespace TheLastKnight.UI
                     initialStock = 3,
                     itemType = ShopItemType.InventoryItem
                 },
+                CreateCritDamagePotionConfig(),
                 new ShopItemConfig
                 {
                     id = "RUNE",
@@ -316,13 +317,38 @@ namespace TheLastKnight.UI
             };
         }
 
-        private void Awake()
+        private static ShopItemConfig CreateCritDamagePotionConfig()
         {
-            if (Instance == null) Instance = this;
+            return new ShopItemConfig
+            {
+                id = "potion_crit_damage",
+                displayName = "Potion Crit DMG",
+                category = "Potion",
+                description = PlayerStats.CritDamageBuffDescription,
+                buyPrice = PotionPrices.GetBuyPrice("potion_crit_damage"),
+                customSellPrice = PotionPrices.GetSellPrice("potion_crit_damage"),
+                initialStock = 3,
+                itemType = ShopItemType.InventoryItem
+            };
+        }
+
+        private void EnsureCatalog()
+        {
             if (_shopCatalog == null || _shopCatalog.Count < 9 || _shopCatalog.Exists(i => i.id == "STR" || i.id == "VIT" || i.id == "DEX" || i.id == "AGI"))
             {
                 PopulateDefaultCatalog();
             }
+            if (!_shopCatalog.Exists(i => string.Equals(i.id, "potion_crit_damage", StringComparison.OrdinalIgnoreCase)))
+            {
+                int runeIndex = _shopCatalog.FindIndex(i => i.itemType == ShopItemType.RuneReward);
+                _shopCatalog.Insert(runeIndex >= 0 ? runeIndex : _shopCatalog.Count, CreateCritDamagePotionConfig());
+            }
+        }
+
+        private void Awake()
+        {
+            if (Instance == null) Instance = this;
+            EnsureCatalog();
             foreach (var item in _shopCatalog)
             {
                 if (item.itemType == ShopItemType.RuneReward) item.buyPrice = 1000;
@@ -359,10 +385,7 @@ namespace TheLastKnight.UI
         {
             if (_panel != null) return;
 
-            if (_shopCatalog == null || _shopCatalog.Count < 9 || _shopCatalog.Exists(i => i.id == "STR" || i.id == "VIT" || i.id == "DEX" || i.id == "AGI"))
-            {
-                PopulateDefaultCatalog();
-            }
+            EnsureCatalog();
             foreach (var item in _shopCatalog)
             {
                 if (item.itemType == ShopItemType.RuneReward) item.buyPrice = 1000;

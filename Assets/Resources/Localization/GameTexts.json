@@ -185,6 +185,22 @@
       "th": "ยาอมตะ"
     },
     {
+      "en": "Potion Crit DMG",
+      "th": "ยาเพิ่มความเสียหายคริติคอล"
+    },
+    {
+      "en": "Sets DEX critical damage (attacks and skills) to 300% and Parry critical damage to 500% for 90 seconds. Using again refreshes the duration.",
+      "th": "เพิ่มความเสียหายคริติคอลจาก DEX ของการโจมตีและสกิลเป็น 300% และจากการปัดป้องเป็น 500% นาน 90 วินาที ดื่มซ้ำเพื่อเริ่มระยะเวลาใหม่"
+    },
+    {
+      "en": "DEX Crit Damage: 150(+150)%",
+      "th": "ความเสียหายคริติคอลจาก DEX: 150(+150)%"
+    },
+    {
+      "en": "Parry Crit Damage: 200(+300)%",
+      "th": "ความเสียหายคริติคอลจากการปัดป้อง: 200(+300)%"
+    },
+    {
       "en": "Gold Pouch",
       "th": "ถุงทอง"
     },

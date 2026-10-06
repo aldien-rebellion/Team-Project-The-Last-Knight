@@ -153,6 +153,19 @@ namespace TheLastKnight.Inventory
                     }
                 }
             },
+            ["potion_crit_damage"] = () => new InventoryItemData
+            {
+                id = "potion_crit_damage",
+                name = "Potion Crit DMG",
+                typeName = "Potion",
+                description = PlayerStats.CritDamageBuffDescription,
+                iconPath = "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion Crit DMG",
+                category = ItemCategory.Consumable,
+                maxStack = 64,
+                isConsumable = true,
+                sellPrice = 150,
+                onUse = player => { if (player != null) player.ApplyCritDamageBuff(); }
+            },
             ["gold_pouch"] = () => new InventoryItemData
             {
                 id = "gold_pouch",

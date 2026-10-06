@@ -125,8 +125,8 @@ namespace TheLastKnight.Tests
         {
             var prices = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType("TheLastKnight.Inventory.PotionPrices")).First(t => t != null);
             var definitionType = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType("TheLastKnight.Inventory.ItemDefinition")).First(t => t != null);
-            var ids = new[] { "potion_heal", "potion_might", "potion_swiftness", "potion_fortitude", "potion_regeneration", "potion_endurance", "potion_purity", "potion_undying" };
-            var buys = new[] { 50, 100, 100, 100, 200, 200, 200, 300 };
+            var ids = new[] { "potion_heal", "potion_might", "potion_swiftness", "potion_fortitude", "potion_regeneration", "potion_endurance", "potion_purity", "potion_undying", "potion_crit_damage" };
+            var buys = new[] { 50, 100, 100, 100, 200, 200, 200, 300, 300 };
             var definitions = Resources.LoadAll("Items/Definitions", definitionType);
             for (int i = 0; i < ids.Length; i++)
             {

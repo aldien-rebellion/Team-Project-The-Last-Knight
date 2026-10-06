@@ -18,7 +18,8 @@ namespace TheLastKnight.Inventory
         PurityBuff,
         RegenBuff,
         FortitudeBuff,
-        UndyingBuff
+        UndyingBuff,
+        CritDamageBuff
     }
 
     [CreateAssetMenu(fileName = "new_item", menuName = "The Last Knight/Item Definition")]
@@ -91,6 +92,9 @@ namespace TheLastKnight.Inventory
                     break;
                 case ItemUseEffect.UndyingBuff:
                     item.onUse = p => { if (p != null) p.ApplyUndyingBuff(); };
+                    break;
+                case ItemUseEffect.CritDamageBuff:
+                    item.onUse = p => { if (p != null) p.ApplyCritDamageBuff(); };
                     break;
             }
             return item;

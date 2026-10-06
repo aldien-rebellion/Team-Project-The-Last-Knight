@@ -331,6 +331,21 @@ namespace TheLastKnight.Stats
         public bool HasUndyingBuff => Time.time < _undyingExpiresAt;
         public float UndyingBuffRemaining => Mathf.Max(0f, _undyingExpiresAt - Time.time);
 
+        private float _critDamageExpiresAt;
+        public const float CritDamageBuffDuration = 90f;
+        public const string CritDamageBuffDescription = "Sets DEX critical damage (attacks and skills) to 300% and Parry critical damage to 500% for 90 seconds. Using again refreshes the duration.";
+        public void ApplyCritDamageBuff() => _critDamageExpiresAt = Time.time + CritDamageBuffDuration;
+        public void RemoveCritDamageBuff() => _critDamageExpiresAt = 0f;
+        public bool HasCritDamageBuff => Time.time < _critDamageExpiresAt;
+        public float CritDamageBuffRemaining => Mathf.Max(0f, _critDamageExpiresAt - Time.time);
+        public float DexCriticalDamageMultiplier => HasCritDamageBuff ? 3f : 1.5f;
+        public float ParryCriticalDamageMultiplier => HasCritDamageBuff ? 5f : 2f;
+
+        public float GetCriticalDamageMultiplier(bool isParryStagger, bool isDexCrit)
+        {
+            return isParryStagger ? ParryCriticalDamageMultiplier : (isDexCrit ? DexCriticalDamageMultiplier : 1f);
+        }
+
         private float _skill2BuffExpiresAt;
         public const float Skill2BuffMultiplier = 0.22f; // +22% ATK
         public const float Skill2BuffDuration = 15f; // 15 seconds
@@ -369,13 +384,7 @@ namespace TheLastKnight.Stats
             if (HasMightBuff)
             {
                 float rem = MightBuffRemaining;
-                Sprite icon = Resources.Load<Sprite>("BuffIcons/buff_might");
-                if (icon == null)
-                {
-                    var def = Resources.Load<TheLastKnight.Inventory.ItemDefinition>("Items/Definitions/Consumables/potion_might");
-                    if (def != null && def.icon != null) icon = def.icon;
-                }
-                if (icon == null) icon = Resources.Load<Sprite>("CharacterStatus/Item_BluePotion");
+                Sprite icon = LoadPotionIcon("potion_might", "CharacterStatus/Item_BluePotion");
 
                 list.Add(new ActiveBuffInfo
                 {
@@ -506,6 +515,24 @@ namespace TheLastKnight.Stats
                 });
             }
 
+            if (HasCritDamageBuff)
+            {
+                float rem = CritDamageBuffRemaining;
+                list.Add(new ActiveBuffInfo
+                {
+                    id = "buff_crit_damage",
+                    name = "Potion Crit DMG",
+                    category = "Elixir Enhancement",
+                    description = CritDamageBuffDescription,
+                    remainingSeconds = rem,
+                    totalDuration = CritDamageBuffDuration,
+                    formattedTime = FormatMinecraftTime(rem),
+                    icon = LoadPotionIcon("potion_crit_damage", "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion Crit DMG"),
+                    isDebuff = false,
+                    themeColor = new Color(0.95f, 0.4f, 0.2f)
+                });
+            }
+
             // 9. Medusa Sacred Fountain Aura
             if (HasRegenAura)
             {
@@ -545,6 +572,9 @@ namespace TheLastKnight.Stats
 
         private Sprite LoadPotionIcon(string potionId, string fallbackResource)
         {
+            // Dedicated framed status icons, shared by the HUD and character window.
+            var buffIcon = Resources.Load<Sprite>("BuffIcons/" + potionId.Replace("potion_", "buff_"));
+            if (buffIcon != null) return buffIcon;
             var def = Resources.Load<TheLastKnight.Inventory.ItemDefinition>("Items/Definitions/Consumables/" + potionId);
             if (def != null && def.icon != null) return def.icon;
             return Resources.Load<Sprite>(fallbackResource);
@@ -564,6 +594,10 @@ namespace TheLastKnight.Stats
         public float Defense { get; private set; }
         [CreateProperty]
         public float AttackSpeedMultiplier { get; private set; } = 1.0f;
+        // Permanent derived values include attribute upgrades, before temporary buffs.
+        public float BaseMaxHP { get; private set; }
+        public float BaseAttackSpeedMultiplier { get; private set; } = 1.0f;
+        public float BaseSprintSpeed { get; private set; }
         [CreateProperty]
         public bool CanDoubleJump => _agility >= (_statsTemplate != null ? _statsTemplate.doubleJumpAgiThreshold : DoubleJumpAgiThreshold);
         public const int DoubleJumpAgiThreshold = 250;
@@ -624,7 +658,8 @@ namespace TheLastKnight.Stats
             AttackPower = baseAtk + _strength * atkPerStr;
 
             // VIT -> Max HP and Max Stamina
-            float calculatedMaxHP = _vitality * hpPerVit;
+            BaseMaxHP = _vitality * hpPerVit;
+            float calculatedMaxHP = BaseMaxHP;
             if (HasFortitudeBuff) calculatedMaxHP *= 1.25f;
             MaxHP = calculatedMaxHP;
             MaxStamina = baseStam + Mathf.Max(0, _vitality - baseVit) * stamPerVit;
@@ -644,7 +679,8 @@ namespace TheLastKnight.Stats
             }
 
             // AGI -> Attack Speed, Movement Speed, Double Jump
-            float baseAtkSpdMultiplier = baseAtkSpd + Mathf.Max(0, _agility - baseAgi) * atkSpdPerAgi;
+            BaseAttackSpeedMultiplier = baseAtkSpd + Mathf.Max(0, _agility - baseAgi) * atkSpdPerAgi;
+            float baseAtkSpdMultiplier = BaseAttackSpeedMultiplier;
             if (HasSwiftnessBuff) baseAtkSpdMultiplier *= 1.25f;
             AttackSpeedMultiplier = baseAtkSpdMultiplier;
 
@@ -684,7 +720,8 @@ namespace TheLastKnight.Stats
                 float speedMod = HasSwiftnessBuff ? 1.25f : 1.0f;
                 _playerController.MoveSpeed = _playerController.BaseMoveSpeed * speedMod;
                 float sprintRatio = _playerController.BaseMoveSpeed > 0f ? (_playerController.BaseSprintSpeed / _playerController.BaseMoveSpeed) : 1.625f;
-                _playerController.SprintSpeed = (_playerController.BaseSprintSpeed + (_agility - baseAgi) * (spdPerAgi * sprintRatio)) * speedMod;
+                BaseSprintSpeed = _playerController.BaseSprintSpeed + (_agility - baseAgi) * (spdPerAgi * sprintRatio);
+                _playerController.SprintSpeed = BaseSprintSpeed * speedMod;
                 _playerController.DashSpeed = _playerController.BaseDashSpeed + (_agility - baseAgi) * dashSpdPerAgi;
                 _playerController.AttackSpeedMultiplier = AttackSpeedMultiplier;
                 _playerController.CanDoubleJump = CanDoubleJump;

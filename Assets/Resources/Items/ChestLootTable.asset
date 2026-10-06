@@ -145,3 +145,6 @@ MonoBehaviour:
   - enabled: 0
     item: {fileID: 11400000, guid: 60c7dd242908385468f4d30a3623a7d2, type: 2}
     rarity: 0
+  - enabled: 1
+    item: {fileID: 11400000, guid: bb022f76b91c4a2599d797398fe8bbca, type: 2}
+    rarity: 2

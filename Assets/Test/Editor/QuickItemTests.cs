@@ -385,6 +385,81 @@ namespace TheLastKnight.Tests
             }
             finally { UnityEngine.Object.DestroyImmediate(playerObject); }
         }
+
+        [UnityEngine.TestTools.UnityTest]
+        public System.Collections.IEnumerator CritDamagePotion_BuyAndDrinkThroughQuickSlot()
+        {
+            var playerObject = UnityEngine.Object.Instantiate(UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+            var shopObject = new GameObject("Test_CritDamageShop");
+            var cameraObject = new GameObject("Test_CritDamageShopCamera", typeof(Camera));
+            var renderTexture = new RenderTexture(1280, 720, 24);
+            var priorRenderTexture = RenderTexture.active;
+            Component shop = null;
+            try
+            {
+                var player = playerObject.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                Call(playerObject.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController")), "Awake");
+                Call(player, "Awake");
+                Call(player, "AddGold", 600);
+                shop = shopObject.AddComponent(RuntimeType("TheLastKnight.UI.ShopUI"));
+                Call(shop, "Awake");
+                var catalog = (System.Collections.IList)shop.GetType().GetProperty("Catalog").GetValue(shop);
+                var potion = catalog.Cast<object>().Single(i => (string)Field(i, "id") == "potion_crit_damage");
+                Call(shop, "Open");
+                var panel = (GameObject)shop.GetType().GetField("_panel", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(shop);
+                Assert.That(panel.GetComponentsInChildren<Transform>(true).Any(t => t.name == "ItemRow_potion_crit_damage"), Is.True);
+                var camera = cameraObject.GetComponent<Camera>();
+                camera.enabled = false;
+                camera.transform.position = new Vector3(30000, 30000, -10);
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.08f, 0.1f, 0.14f);
+                camera.cullingMask = ~0;
+                camera.targetTexture = renderTexture;
+                var canvas = panel.GetComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                canvas.worldCamera = camera;
+                canvas.planeDistance = 1f;
+                Canvas.ForceUpdateCanvases();
+                yield return null;
+                panel.GetComponentsInChildren<ScrollRect>().First(s => s.content.GetComponentsInChildren<Transform>().Any(t => t.name == "ItemRow_potion_crit_damage")).verticalNormalizedPosition = 0f;
+                Canvas.ForceUpdateCanvases();
+                camera.Render();
+                RenderTexture.active = renderTexture;
+                var image = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+                try
+                {
+                    image.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);
+                    image.Apply();
+                    string previewPath = System.IO.Path.Combine(Application.dataPath, "../Temp/CritDamagePotionShop.png");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(previewPath));
+                    System.IO.File.WriteAllBytes(previewPath, image.EncodeToPNG());
+                }
+                finally { UnityEngine.Object.DestroyImmediate(image); }
+                Call(shop, "BuyItem", potion);
+                Assert.That(player.GetType().GetProperty("Gold").GetValue(player), Is.EqualTo(300));
+                int purchasedQuickIndex = Enumerable.Range(0, 5).Single(i => Slot(Quick, i) != null && (string)Field(Slot(Quick, i), "id") == "potion_crit_damage");
+                Assert.That(Count(Slot(Quick, purchasedQuickIndex)), Is.EqualTo(1));
+                Call(shop, "Close");
+                Left(Quick, purchasedQuickIndex, true);
+                int bagIndex = Enumerable.Range(0, 24).Single(i => Slot(Bag, i) != null && (string)Field(Slot(Bag, i), "id") == "potion_crit_damage");
+                Assert.That(Count(Slot(Bag, bagIndex)), Is.EqualTo(1));
+                Left(Bag, bagIndex, true);
+                int quickIndex = Enumerable.Range(0, 5).Single(i => Slot(Quick, i) != null && (string)Field(Slot(Quick, i), "id") == "potion_crit_damage");
+                Assert.That(Call(_quick, "UseSlot", quickIndex, player), Is.EqualTo(true));
+                Assert.That(player.GetType().GetProperty("HasCritDamageBuff").GetValue(player), Is.EqualTo(true));
+                Assert.That(Call(_inventory, "CountItem", "potion_crit_damage"), Is.EqualTo(0));
+            }
+            finally
+            {
+                RenderTexture.active = priorRenderTexture;
+                if (shop != null) Call(shop, "Close");
+                UnityEngine.Object.DestroyImmediate(shopObject);
+                UnityEngine.Object.DestroyImmediate(playerObject);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+                renderTexture.Release();
+                UnityEngine.Object.DestroyImmediate(renderTexture);
+            }
+        }
         [Test]
         public void PlayerDrop_WaitsForLandingAndOwnerSeparationBeforePickup()
         {
