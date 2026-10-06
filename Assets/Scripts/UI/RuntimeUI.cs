@@ -9,7 +9,7 @@ namespace TheLastKnight.UI
 {
     public static class RuntimeUI
     {
-        public static Font Font => Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        public static Font Font => LocalizedText.Font;
 
         public static GameObject Panel(string title, out Transform content, int sortingOrder = 200)
         {
@@ -96,12 +96,14 @@ namespace TheLastKnight.UI
             }
         }
 
-        public static Text Label(Transform parent, string text, int size = 20, Color? color = null)
+        public static Text Label(Transform parent, string text, int size = 20, Color? color = null, bool localize = true)
         {
             var go = new GameObject("Label", typeof(RectTransform), typeof(Text), typeof(LayoutElement));
             go.transform.SetParent(parent, false);
             var label = go.GetComponent<Text>();
-            label.font = Font; label.text = text; label.fontSize = size; label.color = color ?? Color.white;
+            label.font = Font;
+            if (localize) LocalizedText.Set(label, text); else label.text = text;
+            label.fontSize = size; label.color = color ?? Color.white;
             label.alignment = TextAnchor.MiddleCenter; label.raycastTarget = false;
             go.GetComponent<LayoutElement>().preferredHeight = size * 1.6f + (text.Length > 100 ? 70 : 0);
             return label;
@@ -127,6 +129,7 @@ namespace TheLastKnight.UI
             colors.highlightedColor = new Color(0.26f, 0.36f, 0.52f, 1f);
             colors.pressedColor = new Color(0.10f, 0.12f, 0.18f, 1f);
             colors.selectedColor = new Color(0.24f, 0.34f, 0.48f, 1f);
+            colors.fadeDuration = 0f;
             button.colors = colors;
 
             var label = Label(go.transform, text);
@@ -162,7 +165,7 @@ namespace TheLastKnight.UI
             slider.handleRect = handle.GetComponent<RectTransform>();
             slider.targetGraphic = handleImg;
             slider.minValue = min; slider.maxValue = max; slider.value = Mathf.Clamp(value, min, max);
-            slider.onValueChanged.AddListener(v => { label.text = $"{name}  {Mathf.RoundToInt(v * 100)}%"; changed(v); });
+            slider.onValueChanged.AddListener(v => { TheLastKnight.UI.LocalizedText.Set(label, $"{name}  {Mathf.RoundToInt(v * 100)}%"); changed(v); });
             return slider;
         }
 
@@ -221,7 +224,7 @@ namespace TheLastKnight.UI
             phText.fontStyle = FontStyle.Italic;
             phText.color = new Color(0.6f, 0.65f, 0.75f, 0.6f);
             phText.alignment = TextAnchor.MiddleLeft;
-            phText.text = placeholderText;
+            TheLastKnight.UI.LocalizedText.Set(phText, placeholderText);
 
             // Input Text
             var textGo = new GameObject("Text", typeof(RectTransform), typeof(Text));
@@ -304,8 +307,8 @@ namespace TheLastKnight.UI
             card.transform.SetParent(parent, false);
 
             var le = card.GetComponent<LayoutElement>();
-            le.preferredHeight = 64;
-            le.minHeight = 58;
+            le.preferredHeight = 80;
+            le.minHeight = 80;
 
             var img = card.GetComponent<Image>();
             img.color = new Color(0.12f, 0.16f, 0.24f, 0.85f);
@@ -333,17 +336,26 @@ namespace TheLastKnight.UI
             vLayout.childControlHeight = true;
             vLayout.childForceExpandHeight = false;
 
-            string difficultyName = save.difficulty.ToString();
+            string difficultyName = LocalizationManager.Translate(save.difficulty.ToString());
             string titleText = $"{save.saveName}   [{difficultyName}]";
-            var titleLbl = Label(infoGo.transform, titleText, 18, new Color(0.95f, 0.85f, 0.45f));
+            var titleLbl = Label(infoGo.transform, titleText, 18, new Color(0.95f, 0.85f, 0.45f), false);
             titleLbl.alignment = TextAnchor.MiddleLeft;
-            titleLbl.GetComponent<LayoutElement>().preferredHeight = 24;
+            // Thai ascenders and vowel marks need more room than the old Latin-only rows.
+            titleLbl.GetComponent<LayoutElement>().preferredHeight = 34;
+            titleLbl.verticalOverflow = VerticalWrapMode.Overflow;
+            titleLbl.resizeTextForBestFit = true;
+            titleLbl.resizeTextMinSize = 12;
+            titleLbl.resizeTextMaxSize = 18;
 
             string dateStr = !string.IsNullOrEmpty(save.lastSavedDate) ? save.lastSavedDate : "—";
-            string subText = $"Lv.{save.level}  •  {save.scene}  •  {dateStr}";
+            string subText = $"{LocalizationManager.Translate($"Lv. {save.level}")}  •  {LocalizationManager.Translate(save.scene)}  •  {dateStr}";
             var subLbl = Label(infoGo.transform, subText, 14, new Color(0.70f, 0.75f, 0.85f));
             subLbl.alignment = TextAnchor.MiddleLeft;
-            subLbl.GetComponent<LayoutElement>().preferredHeight = 20;
+            subLbl.GetComponent<LayoutElement>().preferredHeight = 28;
+            subLbl.verticalOverflow = VerticalWrapMode.Overflow;
+            subLbl.resizeTextForBestFit = true;
+            subLbl.resizeTextMinSize = 10;
+            subLbl.resizeTextMaxSize = 14;
 
             // Buttons (right)
             var btnPlay = Button(card.transform, LocalizationManager.Get("BTN_LOAD_WORLD"), onPlay);

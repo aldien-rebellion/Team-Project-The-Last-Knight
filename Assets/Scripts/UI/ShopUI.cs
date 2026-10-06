@@ -513,7 +513,7 @@ namespace TheLastKnight.UI
                     }
                     if (_cursorCount != null)
                     {
-                        _cursorCount.text = inv.CursorHeldItem.count > 1 ? inv.CursorHeldItem.count.ToString() : "";
+                        TheLastKnight.UI.LocalizedText.Set(_cursorCount, inv.CursorHeldItem.count > 1 ? inv.CursorHeldItem.count.ToString() : "");
                     }
 
                     Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)UnityEngine.Input.mousePosition;
@@ -771,7 +771,7 @@ namespace TheLastKnight.UI
             txtRt.offsetMax = Vector2.zero;
 
             var txt = txtGo.GetComponent<TextMeshProUGUI>();
-            txt.text = "← BACK";
+            TheLastKnight.UI.LocalizedText.Set(txt, "← BACK");
             txt.fontSize = 18f;
             txt.fontStyle = FontStyles.Bold;
             txt.alignment = TextAlignmentOptions.Center;
@@ -827,7 +827,7 @@ namespace TheLastKnight.UI
             hRt.sizeDelta = new Vector2(panelW - 24f, 32f);
 
             var hTxt = headerGo.GetComponent<TextMeshProUGUI>();
-            hTxt.text = "MERCHANT WARES";
+            TheLastKnight.UI.LocalizedText.Set(hTxt, "MERCHANT WARES");
             hTxt.fontSize = 17f;
             hTxt.fontStyle = FontStyles.Bold;
             hTxt.alignment = TextAlignmentOptions.Center;
@@ -967,7 +967,7 @@ namespace TheLastKnight.UI
             nameRt.offsetMin = new Vector2(0f, 0f);
             nameRt.offsetMax = new Vector2(0f, 0f);
             var nameTxt = nameGo.GetComponent<TextMeshProUGUI>();
-            nameTxt.text = config.displayName;
+            TheLastKnight.UI.LocalizedText.Set(nameTxt, config.displayName);
             nameTxt.fontSize = 16f;
             nameTxt.fontStyle = FontStyles.Bold;
             nameTxt.color = new Color(0.92f, 0.96f, 1f, 1f); // Crisp ice-white
@@ -1003,7 +1003,7 @@ namespace TheLastKnight.UI
             var ptRt = priceTxtGo.GetComponent<RectTransform>();
             ptRt.sizeDelta = new Vector2(60f, 22f);
             var priceTxt = priceTxtGo.GetComponent<TextMeshProUGUI>();
-            priceTxt.text = config.buyPrice.ToString();
+            TheLastKnight.UI.LocalizedText.Set(priceTxt, config.buyPrice.ToString());
             priceTxt.fontSize = 15f;
             priceTxt.fontStyle = FontStyles.Bold;
             priceTxt.color = new Color(1f, 0.86f, 0.40f, 1f); // Bright gold
@@ -1043,7 +1043,7 @@ namespace TheLastKnight.UI
             itRt.anchorMin = Vector2.zero; itRt.anchorMax = Vector2.one;
             itRt.offsetMin = Vector2.zero; itRt.offsetMax = Vector2.zero;
             var itTxt = infoTxtGo.GetComponent<TextMeshProUGUI>();
-            itTxt.text = "i";
+            TheLastKnight.UI.LocalizedText.Set(itTxt, "i");
             itTxt.fontSize = 15f;
             itTxt.fontStyle = FontStyles.Bold;
             itTxt.alignment = TextAlignmentOptions.Center;
@@ -1091,7 +1091,7 @@ namespace TheLastKnight.UI
             bTxtRt.anchorMin = Vector2.zero; bTxtRt.anchorMax = Vector2.one;
             bTxtRt.offsetMin = Vector2.zero; bTxtRt.offsetMax = Vector2.zero;
             var bTxt = buyTxtGo.GetComponent<TextMeshProUGUI>();
-            bTxt.text = "BUY";
+            TheLastKnight.UI.LocalizedText.Set(bTxt, "BUY");
             bTxt.fontSize = 15f;
             bTxt.fontStyle = FontStyles.Bold;
             bTxt.alignment = TextAlignmentOptions.Center;
@@ -1214,7 +1214,7 @@ namespace TheLastKnight.UI
             titleRt.anchoredPosition = new Vector2(0f, -10f);
             titleRt.sizeDelta = new Vector2(240f, 26f);
             var titleTxt = titleGo.GetComponent<TextMeshProUGUI>();
-            titleTxt.text = "SELL TO MERCHANT";
+            TheLastKnight.UI.LocalizedText.Set(titleTxt, "SELL TO MERCHANT");
             titleTxt.fontSize = 15f;
             titleTxt.fontStyle = FontStyles.Bold;
             titleTxt.color = new Color(0.85f, 0.92f, 1f, 1f);
@@ -1229,7 +1229,7 @@ namespace TheLastKnight.UI
             closeRt.anchoredPosition = new Vector2(-8f, -8f);
             closeRt.sizeDelta = new Vector2(24f, 24f);
             var closeTxt = closeGo.GetComponent<TextMeshProUGUI>();
-            closeTxt.text = "X";
+            TheLastKnight.UI.LocalizedText.Set(closeTxt, "X");
             closeTxt.fontSize = 15f;
             closeTxt.fontStyle = FontStyles.Bold;
             closeTxt.color = new Color(0.75f, 0.82f, 0.90f, 1f);
@@ -1329,7 +1329,7 @@ namespace TheLastKnight.UI
             nfsRt.anchoredPosition = new Vector2(0f, 24f);
             nfsRt.sizeDelta = new Vector2(260f, 50f);
             var nfsTxt = _sellNotForSaleGo.GetComponent<TextMeshProUGUI>();
-            nfsTxt.text = "Merchant is not interested in buying this item.";
+            TheLastKnight.UI.LocalizedText.Set(nfsTxt, "Merchant is not interested in buying this item.");
             nfsTxt.fontSize = 13f;
             nfsTxt.fontStyle = FontStyles.Italic;
             nfsTxt.color = new Color(0.95f, 0.45f, 0.45f, 1f);
@@ -1367,7 +1367,7 @@ namespace TheLastKnight.UI
             s1tRt.anchorMin = Vector2.zero; s1tRt.anchorMax = Vector2.one;
             s1tRt.offsetMin = Vector2.zero; s1tRt.offsetMax = Vector2.zero;
             _txtSellOneLabel = s1TxtGo.GetComponent<TextMeshProUGUI>();
-            _txtSellOneLabel.text = "Sell 1";
+            TheLastKnight.UI.LocalizedText.Set(_txtSellOneLabel, "Sell 1");
             _txtSellOneLabel.fontSize = 14f;
             _txtSellOneLabel.fontStyle = FontStyles.Bold;
             _txtSellOneLabel.color = Color.white;
@@ -1412,7 +1412,7 @@ namespace TheLastKnight.UI
             satRt.anchorMin = Vector2.zero; satRt.anchorMax = Vector2.one;
             satRt.offsetMin = Vector2.zero; satRt.offsetMax = Vector2.zero;
             _txtSellAllLabel = saTxtGo.GetComponent<TextMeshProUGUI>();
-            _txtSellAllLabel.text = "Sell All";
+            TheLastKnight.UI.LocalizedText.Set(_txtSellAllLabel, "Sell All");
             _txtSellAllLabel.fontSize = 14f;
             _txtSellAllLabel.fontStyle = FontStyles.Bold;
             _txtSellAllLabel.color = Color.white;
@@ -1468,8 +1468,8 @@ namespace TheLastKnight.UI
         private void UpdateSellPanelContent(SlotType slotType, int slotIndex, InventoryItemData item)
         {
             _imgSellItemIcon.sprite = item.Icon;
-            _txtSellItemStock.text = item.count > 1 ? item.count.ToString() : "";
-            _txtSellItemName.text = item.name;
+            TheLastKnight.UI.LocalizedText.Set(_txtSellItemStock, item.count > 1 ? item.count.ToString() : "");
+            TheLastKnight.UI.LocalizedText.Set(_txtSellItemName, item.name);
 
             int unitSellPrice = GetSellPrice(item.id);
             bool canSell = unitSellPrice > 0;
@@ -1482,29 +1482,29 @@ namespace TheLastKnight.UI
 
                 var config = FindCatalogItem(item.id);
                 if (config != null && config.customSellPrice <= 0)
-                    _txtSellUnitPrice.text = $"Sell Price: {unitSellPrice} Gold (75%)";
+                    TheLastKnight.UI.LocalizedText.Set(_txtSellUnitPrice, $"Sell Price: {unitSellPrice} Gold (75%)");
                 else
-                    _txtSellUnitPrice.text = $"Sell Price: {unitSellPrice} Gold";
+                    TheLastKnight.UI.LocalizedText.Set(_txtSellUnitPrice, $"Sell Price: {unitSellPrice} Gold");
 
                 if (item.count > 1)
                 {
                     _txtSellTotalPrice.gameObject.SetActive(true);
-                    _txtSellTotalPrice.text = $"Total Value: {unitSellPrice * item.count} Gold ({item.count}x)";
-                    _txtSellOneLabel.text = "Sell 1";
-                    _txtSellAllLabel.text = $"Sell All ({item.count})";
+                    TheLastKnight.UI.LocalizedText.Set(_txtSellTotalPrice, $"Total Value: {unitSellPrice * item.count} Gold ({item.count}x)");
+                    TheLastKnight.UI.LocalizedText.Set(_txtSellOneLabel, "Sell 1");
+                    TheLastKnight.UI.LocalizedText.Set(_txtSellAllLabel, $"Sell All ({item.count})");
                     _btnSellOne.GetComponent<RectTransform>().anchoredPosition = new Vector2(-60f, 16f);
                 }
                 else
                 {
                     _txtSellTotalPrice.gameObject.SetActive(false);
-                    _txtSellOneLabel.text = "Sell";
+                    TheLastKnight.UI.LocalizedText.Set(_txtSellOneLabel, "Sell");
                     // Center the single sell button
                     _btnSellOne.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, 16f);
                 }
             }
             else
             {
-                _txtSellUnitPrice.text = "Not for sale";
+                TheLastKnight.UI.LocalizedText.Set(_txtSellUnitPrice, "Not for sale");
                 _txtSellTotalPrice.gameObject.SetActive(false);
                 _sellNotForSaleGo.SetActive(true);
                 _btnSellOne.gameObject.SetActive(false);
@@ -1706,9 +1706,9 @@ namespace TheLastKnight.UI
         public void ShowTooltip(string title, string category, string desc)
         {
             if (_tooltipGo == null) return;
-            _txtTooltipTitle.text = title;
-            _txtTooltipCategory.text = category;
-            _txtTooltipDesc.text = desc;
+            TheLastKnight.UI.LocalizedText.Set(_txtTooltipTitle, title);
+            TheLastKnight.UI.LocalizedText.Set(_txtTooltipCategory, category);
+            TheLastKnight.UI.LocalizedText.Set(_txtTooltipDesc, desc);
             _tooltipGo.SetActive(true);
             UpdateTooltipPosition();
         }
@@ -1880,7 +1880,7 @@ namespace TheLastKnight.UI
             if (_txtGold != null)
             {
                 int gold = player != null ? player.Gold : 0;
-                _txtGold.text = gold.ToString("N0");
+                TheLastKnight.UI.LocalizedText.Set(_txtGold, gold.ToString("N0"));
             }
 
             // 2. Update Left Wooden Rack Slots
@@ -1915,15 +1915,15 @@ namespace TheLastKnight.UI
 
                 if (isSoldOut)
                 {
-                    row.txtStock.text = "<color=#E85D5D>Sold Out</color>";
+                    TheLastKnight.UI.LocalizedText.Set(row.txtStock, "<color=#E85D5D>Sold Out</color>");
                 }
                 else if (cfg.initialStock >= 0)
                 {
-                    row.txtStock.text = $"Stock: {cfg.currentStock}";
+                    TheLastKnight.UI.LocalizedText.Set(row.txtStock, $"Stock: {cfg.currentStock}");
                 }
                 else
                 {
-                    row.txtStock.text = "";
+                    TheLastKnight.UI.LocalizedText.Set(row.txtStock, "");
                 }
 
                 // Can buy validation
@@ -1933,7 +1933,7 @@ namespace TheLastKnight.UI
                 bool interactable = canAfford && !isBlocked;
                 row.btnBuy.interactable = interactable;
                 row.canvasGroup.alpha = interactable ? 1.0f : 0.70f;
-                row.txtBuyBtn.text = isSoldOut ? "SOLD" : "BUY";
+                TheLastKnight.UI.LocalizedText.Set(row.txtBuyBtn, isSoldOut ? "SOLD" : "BUY");
                 row.imgBuy.color = isSoldOut 
                     ? new Color(0.20f, 0.25f, 0.32f, 0.60f) 
                     : (interactable ? new Color(0.18f, 0.48f, 0.82f, 0.95f) : new Color(0.18f, 0.30f, 0.48f, 0.65f));
@@ -1958,7 +1958,7 @@ namespace TheLastKnight.UI
 
         private IEnumerator ToastRoutine(string message, Color color)
         {
-            _txtToastMessage.text = message;
+            TheLastKnight.UI.LocalizedText.Set(_txtToastMessage, message);
             _txtToastMessage.color = color;
 
             yield return new WaitForSecondsRealtime(2.2f);
@@ -1971,7 +1971,7 @@ namespace TheLastKnight.UI
                 _txtToastMessage.color = new Color(color.r, color.g, color.b, a);
                 yield return null;
             }
-            _txtToastMessage.text = "";
+            TheLastKnight.UI.LocalizedText.Set(_txtToastMessage, "");
             _toastCoroutine = null;
         }
 
@@ -2076,7 +2076,7 @@ namespace TheLastKnight.UI
                 }
                 if (countText != null)
                 {
-                    countText.text = item.count > 1 ? item.count.ToString() : "";
+                    TheLastKnight.UI.LocalizedText.Set(countText, item.count > 1 ? item.count.ToString() : "");
                 }
             }
             else
@@ -2088,7 +2088,7 @@ namespace TheLastKnight.UI
                 }
                 if (countText != null)
                 {
-                    countText.text = "";
+                    TheLastKnight.UI.LocalizedText.Set(countText, "");
                 }
                 SetSelectedForSell(false);
             }

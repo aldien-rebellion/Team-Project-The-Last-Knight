@@ -41,6 +41,8 @@ namespace TheLastKnight.Environment
             }
         }
 
+        private void OnEnable() => TheLastKnight.UI.LocalizedText.BindPrompt(_promptUI);
+
         private void Update()
         {
             if (!_autoTransitionOnEnter && _playerInRange)

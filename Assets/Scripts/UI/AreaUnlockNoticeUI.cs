@@ -50,7 +50,7 @@ namespace TheLastKnight.UI
             // system font with Thai support for this Thai-only notification.
             text.font = Font.CreateDynamicFontFromOSFont(new[] { "Tahoma", "Leelawadee UI", "Arial" }, 54)
                 ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.text = "ปลดล็อคพื้นที่ต่อไป";
+            TheLastKnight.UI.LocalizedText.Set(text, "ปลดล็อคพื้นที่ต่อไป");
             text.fontSize = 54;
             text.fontStyle = FontStyle.Bold;
             text.alignment = TextAnchor.MiddleCenter;

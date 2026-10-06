@@ -1,0 +1,1823 @@
+{
+  "entries": [
+    {
+      "en": "THE LAST KNIGHT",
+      "th": "อัศวินคนสุดท้าย"
+    },
+    {
+      "en": "BOA",
+      "th": "โบอา"
+    },
+    {
+      "en": "Arthur Reuven",
+      "th": "อาเธอร์ เลย์วิน"
+    },
+    {
+      "en": "SKIP",
+      "th": "ข้าม"
+    },
+    {
+      "en": "LOG",
+      "th": "ประวัติ"
+    },
+    {
+      "en": "HIDE",
+      "th": "ซ่อน"
+    },
+    {
+      "en": "SHOW",
+      "th": "แสดง"
+    },
+    {
+      "en": "Close",
+      "th": "ปิด"
+    },
+    {
+      "en": "Click / Space to continue",
+      "th": "คลิก / กด Space เพื่ออ่านต่อ"
+    },
+    {
+      "en": "Created by",
+      "th": "สร้างโดย"
+    },
+    {
+      "en": "The Last Knight team",
+      "th": "ทีมผู้สร้างอัศวินคนสุดท้าย"
+    },
+    {
+      "en": "An oath endures.",
+      "th": "คำสาบานยังคงอยู่"
+    },
+    {
+      "en": "Boa's story continues.",
+      "th": "เรื่องราวของโบอายังคงดำเนินต่อ"
+    },
+    {
+      "en": "Thank you for playing.",
+      "th": "ขอบคุณที่ร่วมเดินทาง"
+    },
+    {
+      "en": "YOU DIED",
+      "th": "คุณเสียชีวิต"
+    },
+    {
+      "en": "Arthur's journey is not over.",
+      "th": "การเดินทางของอาเธอร์ยังไม่สิ้นสุด"
+    },
+    {
+      "en": "Respawn",
+      "th": "เกิดใหม่"
+    },
+    {
+      "en": "Exit to Main Menu",
+      "th": "กลับเมนูหลัก"
+    },
+    {
+      "en": "MERCHANT WARES",
+      "th": "สินค้าของพ่อค้า"
+    },
+    {
+      "en": "← BACK",
+      "th": "← ย้อนกลับ"
+    },
+    {
+      "en": "BUY",
+      "th": "ซื้อ"
+    },
+    {
+      "en": "SOLD",
+      "th": "หมด"
+    },
+    {
+      "en": "Sold Out",
+      "th": "สินค้าหมด"
+    },
+    {
+      "en": "SELL TO MERCHANT",
+      "th": "ขายให้พ่อค้า"
+    },
+    {
+      "en": "Merchant is not interested in buying this item.",
+      "th": "พ่อค้าไม่รับซื้อไอเทมนี้"
+    },
+    {
+      "en": "Sell 1",
+      "th": "ขาย 1 ชิ้น"
+    },
+    {
+      "en": "Sell All",
+      "th": "ขายทั้งหมด"
+    },
+    {
+      "en": "Sell",
+      "th": "ขาย"
+    },
+    {
+      "en": "Not for sale",
+      "th": "ขายไม่ได้"
+    },
+    {
+      "en": "Cannot sell this item.",
+      "th": "ไม่สามารถขายไอเทมนี้ได้"
+    },
+    {
+      "en": "Item is Sold Out!",
+      "th": "สินค้าหมดแล้ว!"
+    },
+    {
+      "en": "Not enough Gold!",
+      "th": "ทองไม่เพียงพอ!"
+    },
+    {
+      "en": "Inventory is full!",
+      "th": "กระเป๋าเต็ม!"
+    },
+    {
+      "en": "Already acquired this Demonic Rune!",
+      "th": "ได้รับรูนปีศาจชิ้นนี้แล้ว!"
+    },
+    {
+      "en": "Merchant does not buy this item",
+      "th": "พ่อค้าไม่รับซื้อไอเทมนี้"
+    },
+    {
+      "en": "[L-Click: Move / Organize]",
+      "th": "[คลิกซ้าย: ย้าย / จัดกระเป๋า]"
+    },
+    {
+      "en": "[R-Click: Sell to Shop]",
+      "th": "[คลิกขวา: ขายให้ร้านค้า]"
+    },
+    {
+      "en": "Healing Potion",
+      "th": "ยาฟื้นฟูพลังชีวิต"
+    },
+    {
+      "en": "Healing Potion [Q]",
+      "th": "ยาฟื้นฟูพลังชีวิต [Q]"
+    },
+    {
+      "en": "Potion of Might",
+      "th": "ยาเสริมพลังโจมตี"
+    },
+    {
+      "en": "Potion of Swiftness",
+      "th": "ยาเพิ่มความเร็ว"
+    },
+    {
+      "en": "Potion of Endurance",
+      "th": "ยาลดการใช้พลังงาน"
+    },
+    {
+      "en": "Potion of Purity",
+      "th": "ยาชำระล้าง"
+    },
+    {
+      "en": "Potion of Regeneration",
+      "th": "ยาฟื้นฟูต่อเนื่อง"
+    },
+    {
+      "en": "Potion of Fortitude",
+      "th": "ยาเสริมความแข็งแกร่ง"
+    },
+    {
+      "en": "Potion of the Undying",
+      "th": "ยาอมตะ"
+    },
+    {
+      "en": "Gold Pouch",
+      "th": "ถุงทอง"
+    },
+    {
+      "en": "Gold Bag",
+      "th": "กระสอบทอง"
+    },
+    {
+      "en": "Moonstone Shard",
+      "th": "เศษหินจันทรา"
+    },
+    {
+      "en": "Potion",
+      "th": "ยา"
+    },
+    {
+      "en": "Valuables",
+      "th": "ของมีค่า"
+    },
+    {
+      "en": "Material",
+      "th": "วัตถุดิบ"
+    },
+    {
+      "en": "Item",
+      "th": "ไอเทม"
+    },
+    {
+      "en": "Consumable",
+      "th": "ของใช้สิ้นเปลือง"
+    },
+    {
+      "en": "Consumable Potion",
+      "th": "ยาสำหรับใช้"
+    },
+    {
+      "en": "Attribute Elixir",
+      "th": "ยาเสริมคุณสมบัติ"
+    },
+    {
+      "en": "Weapon",
+      "th": "อาวุธ"
+    },
+    {
+      "en": "Armor",
+      "th": "เกราะ"
+    },
+    {
+      "en": "Boots",
+      "th": "รองเท้า"
+    },
+    {
+      "en": "Quest",
+      "th": "ไอเทมภารกิจ"
+    },
+    {
+      "en": "Accessory",
+      "th": "เครื่องประดับ"
+    },
+    {
+      "en": "Key",
+      "th": "กุญแจ"
+    },
+    {
+      "en": "Demon Seal",
+      "th": "ผนึกปีศาจ"
+    },
+    {
+      "en": "Demonic Keystone",
+      "th": "กุญแจผนึกปีศาจ"
+    },
+    {
+      "en": "Rune of the Trident",
+      "th": "รูนตรีศูล"
+    },
+    {
+      "en": "Trident Rune",
+      "th": "รูนตรีศูล"
+    },
+    {
+      "en": "Pentagram Rune",
+      "th": "รูนดาวห้าแฉก"
+    },
+    {
+      "en": "Demon Hand Rune",
+      "th": "รูนมือปีศาจ"
+    },
+    {
+      "en": "Evil Eye Rune",
+      "th": "รูนดวงตาปีศาจ"
+    },
+    {
+      "en": "Moonstone Keeper's Key",
+      "th": "กุญแจผู้พิทักษ์หินจันทรา"
+    },
+    {
+      "en": "Restores 30% Max HP + 50 HP immediately. Place in Quick Slot 1 to drink with [Q].",
+      "th": "ฟื้นฟูพลังชีวิตทันที 30% ของพลังชีวิตสูงสุด + 50 หน่วย ใส่ในช่องด่วนที่ 1 เพื่อดื่มด้วย [Q]"
+    },
+    {
+      "en": "Restores 30% Max HP + 50 HP immediately. Place in Quick Slot to drink on demand with [Q].",
+      "th": "ฟื้นฟูพลังชีวิตทันที 30% ของพลังชีวิตสูงสุด + 50 หน่วย ใส่ในช่องด่วนเพื่อดื่มด้วย [Q]"
+    },
+    {
+      "en": "Restores 50 HP immediately. Place in Quick Slot to drink on demand with [Q]. (Max 5 held)",
+      "th": "ฟื้นฟูพลังชีวิตทันที 50 หน่วย ใส่ในช่องด่วนเพื่อดื่มด้วย [Q] (พกได้สูงสุด 5 ขวด)"
+    },
+    {
+      "en": "Increases attack power by 25% for 90 seconds. Using again refreshes the duration.",
+      "th": "เพิ่มพลังโจมตี 25% เป็นเวลา 90 วินาที ใช้ซ้ำเพื่อเริ่มนับเวลาใหม่"
+    },
+    {
+      "en": "Increases attack power by 25% for 90 seconds. Place in Quick Slot to drink on demand.",
+      "th": "เพิ่มพลังโจมตี 25% เป็นเวลา 90 วินาที ใส่ในช่องด่วนเพื่อดื่มเมื่อต้องการ"
+    },
+    {
+      "en": "Increases attack speed and movement speed (walk and sprint) by 25% for 90 seconds.",
+      "th": "เพิ่มความเร็วโจมตีและความเร็วเคลื่อนที่ (เดินและวิ่ง) 25% เป็นเวลา 90 วินาที"
+    },
+    {
+      "en": "Reduces all stamina consumption by 25% for 90 seconds.",
+      "th": "ลดการใช้พลังงานทั้งหมด 25% เป็นเวลา 90 วินาที"
+    },
+    {
+      "en": "Cleanses negative effects and grants complete immunity to stun and status ailments for 90 seconds.",
+      "th": "ล้างสถานะผิดปกติและป้องกันการมึนงงกับสถานะผิดปกติทั้งหมดเป็นเวลา 90 วินาที"
+    },
+    {
+      "en": "Continuously regenerates 5% of Max HP per second for 90 seconds.",
+      "th": "ฟื้นฟูพลังชีวิตต่อเนื่อง 5% ของพลังชีวิตสูงสุดต่อวินาที เป็นเวลา 90 วินาที"
+    },
+    {
+      "en": "Bolsters defenses, increasing Max HP and DEF by 25% for 90 seconds.",
+      "th": "เพิ่มพลังชีวิตสูงสุดและพลังป้องกัน 25% เป็นเวลา 90 วินาที"
+    },
+    {
+      "en": "Forbidden elixir. Sets HP to 1 and prevents all healing, but grants complete invincibility for 90 seconds.",
+      "th": "ยาต้องห้าม ลดพลังชีวิตเหลือ 1 และห้ามการฟื้นฟูทั้งหมด แต่ทำให้เป็นอมตะ 90 วินาที"
+    },
+    {
+      "en": "A heavy pouch filled with gleaming coins. Grants 500 Gold.",
+      "th": "ถุงหนักที่เต็มไปด้วยเหรียญแวววาว ได้รับทอง 500 เมื่อใช้"
+    },
+    {
+      "en": "An overflowing bag of gold coins. Grants 1000 Gold when used.",
+      "th": "กระสอบที่เต็มไปด้วยเหรียญทอง ได้รับทอง 1000 เมื่อใช้"
+    },
+    {
+      "en": "A rare lunar mineral glowing with primordial energy. Used for sacred crafting.",
+      "th": "แร่จันทราหายากที่เปล่งพลังโบราณ ใช้สร้างสิ่งศักดิ์สิทธิ์"
+    },
+    {
+      "en": "An item found in the world.",
+      "th": "ไอเทมที่พบระหว่างการเดินทาง"
+    },
+    {
+      "en": "A demon seal purchased from the Shadow Market. Place it in its pillar at the castle gate.",
+      "th": "ผนึกปีศาจที่ซื้อจากตลาดเงา นำไปใส่เสาที่ประตูปราสาท"
+    },
+    {
+      "en": "A demon seal recovered from the Pentagram chest. Place it in its pillar at the castle gate.",
+      "th": "ผนึกปีศาจที่ได้จากหีบดาวห้าแฉก นำไปใส่เสาที่ประตูปราสาท"
+    },
+    {
+      "en": "A demon seal recovered at the city save point. Place it in its pillar at the castle gate.",
+      "th": "ผนึกปีศาจที่ได้จากจุดบันทึกในเมือง นำไปใส่เสาที่ประตูปราสาท"
+    },
+    {
+      "en": "A demon seal recovered from its guardian. Place it in its pillar at the castle gate.",
+      "th": "ผนึกปีศาจที่ได้จากผู้พิทักษ์ นำไปใส่เสาที่ประตูปราสาท"
+    },
+    {
+      "en": "Dropped by the Moonstone Keeper. Press F at the Pentagram chest to unlock it. Consumes one key on opening.",
+      "th": "ได้จากผู้พิทักษ์หินจันทรา กด F ที่หีบดาวห้าแฉกเพื่อเปิด ใช้กุญแจหนึ่งดอก"
+    },
+    {
+      "en": "Ancient demon relic imbued with oceanic depths. Key required to unlock the Demon Castle Gate.",
+      "th": "วัตถุปีศาจโบราณที่อาบพลังแห่งมหาสมุทร ใช้ปลดผนึกประตูปราสาทปีศาจ"
+    },
+    {
+      "en": "Carnage Burst",
+      "th": "พายุดาบ"
+    },
+    {
+      "en": "Iron Will",
+      "th": "เจตจำนงเหล็กกล้า"
+    },
+    {
+      "en": "Excalibur",
+      "th": "ดาบศักดิ์สิทธิ์"
+    },
+    {
+      "en": "Carnage Burst (E)",
+      "th": "พายุดาบ (E)"
+    },
+    {
+      "en": "Iron Will (R)",
+      "th": "เจตจำนงเหล็กกล้า (R)"
+    },
+    {
+      "en": "Excalibur (T)",
+      "th": "ดาบศักดิ์สิทธิ์ (T)"
+    },
+    {
+      "en": "Arthur's Combat Skill",
+      "th": "ทักษะการต่อสู้ของอาเธอร์"
+    },
+    {
+      "en": "Arthur unleashes a whirlwind strike hitting all nearby enemies with massive area damage. Hotkey [E].",
+      "th": "อาเธอร์หมุนดาบโจมตีศัตรูรอบตัว สร้างความเสียหายวงกว้างอย่างรุนแรง ปุ่ม [E]"
+    },
+    {
+      "en": "Enter a berserk focus, boosting attack power and movement speed for 10 seconds. Hotkey [R].",
+      "th": "เข้าสู่สมาธิแห่งนักรบ เพิ่มพลังโจมตีและความเร็วเคลื่อนที่ 10 วินาที ปุ่ม [R]"
+    },
+    {
+      "en": "Channel the full radiance of the holy blade, unleashing a piercing holy beam across the battlefield. Hotkey [T].",
+      "th": "รวมพลังแห่งดาบศักดิ์สิทธิ์ ปล่อยลำแสงทะลุสนามรบ ปุ่ม [T]"
+    },
+    {
+      "en": "Combat Skill Buff",
+      "th": "ผลเสริมจากทักษะต่อสู้"
+    },
+    {
+      "en": "Elixir Enhancement",
+      "th": "ผลเสริมจากยา"
+    },
+    {
+      "en": "Forbidden Elixir",
+      "th": "ยาต้องห้าม"
+    },
+    {
+      "en": "Sacred Aura",
+      "th": "ออร่าศักดิ์สิทธิ์"
+    },
+    {
+      "en": "Status Debuff",
+      "th": "สถานะผิดปกติ"
+    },
+    {
+      "en": "Fountain Grace",
+      "th": "พรแห่งน้ำพุ"
+    },
+    {
+      "en": "Stunned",
+      "th": "มึนงง"
+    },
+    {
+      "en": "Boosts Attack Power by +22% with unwavering warrior spirit.",
+      "th": "เพิ่มพลังโจมตี 22% ด้วยจิตวิญญาณนักรบที่ไม่ยอมแพ้"
+    },
+    {
+      "en": "Infuses weapons with brute force, boosting Attack Power by +25%.",
+      "th": "เสริมพลังอาวุธ เพิ่มพลังโจมตี 25%"
+    },
+    {
+      "en": "Increases Attack Speed and Movement Speed (walk & sprint) by +25%.",
+      "th": "เพิ่มความเร็วโจมตีและความเร็วเคลื่อนที่ (เดินและวิ่ง) 25%"
+    },
+    {
+      "en": "Reduces all Stamina consumption by 25%.",
+      "th": "ลดการใช้พลังงานทั้งหมด 25%"
+    },
+    {
+      "en": "Grants absolute immunity to Stun and all negative status effects.",
+      "th": "ป้องกันการมึนงงและสถานะผิดปกติทั้งหมด"
+    },
+    {
+      "en": "Rapidly regenerates +5% of Max HP per second.",
+      "th": "ฟื้นฟูพลังชีวิต 5% ของพลังชีวิตสูงสุดต่อวินาที"
+    },
+    {
+      "en": "Bolsters defenses, increasing Max HP and Defense by +25%.",
+      "th": "เพิ่มพลังชีวิตสูงสุดและพลังป้องกัน 25%"
+    },
+    {
+      "en": "Reduces HP to 1 and blocks all healing in exchange for absolute invincibility.",
+      "th": "ลดพลังชีวิตเหลือ 1 และห้ามการฟื้นฟูทั้งหมด เพื่อแลกกับความเป็นอมตะ"
+    },
+    {
+      "en": "Sacred blessing restoring Stamina (+20%/s) and HP up to 70% Max HP.",
+      "th": "พรศักดิ์สิทธิ์ฟื้นฟูพลังงาน 20% ต่อวินาที และพลังชีวิตได้ถึง 70% ของค่าสูงสุด"
+    },
+    {
+      "en": "Stunned and incapacitated. Cannot move, attack, or cast skills.",
+      "th": "มึนงงจนไม่สามารถเคลื่อนที่ โจมตี หรือใช้ทักษะได้"
+    },
+    {
+      "en": "Continuous Aura (Sacred Area)",
+      "th": "ออร่าต่อเนื่อง (พื้นที่ศักดิ์สิทธิ์)"
+    },
+    {
+      "en": "Continuous Blessing (Sacred Area)",
+      "th": "พรต่อเนื่อง (พื้นที่ศักดิ์สิทธิ์)"
+    },
+    {
+      "en": "Defense (DEF)",
+      "th": "พลังป้องกัน"
+    },
+    {
+      "en": "Defense increases with level and reduces incoming damage.",
+      "th": "พลังป้องกันเพิ่มตามระดับและลดความเสียหายที่ได้รับ"
+    },
+    {
+      "en": "Increases physical attack power.",
+      "th": "เพิ่มพลังโจมตีกายภาพ"
+    },
+    {
+      "en": "Increases health and stamina capacity.",
+      "th": "เพิ่มพลังชีวิตและพลังงานสูงสุด"
+    },
+    {
+      "en": "Unlocked",
+      "th": "ปลดล็อกแล้ว"
+    },
+    {
+      "en": "Locked",
+      "th": "ยังไม่ปลดล็อก"
+    },
+    {
+      "en": "No Status Points",
+      "th": "ไม่มีแต้มคุณสมบัติ"
+    },
+    {
+      "en": "Notice",
+      "th": "แจ้งเตือน"
+    },
+    {
+      "en": "You need available Status Points (SP) to upgrade attributes. Level up or consume Golden Seeds to gain points.",
+      "th": "ต้องมีแต้มคุณสมบัติเพื่อเพิ่มคุณสมบัติ เพิ่มระดับหรือใช้เมล็ดทองเพื่อรับแต้ม"
+    },
+    {
+      "en": "DEX Maxed Out",
+      "th": "ความชำนาญถึงค่าสูงสุดแล้ว"
+    },
+    {
+      "en": "Player Status",
+      "th": "สถานะผู้เล่น"
+    },
+    {
+      "en": "Collapse Side Panel",
+      "th": "พับแผงด้านข้าง"
+    },
+    {
+      "en": "Expand Status Controls",
+      "th": "เปิดแผงเพิ่มคุณสมบัติ"
+    },
+    {
+      "en": "Status Points",
+      "th": "แต้มคุณสมบัติ"
+    },
+    {
+      "en": "Click to fold the status upgrade drawer.",
+      "th": "คลิกเพื่อพับแผงเพิ่มคุณสมบัติ"
+    },
+    {
+      "en": "Click to expand multi-point (+1, +10, Custom, Max) allocation.",
+      "th": "คลิกเพื่อเปิดการเพิ่มแต้ม (+1, +10, กำหนดเอง, สูงสุด)"
+    },
+    {
+      "en": "Manual Allocation",
+      "th": "กำหนดแต้มเอง"
+    },
+    {
+      "en": "Type number of points to allocate, then press Enter or click [+].",
+      "th": "พิมพ์จำนวนแต้มที่ต้องการ แล้วกด Enter หรือคลิก [+]"
+    },
+    {
+      "en": "Allocates the typed number of points to this attribute.",
+      "th": "เพิ่มคุณสมบัตินี้ตามจำนวนแต้มที่พิมพ์"
+    },
+    {
+      "en": "MAX",
+      "th": "สูงสุด"
+    },
+    {
+      "en": "STR",
+      "th": "STR"
+    },
+    {
+      "en": "AGI",
+      "th": "AGI"
+    },
+    {
+      "en": "VIT",
+      "th": "VIT"
+    },
+    {
+      "en": "DEX",
+      "th": "DEX"
+    },
+    {
+      "en": "THE FOUR SEALS",
+      "th": "ผนึกทั้งสี่"
+    },
+    {
+      "en": "Choose each collected rune to place it in its pillar.",
+      "th": "เลือกรูนที่เก็บได้แต่ละชิ้นเพื่อใส่ลงในเสา"
+    },
+    {
+      "en": "Pentagram",
+      "th": "ดาวห้าแฉก"
+    },
+    {
+      "en": "Demon Hand",
+      "th": "มือปีศาจ"
+    },
+    {
+      "en": "Evil Eye",
+      "th": "ดวงตาปีศาจ"
+    },
+    {
+      "en": "Trident",
+      "th": "ตรีศูล"
+    },
+    {
+      "en": "Return to Suburb to Forest",
+      "th": "กลับชานเมืองสู่ป่า"
+    },
+    {
+      "en": "DEMON CASTLE GATE",
+      "th": "ประตูปราสาทปีศาจ"
+    },
+    {
+      "en": "The gate stands open.",
+      "th": "ประตูเปิดแล้ว"
+    },
+    {
+      "en": "Enter Demon Castle",
+      "th": "เข้าปราสาทปีศาจ"
+    },
+    {
+      "en": "F  Interact",
+      "th": "F  โต้ตอบ"
+    },
+    {
+      "en": "Press F to continue",
+      "th": "กด F เพื่อไปต่อ"
+    },
+    {
+      "en": "[ F ] Enter door",
+      "th": "[ F ] เพื่อเข้าประตู"
+    },
+    {
+      "en": "F  Open chest",
+      "th": "F  เปิดหีบ"
+    },
+    {
+      "en": "Opened",
+      "th": "เปิดแล้ว"
+    },
+    {
+      "en": "F  Rest at Medusa / Save",
+      "th": "F  พักที่เมดูซา / บันทึก"
+    },
+    {
+      "en": "Restored • Game saved",
+      "th": "ฟื้นฟูแล้ว • บันทึกเกมแล้ว"
+    },
+    {
+      "en": "F  Destroy Gate",
+      "th": "F  ทำลายประตู"
+    },
+    {
+      "en": "The portal is sealed by Volcanox's power!",
+      "th": "ประตูถูกผนึกด้วยพลังของโวลคาน็อกซ์!"
+    },
+    {
+      "en": "F  Open Pentagram chest",
+      "th": "F  เปิดหีบดาวห้าแฉก"
+    },
+    {
+      "en": "Requires the Moonstone Keeper's key",
+      "th": "ต้องใช้กุญแจผู้พิทักษ์หินจันทรา"
+    },
+    {
+      "en": "Pentagram collected",
+      "th": "เก็บดาวห้าแฉกแล้ว"
+    },
+    {
+      "en": "F  The Shadow Market",
+      "th": "F  ตลาดเงา"
+    },
+    {
+      "en": "THE SHADOW MARKET",
+      "th": "ตลาดเงา"
+    },
+    {
+      "en": "Bag full",
+      "th": "กระเป๋าเต็ม"
+    },
+    {
+      "en": "Ancient seal of the Demon Castle",
+      "th": "ผนึกโบราณปราสาทปีศาจ"
+    },
+    {
+      "en": "Demon Castle Entrance",
+      "th": "ทางเข้าปราสาทปีศาจ"
+    },
+    {
+      "en": "The gate is open. All four runes have broken the seal.",
+      "th": "ประตูเปิดแล้ว รูนทั้ง 4 ปลดผนึกสมบูรณ์"
+    },
+    {
+      "en": "Press [F] to unseal the gate with all four runes",
+      "th": "กด [F] ปลดผนึกประตูด้วยรูนทั้ง 4"
+    },
+    {
+      "en": "Four runes are required to open the gate",
+      "th": "ต้องการรูน 4 ชิ้นเพื่อเปิดประตู"
+    },
+    {
+      "en": "Press [F] to enter the Demon Castle",
+      "th": "กด [F] เข้าสู่ปราสาทปีศาจ"
+    },
+    {
+      "en": "Choose a destination (press a number or click)",
+      "th": "เลือกจุดหมาย (กดตัวเลข หรือคลิกเมาส์)"
+    },
+    {
+      "en": "Next area unlocked",
+      "th": "ปลดล็อคพื้นที่ต่อไป"
+    },
+    {
+      "en": "Up",
+      "th": "ขึ้น"
+    },
+    {
+      "en": "Down",
+      "th": "ลง"
+    },
+    {
+      "en": "Go",
+      "th": "ไป"
+    },
+    {
+      "en": "Return",
+      "th": "กลับ"
+    },
+    {
+      "en": "Enter",
+      "th": "เข้า"
+    },
+    {
+      "en": "Leave",
+      "th": "ออก"
+    },
+    {
+      "en": "Left",
+      "th": "ซ้าย"
+    },
+    {
+      "en": "Right",
+      "th": "ขวา"
+    },
+    {
+      "en": "LVL",
+      "th": "LVL"
+    },
+    {
+      "en": "HP",
+      "th": "ชีวิต"
+    },
+    {
+      "en": "STA",
+      "th": "พลังงาน"
+    },
+    {
+      "en": "Level {0}",
+      "th": "Level {0}"
+    },
+    {
+      "en": "LV.{0}",
+      "th": "LV.{0}"
+    },
+    {
+      "en": "Lv. {0}",
+      "th": "Lv. {0}"
+    },
+    {
+      "en": "{0}   Lv. {1}",
+      "th": "{0}   Lv. {1}"
+    },
+    {
+      "en": "XP: {0}/{1}",
+      "th": "ค่าประสบการณ์: {0}/{1}"
+    },
+    {
+      "en": "HP: {0}/{1}",
+      "th": "พลังชีวิต: {0}/{1}"
+    },
+    {
+      "en": "STM: {0}/{1}",
+      "th": "พลังงาน: {0}/{1}"
+    },
+    {
+      "en": "DEF: {0}",
+      "th": "พลังป้องกัน: {0}"
+    },
+    {
+      "en": "ATK: {0}",
+      "th": "พลังโจมตี: {0}"
+    },
+    {
+      "en": "Attack Speed: {0}x",
+      "th": "ความเร็วโจมตี: {0} เท่า"
+    },
+    {
+      "en": "Move Speed: {0} (Fixed)",
+      "th": "ความเร็วเดิน: {0} (คงที่)"
+    },
+    {
+      "en": "Sprint Speed: {0}",
+      "th": "ความเร็ววิ่ง: {0}"
+    },
+    {
+      "en": "Dash Speed: {0}",
+      "th": "ความเร็วพุ่ง: {0}"
+    },
+    {
+      "en": "Double Jump: {0}",
+      "th": "กระโดดสองครั้ง: {0}"
+    },
+    {
+      "en": "Max HP: {0}",
+      "th": "พลังชีวิตสูงสุด: {0}"
+    },
+    {
+      "en": "Max Stamina: {0}",
+      "th": "พลังงานสูงสุด: {0}"
+    },
+    {
+      "en": "Critical Chance: {0}%",
+      "th": "โอกาสคริติคอล: {0}%"
+    },
+    {
+      "en": "(Linear: 200 DEX = 100% Crit)",
+      "th": "(ความชำนาญ 200 = โอกาสคริติคอล 100%)"
+    },
+    {
+      "en": "DEX Crit Damage: 150%",
+      "th": "ความเสียหายคริติคอลจากความชำนาญ: 150%"
+    },
+    {
+      "en": "Parry Crit Damage: 200%",
+      "th": "ความเสียหายคริติคอลจากการปัดป้อง: 200%"
+    },
+    {
+      "en": "(MAX)",
+      "th": "(สูงสุด)"
+    },
+    {
+      "en": "{0} Attribute",
+      "th": "คุณสมบัติ {0}"
+    },
+    {
+      "en": "Dexterity is already at the maximum limit ({0})!",
+      "th": "ความชำนาญถึงค่าสูงสุด ({0}) แล้ว!"
+    },
+    {
+      "en": "Add +1 to {0}",
+      "th": "เพิ่ม +1 ให้ {0}"
+    },
+    {
+      "en": "Add +10 to {0}",
+      "th": "เพิ่ม +10 ให้ {0}"
+    },
+    {
+      "en": "Allocates 1 Status Point to {0}.",
+      "th": "ใช้แต้มคุณสมบัติ 1 แต้มเพิ่ม {0}"
+    },
+    {
+      "en": "Allocates 10 Status Points (or remaining SP) to {0}.",
+      "th": "ใช้แต้มคุณสมบัติ 10 แต้ม (หรือแต้มที่เหลือ) เพิ่ม {0}"
+    },
+    {
+      "en": "Custom Points: {0}",
+      "th": "กำหนดแต้ม: {0}"
+    },
+    {
+      "en": "Apply to {0}",
+      "th": "เพิ่มให้ {0}"
+    },
+    {
+      "en": "Max Out {0}",
+      "th": "เพิ่ม {0} สูงสุด"
+    },
+    {
+      "en": "Allocates ALL available Status Points to {0} attribute.",
+      "th": "ใช้แต้มคุณสมบัติทั้งหมดเพิ่ม {0}"
+    },
+    {
+      "en": "Time Remaining: {0} ({1}s)",
+      "th": "เวลาที่เหลือ: {0} ({1} วินาที)"
+    },
+    {
+      "en": "Sell Price: {0} Gold (75%)",
+      "th": "ราคาขาย: {0} ทอง (75%)"
+    },
+    {
+      "en": "Sell Price: {0} Gold",
+      "th": "ราคาขาย: {0} ทอง"
+    },
+    {
+      "en": "Total Value: {0} Gold ({1}x)",
+      "th": "มูลค่ารวม: {0} ทอง ({1} ชิ้น)"
+    },
+    {
+      "en": "Sell All ({0})",
+      "th": "ขายทั้งหมด ({0} ชิ้น)"
+    },
+    {
+      "en": "Stock: {0}",
+      "th": "คงเหลือ: {0}"
+    },
+    {
+      "en": "Sold {0}x {1} for {2} Gold!",
+      "th": "ขาย {1} {0} ชิ้น ได้รับ {2} ทอง!"
+    },
+    {
+      "en": "Purchased {0}!",
+      "th": "ซื้อ {0} แล้ว!"
+    },
+    {
+      "en": "Current Stack: {0} / {1}",
+      "th": "จำนวนในกอง: {0} / {1}"
+    },
+    {
+      "en": "Sell Value: {0} Gold each (75%)",
+      "th": "ขายได้ชิ้นละ {0} ทอง (75%)"
+    },
+    {
+      "en": "Sell Value: {0} Gold each",
+      "th": "ขายได้ชิ้นละ {0} ทอง"
+    },
+    {
+      "en": "+{0} Gold",
+      "th": "+{0} ทอง"
+    },
+    {
+      "en": "Rune slots: {0}",
+      "th": "ช่องใส่รูน: {0}"
+    },
+    {
+      "en": "[{0}]  {1}",
+      "th": "[{0}]  {1}"
+    },
+    {
+      "en": "Rune #{0}",
+      "th": "รูนที่ {0}"
+    },
+    {
+      "en": "Demon Rune {0}",
+      "th": "รูนปีศาจ {0}"
+    },
+    {
+      "en": "Scene {0}",
+      "th": "ฉากที่ {0}"
+    },
+    {
+      "en": "Golden Seed",
+      "th": "เมล็ดทอง"
+    },
+    {
+      "en": "Scene 1 — The First Day Beneath Boa's Banner",
+      "th": "ฉากที่ 1 — วันแรกใต้ธงแห่งโบอา"
+    },
+    {
+      "en": "The First Day Beneath Boa's Banner",
+      "th": "วันแรกใต้ธงแห่งโบอา"
+    },
+    {
+      "en": "Location: Boa Castle training yard. Time: Morning.",
+      "th": "สถานที่: ลานฝึกปราสาทโบอา, เวลา: ยามเช้า"
+    },
+    {
+      "en": "I once thought a knight must never fear.\nBut on my first day inside Boa Castle, I was only a young man among warriors who had survived countless battles.",
+      "th": "ข้าเคยคิดว่าอัศวินต้องไม่หวาดกลัว\nแต่ในวันแรกที่ก้าวเข้าปราสาทโบอา ข้ากลับเป็นเพียงเด็กหนุ่มคนหนึ่ง ท่ามกลางนักรบผู้ผ่านสมรภูมิมานับครั้งไม่ถ้วน"
+    },
+    {
+      "en": "“No one here cares where you come from. Only what you do on the battlefield will prove who you are.”",
+      "th": "“ที่นี่ไม่มีใครสนใจว่าเจ้ามาจากไหน มีเพียงสิ่งที่เจ้าทำในสนามรบเท่านั้นที่พิสูจน์ตัวเจ้า”"
+    },
+    {
+      "en": "“Yes, sir.”",
+      "th": "“ครับ”"
+    },
+    {
+      "en": "“Train hard. Do not bring shame upon the knight's crest.”",
+      "th": "“ฝึกให้หนัก อย่าทำให้ตราอัศวินต้องมัวหมอง”"
+    },
+    {
+      "en": "That day, I swore to defend Boa with my sword.\nI believed the kingdom could never fall while knights still stood.\nI did not know that one day, that oath would be all I had left.",
+      "th": "วันนั้น ข้าสาบานว่าจะใช้ดาบปกป้องโบอา\nข้าเชื่อว่าอาณาจักรจะไม่มีวันล่มสลาย ตราบใดที่ยังมีอัศวินยืนหยัด\nข้าไม่รู้เลยว่า วันหนึ่งคำสาบานนั้นจะเป็นสิ่งเดียวที่เหลืออยู่"
+    },
+    {
+      "en": "Scene 2 — An Oath at the Border",
+      "th": "ฉากที่ 2 — คำสาบาน ณ ชายแดน"
+    },
+    {
+      "en": "An Oath at the Border",
+      "th": "คำสาบาน ณ ชายแดน"
+    },
+    {
+      "en": "Location: The border fortress. Several years later.",
+      "th": "สถานที่: ป้อมปราการชายแดน, เวลาผ่านไปหลายปี"
+    },
+    {
+      "en": "Years passed. I became a knight commander and was sent to the northern border.\nBefore me stood new knights, still carrying the same dreams I had on my first day.",
+      "th": "หลายปีผ่านไป ข้ากลายเป็นหัวหน้าหน่วยอัศวิน และถูกส่งไปประจำชายแดนทางเหนือ\nเบื้องหน้าข้าคือเหล่าอัศวินหน้าใหม่ ผู้ยังมีความฝันเหมือนข้าในวันแรก"
+    },
+    {
+      "en": "“Knights of Boa, raise your heads.”\n\n“When fear tells you to flee, look at those standing behind you.”\n\n“A knight's sword protects those who cannot protect themselves.”",
+      "th": "“อัศวินแห่งโบอา จงเงยหน้าขึ้น”\n\n“เมื่อความกลัวบอกให้พวกเจ้าหนี จงมองคนที่ยืนอยู่ข้างหลัง”\n\n“ดาบของอัศวินมีไว้ปกป้องผู้ที่ปกป้องตัวเองไม่ได้”"
+    },
+    {
+      "en": "“For Boa! For the people! For the honor of the knights!”",
+      "th": "“เพื่อโบอา! เพื่อประชาชน! เพื่อเกียรติแห่งอัศวิน!”"
+    },
+    {
+      "en": "Their voices echoed through the fortress.\nI smiled, unaware that the coming war would take them away.\nAnd I would not be able to keep every promise I had made.",
+      "th": "เสียงของพวกเขาก้องไปทั่วป้อมปราการ\nข้ายิ้ม โดยไม่รู้ว่าสงครามที่กำลังมาถึงจะพรากพวกเขาไป\nและข้าจะรักษาคำพูดของตัวเองไว้ไม่ได้ทั้งหมด"
+    },
+    {
+      "en": "Scene 3 — A Rift from Beyond",
+      "th": "ฉากที่ 3 — รอยแยกจากอีกฟากหนึ่ง"
+    },
+    {
+      "en": "A Rift from Beyond",
+      "th": "รอยแยกจากอีกฟากหนึ่ง"
+    },
+    {
+      "en": "Location: The northern border. Time: Night.",
+      "th": "สถานที่: ชายแดนทางเหนือ, เวลา: กลางคืน"
+    },
+    {
+      "en": "That night, the sky tore open like a wound.\nRed light spilled over the earth, followed by a roar from beyond the darkness.",
+      "th": "คืนนั้น ท้องฟ้าฉีกออกเป็นรอยแผล\nแสงสีแดงสาดลงบนผืนดิน พร้อมเสียงคำรามจากอีกฟากของความมืด"
+    },
+    {
+      "en": "“Commander! What is that?!”",
+      "th": "“ท่านหัวหน้า! นั่นคืออะไร?!”"
+    },
+    {
+      "en": "“Sound the alarm. Get everyone onto the walls!”",
+      "th": "“ส่งสัญญาณเตือนภัย เรียกทุกคนขึ้นกำแพง!”"
+    },
+    {
+      "en": "“Something is coming out of the rift!”",
+      "th": "“มีบางอย่างออกมาจากรอยแยก!”"
+    },
+    {
+      "en": "I saw the first shadow fall from the sky, then ten more, a hundred, and countless others.\nDemons from another dimension poured into our world. I heard the warning being sent to the capital.",
+      "th": "ข้าเห็นเงาร่างแรกตกลงมาจากท้องฟ้า ตามด้วยอีกสิบ ร้อย และนับไม่ถ้วน\nปีศาจจากอีกมิติหลั่งไหลเข้าสู่โลก ข้าได้ยินสัญญาณเตือนภัยถูกส่งไปยังเมืองหลวง"
+    },
+    {
+      "en": "“Form a defensive line!”",
+      "th": "“ตั้งแนวป้องกัน!”"
+    },
+    {
+      "en": "I drew my sword, still believing we could stop them.\nI was a knight of Boa. This was the land I had sworn to defend.",
+      "th": "ข้าชักดาบ ยังเชื่อว่าเราจะหยุดพวกมันได้\nข้าคืออัศวินแห่งโบอา และนี่คือดินแดนที่ข้าสาบานว่าจะปกป้อง"
+    },
+    {
+      "en": "Scene 4 — The Day the Walls Fell",
+      "th": "ฉากที่ 4 — วันที่กำแพงพังทลาย"
+    },
+    {
+      "en": "The Day the Walls Fell",
+      "th": "วันที่กำแพงพังทลาย"
+    },
+    {
+      "en": "Location: The border fortress and the road to the capital.",
+      "th": "สถานที่: ป้อมชายแดนและเส้นทางสู่เมืองหลวง"
+    },
+    {
+      "en": "The fighting began before dawn.\nMy knights fought until they had no strength left. Each time an enemy fell, another climbed over its body.\nThis was no army. It was an endless tide.",
+      "th": "การต่อสู้เริ่มก่อนรุ่งสาง\nอัศวินของข้าสู้จนหมดแรง แต่ทุกครั้งที่ศัตรูล้มลง ตัวใหม่ก็ข้ามร่างของมันเข้ามา\nนี่ไม่ใช่กองทัพ แต่เป็นคลื่นที่ไม่มีวันสิ้นสุด"
+    },
+    {
+      "en": "“They have breached the outer gate!”",
+      "th": "“พวกมันทะลวงประตูชั้นนอกแล้ว!”"
+    },
+    {
+      "en": "“Fall back to the inner gate. Get the wounded out!”",
+      "th": "“ถอยไปประตูชั้นใน พาผู้บาดเจ็บออกไป!”"
+    },
+    {
+      "en": "“What about you, sir?!”",
+      "th": "“แล้วท่านล่ะครับ?!”"
+    },
+    {
+      "en": "“That is an order.”",
+      "th": "“นั่นคือคำสั่ง”"
+    },
+    {
+      "en": "My orders could not stop death.\nThe knights who had stood beside me fell. Boa's banners burned, and the walls collapsed.\nWe fought to the end, but courage could not halt an enemy without limit.",
+      "th": "คำสั่งของข้าหยุดความตายไม่ได้\nอัศวินที่เคยยืนเคียงข้างข้าล้มลง ธงโบอาถูกไฟเผา และกำแพงพังทลาย\nเราสู้จนถึงที่สุด แต่ความกล้าหาญไม่อาจหยุดศัตรูที่ไร้ขอบเขต"
+    },
+    {
+      "en": "“You must go... Otherwise, no one will tell them what happened.”",
+      "th": "“ท่านต้องไป… ไม่อย่างนั้นจะไม่มีใครบอกพวกเขาว่าเกิดอะไรขึ้น”"
+    },
+    {
+      "en": "“There are still people to save...”",
+      "th": "“ยังมีคนต้องช่วย…”"
+    },
+    {
+      "en": "“Please... Go, sir.”",
+      "th": "“ได้โปรด… ไปเถอะครับ”"
+    },
+    {
+      "en": "My hand trembled on my sword.\nI had promised to protect everyone. That day, all I could do was flee the battlefield.\nI heard the bells behind me, before they fell silent forever.",
+      "th": "มือข้าสั่นอยู่บนด้ามดาบ\nข้าเคยสัญญาว่าจะปกป้องทุกคน แต่วันนั้นข้าทำได้เพียงหนีจากสนามรบ\nข้าได้ยินเสียงระฆังดังอยู่เบื้องหลัง ก่อนที่มันจะเงียบลงตลอดกาล"
+    },
+    {
+      "en": "Scene 5 — The Survivor",
+      "th": "ฉากที่ 5 — ผู้รอดชีวิต"
+    },
+    {
+      "en": "The Survivor",
+      "th": "ผู้รอดชีวิต"
+    },
+    {
+      "en": "Location: The ruined forest behind the front. Days after the defeat.",
+      "th": "สถานที่: ซากป่าหลังแนวรบ, หลายวันหลังการพ่ายแพ้"
+    },
+    {
+      "en": "I woke amid smoke and the smell of blood.\nMy armor was broken. I could barely move my arm. Every breath hurt.\nAll I knew was that I was still alive.",
+      "th": "ข้าตื่นขึ้นท่ามกลางควันและกลิ่นเลือด\nเกราะแตกหัก แขนแทบขยับไม่ได้ ทุกลมหายใจเต็มไปด้วยความเจ็บปวด\nสิ่งเดียวที่รู้คือ ข้ายังมีชีวิตอยู่"
+    },
+    {
+      "en": "“Why... did I survive?”",
+      "th": "“ทำไม… ข้าถึงรอด”"
+    },
+    {
+      "en": "I thought of the new knights. They had believed my words, believed I would bring them home.",
+      "th": "ข้านึกถึงเหล่าอัศวินหน้าใหม่ พวกเขาเชื่อในคำพูดของข้า เชื่อว่าข้าจะพาพวกเขากลับบ้าน"
+    },
+    {
+      "en": "I wanted to lay down my sword and let the darkness take me.\nBut the shattered knight's crest was still beside me.\nI remembered my promise: a sword protects those who cannot protect themselves.",
+      "th": "ข้าอยากวางดาบ แล้วปล่อยให้ความมืดกลืนกิน\nแต่ตราอัศวินที่แตกร้าวยังอยู่ข้างกาย\nข้านึกถึงคำพูดที่เคยให้ไว้: ดาบมีไว้ปกป้องผู้ที่ปกป้องตัวเองไม่ได้"
+    },
+    {
+      "en": "“If someone is still waiting for help... I will not give up.”",
+      "th": "“ถ้ายังมีคนรอความช่วยเหลือ… ข้าจะไม่ยอมแพ้”"
+    },
+    {
+      "en": "I knew the dimensional gate was still open. The demons would not stop while it remained.\nI could not save the dead. Perhaps I could still save those who remained.",
+      "th": "ข้ารู้ว่าประตูมิติยังเปิดอยู่ และปีศาจจะไม่หยุดตราบใดที่มันยังคงอยู่\nข้าช่วยคนที่ตายไปแล้วไม่ได้ แต่อาจยังช่วยคนที่เหลืออยู่"
+    },
+    {
+      "en": "I picked up my chipped, broken sword and walked out of the ruined forest alone.",
+      "th": "ข้าหยิบดาบบิ่นหักขึ้นมา แล้วเดินออกจากซากป่าเพียงลำพัง"
+    },
+    {
+      "en": "Scene 6 — The Last Knight",
+      "th": "ฉากที่ 6 — อัศวินคนสุดท้าย"
+    },
+    {
+      "en": "The Last Knight",
+      "th": "อัศวินคนสุดท้าย"
+    },
+    {
+      "en": "Location: The heart of the dimensional rift. The final battle.",
+      "th": "สถานที่: ใจกลางรอยแยกมิติ, การต่อสู้ครั้งสุดท้าย"
+    },
+    {
+      "en": "The road to the rift was lined with ruined cities, scorched banners, and the swords of those who would never return.\nNo one answered. No soldiers remained to command.\nOnly my sword and the rift tearing our world apart.",
+      "th": "เส้นทางสู่รอยแยกเต็มไปด้วยซากเมือง ธงที่ไหม้เกรียม และดาบของผู้ที่ไม่มีวันกลับมา\nไม่มีเสียงตอบรับ ไม่มีทหารให้สั่งการ\nเหลือเพียงดาบในมือกับรอยแยกที่กำลังฉีกโลก"
+    },
+    {
+      "en": "I understood then: the rift was more than a gate. It was a wound joining our world to the demon realm.\nIt was growing. If I left it, there would be nothing left to protect.",
+      "th": "ข้าเข้าใจแล้วว่ารอยแยกไม่ใช่แค่ประตู แต่มันคือบาดแผลที่เชื่อมโลกของเราเข้ากับดินแดนปีศาจ\nข้าเห็นมันกำลังขยายตัว หากปล่อยไว้ จะไม่เหลือสิ่งใดให้ปกป้อง"
+    },
+    {
+      "en": "“So this is the source...”\n\n“I will not let you take what remains.”",
+      "th": "“นี่คือต้นเหตุ…”\n\n“ข้าจะไม่ยอมให้เจ้าเอาสิ่งที่เหลือไปอีก”"
+    },
+    {
+      "en": "“In the name of the knights of Boa... I will end this war.”",
+      "th": "“ในนามของอัศวินแห่งโบอา… ข้าจะจบสงครามนี้”"
+    },
+    {
+      "en": "I saw the rift shrink, the red light fade, and the demons dissolve with the power that sustained them.\nThe sky slowly returned to normal. Months later, the world was peaceful for the first time.",
+      "th": "ข้าเห็นรอยแยกหดตัว แสงสีแดงดับลง และปีศาจสลายไปพร้อมพลังที่หล่อเลี้ยงพวกมัน\nท้องฟ้าค่อย ๆ กลับคืนสู่สภาพเดิม หลายเดือนต่อมา โลกก็สงบลงเป็นครั้งแรก"
+    },
+    {
+      "en": "“...Let it end.”",
+      "th": "“จบแล้วสินะ”"
+    },
+    {
+      "en": "I fell to my knees. The sword slipped from my hand.\nI did not know whether I would survive until tomorrow.\nBut no demon could pass through that gate again.\nThat was enough.",
+      "th": "ข้าทรุดลง ดาบหลุดจากมือ\nข้าไม่รู้ว่าจะรอดถึงวันพรุ่งนี้หรือไม่\nแต่ไม่มีปีศาจผ่านประตูนั้นมาได้อีก\nแค่นั้นก็เพียงพอแล้ว"
+    },
+    {
+      "en": "Scene 7 — Dawn of the Kingdom",
+      "th": "ฉากที่ 7 — รุ่งอรุณของอาณาจักร"
+    },
+    {
+      "en": "Dawn of the Kingdom",
+      "th": "รุ่งอรุณของอาณาจักร"
+    },
+    {
+      "en": "Location: Boa's capital. Several months later.",
+      "th": "สถานที่: เมืองหลวงของโบอา, หลายเดือนต่อมา"
+    },
+    {
+      "en": "Months later, I walked to a hill overlooking the kingdom. My tattered red cloak fluttered in the breeze. Morning sunlight touched the roofs being rebuilt.\n\nThe Demon King had fallen. The dimensional rift was closed. Dawn returned to Boa, and the long work of rebuilding began.\n\nBoa could never be what it once was. Those who were gone would never return. The wounds of war would remain in the memories of the survivors.\n\nBut where screams had once filled the land, I now heard builders' hammers, children's laughter, and bells welcoming a new day.\n\nSeasons passed. The bells rang again. Houses rose from the ruins. The market filled with voices once more. I watched over the kingdom I had sworn to protect.",
+      "th": "หลายเดือนต่อมา ข้าเดินไปยังเนินเขาที่มองเห็นอาณาจักรทั้งเมือง เสื้อคลุมสีแดงขาดวิ่นปลิวไปตามสายลม แสงอาทิตย์ยามเช้าส่องกระทบหลังคาที่กำลังสร้างขึ้นใหม่\n\nราชาปีศาจพ่ายแพ้ รอยแยกประตูมิติถูกปิดลง แสงอรุณสาดส่องมายังโบอา และงานฟื้นฟูอันยาวนานก็เริ่มต้นขึ้น\n\nโบอาไม่อาจกลับไปเป็นเหมือนวันวาน ผู้ที่จากไปจะไม่มีวันหวนคืน และบาดแผลจากสงครามจะยังคงอยู่ในความทรงจำของผู้รอดชีวิต\n\nแต่ในดินแดนที่ครั้งหนึ่งเคยเต็มไปด้วยเสียงกรีดร้อง บัดนี้ข้าได้ยินเสียงค้อนของช่างก่อสร้าง เสียงหัวเราะของเด็ก ๆ และเสียงระฆังที่ต้อนรับวันใหม่\n\nฤดูกาลผันผ่าน เสียงระฆังกลับมาดังอีกครั้ง บ้านเรือนค่อย ๆ ถูกสร้างขึ้นใหม่ ตลาดกลับมาเต็มไปด้วยเสียงผู้คน ข้าเฝ้ามองอาณาจักรที่เคยให้คำสัตย์ว่าจะปกป้อง"
+    },
+    {
+      "en": "“I am sorry I could not bring all of you home...”\n\n“But I promised to protect the people who remain.”\n\n“And as long as someone needs help... I will still be a knight.”",
+      "th": "“ข้าขอโทษที่ไม่อาจพาพวกเจ้าทุกคนกลับบ้านได้...”\n\n“แต่ข้าสัญญาไว้แล้ว ว่าจะปกป้องผู้คนที่ยังเหลืออยู่”\n\n“และตราบใดที่ยังมีใครต้องการความช่วยเหลือ... ข้าก็จะยังคงเป็นอัศวิน”"
+    },
+    {
+      "en": "Knight Instructor",
+      "th": "อัศวินผู้ฝึกสอน"
+    },
+    {
+      "en": "New Knight",
+      "th": "อัศวินหน้าใหม่"
+    },
+    {
+      "en": "Fortress Sentry",
+      "th": "อัศวินยามเฝ้าป้อม"
+    },
+    {
+      "en": "Another Knight",
+      "th": "อัศวินอีกคน"
+    },
+    {
+      "en": "Wounded Knight",
+      "th": "อัศวินผู้บาดเจ็บ"
+    },
+    {
+      "en": "Narration",
+      "th": "บทบรรยาย"
+    },
+    {
+      "en": "Shadow Merchant",
+      "th": "พ่อค้าแห่งเงา"
+    },
+    {
+      "en": "Welcome, Sir Knight... I am the merchant of shadows.",
+      "th": "ยินดีต้อนรับ ท่านอัศวิน … ข้าเป็นพ่อค้าแห่งเงา"
+    },
+    {
+      "en": "Here you will find what you seek, and things you may not yet know you need.",
+      "th": "ที่นี่มีทั้งสิ่งที่เจ้าตามหา และสิ่งที่เจ้าอาจยังไม่รู้ว่าต้องการ"
+    },
+    {
+      "en": "Look closely and choose carefully—everything has a price.",
+      "th": "มองดูให้ดี แล้วเลือกอย่างระวัง—ทุกสิ่งมีราคาเสมอ"
+    },
+    {
+      "en": "You have returned, Sir Knight... I have fine wares waiting for you.",
+      "th": "กลับมาแล้วหรือ ท่านอัศวิน… ข้ามีของดีรอเจ้าอยู่"
+    },
+    {
+      "en": "Easy",
+      "th": "ง่าย"
+    },
+    {
+      "en": "Normal",
+      "th": "ปกติ"
+    },
+    {
+      "en": "Hard",
+      "th": "ยาก"
+    },
+    {
+      "en": "CityCenter",
+      "th": "ใจกลางเมือง"
+    },
+    {
+      "en": "OutdoorMarket",
+      "th": "ตลาดกลางแจ้ง"
+    },
+    {
+      "en": "Church",
+      "th": "โบสถ์"
+    },
+    {
+      "en": "SuburbToForest",
+      "th": "ชานเมืองสู่ป่า"
+    },
+    {
+      "en": "DemonCastleEntrance",
+      "th": "ทางเข้าปราสาทปีศาจ"
+    },
+    {
+      "en": "DemonCastle",
+      "th": "ปราสาทปีศาจ"
+    },
+    {
+      "en": "Demon Boss",
+      "th": "ราชาปีศาจ"
+    },
+    {
+      "en": "Mecha Stone Golem",
+      "th": "โกเลมหินจักรกล"
+    },
+    {
+      "en": "Moonstone Keeper",
+      "th": "ผู้พิทักษ์หินจันทรา"
+    },
+    {
+      "en": "Volcanox",
+      "th": "โวลคาน็อกซ์"
+    },
+    {
+      "en": "Fox",
+      "th": "จิ้งจอก"
+    },
+    {
+      "en": "Rune acquired",
+      "th": "ได้รับรูนแล้ว"
+    },
+    {
+      "en": "Star",
+      "th": "ดาว"
+    },
+    {
+      "en": "Hand",
+      "th": "มือ"
+    },
+    {
+      "en": "Eye",
+      "th": "ตา"
+    },
+    {
+      "en": "[{0} {1}]",
+      "th": "[{0} {1}]"
+    },
+    {
+      "en": "Archdemon Horn",
+      "th": "เขาอาร์ชดีมอน"
+    },
+    {
+      "source": "A sharp, fiery horn harvested from an ArchDemon. (เขาอาร์ชดีมอน)",
+      "en": "A sharp, fiery horn harvested from an ArchDemon.",
+      "th": "เขาแหลมที่อาบเปลวไฟจากอาร์ชดีมอน"
+    },
+    {
+      "en": "Slime Jelly",
+      "th": "เจลสไลม์ฟ้า"
+    },
+    {
+      "source": "Sticky blue jelly dropped by a Blue Slime. (เจลสไลม์ฟ้า)",
+      "en": "Sticky blue jelly dropped by a Blue Slime.",
+      "th": "เจลสีฟ้าเหนียวที่ได้จากสไลม์ฟ้า"
+    },
+    {
+      "en": "Death Essence",
+      "th": "แก่นวิญญาณแห่งความตาย"
+    },
+    {
+      "source": "An eerie soul remnant left behind by the Bringer of Death. (แก่นวิญญาณแห่งความตาย)",
+      "en": "An eerie soul remnant left behind by the Bringer of Death.",
+      "th": "เศษวิญญาณน่าขนลุกที่ผู้ส่งความตายทิ้งไว้"
+    },
+    {
+      "en": "Demon Fang",
+      "th": "เขี้ยวปีศาจ"
+    },
+    {
+      "source": "A razor-sharp fang from a demon, infused with hellfire. (เขี้ยวปีศาจ)",
+      "en": "A razor-sharp fang from a demon, infused with hellfire.",
+      "th": "เขี้ยวปีศาจคมกริบที่อาบไฟนรก"
+    },
+    {
+      "en": "Demon Boss Core",
+      "th": "แกนพลังราชาปีศาจ"
+    },
+    {
+      "source": "The pulsating demonic core of the Demon Boss. (แกนพลังราชาปีศาจ)",
+      "en": "The pulsating demonic core of the Demon Boss.",
+      "th": "แกนพลังปีศาจที่เต้นเป็นจังหวะจากราชาปีศาจ"
+    },
+    {
+      "en": "Demonkin Blood",
+      "th": "เลือดดีมอนคิน"
+    },
+    {
+      "source": "Vial of potent blood dropped by DemonKin. (เลือดดีมอนคิน)",
+      "en": "Vial of potent blood dropped by DemonKin.",
+      "th": "ขวดเลือดทรงพลังจากดีมอนคิน"
+    },
+    {
+      "en": "Dragon Scale",
+      "th": "เกล็ดมังกร"
+    },
+    {
+      "source": "An impenetrable scale shed by an ancient dragon. (เกล็ดมังกร)",
+      "en": "An impenetrable scale shed by an ancient dragon.",
+      "th": "เกล็ดแข็งแกร่งที่หลุดจากมังกรโบราณ"
+    },
+    {
+      "en": "Fantasy Mushroom Spore",
+      "th": "สปอร์เห็ดแฟนตาซี"
+    },
+    {
+      "source": "Mystical spores harvested from a Fantasy Mushroom. (สปอร์เห็ดแฟนตาซี)",
+      "en": "Mystical spores harvested from a Fantasy Mushroom.",
+      "th": "สปอร์ลึกลับที่เก็บจากเห็ดแฟนตาซี"
+    },
+    {
+      "en": "Fireworm Ember",
+      "th": "เศษเพลิงหนอนไฟ"
+    },
+    {
+      "source": "A smoldering ember dropped by a Fire Worm. (เศษเพลิงหนอนไฟ)",
+      "en": "A smoldering ember dropped by a Fire Worm.",
+      "th": "เศษถ่านที่ยังคุกรุ่นจากหนอนไฟ"
+    },
+    {
+      "en": "Flying Eye Lens",
+      "th": "เลนส์ดวงตาลอยได้"
+    },
+    {
+      "source": "The gazing ocular lens of a Flying Eye. (เลนส์ดวงตาลอยได้)",
+      "en": "The gazing ocular lens of a Flying Eye.",
+      "th": "เลนส์จับจ้องที่ได้จากดวงตาลอยได้"
+    },
+    {
+      "en": "Forest Mushroom Cap",
+      "th": "หมวกเห็ดป่า"
+    },
+    {
+      "source": "An earthy cap plucked from a Forest Mushroom. (หมวกเห็ดป่า)",
+      "en": "An earthy cap plucked from a Forest Mushroom.",
+      "th": "หมวกเห็ดกลิ่นดินที่เก็บจากเห็ดป่า"
+    },
+    {
+      "en": "Fox Spirit Jewel",
+      "th": "อัญมณีจิ้งจอก"
+    },
+    {
+      "source": "A mystical spirit gem dropped by the guardian Fox boss. (อัญมณีจิ้งจอก)",
+      "en": "A mystical spirit gem dropped by the guardian Fox boss.",
+      "th": "อัญมณีวิญญาณลึกลับจากบอสจิ้งจอกผู้พิทักษ์"
+    },
+    {
+      "en": "Goblin Trinket",
+      "th": "ของสะสมก็อบลิน"
+    },
+    {
+      "source": "A crude trinket scavenged by a Goblin. (ของสะสมก็อบลิน)",
+      "en": "A crude trinket scavenged by a Goblin.",
+      "th": "ของสะสมหยาบ ๆ ที่ก็อบลินเก็บไว้"
+    },
+    {
+      "en": "Wanderer's Insignia",
+      "th": "ตราผู้พเนจร"
+    },
+    {
+      "source": "A worn insignia carried by the Hooded Protagonist. (ตราผู้พเนจร)",
+      "en": "A worn insignia carried by the Hooded Protagonist.",
+      "th": "ตราเก่าที่ผู้พเนจรสวมฮู้ดพกติดตัว"
+    },
+    {
+      "en": "Jinn Essence Bottle",
+      "th": "ขวดแก่นเวทจินน์"
+    },
+    {
+      "source": "Swirling mystical vapor bottled from a defeat of Jinn. (ขวดแก่นเวทจินน์)",
+      "en": "Swirling mystical vapor bottled from a defeat of Jinn.",
+      "th": "ไอเวทลึกลับที่เก็บใส่ขวดหลังปราบจินน์"
+    },
+    {
+      "en": "Lizard Tail",
+      "th": "หางกิ้งก่า"
+    },
+    {
+      "source": "Tough reptilian leather dropped by a Lizard. (หางกิ้งก่า)",
+      "en": "Tough reptilian leather dropped by a Lizard.",
+      "th": "หนังสัตว์เลื้อยคลานเหนียวที่ได้จากกิ้งก่า"
+    },
+    {
+      "en": "White-Gold Core Crystal",
+      "th": "ผลึกคริสตัลทองคำขาว"
+    },
+    {
+      "source": "A luminous white-gold crystal powering the Mecha Stone Golem. (ผลึกคริสตัลทองคำขาว)",
+      "en": "A luminous white-gold crystal powering the Mecha Stone Golem.",
+      "th": "ผลึกสีทองคำขาวส่องสว่างที่ให้พลังแก่โกเลมหินจักรกล"
+    },
+    {
+      "en": "Minotaur Horn",
+      "th": "เขามิโนทอร์"
+    },
+    {
+      "source": "A colossal, hardened horn severed from a fierce Minotaur. (เขามิโนทอร์)",
+      "en": "A colossal, hardened horn severed from a fierce Minotaur.",
+      "th": "เขาขนาดใหญ่แข็งแกร่งจากมิโนทอร์ดุร้าย"
+    },
+    {
+      "en": "Necromancer Phylactery",
+      "th": "ตำราเนโครแมนเซอร์"
+    },
+    {
+      "source": "A forbidden artifact containing dark rites of the Necromancer. (ตำราเนโครแมนเซอร์)",
+      "en": "A forbidden artifact containing dark rites of the Necromancer.",
+      "th": "วัตถุต้องห้ามที่บรรจุพิธีกรรมมืดของเนโครแมนเซอร์"
+    },
+    {
+      "en": "Reaper's Shroud",
+      "th": "ผ้าคลุมริปเปอร์"
+    },
+    {
+      "source": "A threadbare dark shroud left behind by the Grim Reaper. (ผ้าคลุมริปเปอร์)",
+      "en": "A threadbare dark shroud left behind by the Grim Reaper.",
+      "th": "ผ้าคลุมมืดที่ขาดเก่าของยมทูต"
+    },
+    {
+      "en": "Satyr Trophy",
+      "th": "ของรางวัลซาไทร์"
+    },
+    {
+      "source": "A wild forest relic carried by Satyr. (ของรางวัลซาไทร์)",
+      "en": "A wild forest relic carried by Satyr.",
+      "th": "ของโบราณแห่งป่าที่ซาไทร์พกไว้"
+    },
+    {
+      "en": "Shadow Demon Eye",
+      "th": "ดวงตามังกรเงาปีศาจ"
+    },
+    {
+      "source": "A sinister draconic eye radiating abyss energy. (ดวงตามังกรเงาปีศาจ)",
+      "en": "A sinister draconic eye radiating abyss energy.",
+      "th": "ดวงตามังกรชั่วร้ายที่แผ่พลังแห่งห้วงลึก"
+    },
+    {
+      "en": "Skeleton Bone",
+      "th": "กระดูกสเกเลตัน"
+    },
+    {
+      "source": "Ancient bone shards collected from a fallen skeleton. (กระดูกสเกเลตัน)",
+      "en": "Ancient bone shards collected from a fallen skeleton.",
+      "th": "เศษกระดูกโบราณที่เก็บจากโครงกระดูกที่ถูกปราบ"
+    },
+    {
+      "en": "Knight's Bone Crest",
+      "th": "ตรากระดูกอัศวิน"
+    },
+    {
+      "source": "An armored bone fragment from an undead Skeleton Knight. (ตรากระดูกอัศวิน)",
+      "en": "An armored bone fragment from an undead Skeleton Knight.",
+      "th": "เศษกระดูกหุ้มเกราะจากอัศวินโครงกระดูกผีดิบ"
+    },
+    {
+      "en": "Skullwolf Fang",
+      "th": "เขี้ยวหมาป่ากะโหลก"
+    },
+    {
+      "source": "A feral predator tooth dropped by a Skullwolf. (เขี้ยวหมาป่ากะโหลก)",
+      "en": "A feral predator tooth dropped by a Skullwolf.",
+      "th": "เขี้ยวนักล่าดุร้ายที่ได้จากหมาป่ากะโหลก"
+    },
+    {
+      "en": "Small Dragon Wing",
+      "th": "ปีกมังกรน้อย"
+    },
+    {
+      "source": "A leathery young dragon wing imbued with dragon blood. (ปีกมังกรน้อย)",
+      "en": "A leathery young dragon wing imbued with dragon blood.",
+      "th": "ปีกหนังของมังกรวัยเยาว์ที่อาบเลือดมังกร"
+    },
+    {
+      "en": "Executioner Shard",
+      "th": "เศษขวานเพชฌฆาต"
+    },
+    {
+      "source": "A notched chunk from the Undead Executioner's guillotine axe. (เศษขวานเพชฌฆาต)",
+      "en": "A notched chunk from the Undead Executioner's guillotine axe.",
+      "th": "เศษคมขวานจากขวานประหารของเพชฌฆาตผีดิบ"
+    },
+    {
+      "en": "Sea of Fire Gem",
+      "th": "อัญมณีทะเลเพลิง"
+    },
+    {
+      "source": "A primordial volcanic core blazing with eternal magma from Volcanox. (ศิลาทะเลเพลิง)",
+      "en": "A primordial volcanic core blazing with eternal magma from Volcanox.",
+      "th": "แกนภูเขาไฟโบราณที่ลุกโชนด้วยลาวานิรันดร์จากโวลคาน็อกซ์"
+    },
+    {
+      "en": "Gold",
+      "th": "ทอง"
+    },
+    {
+      "en": "Skill 1",
+      "th": "ทักษะ 1"
+    },
+    {
+      "en": "Skill 2",
+      "th": "ทักษะ 2"
+    },
+    {
+      "en": "Skill 3",
+      "th": "ทักษะ 3"
+    },
+    {
+      "en": "Quick Items",
+      "th": "ไอเทมด่วน"
+    },
+    {
+      "en": "Ancient Demon Rune",
+      "th": "รูนปีศาจโบราณ"
+    },
+    {
+      "en": "« STAT ALLOCATION »",
+      "th": "« เพิ่มคุณสมบัติ »"
+    },
+    {
+      "en": "{0} • Ready for [Q]",
+      "th": "{0} • พร้อมใช้ด้วย [Q]"
+    },
+    {
+      "en": "{0} • Quick Slot {1}",
+      "th": "{0} • ช่องด่วน {1}"
+    },
+    {
+      "en": "[L-Click: Pick / Place]",
+      "th": "[คลิกซ้าย: หยิบ / วาง]"
+    },
+    {
+      "en": "[R-Click: Split / Place 1]",
+      "th": "[คลิกขวา: แบ่ง / วาง 1 ชิ้น]"
+    },
+    {
+      "en": "[Shift + L-Click: Quick Move]",
+      "th": "[Shift + คลิกซ้าย: ย้ายด่วน]"
+    },
+    {
+      "en": "Hotbar Priority {0}",
+      "th": "ลำดับช่องด่วน {0}"
+    },
+    {
+      "en": "Active [Q] hotkey item slot. Drag consumables here to use with [Q] in battle.",
+      "th": "ช่องไอเทมที่ใช้ด้วย [Q] ลากของใช้มาใส่เพื่อใช้ด้วย [Q] ระหว่างต่อสู้"
+    },
+    {
+      "en": "Backup quick slot. Items advance automatically when earlier slots run out.",
+      "th": "ช่องด่วนสำรอง ไอเทมจะเลื่อนไปช่องก่อนหน้าอัตโนมัติเมื่อหมด"
+    },
+    {
+      "en": "[Drag item here to assign]",
+      "th": "[ลากไอเทมมาที่นี่เพื่อกำหนด]"
+    },
+    {
+      "en": "Quick Slot {0} (Empty)",
+      "th": "ช่องด่วน {0} (ว่าง)"
+    },
+    {
+      "en": "[Drag item here to store]",
+      "th": "[ลากไอเทมมาที่นี่เพื่อเก็บ]"
+    },
+    {
+      "en": "Empty Inventory Slot",
+      "th": "ช่องกระเป๋าว่าง"
+    },
+    {
+      "en": "Bag Slot {0}",
+      "th": "ช่องกระเป๋า {0}"
+    },
+    {
+      "en": "Slot is empty and ready to store items.",
+      "th": "ช่องว่างพร้อมเก็บไอเทม"
+    },
+    {
+      "en": "Drag items here to organize.",
+      "th": "ลากไอเทมมาที่นี่เพื่อจัดกระเป๋า"
+    },
+    {
+      "en": "Full HP",
+      "th": "พลังชีวิตเต็ม"
+    },
+    {
+      "en": "PARRY",
+      "th": "ปัดป้อง"
+    },
+    {
+      "en": "STUNNED!",
+      "th": "มึนงง!"
+    },
+    {
+      "en": "+{0} Gold / +{1} EXP",
+      "th": "+{0} ทอง / +{1} ค่าประสบการณ์"
+    },
+    {
+      "en": "+{0} {1}",
+      "th": "+{0} {1}"
+    },
+    {
+      "en": "{0}  {1}%",
+      "th": "{0}  {1}%"
+    },
+    {
+      "en": "Could not save: {0}.",
+      "th": "บันทึกไม่ได้: {0}"
+    },
+    {
+      "en": "player state is missing",
+      "th": "ไม่พบข้อมูลผู้เล่น"
+    },
+    {
+      "en": "save version is unsupported",
+      "th": "ไม่รองรับรุ่นข้อมูลบันทึก"
+    },
+    {
+      "en": "player state has not been initialized",
+      "th": "ยังไม่ได้เริ่มต้นข้อมูลผู้เล่น"
+    },
+    {
+      "en": "rune data is invalid",
+      "th": "ข้อมูลรูนไม่ถูกต้อง"
+    },
+    {
+      "en": "player level is invalid",
+      "th": "ระดับผู้เล่นไม่ถูกต้อง"
+    },
+    {
+      "en": "player progression data is invalid",
+      "th": "ข้อมูลความก้าวหน้าผู้เล่นไม่ถูกต้อง"
+    },
+    {
+      "en": "player attributes are invalid",
+      "th": "คุณสมบัติผู้เล่นไม่ถูกต้อง"
+    },
+    {
+      "en": "inventory totals are invalid",
+      "th": "จำนวนไอเทมไม่ถูกต้อง"
+    },
+    {
+      "en": "game difficulty is invalid",
+      "th": "ระดับความยากไม่ถูกต้อง"
+    },
+    {
+      "en": "player health is invalid",
+      "th": "พลังชีวิตผู้เล่นไม่ถูกต้อง"
+    },
+    {
+      "en": "player stamina is invalid",
+      "th": "พลังงานผู้เล่นไม่ถูกต้อง"
+    },
+    {
+      "en": "player position is invalid",
+      "th": "ตำแหน่งผู้เล่นไม่ถูกต้อง"
+    },
+    {
+      "en": "current scene is not saveable: {0}",
+      "th": "ไม่สามารถบันทึกในพื้นที่นี้: {0}"
+    },
+    {
+      "en": "<empty>",
+      "th": "ไม่มีข้อมูล"
+    },
+    {
+      "en": "Master Volume",
+      "th": "ระดับเสียงหลัก"
+    },
+    {
+      "en": "Music Volume",
+      "th": "ระดับเสียงดนตรี"
+    },
+    {
+      "en": "Sound Effects",
+      "th": "ระดับเสียงเอฟเฟกต์"
+    },
+    {
+      "en": "Game Brightness",
+      "th": "ความสว่างทั้งเกม"
+    },
+    {
+      "en": "Critical Chance: {0}% (MAX)",
+      "th": "โอกาสคริติคอล: {0}% (สูงสุด)"
+    },
+    {
+      "source": "DemonBoss",
+      "en": "Demon Boss",
+      "th": "ราชาปีศาจ"
+    },
+    {
+      "source": "MechaStoneGolem",
+      "en": "Mecha Stone Golem",
+      "th": "โกเลมหินจักรกล"
+    },
+    {
+      "source": "MoonstoneKeeper",
+      "en": "Moonstone Keeper",
+      "th": "ผู้พิทักษ์หินจันทรา"
+    },
+    {
+      "en": "LMB",
+      "th": "คลิกซ้าย"
+    },
+    {
+      "en": "RMB",
+      "th": "คลิกขวา"
+    },
+    {
+      "en": "MMB",
+      "th": "คลิกกลาง"
+    },
+    {
+      "en": "Right Shift",
+      "th": "Shift ขวา"
+    },
+    {
+      "en": "Right Ctrl",
+      "th": "Ctrl ขวา"
+    },
+    {
+      "en": "Right Alt",
+      "th": "Alt ขวา"
+    },
+    {
+      "en": "Up Arrow",
+      "th": "ลูกศรขึ้น"
+    },
+    {
+      "en": "Down Arrow",
+      "th": "ลูกศรลง"
+    },
+    {
+      "en": "Left Arrow",
+      "th": "ลูกศรซ้าย"
+    },
+    {
+      "en": "Right Arrow",
+      "th": "ลูกศรขวา"
+    }
+  ]
+}

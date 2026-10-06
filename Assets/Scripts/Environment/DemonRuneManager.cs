@@ -128,7 +128,7 @@ namespace TheLastKnight.Environment
             for (int i = 0; i < 4; i++)
             {
                 string state = _collectedRunes[i] ? "<color=#FF3333>●</color>" : "<color=#888888>○</color>";
-                sb.Append($"[{shortLabels[i]} {state}] ");
+                sb.Append($"[{LocalizationManager.Translate(shortLabels[i])} {state}] ");
             }
             sb.Append($"({CollectedCount}/4)");
             return sb.ToString();

@@ -222,7 +222,7 @@ namespace TheLastKnight.Environment
 
             if (_titleText != null)
             {
-                _titleText.text = "เลือกจุดหมาย (กดตัวเลข หรือคลิกเมาส์)";
+                TheLastKnight.UI.LocalizedText.Set(_titleText, "เลือกจุดหมาย (กดตัวเลข หรือคลิกเมาส์)");
             }
 
             // Clear previous or leftover buttons completely
@@ -240,7 +240,7 @@ namespace TheLastKnight.Environment
                 var btnText = btnObj.GetComponentInChildren<Text>();
                 if (btnText != null)
                 {
-                    btnText.text = $"[{i + 1}]  {dest.GetLabel()}";
+                    TheLastKnight.UI.LocalizedText.Set(btnText, $"[{i + 1}]  {dest.GetLabel()}");
                     btnText.raycastTarget = false; // Don't block button raycasts!
                 }
 

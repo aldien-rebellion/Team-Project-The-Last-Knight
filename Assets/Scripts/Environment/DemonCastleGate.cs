@@ -192,24 +192,24 @@ namespace TheLastKnight.Environment
             {
                 if (promptTitleText != null)
                 {
-                    promptTitleText.text = "ผนึกโบราณปราสาทปีศาจ";
+                    TheLastKnight.UI.LocalizedText.Set(promptTitleText, "ผนึกโบราณปราสาทปีศาจ");
                 }
 
                 if (runeSlotsText != null)
                 {
                     string slots = DemonRuneManager.Instance != null ? DemonRuneManager.Instance.GetRuneSlotVisualText() : $"({count}/4)";
-                    runeSlotsText.text = $"ช่องใส่รูน: {slots}";
+                    TheLastKnight.UI.LocalizedText.Set(runeSlotsText, $"ช่องใส่รูน: {slots}");
                 }
 
                 if (promptActionText != null)
                 {
                     if (hasAll)
                     {
-                        promptActionText.text = "<color=#FFFF00>กด [F] ปลดผนึกประตูด้วยรูนทั้ง 4</color>";
+                        TheLastKnight.UI.LocalizedText.Set(promptActionText, "<color=#FFFF00>กด [F] ปลดผนึกประตูด้วยรูนทั้ง 4</color>");
                     }
                     else
                     {
-                        promptActionText.text = "<color=#FF6666>ต้องการรูน 4 ชิ้นเพื่อเปิดประตู</color>";
+                        TheLastKnight.UI.LocalizedText.Set(promptActionText, "<color=#FF6666>ต้องการรูน 4 ชิ้นเพื่อเปิดประตู</color>");
                     }
                 }
             }
@@ -217,17 +217,17 @@ namespace TheLastKnight.Environment
             {
                 if (promptTitleText != null)
                 {
-                    promptTitleText.text = "ทางเข้าปราสาทปีศาจ";
+                    TheLastKnight.UI.LocalizedText.Set(promptTitleText, "ทางเข้าปราสาทปีศาจ");
                 }
 
                 if (runeSlotsText != null)
                 {
-                    runeSlotsText.text = "<color=#66FF66>ประตูเปิดแล้ว รูนทั้ง 4 ปลดผนึกสมบูรณ์</color>";
+                    TheLastKnight.UI.LocalizedText.Set(runeSlotsText, "<color=#66FF66>ประตูเปิดแล้ว รูนทั้ง 4 ปลดผนึกสมบูรณ์</color>");
                 }
 
                 if (promptActionText != null)
                 {
-                    promptActionText.text = "<color=#FFFF00>กด [F] เข้าสู่ปราสาทปีศาจ</color>";
+                    TheLastKnight.UI.LocalizedText.Set(promptActionText, "<color=#FFFF00>กด [F] เข้าสู่ปราสาทปีศาจ</color>");
                 }
             }
         }

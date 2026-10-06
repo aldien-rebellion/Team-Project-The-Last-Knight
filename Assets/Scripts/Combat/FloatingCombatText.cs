@@ -26,7 +26,7 @@ namespace TheLastKnight.Combat
                 popup.GetComponent<MeshRenderer>().sharedMaterial = _thaiFont.material;
                 break;
             }
-            popup._text.text = message;
+            TheLastKnight.UI.LocalizedText.Set(popup._text, message);
             popup._text.color = color;
             popup._text.fontSize = 48;
             popup._text.characterSize = 0.06f;

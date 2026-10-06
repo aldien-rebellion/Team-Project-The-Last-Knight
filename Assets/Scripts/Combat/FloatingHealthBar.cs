@@ -175,7 +175,7 @@ namespace TheLastKnight.Combat
             if (_levelText != null)
             {
                 _levelText.enabled = TheLastKnight.Core.GameDifficultyManager.ShowEnemyLevel;
-                _levelText.text = _targetStats != null ? "Lv. " + _targetStats.Level : "";
+                TheLastKnight.UI.LocalizedText.Set(_levelText, _targetStats != null ? "Lv. " + _targetStats.Level : "");
             }
             // Counteract parent flipping so health bar always stays upright and correctly oriented
             if (_maintainWorldScale && transform.parent != null)
@@ -317,7 +317,7 @@ namespace TheLastKnight.Combat
 
             if (_healthPercentText != null)
             {
-                _healthPercentText.text = Mathf.RoundToInt(pct * 100f) + "%";
+                TheLastKnight.UI.LocalizedText.Set(_healthPercentText, Mathf.RoundToInt(pct * 100f) + "%");
             }
         }
 

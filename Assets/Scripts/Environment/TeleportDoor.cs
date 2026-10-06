@@ -127,6 +127,7 @@ namespace TheLastKnight.Environment
 
         private void OnEnable()
         {
+            TheLastKnight.UI.LocalizedText.BindPrompt(_promptUI);
             if (!s_ActiveDoors.Contains(this))
             {
                 s_ActiveDoors.Add(this);

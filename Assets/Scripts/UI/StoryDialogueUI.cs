@@ -17,6 +17,8 @@ namespace TheLastKnight.UI
     {
         private GameObject _panel;
         private string[] _lines;
+        private string[] _sourceLines;
+        private int[] _lineOrigins;
         private int _index;
         private Text _body;
         private Text _speaker;
@@ -50,6 +52,7 @@ namespace TheLastKnight.UI
                     Destroy(canvas.gameObject);
             }
             _ending = _rolling = _cutscenePlaying = _isDialogueHidden = false; _elapsed = 0f;
+            _sourceLines = lines;
             _lines = PrepareLines(lines); _index = 0; _complete = complete; _openedFrame = Time.frameCount; _history.Clear();
             GameManager.Instance.SetInputBlocked(true); Time.timeScale = 0f;
             SetHudVisible(false);
@@ -117,27 +120,34 @@ namespace TheLastKnight.UI
             _continueHint = CreateText(_dialoguePanel.transform, "Click / Space to continue", 14, new Color(0.75f, 0.75f, 0.78f), TextAnchor.MiddleRight, new Vector2(0.65f, 0.04f), new Vector2(0.95f, 0.18f));
         }
 
-        private static string[] PrepareLines(string[] source)
+        private string[] PrepareLines(string[] source)
         {
             var prepared = new List<string>();
-            foreach (string sourceLine in source)
+            var origins = new List<int>();
+            for (int sourceIndex = 0; sourceIndex < source.Length; sourceIndex++)
             {
+                string sourceLine = source[sourceIndex];
                 if (sourceLine.StartsWith("ฉากที่", StringComparison.Ordinal))
                 {
                     prepared.Add(sourceLine);
+                    origins.Add(sourceIndex);
                     continue;
                 }
 
                 int divider = sourceLine.IndexOf("\n\n", StringComparison.Ordinal);
                 string speaker = divider >= 0 ? sourceLine.Substring(0, divider) : "บทบรรยาย";
-                string content = divider >= 0 ? sourceLine.Substring(divider + 2) : sourceLine;
+                string content = LocalizationManager.Translate(divider >= 0 ? sourceLine.Substring(divider + 2) : sourceLine);
                 content = Regex.Replace(content, @"\n(?:[ \t]*\n)+", " ");
                 content = Regex.Replace(content, @"\s+", " ").Trim();
                 content = content.Replace("—", "-").Replace("…", "...").Replace("|", ",").Replace("◆", "");
 
                 foreach (string page in SplitTextPages(content, 120))
+                {
                     prepared.Add(speaker + "\n\n" + page);
+                    origins.Add(sourceIndex);
+                }
             }
+            _lineOrigins = origins.ToArray();
             return prepared.ToArray();
         }
 
@@ -223,7 +233,7 @@ namespace TheLastKnight.UI
             label.transform.SetParent(parent, false);
             var rect = label.rectTransform;
             rect.anchorMin = anchorMin; rect.anchorMax = anchorMax; rect.offsetMin = rect.offsetMax = Vector2.zero;
-            label.font = StoryFont; label.text = value; label.fontSize = size; label.color = color; label.alignment = alignment; label.raycastTarget = false;
+            label.font = StoryFont; TheLastKnight.UI.LocalizedText.Set(label, value); label.fontSize = size; label.color = color; label.alignment = alignment; label.raycastTarget = false;
             return label;
         }
 
@@ -298,9 +308,9 @@ namespace TheLastKnight.UI
                 speaker = "Arthur Reuven";
             else
                 speaker = Regex.Replace(speaker.Replace("—", " ").Replace("◆", ""), @"\s+", " ").Trim();
-            _speaker.text = speaker;
+            TheLastKnight.UI.LocalizedText.Set(_speaker, speaker);
             _speakerPlate.SetActive(!narration);
-            _body.text = dialogue;
+            TheLastKnight.UI.LocalizedText.Set(_body, dialogue);
             _history.Add(speaker + "\n" + dialogue);
         }
 
@@ -327,6 +337,24 @@ namespace TheLastKnight.UI
             title.resizeTextMinSize = 26;
             title.resizeTextMaxSize = 38;
             _sceneTitleElapsed = 0f;
+        }
+
+        private void OnEnable() => LocalizationManager.OnLanguageChanged += RefreshLanguage;
+
+        private void OnDisable() => LocalizationManager.OnLanguageChanged -= RefreshLanguage;
+
+        private void RefreshLanguage(GameLanguage language)
+        {
+            if (_panel == null || _sourceLines == null || _rolling || _cutscenePlaying) return;
+            int scene = _currentStoryScene;
+            int sourceIndex = _lineOrigins[_index];
+            _lines = PrepareLines(_sourceLines);
+            _index = Mathf.Max(0, Array.IndexOf(_lineOrigins, sourceIndex));
+            _history.Clear();
+            if (_sceneTitlePanel != null) HideSceneTitle();
+            if (_logPanel != null) { Destroy(_logPanel); _logPanel = null; }
+            SetLine(_index);
+            _currentStoryScene = scene;
         }
 
         private void HideSceneTitle()
@@ -416,7 +444,7 @@ namespace TheLastKnight.UI
             _dialoguePanel.SetActive(!_isDialogueHidden);
             if (_hideButtonText != null)
             {
-                _hideButtonText.text = _isDialogueHidden ? "SHOW" : "HIDE";
+                TheLastKnight.UI.LocalizedText.Set(_hideButtonText, _isDialogueHidden ? "SHOW" : "HIDE");
             }
         }
 
@@ -678,7 +706,8 @@ namespace TheLastKnight.UI
 
             // Check if current line is the end of the quote:
             // "ตัวเอก\n\n“ในนามของอัศวินแห่งโบอา… ข้าจะจบสงครามนี้”"
-            if (_index >= 0 && _index < _lines.Length && _lines[_index].Contains("ข้าจะจบสงครามนี้"))
+            if (_index >= 0 && _index < _lines.Length &&
+                (_lines[_index].Contains("ข้าจะจบสงครามนี้") || _lines[_index].Contains("I will end this war")))
             {
                 StartCoroutine(PlayWarriorSkill4Cutscene());
                 return;

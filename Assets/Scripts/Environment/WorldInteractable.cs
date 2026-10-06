@@ -53,7 +53,7 @@ namespace TheLastKnight.Environment
             float promptY = transform.position.y + promptHeight;
             _prompt.transform.position = new Vector3(transform.position.x, promptY, transform.position.z);
             _prompt.gameObject.SetActive(selected);
-            _prompt.text = prompt;
+            TheLastKnight.UI.LocalizedText.Set(_prompt, prompt);
             bool fPressed = Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame;
             if (selected && fPressed) Interact();
         }
