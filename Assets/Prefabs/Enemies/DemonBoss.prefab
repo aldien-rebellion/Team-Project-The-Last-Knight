@@ -206,6 +206,7 @@ MonoBehaviour:
   _maxHealth: 800
   _defense: 10
   _attackPower: 50
+  _scalePlayerDamageWithMissingHealth: 1
   _goldReward: 8
   _expReward: 15
   _currentStatus: 0

@@ -24,6 +24,8 @@ namespace TheLastKnight.Combat
         [SerializeField] private float _maxHealth = 50f;
         [SerializeField] private float _defense = 0f;
         [SerializeField] private float _attackPower = 10f;
+        [Tooltip("Increase damage received from players by their missing HP percentage (50% HP remaining = 50% more damage).")]
+        [SerializeField] private bool _scalePlayerDamageWithMissingHealth;
         [SerializeField, HideInInspector] private int _goldReward = 8;
         [SerializeField, HideInInspector] private int _expReward = 15;
         public void SetRewards(int gold, int experience) { _goldReward = gold; _expReward = experience; }
@@ -121,6 +123,13 @@ namespace TheLastKnight.Combat
                 else if (levelDiff >= 5)  actualDamage *= 0.90f; // -10%
 
                 actualDamage = Mathf.Max(1f, actualDamage);
+            }
+
+            // Only explicit player attacks receive this bonus; environmental damage does not.
+            if (_scalePlayerDamageWithMissingHealth && damageData.attacker != null
+                && player != null && player.MaxHP > 0f)
+            {
+                actualDamage *= 1f + (1f - Mathf.Clamp01(player.HealthPercentage));
             }
 
             var attackingPlayer = damageData.attacker != null
