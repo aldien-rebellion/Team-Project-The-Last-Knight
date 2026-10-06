@@ -6,6 +6,7 @@ namespace TheLastKnight.Combat
     {
         private TextMesh _text;
         private float _remaining = 1f;
+        private static Font _thaiFont;
 
         public static void Show(Vector3 position, string message, Color color)
         {
@@ -15,6 +16,16 @@ namespace TheLastKnight.Combat
             popup.transform.position = position + Vector3.up;
             popup._text = popup.GetComponent<TextMesh>();
             if (popup._text == null) popup._text = popup.gameObject.AddComponent<TextMesh>();
+            for (int i = 0; i < message.Length; i++)
+            {
+                if (message[i] < '\u0E00' || message[i] > '\u0E7F') continue;
+                if (_thaiFont == null)
+                    _thaiFont = Font.CreateDynamicFontFromOSFont(new[] { "Tahoma", "Leelawadee UI", "Arial" }, 48)
+                        ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                popup._text.font = _thaiFont;
+                popup.GetComponent<MeshRenderer>().sharedMaterial = _thaiFont.material;
+                break;
+            }
             popup._text.text = message;
             popup._text.color = color;
             popup._text.fontSize = 48;

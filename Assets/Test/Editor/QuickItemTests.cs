@@ -429,6 +429,55 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
+        public void WorldPickup_FullInventoryExplainsFailureAndAcceptsAvailableStackSpace()
+        {
+            var playerObject = new GameObject("Test_FullBagPlayer");
+            var dropObject = new GameObject("Test_FullBagPickup");
+            var popupType = RuntimeType("TheLastKnight.Combat.FloatingCombatText");
+            var existingPopups = new HashSet<UnityEngine.Object>(UnityEngine.Object.FindObjectsByType(popupType, FindObjectsSortMode.None));
+            var pickupType = RuntimeType("TheLastKnight.Inventory.WorldItemPickup");
+            var cooldown = pickupType.GetField("_nextInventoryFullNoticeTime", BindingFlags.Static | BindingFlags.NonPublic);
+            float originalCooldown = (float)cooldown.GetValue(null);
+            try
+            {
+                for (int i = 0; i < 24; i++) Set(Bag, i, "church_key", 1);
+                for (int i = 0; i < 5; i++) Set(Quick, i, "church_key", 1);
+                var player = playerObject.AddComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                player.GetType().GetField("_currentHP", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(player, 100f);
+                var body = playerObject.AddComponent<BoxCollider2D>();
+                var pickup = dropObject.AddComponent(pickupType);
+                Call(pickup, "Initialize", Item("potion_undying", 2), 0f);
+                pickupType.GetField("_spawnTime", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(pickup, Time.time - 1f);
+                cooldown.SetValue(null, Time.unscaledTime - 1f);
+                Call(pickup, "TryPickup", body);
+                Assert.That(Count(pickupType.GetProperty("ItemData").GetValue(pickup)), Is.EqualTo(2), "Full bags must not destroy unaccepted loot.");
+                var popups = UnityEngine.Object.FindObjectsByType(popupType, FindObjectsSortMode.None).Except(existingPopups).Cast<Component>().ToArray();
+                Assert.That(popups.Count(popup => popup.GetComponent<TextMesh>().text == "กระเป๋าเต็ม"), Is.EqualTo(1));
+                Call(pickup, "TryPickup", body);
+                Assert.That(UnityEngine.Object.FindObjectsByType(popupType, FindObjectsSortMode.None).Except(existingPopups).Count(), Is.EqualTo(1),
+                    "Repeated trigger callbacks must not spam full-bag notices.");
+                Set(Bag, 0, "potion_undying", 63);
+                Call(pickup, "TryPickup", body);
+                Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(64), "Matching stacks can accept loot even with every slot occupied.");
+                Assert.That(Count(pickupType.GetProperty("ItemData").GetValue(pickup)), Is.EqualTo(1), "Only the unaccepted remainder stays on the floor.");
+                Set(Bag, 0, "potion_undying", 62);
+                Call(pickup, "Initialize", Item("potion_undying", 3), 0f);
+                pickupType.GetField("_spawnTime", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(pickup, Time.time - 1f);
+                Call(pickup, "TryPickup", body);
+                Assert.That(Count(Slot(Bag, 0)), Is.EqualTo(64));
+                Assert.That(Count(pickupType.GetProperty("ItemData").GetValue(pickup)), Is.EqualTo(1));
+            }
+            finally
+            {
+                cooldown.SetValue(null, originalCooldown);
+                foreach (Component popup in UnityEngine.Object.FindObjectsByType(popupType, FindObjectsSortMode.None).Except(existingPopups))
+                    UnityEngine.Object.DestroyImmediate(popup.gameObject);
+                UnityEngine.Object.DestroyImmediate(dropObject);
+                UnityEngine.Object.DestroyImmediate(playerObject);
+            }
+        }
+
+        [Test]
         public void WorldDrops_OneThenAll_AndFullBagClose_PreserveQuantities()
         {
             var pickupType = RuntimeType("TheLastKnight.Inventory.WorldItemPickup");

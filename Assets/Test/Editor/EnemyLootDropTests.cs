@@ -110,6 +110,258 @@ namespace TheLastKnight.Tests
             }
         }
 
+        [TestCase("drop_blueslime", 2f, 0f, 0f)]
+        [TestCase("drop_demonboss", 12f, 0f, 0f)]
+        [TestCase("drop_blueslime", 2f, 2f, 0f)]
+        [TestCase("drop_blueslime", 2f, 0f, 15f)]
+        [TestCase("drop_blueslime", -1.4f, 0f, 0f)]
+        [TestCase("drop_mechastonegolem", -1.4f, 0f, 0f)]
+        [TestCase("drop_volcanox", -1.4f, 0f, 0f)]
+        [TestCase("drop_blueslime", -1.4f, 0f, 0f, false)]
+        public void Pickup_LandsOnActualGroundWithoutBobbing(string itemId, float height, float landingX, float slope, bool startInColliders = true)
+        {
+            var randomState = UnityEngine.Random.state;
+            bool originalStartInColliders = Physics2D.queriesStartInColliders;
+            Physics2D.queriesStartInColliders = startInColliders;
+            var ground = new GameObject("Loot grounding test floor");
+            var enemy = new GameObject("Loot grounding test enemy");
+            GameObject pickupObject = null;
+            try
+            {
+                Vector3 origin = new Vector3(10000f, 1000f, 0f);
+                ground.transform.position = origin + new Vector3(landingX, -0.5f, 0f);
+                ground.transform.rotation = Quaternion.Euler(0f, 0f, slope);
+                ground.AddComponent<BoxCollider2D>().size = new Vector2(landingX == 0f ? 10f : 1.5f, 1f);
+                enemy.transform.position = origin + Vector3.up;
+                enemy.AddComponent(FindType("TheLastKnight.Combat.EnemyStats"));
+                enemy.AddComponent<BoxCollider2D>().size = Vector2.one;
+                Physics2D.SyncTransforms();
+
+                var pickupType = FindType("TheLastKnight.Inventory.WorldItemPickup");
+                var registryType = FindType("TheLastKnight.Inventory.ItemRegistry");
+                var item = registryType.GetMethod("CreateItem", new[] { typeof(string), typeof(int) })
+                    .Invoke(null, new object[] { itemId, 1 });
+                var pickup = (Component)pickupType.GetMethod("Spawn", StaticMembers)
+                    .Invoke(null, new object[] { item, origin + Vector3.up * height });
+                pickupObject = pickup.gameObject;
+                pickupObject.transform.position += Vector3.right * landingX;
+                pickupType.GetField("_velocity", InstanceMembers).SetValue(pickup, Vector2.zero);
+                var simulate = pickupType.GetMethod("SimulateFall", InstanceMembers);
+                var settled = pickupType.GetField("_isSettled", InstanceMembers);
+                for (int i = 0; i < 500 && !(bool)settled.GetValue(pickup); i++)
+                    simulate.Invoke(pickup, new object[] { 0.02f });
+                Assert.IsTrue((bool)settled.GetValue(pickup), "Must reach the terrain even after a long fall.");
+                var bounds = pickupObject.GetComponent<SpriteRenderer>().bounds;
+                float surface = float.NegativeInfinity;
+                for (int i = -1; i <= 1; i++)
+                {
+                    foreach (var hit in Physics2D.RaycastAll(
+                        new Vector2(bounds.center.x + i * bounds.extents.x, origin.y + 20f), Vector2.down, 40f))
+                        if (hit.collider.gameObject == ground) surface = Mathf.Max(surface, hit.point.y);
+                }
+                Assert.That(bounds.min.y - surface, Is.EqualTo(0.01f).Within(0.002f), "Icon bottom must rest on terrain, not on the monster.");
+                Vector3 restingPosition = pickupObject.transform.position;
+                pickupType.GetMethod("Update", InstanceMembers).Invoke(pickup, null);
+                Assert.AreEqual(restingPosition, pickupObject.transform.position, "Landed loot must not bob into or above the ground.");
+            }
+            finally
+            {
+                if (pickupObject != null) UnityEngine.Object.DestroyImmediate(pickupObject);
+                UnityEngine.Object.DestroyImmediate(enemy);
+                UnityEngine.Object.DestroyImmediate(ground);
+                Physics2D.SyncTransforms();
+                UnityEngine.Random.state = randomState;
+                Physics2D.queriesStartInColliders = originalStartInColliders;
+            }
+        }
+
+        [Test]
+        public void All28MonsterPickups_LandOnLoadedCityCenterGround()
+        {
+            var verificationScene = UnityEngine.SceneManagement.SceneManager.GetSceneByPath("Assets/Scenes/Maps/CityCenter.unity");
+            bool openedScene = !verificationScene.isLoaded;
+            if (openedScene)
+                verificationScene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(
+                    "Assets/Scenes/Maps/CityCenter.unity", UnityEditor.SceneManagement.OpenSceneMode.Additive);
+            var ground = UnityEngine.Object.FindObjectsByType<BoxCollider2D>(FindObjectsSortMode.None)
+                .FirstOrDefault(collider => collider.name == "Ground" && collider.gameObject.scene.name == "CityCenter");
+            var randomState = UnityEngine.Random.state;
+            var spawned = new List<GameObject>();
+            try
+            {
+                Assert.IsNotNull(ground, "CityCenter must have its actual floor collider.");
+                Physics2D.SyncTransforms();
+                var pickupType = FindType("TheLastKnight.Inventory.WorldItemPickup");
+                var createItem = FindType("TheLastKnight.Inventory.ItemRegistry")
+                    .GetMethod("CreateItem", new[] { typeof(string), typeof(int) });
+                var spawn = pickupType.GetMethod("Spawn", StaticMembers);
+                var simulate = pickupType.GetMethod("SimulateFall", InstanceMembers);
+                var settled = pickupType.GetField("_isSettled", InstanceMembers);
+                for (int index = 0; index < _monsters.Length; index++)
+                {
+                    var monster = _monsters[index];
+                    float x = ground.bounds.center.x + index - 14f;
+                    float y = ground.bounds.max.y + (index % 2 == 0 ? -1.4f : 12f);
+                    var item = createItem.Invoke(null, new object[] { monster.itemId, 1 });
+                    var pickup = (Component)spawn.Invoke(null, new object[] { item, new Vector3(x, y, 0f) });
+                    spawned.Add(pickup.gameObject);
+                    for (int step = 0; step < 500 && !(bool)settled.GetValue(pickup); step++)
+                        simulate.Invoke(pickup, new object[] { 0.02f });
+                    Assert.IsTrue((bool)settled.GetValue(pickup), monster.itemId + " must land.");
+                    Assert.That(pickup.GetComponent<SpriteRenderer>().bounds.min.y - ground.bounds.max.y,
+                        Is.EqualTo(0.01f).Within(0.002f), monster.itemId + " must remain above CityCenter's floor.");
+                }
+            }
+            finally
+            {
+                foreach (var pickup in spawned) UnityEngine.Object.DestroyImmediate(pickup);
+                Physics2D.SyncTransforms();
+                UnityEngine.Random.state = randomState;
+                if (openedScene) UnityEditor.SceneManagement.EditorSceneManager.CloseScene(verificationScene, true);
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void DemonKinPrefab_DropsAboveFloorEvenWhenDeathDisablesBody(bool disabledBody)
+        {
+            var randomState = UnityEngine.Random.state;
+            var ground = new GameObject("DemonKin actual pivot regression floor");
+            GameObject enemy = null;
+            var spawned = new List<GameObject>();
+            try
+            {
+                Vector3 origin = new Vector3(10000f, 1000f, 0f);
+                ground.transform.position = origin - Vector3.up * 0.5f;
+                ground.AddComponent<BoxCollider2D>().size = new Vector2(20f, 1f);
+                var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemies/DemonKin.prefab");
+                enemy = UnityEngine.Object.Instantiate(prefab);
+                var body = enemy.GetComponent<CapsuleCollider2D>();
+                float rootToFeet = (body.offset.y - body.size.y * 0.5f) * enemy.transform.localScale.y;
+                enemy.transform.position = origin - Vector3.up * rootToFeet;
+                Assert.Less(enemy.transform.position.y, ground.GetComponent<BoxCollider2D>().bounds.min.y,
+                    "The real DemonKin pivot must be below the entire floor collider to reproduce the bug.");
+                Physics2D.SyncTransforms();
+                body.enabled = !disabledBody;
+                var lootType = FindType("TheLastKnight.Combat.EnemyLootDrop");
+                var loot = enemy.GetComponent(lootType);
+                lootType.GetProperty("DropChance").SetValue(loot, 1f);
+                lootType.GetProperty("DropRolls").SetValue(loot, 3);
+                lootType.GetMethod("DropLoot").Invoke(loot, null);
+                var pickupType = FindType("TheLastKnight.Inventory.WorldItemPickup");
+                var simulate = pickupType.GetMethod("SimulateFall", InstanceMembers);
+                var settled = pickupType.GetField("_isSettled", InstanceMembers);
+                foreach (Component pickup in UnityEngine.Object.FindObjectsByType(pickupType, FindObjectsSortMode.None))
+                {
+                    spawned.Add(pickup.gameObject);
+                    Assert.Greater(pickup.GetComponent<SpriteRenderer>().bounds.min.y, origin.y,
+                        "Loot must start above the floor, not at DemonKin's underground pivot.");
+                    for (int step = 0; step < 500 && !(bool)settled.GetValue(pickup); step++)
+                        simulate.Invoke(pickup, new object[] { 0.02f });
+                    Assert.IsTrue((bool)settled.GetValue(pickup));
+                    Assert.That(pickup.GetComponent<SpriteRenderer>().bounds.min.y - origin.y,
+                        Is.EqualTo(0.01f).Within(0.002f));
+                }
+                Assert.AreEqual(3, spawned.Count);
+            }
+            finally
+            {
+                foreach (var pickup in spawned) UnityEngine.Object.DestroyImmediate(pickup);
+                if (enemy != null) UnityEngine.Object.DestroyImmediate(enemy);
+                UnityEngine.Object.DestroyImmediate(ground);
+                Physics2D.SyncTransforms();
+                UnityEngine.Random.state = randomState;
+            }
+        }
+
+        public static IEnumerable<TestCaseData> EnemyPrefabDropCases()
+        {
+            foreach (var path in System.IO.Directory.GetFiles("Assets/Prefabs/Enemies", "*.prefab").OrderBy(path => path))
+                foreach (bool disabledBody in new[] { false, true })
+                    foreach (float height in new[] { 0f, 8f })
+                        yield return new TestCaseData(path.Replace('\\', '/'), disabledBody, height)
+                            .SetName("MonsterPrefabDrop_" + System.IO.Path.GetFileNameWithoutExtension(path)
+                                + "_" + (disabledBody ? "Dead" : "Alive") + "_Height" + height);
+        }
+
+        [TestCaseSource(nameof(EnemyPrefabDropCases))]
+        public void MonsterPrefabDrop_LandsAboveFloor(string prefabPath, bool disabledBody, float height)
+        {
+            var randomState = UnityEngine.Random.state;
+            var ground = new GameObject("Monster prefab drop audit floor");
+            GameObject enemy = null;
+            var spawned = new List<GameObject>();
+            var pickupType = FindType("TheLastKnight.Inventory.WorldItemPickup");
+            var existingPickups = new HashSet<UnityEngine.Object>(UnityEngine.Object.FindObjectsByType(pickupType, FindObjectsSortMode.None));
+            try
+            {
+                Vector3 origin = new Vector3(10000f, 1000f, 0f);
+                ground.transform.position = origin - Vector3.up * 0.5f;
+                ground.AddComponent<BoxCollider2D>().size = new Vector2(100f, 1f);
+                enemy = UnityEngine.Object.Instantiate(UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath));
+                var body = enemy.GetComponents<Collider2D>().FirstOrDefault(collider => !collider.isTrigger);
+                Assert.IsNotNull(body, prefabPath + " must have a solid body collider.");
+                body.enabled = true;
+                enemy.transform.position = origin;
+                Physics2D.SyncTransforms();
+                enemy.transform.position += Vector3.up * (origin.y + height - body.bounds.min.y);
+                Physics2D.SyncTransforms();
+                float pivotBelowFeet = body.bounds.min.y - enemy.transform.position.y;
+                if (!disabledBody && height == 0f)
+                    TestContext.WriteLine("PIVOT " + System.IO.Path.GetFileNameWithoutExtension(prefabPath)
+                        + " belowFeet=" + pivotBelowFeet.ToString("F3")
+                        + " oldSpawnBelowFloor=" + (enemy.transform.position.y + 0.5f < origin.y));
+                var expectedFeet = new Vector3(body.bounds.center.x, body.bounds.min.y, enemy.transform.position.z);
+                if (disabledBody)
+                    foreach (var collider in enemy.GetComponentsInChildren<Collider2D>()) collider.enabled = false;
+                var lootType = FindType("TheLastKnight.Combat.EnemyLootDrop");
+                var loot = enemy.GetComponent(lootType);
+                if (loot != null)
+                {
+                    lootType.GetProperty("DropChance").SetValue(loot, 1f);
+                    lootType.GetProperty("DropRolls").SetValue(loot, 3);
+                    lootType.GetProperty("BossGuaranteedCount").SetValue(loot, 1);
+                    lootType.GetMethod("DropLoot").Invoke(loot, null);
+                }
+                else
+                {
+                    Assert.AreEqual("MoonstoneKeeper.prefab", System.IO.Path.GetFileName(prefabPath),
+                        "Unexpected monster without EnemyLootDrop.");
+                    var dropPosition = (Vector3)pickupType.GetMethod("GetDropPosition", StaticMembers)
+                        .Invoke(null, new object[] { enemy.transform });
+                    Assert.That(Vector3.Distance(dropPosition, expectedFeet), Is.LessThan(0.002f));
+                    var item = FindType("TheLastKnight.Inventory.ItemRegistry")
+                        .GetMethod("CreateItem", new[] { typeof(string), typeof(int) })
+                        .Invoke(null, new object[] { "moonstone_shard", 1 });
+                    pickupType.GetMethod("Spawn", StaticMembers).Invoke(null, new object[] { item, dropPosition });
+                }
+                var simulate = pickupType.GetMethod("SimulateFall", InstanceMembers);
+                var settled = pickupType.GetField("_isSettled", InstanceMembers);
+                foreach (Component pickup in UnityEngine.Object.FindObjectsByType(pickupType, FindObjectsSortMode.None))
+                {
+                    if (existingPickups.Contains(pickup)) continue;
+                    spawned.Add(pickup.gameObject);
+                    Assert.Greater(pickup.GetComponent<SpriteRenderer>().bounds.min.y, origin.y,
+                        prefabPath + " must spawn loot above the floor.");
+                    for (int step = 0; step < 600 && !(bool)settled.GetValue(pickup); step++)
+                        simulate.Invoke(pickup, new object[] { step % 3 == 0 ? 0.1f : 0.02f });
+                    Assert.IsTrue((bool)settled.GetValue(pickup), prefabPath + " loot must land.");
+                    Assert.That(pickup.GetComponent<SpriteRenderer>().bounds.min.y - origin.y,
+                        Is.EqualTo(0.01f).Within(0.002f), prefabPath + " loot must stay above the floor.");
+                }
+                Assert.IsNotEmpty(spawned, prefabPath + " must drop its configured item.");
+            }
+            finally
+            {
+                foreach (Component pickup in UnityEngine.Object.FindObjectsByType(pickupType, FindObjectsSortMode.None))
+                    if (!existingPickups.Contains(pickup)) UnityEngine.Object.DestroyImmediate(pickup.gameObject);
+                if (enemy != null) UnityEngine.Object.DestroyImmediate(enemy);
+                UnityEngine.Object.DestroyImmediate(ground);
+                Physics2D.SyncTransforms();
+                UnityEngine.Random.state = randomState;
+            }
+        }
+
         [Test]
         public void Boss_AlwaysDropsGuaranteedOneItem()
         {

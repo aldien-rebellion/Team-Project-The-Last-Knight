@@ -16,9 +16,10 @@ namespace TheLastKnight.Environment
         private void OnDisable() { GetComponent<EnemyStats>().OnDeath -= Award; }
         private void Award()
         {
+            Vector3 dropPosition = WorldItemPickup.GetDropPosition(transform);
             if (churchKey)
             {
-                WorldItemPickup.Spawn(ItemRegistry.CreateItem("church_key", 1), transform.position);
+                WorldItemPickup.Spawn(ItemRegistry.CreateItem("church_key", 1), dropPosition);
                 var gameManager = GameManager.Instance;
                 if (gameManager != null)
                 {
@@ -30,9 +31,9 @@ namespace TheLastKnight.Environment
             }
             if (moonstoneShard || (name != null && name.IndexOf("MoonstoneKeeper", System.StringComparison.OrdinalIgnoreCase) >= 0))
             {
-                WorldItemPickup.Spawn(ItemRegistry.CreateItem("moonstone_shard", 1), transform.position);
+                WorldItemPickup.Spawn(ItemRegistry.CreateItem("moonstone_shard", 1), dropPosition);
             }
-            if (runeIndex >= 0) DemonRuneManager.Instance.DropRune(runeIndex, transform.position);
+            if (runeIndex >= 0) DemonRuneManager.Instance.DropRune(runeIndex, dropPosition);
             if (finalBoss)
             {
                 GameManager.Instance.State.victory = true;

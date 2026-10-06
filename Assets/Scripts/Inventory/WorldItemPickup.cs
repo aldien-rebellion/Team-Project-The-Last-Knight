@@ -12,13 +12,16 @@ namespace TheLastKnight.Inventory
         public InventoryItemData ItemData => _itemData;
 
         private SpriteRenderer _spriteRenderer;
-        private Vector3 _basePosition;
         private float _spawnTime;
         private bool _isSettled;
         private Vector2 _velocity;
-        private float _floorY;
+        private const float GroundClearance = 0.01f;
+        // Match the usual 32 px loot icons at 100 pixels per unit and 1.1 scale.
+        private const float MaxIconWorldSize = 0.352f;
+        private const float PickupWorldRadius = 0.495f;
         private const float Gravity = -14f;
         private const float PickupDelay = 0.5f;
+        private static float _nextInventoryFullNoticeTime;
         private bool _collected;
         private PlayerStats _dropOwner;
         private Collider2D[] _ownerColliders;
@@ -60,24 +63,38 @@ namespace TheLastKnight.Inventory
             if (item != null) Initialize(item, transform.position.y);
         }
 
+        public static Vector3 GetDropPosition(Transform source)
+        {
+            // Monster artwork can place the root pivot below the map. Use the body feet.
+            // Read local geometry because EnemyController disables colliders before loot callbacks.
+            foreach (var collider in source.GetComponents<Collider2D>())
+            {
+                if (collider.isTrigger) continue;
+                Vector2 feet;
+                if (collider is CapsuleCollider2D capsule)
+                    feet = capsule.offset - Vector2.up * (capsule.size.y * 0.5f);
+                else if (collider is BoxCollider2D box)
+                    feet = box.offset - Vector2.up * (box.size.y * 0.5f);
+                else if (collider is CircleCollider2D circle)
+                    feet = circle.offset - Vector2.up * circle.radius;
+                else if (collider.enabled && collider.gameObject.activeInHierarchy)
+                    return new Vector3(collider.bounds.center.x, collider.bounds.min.y, source.position.z);
+                else
+                    continue;
+                return source.TransformPoint(feet);
+            }
+            return source.position;
+        }
+
         public static WorldItemPickup Spawn(InventoryItemData item, Vector3 position)
         {
             if (item == null || item.count <= 0) return null;
 
             var go = new GameObject($"Pickup_{item.id}");
-            // Raycast down slightly to find ground level
-            float floorLevel = position.y;
-            foreach (var hit in Physics2D.RaycastAll(position + Vector3.up * 0.2f, Vector2.down, 4f))
-            {
-                if (hit.collider.isTrigger || hit.collider.GetComponentInParent<PlayerStats>() != null) continue;
-                floorLevel = hit.point.y + 0.35f;
-                break;
-            }
-
             go.transform.position = position + Vector3.up * 0.5f;
 
             var pickup = go.AddComponent<WorldItemPickup>();
-            pickup.Initialize(item, floorLevel);
+            pickup.Initialize(item, position.y);
             int rune = TheLastKnight.Environment.DemonRuneManager.ItemIndex(item.id);
             if (rune >= 0 && TheLastKnight.Environment.DemonRuneManager.Instance != null)
                 TheLastKnight.Environment.DemonRuneManager.Instance.TrackDrop(rune, position);
@@ -88,7 +105,6 @@ namespace TheLastKnight.Inventory
         {
             _itemData = item.Clone();
             _spawnTime = Time.time;
-            _floorY = floorLevel;
 
             _collected = false;
             _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -96,11 +112,29 @@ namespace TheLastKnight.Inventory
             _spriteRenderer.sprite = item.Icon;
             _spriteRenderer.sortingOrder = 50;
 
-            transform.localScale = Vector3.one * 1.1f;
+            float iconScale = 1.1f;
+            if (_spriteRenderer.sprite != null)
+            {
+                Vector3 iconSize = _spriteRenderer.sprite.bounds.size;
+                float longestSide = Mathf.Max(iconSize.x, iconSize.y);
+                if (longestSide > 0f)
+                    iconScale = Mathf.Min(iconScale, MaxIconWorldSize / longestSide);
+            }
+            transform.localScale = Vector3.one * iconScale;
 
             var col = GetComponent<CircleCollider2D>();
             col.isTrigger = true;
-            col.radius = 0.45f;
+            // Keep the pickup reach consistent when only the picture needs shrinking.
+            col.radius = PickupWorldRadius / iconScale;
+
+            // Resolve an overlapping spawn using the visual bottom, not the pickup trigger.
+            float bottomOffset = transform.position.y - _spriteRenderer.bounds.min.y;
+            if (TryFindGround(transform.position.x, Mathf.Max(transform.position.y, floorLevel) + 0.5f,
+                bottomOffset + 1f, out float groundY) && transform.position.y - bottomOffset < groundY)
+            {
+                transform.position = new Vector3(transform.position.x,
+                    groundY + bottomOffset + GroundClearance, transform.position.z);
+            }
 
             // Initial pop velocity
             float randomX = UnityEngine.Random.Range(-1.6f, 1.6f);
@@ -114,23 +148,71 @@ namespace TheLastKnight.Inventory
             if (_itemData == null || string.IsNullOrEmpty(_itemData.id) || _itemData.count <= 0) return;
             if (!_isSettled)
             {
-                _velocity.y += Gravity * Time.deltaTime;
-                transform.position += (Vector3)(_velocity * Time.deltaTime);
-
-                if (transform.position.y <= _floorY && _velocity.y < 0)
-                {
-                    transform.position = new Vector3(transform.position.x, _floorY, transform.position.z);
-                    _basePosition = transform.position;
-                    _isSettled = true;
-                }
-            }
-            else
-            {
-                // Smooth Minecraft-style bobbing sine wave
-                float bob = Mathf.Sin((Time.time - _spawnTime) * 3f) * 0.12f;
-                transform.position = new Vector3(_basePosition.x, _basePosition.y + bob, _basePosition.z);
+                SimulateFall(Time.deltaTime);
             }
             UpdateOwnerSeparation();
+        }
+
+        private void SimulateFall(float deltaTime)
+        {
+            float bottomOffset = transform.position.y - _spriteRenderer.bounds.min.y;
+            Vector3 previous = transform.position;
+            _velocity.y += Gravity * deltaTime;
+            Vector3 next = previous + (Vector3)(_velocity * deltaTime);
+            float originY = previous.y + GroundClearance;
+            float distance = originY - (next.y - bottomOffset) + GroundClearance;
+
+            // Sweep at the landing X so slopes, ledges and long falls use the actual surface.
+            if (_velocity.y < 0f && TryFindGround(next.x, originY, distance, out float groundY)
+                && next.y - bottomOffset <= groundY + GroundClearance)
+            {
+                next.y = groundY + bottomOffset + GroundClearance;
+                _velocity = Vector2.zero;
+                _isSettled = true;
+            }
+            transform.position = next;
+        }
+
+        private bool TryFindGround(float x, float originY, float distance, out float groundY)
+        {
+            groundY = float.NegativeInfinity;
+            float halfWidth = _spriteRenderer.bounds.extents.x;
+            // Check both edges too, keeping the whole icon above sloped terrain.
+            for (int i = -1; i <= 1; i++)
+            {
+                var origin = new Vector2(x + i * halfWidth, originY);
+                // A ray starting inside solid ground has no usable surface normal.
+                // Query overlaps explicitly so this also works when start-in-collider hits are disabled.
+                foreach (var collider in Physics2D.OverlapPointAll(origin))
+                {
+                    if (!IsGroundCollider(collider)) continue;
+                    var bounds = collider.bounds;
+                    var surfaceOrigin = new Vector2(origin.x, bounds.max.y + GroundClearance);
+                    foreach (var surface in Physics2D.RaycastAll(surfaceOrigin, Vector2.down,
+                        bounds.size.y + GroundClearance * 2f))
+                    {
+                        if (surface.collider != collider || surface.fraction <= 0f || surface.normal.y <= 0.01f) continue;
+                        groundY = Mathf.Max(groundY, surface.point.y);
+                        break;
+                    }
+                }
+                foreach (var hit in Physics2D.RaycastAll(origin, Vector2.down, distance))
+                {
+                    var collider = hit.collider;
+                    if (!IsGroundCollider(collider) || hit.fraction <= 0f || hit.normal.y <= 0.01f) continue;
+                    groundY = Mathf.Max(groundY, hit.point.y);
+                    break;
+                }
+            }
+            return !float.IsNegativeInfinity(groundY);
+        }
+
+        private static bool IsGroundCollider(Collider2D collider)
+        {
+            return !collider.isTrigger
+                && collider.GetComponentInParent<PlayerStats>() == null
+                && collider.GetComponentInParent<EnemyStats>() == null
+                && collider.GetComponentInParent<WorldItemPickup>() == null;
         }
 
         private void OnTriggerStay2D(Collider2D other)
@@ -160,9 +242,17 @@ namespace TheLastKnight.Inventory
             if (_waitForOwnerSeparation && player == _dropOwner) return;
 
             int initialCount = _itemData.count;
-            int remaining = InventoryManager.Instance != null
-                ? InventoryManager.Instance.AddItem(_itemData)
-                : _itemData.count;
+            var inventory = InventoryManager.Instance;
+            if (inventory == null) return;
+            int remaining = inventory.AddItem(_itemData);
+
+            // Failed and partial pickups used to be silent when no slot could accept more.
+            if (remaining > 0 && Time.unscaledTime >= _nextInventoryFullNoticeTime)
+            {
+                _nextInventoryFullNoticeTime = Time.unscaledTime + 2f;
+                FloatingCombatText.Show(player.transform.position + Vector3.up,
+                    "กระเป๋าเต็ม", new Color(1f, 0.65f, 0.25f));
+            }
 
             int pickedUp = initialCount - remaining;
             if (pickedUp > 0)
