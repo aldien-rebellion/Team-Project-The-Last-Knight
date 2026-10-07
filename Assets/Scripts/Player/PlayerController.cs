@@ -229,6 +229,24 @@ namespace TheLastKnight.Player
         private Vector2 _velocity;
         public Vector2 Velocity => _velocity;
         public void ResetVelocity() => _velocity = Vector2.zero;
+
+        private MonoBehaviour _fairyCarryOwner;
+        public bool IsFairyCarried => _fairyCarryOwner != null;
+
+        public bool TryBeginFairyCarry(MonoBehaviour owner)
+        {
+            if (owner == null || IsFairyCarried || !isActiveAndEnabled || CurrentState != PlayerState.Idle) return false;
+            _fairyCarryOwner = owner;
+            ResetVelocity();
+            return true;
+        }
+
+        public void EndFairyCarry(MonoBehaviour owner)
+        {
+            if (_fairyCarryOwner != owner) return;
+            _fairyCarryOwner = null;
+            ResetVelocity();
+        }
         public bool IsFacingRight { get; private set; } = true;
 
         /// <summary>
@@ -345,6 +363,7 @@ namespace TheLastKnight.Player
         {
             var stats = GetComponent<PlayerStats>();
             if (stats != null && stats.IsDead) return;
+            if (IsFairyCarried) { ResetVelocity(); return; }
 
             // Update Dash i-Frame Timer
             if (_dashIFrameTimer > 0f)

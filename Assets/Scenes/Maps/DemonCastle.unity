@@ -788,6 +788,70 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.067462, y: 6.8871794}
   m_EdgeRadius: 0
+--- !u!1 &35648231
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 35648233}
+  - component: {fileID: 35648232}
+  m_Layer: 0
+  m_Name: DemonCastle Fairy Lift
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &35648232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35648231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d808dced5b5c3cf42993bb26567ff7d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastKnight.Environment.DemonCastleFairyLift
+  _sourceShelf: {fileID: 1787821567}
+  _leftLanding: {fileID: 830580580}
+  _rightLanding: {fileID: 458784867}
+  _fairyAnimation: {fileID: 9100000, guid: e99e90c4474296e42a4b0f6260b1df7f, type: 2}
+  _firstFrames:
+  - {fileID: 4164213114258598589, guid: 5e7116c0b33c98046b2185a9cc573b3e, type: 3}
+  - {fileID: -8496419234733875833, guid: 32aecdee9343fb9489c6d894e7f86001, type: 3}
+  - {fileID: -8576890578096270759, guid: 5d4bb2b654215df4bb6df314cfb319c0, type: 3}
+  _dustSprite: {fileID: -8863538631117456611, guid: b4000314f954afe4d8f798f578a70d24, type: 3}
+  _interior:
+    serializedVersion: 2
+    x: -110.1
+    y: 27.4
+    width: 38
+    height: 19.1
+  _idleSeconds: 2
+  _approachSeconds: 0.9
+  _flightSpeed: 3.5
+  _lingerSeconds: 2
+  _fairyScale: 2.2
+--- !u!4 &35648233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35648231}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &35874594
 GameObject:
   m_ObjectHideFlags: 0
@@ -130996,3 +131060,4 @@ SceneRoots:
   - {fileID: 1393626945}
   - {fileID: 914654001}
   - {fileID: 1237439933}
+  - {fileID: 35648233}
