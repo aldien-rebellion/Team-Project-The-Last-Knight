@@ -111,6 +111,8 @@ namespace TheLastKnight.Inventory
             _spriteRenderer = GetComponent<SpriteRenderer>();
             if (_spriteRenderer == null) _spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
             _spriteRenderer.sprite = item.Icon;
+            // Render drops above world props, including Medusa save points.
+            _spriteRenderer.sortingLayerName = "ItemDrops";
             _spriteRenderer.sortingOrder = 50;
 
             float iconScale = 1.1f;
