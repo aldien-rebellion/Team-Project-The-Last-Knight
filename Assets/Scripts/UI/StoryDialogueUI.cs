@@ -655,7 +655,7 @@ namespace TheLastKnight.UI
             if (assetCredits == null) Debug.LogError("End-credit asset list is missing.");
             // Credits retain the original game, team, asset and creator names in both languages.
             var text = CreateText(viewport.transform,
-                "<size=44><b>THE LAST KNIGHT</b></size>\n\nBOA\n\n\nCreated by\nThe Ngu lueam team\n\n\nAn oath endures.\nBoa's story continues.\n\n\n" +
+                "<size=44><b>THE LAST KNIGHT</b></size>\n\nBOA KINGDOM\n\n\nCreated by\nThe Ngu lueam team\n\n\nAn oath endures.\nBoa's story continues.\n\n\n" +
                 (assetCredits != null ? assetCredits.text.Trim() + "\n\n\n" : "") +
                 "Thank you for playing.", 24, Color.white, TextAnchor.UpperCenter, new Vector2(0.05f, 1f), new Vector2(0.95f, 1f), false);
             text.supportRichText = true;
