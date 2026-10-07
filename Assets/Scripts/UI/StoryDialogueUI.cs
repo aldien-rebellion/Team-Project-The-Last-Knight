@@ -35,6 +35,7 @@ namespace TheLastKnight.UI
         private float _elapsed;
         private float _sceneTitleElapsed;
         private RectTransform _credits, _creditsViewport;
+        private const float CreditsScrollSpeed = 32f;
         private readonly List<string> _history = new List<string>();
         private GameObject _logPanel;
         private HUDController _hud;
@@ -227,13 +228,16 @@ namespace TheLastKnight.UI
             }
         }
 
-        private static Text CreateText(Transform parent, string value, int size, Color color, TextAnchor alignment, Vector2 anchorMin, Vector2 anchorMax)
+        private static Text CreateText(Transform parent, string value, int size, Color color, TextAnchor alignment, Vector2 anchorMin, Vector2 anchorMax, bool localize = true)
         {
             var label = new GameObject("Text", typeof(RectTransform), typeof(Text)).GetComponent<Text>();
             label.transform.SetParent(parent, false);
             var rect = label.rectTransform;
             rect.anchorMin = anchorMin; rect.anchorMax = anchorMax; rect.offsetMin = rect.offsetMax = Vector2.zero;
-            label.font = StoryFont; TheLastKnight.UI.LocalizedText.Set(label, value); label.fontSize = size; label.color = color; label.alignment = alignment; label.raycastTarget = false;
+            label.font = StoryFont;
+            if (localize) TheLastKnight.UI.LocalizedText.Set(label, value);
+            else label.text = value;
+            label.fontSize = size; label.color = color; label.alignment = alignment; label.raycastTarget = false;
             return label;
         }
 
@@ -640,16 +644,27 @@ namespace TheLastKnight.UI
             _rolling = true; _elapsed = 0f;
             _speaker.transform.parent.gameObject.SetActive(false);
             _body.transform.parent.gameObject.SetActive(false);
-            var viewport = CreatePanel(_panel.transform.Find("Backdrop"), "Rolling Credits", new Color(0.01f, 0.01f, 0.02f, 0.92f), new Vector2(0.25f, 0.12f), new Vector2(0.75f, 0.88f));
+            var viewport = CreatePanel(_panel.transform.Find("Backdrop"), "Rolling Credits", new Color(0.01f, 0.01f, 0.02f, 0.92f), new Vector2(0.12f, 0.12f), new Vector2(0.88f, 0.88f));
             viewport.AddComponent<RectMask2D>();
             _creditsViewport = viewport.GetComponent<RectTransform>();
+            var assetCredits = Resources.Load<TextAsset>("Credits/EndCreditAssets");
+            if (assetCredits == null) Debug.LogError("End-credit asset list is missing.");
+            // Credits retain the original game, team, asset and creator names in both languages.
             var text = CreateText(viewport.transform,
-                "THE LAST KNIGHT\n\nBOA\n\n\nCreated by\nThe Last Knight team\n\n\nAn oath endures.\nBoa's story continues.\n\n\nThank you for playing.", 28, Color.white, TextAnchor.UpperCenter, new Vector2(0.05f, 0f), new Vector2(0.95f, 1f));
+                "<size=44><b>THE LAST KNIGHT</b></size>\n\nBOA\n\n\nCreated by\nThe Ngu lueam team\n\n\nAn oath endures.\nBoa's story continues.\n\n\n" +
+                (assetCredits != null ? assetCredits.text.Trim() + "\n\n\n" : "") +
+                "Thank you for playing.", 24, Color.white, TextAnchor.UpperCenter, new Vector2(0.05f, 1f), new Vector2(0.95f, 1f), false);
+            text.supportRichText = true;
+            text.horizontalOverflow = HorizontalWrapMode.Wrap;
+            text.verticalOverflow = VerticalWrapMode.Overflow;
             text.lineSpacing = 1.2f;
             _credits = text.rectTransform;
-            _credits.pivot = new Vector2(0.5f, 0);
-            _credits.sizeDelta = new Vector2(-40, 680);
-            _credits.anchoredPosition = new Vector2(0, -680);
+            _credits.pivot = new Vector2(0.5f, 1f);
+            _credits.sizeDelta = new Vector2(-40f, 0f);
+            Canvas.ForceUpdateCanvases();
+            // Measure wrapped text rather than imposing a fixed height or duration.
+            _credits.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, text.preferredHeight + 48f);
+            _credits.anchoredPosition = new Vector2(0f, -_creditsViewport.rect.height);
         }
         private void Update()
         {
@@ -685,8 +700,9 @@ namespace TheLastKnight.UI
                 _elapsed += Time.unscaledDeltaTime;
                 if (_rolling)
                 {
-                    _credits.anchoredPosition = new Vector2(0, Mathf.Lerp(-680, _creditsViewport.rect.height, _elapsed / 24f));
-                    if (_elapsed >= 24f) { Finish(); return; }
+                    float position = -_creditsViewport.rect.height + _elapsed * CreditsScrollSpeed;
+                    _credits.anchoredPosition = new Vector2(0f, position);
+                    if (position >= _credits.rect.height) { Finish(); return; }
                 }
                 else if (_elapsed >= 9f) { Advance(); return; }
             }

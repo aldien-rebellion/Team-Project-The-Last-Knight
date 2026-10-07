@@ -1,0 +1,274 @@
+<size=44><b>Credit Assets</b></size>
+
+
+<size=36><b>Characters & Animation</b></size>
+
+Free Isometric Animated Fox
+<size=22>Created by Engvee</size>
+
+FREE 2D Sideview Boss Creature
+<size=22>Created by Engvee</size>
+<size=22>Original 3D model by Maksim Bugrimov.</size>
+
+Free Slime Sprite Sheets Pixel Art
+<size=22>Created by CraftPix</size>
+
+Epic 2D Pixel Art Shadow Demon Dragon with 10 Animations & SFX
+<size=22>Created by Vinzes</size>
+
+DuskBorne Enemy #4 [ArchDemon] - Free 2D PixelArt Animated Character
+<size=22>Created by KiyoZ</size>
+
+DuskBorne Enemy #3 [DemonKin] - Free 2D PixelArt Animated Character
+<size=22>Created by KiyoZ</size>
+
+Hooded Protagonist Animated Character
+<size=22>Created by Penzilla</size>
+
+Free City Trader Character Pixel Sprites
+<size=22>Created by Free Game Assets (GUI, Sprite, Tilesets)</size>
+
+Necromancer (Free)
+<size=22>Created by CreativeKind</size>
+
+[Free] Fairy
+<size=22>Created by Papoy Core</size>
+
+Free character - Satyr
+<size=22>Created by LuckyLoops</size>
+
+Skeleton Knight Enemy
+<size=22>Created by IDIO</size>
+
+Moonstone Keeper - Eldermoon Grove by Sucart
+<size=22>Created by Sucart</size>
+
+Reaper (Animated Pixel Art)
+<size=22>Created by SamuelLee</size>
+
+Boss: Undead Executioner [FREE]
+<size=22>Created by Kronovi-</size>
+
+Boss: Mecha-Stone Golem [FREE]
+<size=22>Created by Kronovi-</size>
+
+Monsters Creatures Fantasy
+<size=22>Created by LuizMelo</size>
+
+Bringer Of Death (Free)
+<size=22>Created by Clembod</size>
+
+Skull Wolf Pixel art
+<size=22>Created by Atari Boy</size>
+
+Forest Monsters 2D Pixel Art
+<size=22>Created by MonoPixelArt</size>
+
+Fire Worm
+<size=22>Created by LuizMelo</size>
+
+Free Monster Sprites Pixel Art
+<size=22>Created by Free Game Assets (GUI, Sprite, Tilesets)</size>
+
+Free Pixel Minotaur Sprite
+<size=22>Created by Free Game Assets (GUI, Sprite, Tilesets)</size>
+
+Pixel Art VFX - Warrior - FREE Version
+<size=22>Created by Frostwindz</size>
+
+
+<size=36><b>Environment & Props</b></size>
+
+Dark Dungeon - Side-Scroller Tileset
+<size=22>Created by Raou</size>
+
+Platformer Set
+<size=22>Created by Szadi Art.</size>
+
+FREE Pixel Art Chest Pack - Animated
+<size=22>Created by karsiori</size>
+
+Overgrown Portal Evolution - 3 Stages (Torn & Electric)
+<size=22>Created by The Pixel Game</size>
+<size=22>Recolored from the original asset.</size>
+
+
+<size=36><b>item & icon</b></size>
+
+Mega RPG Icon Pack 128x128 px - 800+ Fantasy Status Effect Icons | Buffs/De buffs | 2 Versions |
+<size=22>Created by WorldsWithoutEnd</size>
+
+Cat Fantasy - Icon Potion Pack
+<size=22>Created by Carlos Zepter</size>
+
+2D Game Assets - Fantasy Money Bags
+<size=22>Created by Joanna Casaje</size>
+
+Free Crystals Pixel Art Asset Pack
+<size=22>Created by CraftPix</size>
+
+Free Goblin Loot Pixel Icons
+<size=22>Created by Free Game Assets (GUI, Sprite, Tilesets)</size>
+
+48 Free RPG Loot Icons Pixel Art
+<size=22>Created by Free Game Assets (GUI, Sprite, Tilesets)</size>
+
+48 Free Alchemy Herbs Vector Icons
+<size=22>Created by Free Game Assets (GUI, Sprite, Tilesets)</size>
+
+Book & Scroll Set #1 free version
+<size=22>Created by TrulyMalicious</size>
+
+FREE Pixel Art Key Pack - Animated
+<size=22>Created by karsiori</size>
+
+
+<size=36><b>music</b></size>
+
+16-Bit Fantasy & Adventure Music Pack
+<size=22>Created by xDeviruchi</size>
+<size=22>Tracks used: Title Theme & Lost Shrine.</size>
+
+Free 12 JRPG Stylized Tracks Game Music Pack [No AI]
+<size=22>Created by alkakrab</size>
+<size=22>Track used: Starfall Dreams.</size>
+
+Free 12 Magical Fantasy Tracks Music Pack [No AI]
+<size=22>Created by alkakrab</size>
+<size=22>Track used: Hollow Vale.</size>
+
+Battlefield (Loop tagged)
+<size=22>Created by LUShvalleySound</size>
+
+The voices of birds in the forest, Голоса птиц в лесу
+<size=22>Created by SSPsurvival</size>
+
+Orchestral Risers
+<size=22>Created by storegraphic</size>
+
+Music for the city center and market scenes
+<size=22>Created by The Ngu lueam team</size>
+<size=22>Generated using Gemini AI.</size>
+
+
+<size=36><b>sound</b></size>
+
+Powerful Cannon Shot 02
+<size=22>Created by Universfield</size>
+
+sword-sound
+<size=22>Created by MUSICHOLDER</size>
+
+sword slashing game sound effect (1)
+<size=22>Created by gargamel10</size>
+
+Fire Breath
+<size=22>Created by freesound_community</size>
+
+Fireball Impact
+<size=22>Created by KoiRoylers</size>
+
+Slime Impact
+<size=22>Created by Universfield</size>
+
+Bouncing Ball Sound Effect by Engyclick
+<size=22>Created by Engyclick</size>
+
+Violent Sword Slice
+<size=22>Created by DRAGON-STUDIO</size>
+
+Swoosh Riser Reverb
+<size=22>Created by DRAGON-STUDIO</size>
+
+Axe Hit Head Beheaded
+<size=22>Created by RAGECore29</size>
+
+Heavy Walking Footsteps
+<size=22>Created by Universfield</size>
+
+Werewolf Growl
+<size=22>Created by DRAGON-STUDIO</size>
+
+spear_thrust (1)
+<size=22>Created by Yodguard</size>
+
+Tiny vicious creature 2
+<size=22>Created by freesound_community</size>
+
+Punch Impact Hit
+<size=22>Created by Universfield</size>
+
+Camera Appareil Photo Prise Shot
+<size=22>Created by ALEXIS_GAMING_CAM</size>
+
+Wolf Howl 2
+<size=22>Created by DRAGON-STUDIO</size>
+
+Throwing clothes on the floor #2
+<size=22>Created by freesound_community</size>
+
+Whoosh Effect
+<size=22>Created by DRAGON-STUDIO</size>
+
+Horror Liquid Splash
+<size=22>Created by Universfield</size>
+
+Wind Gust
+<size=22>Created by DRAGON-STUDIO</size>
+
+Laser Gun
+<size=22>Created by freesound_community</size>
+
+Sci-Fi Blaster Shot
+<size=22>Created by Universfield</size>
+
+Hard Punch SFX
+<size=22>Created by DRAGON-STUDIO</size>
+
+Epic Hybrid Logo
+<size=22>Created by Ivan_Luzan</size>
+
+Laser zap
+<size=22>Created by freesound_community</size>
+
+Biodynamic - Impact, Braam, Tonal, Dark
+<size=22>Created by BryanSantosBreton</size>
+
+Footsteps on Gravel - 2
+<size=22>Created by DRAGON-STUDIO</size>
+
+glug glug glug
+<size=22>Created by freesound_community</size>
+
+giant axe strike hitting solid wood (3)
+<size=22>Created by Yodguard</size>
+
+oof
+<size=22>Created by freesound_community</size>
+
+Cartoon Wet Splat
+<size=22>Created by Universfield</size>
+
+shield_impact (3)
+<size=22>Created by Yodguard</size>
+
+Aggressive Dog Barking and Growling Sound Effect
+<size=22>Created by Karim_alaoui</size>
+
+Tired-dog-panting-52
+<size=22>Created by mbardak</size>
+
+Hard Heavy Impact
+<size=22>Created by DRAGON-STUDIO</size>
+
+Punch
+<size=22>Created by DRAGON-STUDIO</size>
+
+Punch with Male Scream
+<size=22>Created by Universfield</size>
+
+
+<size=22>This game was developed primarily through vibe coding,
+with some AI-generated images and audio.
+
+We apologize for any assets unintentionally omitted from these credits.</size>
