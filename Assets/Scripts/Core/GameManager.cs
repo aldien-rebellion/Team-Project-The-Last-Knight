@@ -44,6 +44,7 @@ namespace TheLastKnight.Core
             gameObject.AddComponent<StoryDialogueUI>();
             gameObject.AddComponent<CharacterStatusUI>();
             gameObject.AddComponent<PauseMenuUI>();
+            gameObject.AddComponent<MinimapUI>();
             gameObject.AddComponent<GameBrightnessManager>();
         }
 

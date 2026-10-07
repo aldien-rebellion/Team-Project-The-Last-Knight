@@ -46,7 +46,7 @@ namespace TheLastKnight.Core
             { "MAIN_CONTINUE", "Continue" },
             { "MAIN_SETTINGS", "Settings" },
             { "MAIN_EXIT", "Exit" },
-            { "MAIN_CONTROLS_HINT", "A/D Move   Space Jump   Shift / RMB Dash\nLMB Attack / Parry   Q Potion   F Interact\nE Carnage Burst   R Buff   T Excalibur   B Status" },
+            { "MAIN_CONTROLS_HINT", "A/D Move   Space Jump   Shift / RMB Dash\nLMB Attack / Parry   Q Potion   F Interact\nE Carnage Burst   R Buff   T Excalibur   B Status   M Map" },
 
             // Difficulty Selection
             { "DIFF_TITLE", "CHOOSE YOUR JOURNEY" },
@@ -124,7 +124,7 @@ namespace TheLastKnight.Core
             { "MAIN_CONTINUE", "เล่นต่อ" },
             { "MAIN_SETTINGS", "ตั้งค่า" },
             { "MAIN_EXIT", "ออกจากเกม" },
-            { "MAIN_CONTROLS_HINT", "A/D เดิน   Space กระโดด   Shift / คลิกขวา พุ่งตัว\nคลิกซ้าย โจมตี / ปัดป้อง   Q ดื่มยา   F โต้ตอบ\nE สกิลหมุนดาบ   R บัฟ   T ดาบศักดิ์สิทธิ์   B สเตตัส" },
+            { "MAIN_CONTROLS_HINT", "A/D เดิน   Space กระโดด   Shift / คลิกขวา พุ่งตัว\nคลิกซ้าย โจมตี / ปัดป้อง   Q ดื่มยา   F โต้ตอบ\nE สกิลหมุนดาบ   R บัฟ   T ดาบศักดิ์สิทธิ์   B สเตตัส   M แผนที่" },
 
             // Difficulty Selection
             { "DIFF_TITLE", "เลือกระดับความยาก" },

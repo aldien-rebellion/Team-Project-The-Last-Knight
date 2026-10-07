@@ -78,6 +78,7 @@ namespace TheLastKnight.UI
 
         private void Update()
         {
+            if (MinimapUI.EscapeConsumedFrame == Time.frameCount) return;
             // If actively listening for a key rebind, let the rebind operation consume inputs
             if (!string.IsNullOrEmpty(_activeRebindActionName))
             {
