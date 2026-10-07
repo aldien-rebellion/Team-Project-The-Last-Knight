@@ -35,7 +35,11 @@ namespace TheLastKnight.UI
         private float _elapsed;
         private float _sceneTitleElapsed;
         private RectTransform _credits, _creditsViewport;
+        private RectTransform[] _creditsBanners;
+        private float _creditsBannerStart, _creditsBannerPeriod;
         private const float CreditsScrollSpeed = 32f;
+        private const float CreditsBannerGap = 160f;
+        private static Font _creditsBannerFont;
         private readonly List<string> _history = new List<string>();
         private GameObject _logPanel;
         private HUDController _hud;
@@ -665,6 +669,42 @@ namespace TheLastKnight.UI
             // Measure wrapped text rather than imposing a fixed height or duration.
             _credits.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, text.preferredHeight + 48f);
             _credits.anchoredPosition = new Vector2(0f, -_creditsViewport.rect.height);
+            BuildCreditsBanners(viewport.transform);
+        }
+
+        private void BuildCreditsBanners(Transform parent)
+        {
+            var artwork = Resources.Load<TextAsset>("Credits/PythonSwordBanner");
+            _creditsBanners = null;
+            if (artwork == null)
+            {
+                Debug.LogError("End-credit ASCII banner is missing.");
+                return;
+            }
+            if (_creditsBannerFont == null)
+                _creditsBannerFont = Font.CreateDynamicFontFromOSFont(new[] { "Consolas", "Courier New", "Liberation Mono", "DejaVu Sans Mono" }, 14);
+
+            _creditsBanners = new RectTransform[3];
+            _creditsBannerStart = _credits.rect.height + CreditsBannerGap;
+            for (int i = 0; i < _creditsBanners.Length; i++)
+            {
+                var banner = CreateText(parent, artwork.text.TrimEnd(), 14, new Color(0.95f, 0.78f, 0.43f),
+                    TextAnchor.UpperLeft, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), false);
+                banner.gameObject.name = "Python Sword ASCII Banner " + (i + 1);
+                banner.font = _creditsBannerFont;
+                banner.supportRichText = false;
+                banner.horizontalOverflow = HorizontalWrapMode.Overflow;
+                banner.verticalOverflow = VerticalWrapMode.Overflow;
+                banner.lineSpacing = 0.9f;
+                var rect = banner.rectTransform;
+                rect.pivot = new Vector2(0.5f, 1f);
+                rect.sizeDelta = new Vector2(banner.preferredWidth + 16f, banner.preferredHeight + 16f);
+                float scale = Mathf.Min(1f, Mathf.Max(32f, _creditsViewport.rect.height - 64f) / rect.rect.height);
+                rect.localScale = Vector3.one * scale;
+                if (i == 0) _creditsBannerPeriod = rect.rect.height * scale + CreditsBannerGap;
+                rect.anchoredPosition = new Vector2(0f, -_creditsViewport.rect.height - _creditsBannerStart - i * _creditsBannerPeriod);
+                _creditsBanners[i] = rect;
+            }
         }
         private void Update()
         {
@@ -701,8 +741,20 @@ namespace TheLastKnight.UI
                 if (_rolling)
                 {
                     float position = -_creditsViewport.rect.height + _elapsed * CreditsScrollSpeed;
+                    if (_creditsBanners != null && position >= _creditsBannerStart + _creditsBannerPeriod)
+                    {
+                        // Recycle identical banners after the text has left the viewport.
+                        // Bound the elapsed time so the loop remains smooth during long sessions.
+                        position = _creditsBannerStart + Mathf.Repeat(position - _creditsBannerStart, _creditsBannerPeriod);
+                        _elapsed = (position + _creditsViewport.rect.height) / CreditsScrollSpeed;
+                    }
                     _credits.anchoredPosition = new Vector2(0f, position);
-                    if (position >= _credits.rect.height) { Finish(); return; }
+                    if (_creditsBanners != null)
+                    {
+                        for (int i = 0; i < _creditsBanners.Length; i++)
+                            _creditsBanners[i].anchoredPosition = new Vector2(0f, position - _creditsBannerStart - i * _creditsBannerPeriod);
+                    }
+                    else if (position >= _credits.rect.height) { Finish(); return; }
                 }
                 else if (_elapsed >= 9f) { Advance(); return; }
             }

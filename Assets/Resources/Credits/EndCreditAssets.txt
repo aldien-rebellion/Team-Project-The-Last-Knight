@@ -1,5 +1,9 @@
 <size=44><b>Credit Assets</b></size>
 
+<size=28><b>2D Sprite Concepts & Inspiration:</b></size>
+Based on "Balder Knight[Dark Souls]" by Ev Ganin.
+<size=22>(Sprites generated and refined via AI using the original artwork as reference).</size>
+
 
 <size=36><b>Characters & Animation</b></size>
 
