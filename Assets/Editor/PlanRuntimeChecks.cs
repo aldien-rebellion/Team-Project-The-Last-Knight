@@ -259,7 +259,12 @@ public class PlanRuntimeChecks
         FindAnyObjectByType<MedusaSavePoint>().Interact();
         var checkpoint = Manager.State.Copy();
         Manager.Player.TakeDamage(100000f);
-        Check(Manager.InputBlocked && GameObject.Find("YOU DIED") != null, "Player death blocks controls and opens death UI");
+        Check(Manager.InputBlocked && GameObject.Find("YOU DIED") == null, "Player death blocks controls before showing death UI");
+        float deathDeadline = Time.time + 5f;
+        while (GameObject.Find("YOU DIED") == null && Time.time < deathDeadline) yield return null;
+        var deathState = Manager.Player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
+        Check(GameObject.Find("YOU DIED") != null && deathState.IsName("Dead") && deathState.normalizedTime >= 1f,
+            "Death UI opens only after the Dead animation finishes");
         Click("Respawn"); yield return Settled();
         Check(SceneManager.GetActiveScene().name == "SuburbToForest" && Manager.Player.CurrentHP == checkpoint.hp && Manager.Player.Gold == checkpoint.gold && Manager.Player.HealingPotions == checkpoint.potions && Manager.State.runes.All(r => r), "Respawn restores checkpoint health, inventory and runes");
         Check(Vector2.Distance(Manager.Player.transform.position, checkpoint.position) < 0.5f, "Respawn restores checkpoint position");

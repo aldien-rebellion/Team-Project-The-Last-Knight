@@ -26,6 +26,7 @@ namespace TheLastKnight.Core
             Player != null && !Player.IsDead && !InputBlocked && !ArenaLocked && Time.timeScale > 0f;
         private bool _restoring, _restorePosition, _deathShown;
         private GameObject _deathPanel;
+        private Coroutine _deathRoutine;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -56,6 +57,7 @@ namespace TheLastKnight.Core
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            CancelDeathRoutine();
             if (_deathPanel != null) Destroy(_deathPanel);
             _deathPanel = null;
             Player = null;
@@ -247,6 +249,7 @@ namespace TheLastKnight.Core
 
         public void Load(string scene, bool capture = true)
         {
+            CancelDeathRoutine();
             if (capture) Capture();
             _restoring = true;
             Player = null;
@@ -261,9 +264,64 @@ namespace TheLastKnight.Core
 
         public void PlayerDied()
         {
-            if (_deathShown) return;
-            _deathShown = true;
+            if (_deathShown || _deathRoutine != null) return;
             SetInputBlocked(true);
+            _deathRoutine = StartCoroutine(ShowDeathPanelAfterAnimation(Player));
+        }
+
+        private IEnumerator ShowDeathPanelAfterAnimation(PlayerStats dyingPlayer)
+        {
+            var animator = dyingPlayer != null ? dyingPlayer.GetComponent<Animator>() : null;
+            int deadState = Animator.StringToHash("Base Layer.Dead");
+            bool canAnimate = animator != null && animator.isActiveAndEnabled &&
+                animator.runtimeAnimatorController != null && animator.HasState(0, deadState);
+            if (canAnimate)
+            {
+                animator.speed = 1f; // Attack speed must not shorten the death animation.
+                foreach (var parameter in animator.parameters)
+                {
+                    if (parameter.type == AnimatorControllerParameterType.Bool)
+                        animator.SetBool(parameter.nameHash, false);
+                    else if (parameter.type == AnimatorControllerParameterType.Trigger)
+                        animator.ResetTrigger(parameter.nameHash);
+                }
+                animator.SetBool("IsDead", true);
+                animator.Play(deadState, 0, 0f);
+                var sprite = dyingPlayer.GetComponent<SpriteRenderer>();
+                if (sprite != null)
+                {
+                    var color = sprite.color;
+                    color.a = 1f;
+                    sprite.color = color;
+                }
+            }
+
+            // Let the Animator enter Dead before reading its progress.
+            yield return null;
+            while (canAnimate && dyingPlayer != null && dyingPlayer == Player && dyingPlayer.IsDead &&
+                animator != null && animator.isActiveAndEnabled && animator.runtimeAnimatorController != null)
+            {
+                var state = animator.GetCurrentAnimatorStateInfo(0);
+                if (state.fullPathHash == deadState && state.normalizedTime >= 1f) break;
+                yield return null;
+            }
+
+            // Hold the final death pose for one second before showing the respawn options.
+            yield return new WaitForSecondsRealtime(1f);
+            _deathRoutine = null;
+            if (dyingPlayer == null || dyingPlayer != Player || !dyingPlayer.IsDead || _restoring) yield break;
+            ShowDeathPanel();
+        }
+
+        private void CancelDeathRoutine()
+        {
+            if (_deathRoutine != null) StopCoroutine(_deathRoutine);
+            _deathRoutine = null;
+        }
+
+        private void ShowDeathPanel()
+        {
+            _deathShown = true;
             _deathPanel = RuntimeUI.Panel("YOU DIED", out var content);
             RuntimeUI.Label(content, "Arthur's journey is not over.", 22);
             RuntimeUI.Button(content, "Respawn", () =>
