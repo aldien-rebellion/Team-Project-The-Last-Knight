@@ -1838,6 +1838,258 @@
     {
       "en": "Unlocks at Level {0}",
       "th": "ปลดล็อกเมื่อเลเวล {0}"
+    },
+    {
+      "en": "Unknown",
+      "th": "ไม่ทราบ"
+    },
+    {
+      "en": "None",
+      "th": "ไม่มี"
+    },
+    {
+      "en": "N/A",
+      "th": "ไม่พร้อมใช้งาน"
+    },
+    {
+      "en": "[F Rest / Save]",
+      "th": "[F พักผ่อน/บันทึก]"
+    },
+    {
+      "en": "[F Examine Medusa statue]",
+      "th": "[F สำรวจรูปปั้นเมดูซ่า]"
+    },
+    {
+      "en": "[F Respawn monsters]",
+      "th": "[F บังคับมอนสเตอร์เกิดใหม่]"
+    },
+    {
+      "en": "Scroll to select • F or click to confirm",
+      "th": "ลูกกลิ้งเลือก • F หรือคลิกเพื่อยืนยัน"
+    },
+    {
+      "en": "Scroll the mouse wheel to select",
+      "th": "เลื่อนลูกกลิ้งเมาส์เพื่อเลือก"
+    },
+    {
+      "en": "Restored • Game saved successfully",
+      "th": "ฟื้นฟูพลังแล้ว • บันทึกเกมสำเร็จ"
+    },
+    {
+      "en": "Respawned {0} monsters",
+      "th": "มอนสเตอร์เกิดใหม่ {0} ตัว"
+    },
+    {
+      "en": "No monsters waiting to respawn",
+      "th": "ไม่มีมอนสเตอร์ที่รอเกิดใหม่"
+    },
+    {
+      "en": "Medusa Statue",
+      "th": "รูปปั้นเมดูซ่า"
+    },
+    {
+      "en": "Arthur",
+      "th": "อาเธอร์"
+    },
+    {
+      "en": "Received the Rune of the Demon Hand",
+      "th": "ได้รับรูนหัตถ์ปีศาจ"
+    },
+    {
+      "en": "Bag full • Rune placed beside the statue",
+      "th": "กระเป๋าเต็ม • รูนวางอยู่ข้างรูปปั้น"
+    },
+    {
+      "en": "Cannot recall during a boss battle",
+      "th": "ไม่สามารถวาร์ประหว่างสู้บอส"
+    },
+    {
+      "en": "Save at a Medusa statue first",
+      "th": "ต้องบันทึกที่รูปปั้นเมดูซ่าก่อน"
+    },
+    {
+      "en": "Move or use an action to cancel",
+      "th": "ขยับหรือใช้ท่าเพื่อยกเลิก"
+    },
+    {
+      "en": "Recalling to save point  {0} s",
+      "th": "กำลังกลับจุดเซฟ  {0} วิ"
+    },
+    {
+      "en": "{0} • Use in the status window",
+      "th": "{0} • ใช้ในหน้าสเตตัส"
+    },
+    {
+      "en": "[R-Click: Use]",
+      "th": "[R-Click: ใช้]"
+    },
+    {
+      "en": "Cannot be used with [Q]",
+      "th": "ใช้ด้วยปุ่ม Q ไม่ได้"
+    },
+    {
+      "en": "Random stock • Equal chance 1/7",
+      "th": "สินค้าสุ่ม • โอกาสเท่ากัน 1/7"
+    },
+    {
+      "en": "Reroll • +10%",
+      "th": "สุ่มใหม่ • +10%"
+    },
+    {
+      "en": "Each permission can be toggled independently",
+      "th": "สิทธิ์แต่ละอย่างเปิดหรือปิดแยกกันได้"
+    },
+    {
+      "en": "Invincible (no damage)",
+      "th": "อมตะ (ไม่รับความเสียหาย)"
+    },
+    {
+      "en": "Disable skill / attack / dash cooldowns",
+      "th": "ปิดคูลดาวน์สกิล / โจมตี / แดช"
+    },
+    {
+      "en": "Immune to stun and negative effects",
+      "th": "ต้านทานสตันและสถานะผิดปกติ"
+    },
+    {
+      "en": "Add Status Points",
+      "th": "เพิ่ม Status Point"
+    },
+    {
+      "en": "Add",
+      "th": "เพิ่ม"
+    },
+    {
+      "en": "Remaining: {0}",
+      "th": "แต้มคงเหลือ: {0}"
+    },
+    {
+      "en": "Player stats unavailable",
+      "th": "ไม่พบ PlayerStats"
+    },
+    {
+      "en": "Spawn items  |  Amount per spawn",
+      "th": "เสกไอเทม  |  จำนวนต่อครั้ง"
+    },
+    {
+      "en": "Spawn",
+      "th": "เสก"
+    },
+    {
+      "en": "Medusa... guardian goddess of Boa. Even with the kingdom in ruins, the people still place their hopes beneath her gaze.",
+      "th": "เมดูซ่า… เทพผู้พิทักษ์ประจำอาณาจักรโบอา แม้บ้านเมืองจะพังทลาย ผู้คนก็ยังฝากความหวังไว้ใต้สายตาของนาง"
+    },
+    {
+      "en": "Light is seeping through a crack at the base... The Rune of the Demon Hand! Someone must have hidden it under her protection.",
+      "th": "ตรงฐานรูปปั้นมีแสงลอดออกมาจากรอยแยก… นี่มันรูนหัตถ์ปีศาจ! ใครบางคนคงซ่อนมันไว้ภายใต้การคุ้มครองของนาง"
+    },
+    {
+      "en": "I will use this rune to unseal the castle gate. May your protection guide me, Medusa.",
+      "th": "ข้าจะนำรูนนี้ไปปลดผนึกประตูปราสาท ขอให้การคุ้มครองของท่านนำทางข้า เมดูซ่า"
+    },
+    {
+      "en": "Medusa, guardian goddess of Boa... The rune beneath the statue has been found, yet her gaze still watches over this kingdom.",
+      "th": "เมดูซ่า เทพผู้พิทักษ์แห่งโบอา… รูนที่ซ่อนอยู่ใต้ฐานถูกค้นพบแล้ว แต่สายตาของนางยังเฝ้าดูอาณาจักรนี้อยู่"
+    },
+    {
+      "en": "{0}  Interact",
+      "th": "{0}  โต้ตอบ"
+    },
+    {
+      "en": "Press {0} to continue",
+      "th": "กด {0} เพื่อไปต่อ"
+    },
+    {
+      "en": "[ {0} ] Enter door",
+      "th": "[ {0} ] เพื่อเข้าประตู"
+    },
+    {
+      "en": "{0}  Open chest",
+      "th": "{0}  เปิดหีบ"
+    },
+    {
+      "en": "{0}  Destroy Gate",
+      "th": "{0}  ทำลายประตู"
+    },
+    {
+      "en": "{0}  Open Pentagram chest",
+      "th": "{0}  เปิดหีบดาวห้าแฉก"
+    },
+    {
+      "en": "{0}  The Shadow Market",
+      "th": "{0}  ตลาดเงา"
+    },
+    {
+      "source": "Increases AGI by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q].",
+      "en": "Increases AGI by 5 points. Right-click in the status window and choose Use to consume one scroll. Cannot be used with [Q].",
+      "th": "เพิ่ม ความคล่องตัว ถาวร 5 แต้ม คลิกขวาในหน้าสเตตัสแล้วเลือก ใช้ เพื่อใช้ม้วนคัมภีร์หนึ่งชิ้น ไม่สามารถใช้ด้วย [Q]"
+    },
+    {
+      "source": "Permanently increases DEX by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q].",
+      "en": "Permanently increases DEX by 5 points. Right-click in the status window and choose Use to consume one scroll. Cannot be used with [Q].",
+      "th": "เพิ่ม ความแม่นยำ ถาวร 5 แต้ม คลิกขวาในหน้าสเตตัสแล้วเลือก ใช้ เพื่อใช้ม้วนคัมภีร์หนึ่งชิ้น ไม่สามารถใช้ด้วย [Q]"
+    },
+    {
+      "source": "Permanently increases STR by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q].",
+      "en": "Permanently increases STR by 5 points. Right-click in the status window and choose Use to consume one scroll. Cannot be used with [Q].",
+      "th": "เพิ่ม ความแข็งแกร่ง ถาวร 5 แต้ม คลิกขวาในหน้าสเตตัสแล้วเลือก ใช้ เพื่อใช้ม้วนคัมภีร์หนึ่งชิ้น ไม่สามารถใช้ด้วย [Q]"
+    },
+    {
+      "source": "Permanently increases VIT by 5 points. Right-click in the status window and choose ใช้ to consume one scroll. Cannot be used with [Q].",
+      "en": "Permanently increases VIT by 5 points. Right-click in the status window and choose Use to consume one scroll. Cannot be used with [Q].",
+      "th": "เพิ่ม ความทนทาน ถาวร 5 แต้ม คลิกขวาในหน้าสเตตัสแล้วเลือก ใช้ เพื่อใช้ม้วนคัมภีร์หนึ่งชิ้น ไม่สามารถใช้ด้วย [Q]"
+    },
+    {
+      "source": "Grants EXP equal to the amount required to advance from Lv.30 to Lv.31. Right-click in the status window and choose ใช้ to consume one book. Cannot be used with [Q].",
+      "en": "Grants EXP equal to the amount required to advance from Lv.30 to Lv.31. Right-click in the status window and choose Use to consume one book. Cannot be used with [Q].",
+      "th": "ได้รับค่าประสบการณ์เท่ากับที่ต้องใช้จากเลเวล 30 ไปเลเวล 31 คลิกขวาในหน้าสเตตัสแล้วเลือก ใช้ เพื่อใช้หนังสือหนึ่งเล่ม ไม่สามารถใช้ด้วย [Q]"
+    },
+    {
+      "source": "Grants EXP equal to the amount required to advance from Lv.20 to Lv.21. Right-click in the status window and choose ใช้ to consume one book. Cannot be used with [Q].",
+      "en": "Grants EXP equal to the amount required to advance from Lv.20 to Lv.21. Right-click in the status window and choose Use to consume one book. Cannot be used with [Q].",
+      "th": "ได้รับค่าประสบการณ์เท่ากับที่ต้องใช้จากเลเวล 20 ไปเลเวล 21 คลิกขวาในหน้าสเตตัสแล้วเลือก ใช้ เพื่อใช้หนังสือหนึ่งเล่ม ไม่สามารถใช้ด้วย [Q]"
+    },
+    {
+      "source": "Grants EXP equal to the amount required to advance from Lv.10 to Lv.11. Right-click in the status window and choose ใช้ to consume one book.",
+      "en": "Grants EXP equal to the amount required to advance from Lv.10 to Lv.11. Right-click in the status window and choose Use to consume one book.",
+      "th": "ได้รับค่าประสบการณ์เท่ากับที่ต้องใช้จากเลเวล 10 ไปเลเวล 11 คลิกขวาในหน้าสเตตัสแล้วเลือก ใช้ เพื่อใช้หนังสือหนึ่งเล่ม"
+    },
+    {
+      "en": "Advanced Spellbook",
+      "th": "ตำราเวทขั้นสูง"
+    },
+    {
+      "en": "Earth Scroll",
+      "th": "คัมภีร์ปฐพี"
+    },
+    {
+      "en": "Earth Spellbook",
+      "th": "ตำราเวทปฐพี"
+    },
+    {
+      "en": "Fire Scroll",
+      "th": "คัมภีร์เพลิง"
+    },
+    {
+      "en": "Ice Spellbook",
+      "th": "ตำราเวทน้ำแข็ง"
+    },
+    {
+      "en": "Light Scroll",
+      "th": "คัมภีร์แสง"
+    },
+    {
+      "en": "Thunder Scroll",
+      "th": "คัมภีร์สายฟ้า"
+    },
+    {
+      "en": "Reduces all stamina consumption by 50% for 90 seconds.",
+      "th": "ลดการใช้พลังงานทั้งหมด 50% เป็นเวลา 90 วินาที"
+    },
+    {
+      "source": "Grants EXP equal to the amount required to advance from Lv.10 to Lv.11. Right-click in the status window and choose ใช้ to consume one book. Cannot be used with [Q].",
+      "en": "Grants EXP equal to the amount required to advance from Lv.10 to Lv.11. Right-click in the status window and choose Use to consume one book. Cannot be used with [Q].",
+      "th": "ได้รับค่าประสบการณ์เท่ากับที่ต้องใช้จากเลเวล 10 ไปเลเวล 11 คลิกขวาในหน้าสเตตัสแล้วเลือก ใช้ เพื่อใช้หนังสือหนึ่งเล่ม ไม่สามารถใช้ด้วย [Q]"
     }
   ]
 }

@@ -65,16 +65,23 @@ namespace TheLastKnight.UI
         private void OnEnable()
         {
             LocalizationManager.OnLanguageChanged += Refresh;
+            TheLastKnight.Input.KeyRebindManager.OnBindingsChanged += RefreshBindings;
             Refresh(LocalizationManager.Current);
         }
 
-        private void OnDisable() => LocalizationManager.OnLanguageChanged -= Refresh;
+        private void OnDisable()
+        {
+            LocalizationManager.OnLanguageChanged -= Refresh;
+            TheLastKnight.Input.KeyRebindManager.OnBindingsChanged -= RefreshBindings;
+        }
+
+        private void RefreshBindings() => Refresh(LocalizationManager.Current);
 
         private void Refresh(GameLanguage language)
         {
             if (_target == null) return;
             _language = language;
-            _displayed = LocalizationManager.Translate(_source);
+            _displayed = TheLastKnight.Input.KeyRebindManager.UpdateBindingHints(LocalizationManager.Translate(_source));
             if (_target is TMP_Text tmp)
             {
                 tmp.font = FontAsset;

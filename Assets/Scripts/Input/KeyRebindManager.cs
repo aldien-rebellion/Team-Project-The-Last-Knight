@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,11 +24,14 @@ namespace TheLastKnight.Input
     {
         private const string PrefKey = "TheLastKnight_BindingOverridesJson";
         private static InputActionRebindingExtensions.RebindingOperation _currentRebindOp;
+        public static event Action OnBindingsChanged;
+        public static int RebindFinishedFrame { get; private set; } = -1;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoLoad()
         {
             LoadSavedBindings();
+            InputSystem.actions?.FindActionMap("Shortcuts")?.Enable();
         }
 
         public static List<RebindableActionInfo> GetRebindableActions()
@@ -36,28 +40,62 @@ namespace TheLastKnight.Input
             {
                 new RebindableActionInfo("Move", 6, "ACTION_MOVE_LEFT"),
                 new RebindableActionInfo("Move", 8, "ACTION_MOVE_RIGHT"),
+                new RebindableActionInfo("Move", 7, "ACTION_MOVE_LEFT_ALT"),
+                new RebindableActionInfo("Move", 9, "ACTION_MOVE_RIGHT_ALT"),
                 new RebindableActionInfo("Jump", 0, "ACTION_JUMP"),
+                new RebindableActionInfo("Sprint", 0, "ACTION_SPRINT"),
+                new RebindableActionInfo("Sprint", 1, "ACTION_SPRINT_ALT"),
                 new RebindableActionInfo("Attack", 1, "ACTION_ATTACK"),
+                new RebindableActionInfo("Attack", 5, "ACTION_ATTACK_ALT"),
                 new RebindableActionInfo("Dash", 0, "ACTION_DASH"),
+                new RebindableActionInfo("Dash", 2, "ACTION_DASH_ALT"),
                 new RebindableActionInfo("CounterAttack", 0, "ACTION_PARRY"),
                 new RebindableActionInfo("UseDrink", 0, "ACTION_DRINK"),
                 new RebindableActionInfo("UseSkill", 0, "ACTION_SKILL"),
                 new RebindableActionInfo("UseBuff", 0, "ACTION_BUFF"),
                 new RebindableActionInfo("UseExcalibur", 0, "ACTION_EXCALIBUR"),
                 new RebindableActionInfo("Interact", 0, "ACTION_INTERACT"),
+                new RebindableActionInfo("Previous", 0, "ACTION_PREVIOUS"),
+                new RebindableActionInfo("Next", 0, "ACTION_NEXT"),
+                new RebindableActionInfo("ToggleStatus", 0, "ACTION_STATUS"),
+                new RebindableActionInfo("ToggleMap", 0, "ACTION_MAP"),
+                new RebindableActionInfo("SwitchMapView", 0, "ACTION_MAP_VIEW"),
+                new RebindableActionInfo("Recall", 0, "ACTION_RECALL"),
+                new RebindableActionInfo("DropItem", 0, "ACTION_DROP_ITEM"),
                 new RebindableActionInfo("AdminModeModifier", 0, "ACTION_ADMIN_MODIFIER"),
                 new RebindableActionInfo("AdminModeKey", 0, "ACTION_ADMIN_KEY")
             };
         }
 
+        public static bool WasPressedThisFrame(string actionName)
+        {
+            var action = InputSystem.actions?.FindAction(actionName);
+            // Menu shortcuts must remain available to close their own windows while gameplay is blocked.
+            if (action != null && action.actionMap.name == "Shortcuts" && !action.enabled) action.Enable();
+            return action != null && action.enabled && action.WasPressedThisFrame();
+        }
+
+        public static string UpdateBindingHints(string text)
+        {
+            if (string.IsNullOrEmpty(text) || InputSystem.actions == null) return text;
+            // Binding badges already contain the current key; only rewrite explanatory text.
+            if (Regex.IsMatch(text, @"^\[\s*\w+\s*\]$")) return text;
+            return Regex.Replace(text, @"(?<![\w])(?:\[\s*[QFET]\s*\]|F(?=  | พักผ่อน| สำรวจ| บังคับ| หรือ| Rest| Examine| Respawn| or click| to continue| เพื่อไปต่อ))", match =>
+            {
+                string token = match.Value.Trim('[', ']', ' ');
+                string action = token == "F" ? "Interact" : token == "Q" ? "UseDrink" : token == "E" ? "UseSkill" : "UseExcalibur";
+                return match.Value.Replace(token, GetCurrentBindingDisplay(action, 0));
+            });
+        }
+
         public static string GetCurrentBindingDisplay(string actionName, int bindingIndex)
         {
-            if (InputSystem.actions == null) return "Unknown";
+            if (InputSystem.actions == null) return TheLastKnight.Core.LocalizationManager.Translate("Unknown");
             var action = InputSystem.actions.FindAction(actionName);
             if (action == null || bindingIndex < 0 || bindingIndex >= action.bindings.Count) return "N/A";
 
             var binding = action.bindings[bindingIndex];
-            string path = string.IsNullOrEmpty(binding.overridePath) ? binding.path : binding.overridePath;
+            string path = binding.effectivePath;
             return FormatPathToEnglish(path);
         }
 
@@ -147,34 +185,40 @@ namespace TheLastKnight.Input
             }
 
             var action = InputSystem.actions.FindAction(item.ActionName);
-            if (action == null)
+            if (action == null || item.BindingIndex < 0 || item.BindingIndex >= action.bindings.Count || action.bindings[item.BindingIndex].isComposite)
             {
                 onCancel?.Invoke();
                 return;
             }
 
-            _currentRebindOp?.Cancel();
-            _currentRebindOp?.Dispose();
-
+            CancelOngoingRebind();
+            bool wasEnabled = action.enabled;
             action.Disable();
 
             _currentRebindOp = action.PerformInteractiveRebinding(item.BindingIndex)
                 .WithCancelingThrough("<Keyboard>/escape")
                 .WithControlsExcluding("<Mouse>/position")
                 .WithControlsExcluding("<Pointer>/delta")
+                .WithControlsExcluding("<Mouse>/scroll")
+                .WithControlsExcluding("<Mouse>/clickCount")
+                .WithExpectedControlType("Button")
+                .OnMatchWaitForAnother(0.1f)
                 .OnComplete(op =>
                 {
                     op.Dispose();
                     _currentRebindOp = null;
-                    action.Enable();
+                    if (wasEnabled) action.Enable();
+                    RebindFinishedFrame = Time.frameCount;
                     SaveBindings();
+                    OnBindingsChanged?.Invoke();
                     onComplete?.Invoke();
                 })
                 .OnCancel(op =>
                 {
                     op.Dispose();
                     _currentRebindOp = null;
-                    action.Enable();
+                    if (wasEnabled) action.Enable();
+                    RebindFinishedFrame = Time.frameCount;
                     onCancel?.Invoke();
                 });
 
@@ -185,9 +229,8 @@ namespace TheLastKnight.Input
         {
             if (_currentRebindOp != null)
             {
+                // OnCancel disposes the operation and clears the reference.
                 _currentRebindOp.Cancel();
-                _currentRebindOp.Dispose();
-                _currentRebindOp = null;
             }
         }
 
@@ -207,6 +250,7 @@ namespace TheLastKnight.Input
             {
                 InputActionRebindingExtensions.LoadBindingOverridesFromJson(InputSystem.actions, json);
             }
+            OnBindingsChanged?.Invoke();
         }
 
         public static void ResetAllToDefaults()
@@ -218,6 +262,7 @@ namespace TheLastKnight.Input
             }
             PlayerPrefs.DeleteKey(PrefKey);
             PlayerPrefs.Save();
+            OnBindingsChanged?.Invoke();
         }
     }
 }

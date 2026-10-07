@@ -264,7 +264,7 @@ namespace TheLastKnight.UI
             }
 
             // Toggle with 'B' key
-            if (keyboard.bKey.wasPressedThisFrame)
+            if (TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("ToggleStatus"))
             {
                 Toggle();
                 return;
@@ -277,7 +277,7 @@ namespace TheLastKnight.UI
                 UpdateTooltipPosition();
 
                 // Press Q while holding an item to drop it into the world (Ctrl+Q drops whole stack, Q drops 1)
-                if (keyboard.qKey.wasPressedThisFrame)
+                if (TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("DropItem"))
                 {
                     var inv = InventoryManager.Instance;
                     if (inv != null && inv.CursorHeldItem != null)

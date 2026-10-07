@@ -65,7 +65,13 @@ namespace TheLastKnight.UI
         private void OnDestroy()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            if (Instance == this) Instance = null;
+            if (Instance == this)
+            {
+                _state = PauseMenuState.Closed;
+                KeyRebindManager.CancelOngoingRebind();
+                DestroyPanel();
+                Instance = null;
+            }
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -78,6 +84,7 @@ namespace TheLastKnight.UI
 
         private void Update()
         {
+            if (KeyRebindManager.RebindFinishedFrame == Time.frameCount) return;
             if (MinimapUI.EscapeConsumedFrame == Time.frameCount) return;
             // If actively listening for a key rebind, let the rebind operation consume inputs
             if (!string.IsNullOrEmpty(_activeRebindActionName))
@@ -400,6 +407,12 @@ namespace TheLastKnight.UI
 
         private void ShowControlsMenu()
         {
+            float scrollPosition = 1;
+            if (_state == PauseMenuState.Controls && _panel != null)
+            {
+                var previousScroll = _panel.GetComponentInChildren<ScrollRect>();
+                if (previousScroll != null) scrollPosition = previousScroll.verticalNormalizedPosition;
+            }
             _state = PauseMenuState.Controls;
             DestroyPanel();
 
@@ -410,6 +423,7 @@ namespace TheLastKnight.UI
                 : LocalizationManager.Get("CONTROLS_SUBTITLE");
 
             RuntimeUI.Label(content, subtitle, 17, new Color(0.9f, 0.85f, 0.55f));
+            var rows = RuntimeUI.ScrollContent(content, 290);
 
             var actions = KeyRebindManager.GetRebindableActions();
             foreach (var action in actions)
@@ -420,14 +434,15 @@ namespace TheLastKnight.UI
                     : $"[ {KeyRebindManager.GetCurrentBindingDisplay(action.ActionName, action.BindingIndex)} ]";
 
                 var targetAction = action;
-                RuntimeUI.ActionRow(content, actionLabel, keyDisplay, () =>
+                var button = RuntimeUI.ActionRow(rows, actionLabel, keyDisplay, () =>
                 {
                     StartRebindAction(targetAction);
                 });
+                button.interactable = string.IsNullOrEmpty(_activeRebindActionName);
             }
 
             // Reset Controls to Default
-            RuntimeUI.Button(content, LocalizationManager.Get("BTN_RESET_CONTROLS"), () =>
+            var resetButton = RuntimeUI.Button(content, LocalizationManager.Get("BTN_RESET_CONTROLS"), () =>
             {
                 KeyRebindManager.ResetAllToDefaults();
                 ShowControlsMenu();
@@ -435,6 +450,9 @@ namespace TheLastKnight.UI
 
             // Back to Settings
             var btnBack = RuntimeUI.Button(content, LocalizationManager.Get("BTN_BACK"), ShowSettings);
+            resetButton.interactable = btnBack.interactable = string.IsNullOrEmpty(_activeRebindActionName);
+            Canvas.ForceUpdateCanvases();
+            rows.GetComponentInParent<ScrollRect>().verticalNormalizedPosition = scrollPosition;
 
             if (EventSystem.current != null && btnBack != null)
             {
@@ -451,12 +469,12 @@ namespace TheLastKnight.UI
                 onComplete: () =>
                 {
                     _activeRebindActionName = null;
-                    ShowControlsMenu();
+                    if (_state == PauseMenuState.Controls) ShowControlsMenu();
                 },
                 onCancel: () =>
                 {
                     _activeRebindActionName = null;
-                    ShowControlsMenu();
+                    if (_state == PauseMenuState.Controls) ShowControlsMenu();
                 });
         }
 

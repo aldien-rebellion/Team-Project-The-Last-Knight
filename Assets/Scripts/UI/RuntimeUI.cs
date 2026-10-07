@@ -169,6 +169,37 @@ namespace TheLastKnight.UI
             return slider;
         }
 
+        public static Transform ScrollContent(Transform parent, float height)
+        {
+            var root = new GameObject("Controls Scroll", typeof(RectTransform), typeof(Image), typeof(ScrollRect), typeof(LayoutElement));
+            root.transform.SetParent(parent, false);
+            root.GetComponent<Image>().color = new Color(0.05f, 0.07f, 0.11f, 0.6f);
+            var element = root.GetComponent<LayoutElement>();
+            element.preferredHeight = element.minHeight = height;
+            var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D));
+            viewport.transform.SetParent(root.transform, false);
+            var viewportRect = viewport.GetComponent<RectTransform>();
+            viewportRect.anchorMin = Vector2.zero; viewportRect.anchorMax = Vector2.one;
+            viewportRect.offsetMin = viewportRect.offsetMax = Vector2.zero;
+            var rows = new GameObject("Rows", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
+            rows.transform.SetParent(viewport.transform, false);
+            var rowsRect = rows.GetComponent<RectTransform>();
+            rowsRect.anchorMin = new Vector2(0, 1); rowsRect.anchorMax = Vector2.one;
+            rowsRect.pivot = new Vector2(0.5f, 1);
+            rowsRect.sizeDelta = Vector2.zero;
+            var layout = rows.GetComponent<VerticalLayoutGroup>();
+            layout.padding = new RectOffset(12, 12, 8, 8); layout.spacing = 8;
+            layout.childControlWidth = layout.childControlHeight = true;
+            layout.childForceExpandWidth = true; layout.childForceExpandHeight = false;
+            rows.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            var scroll = root.GetComponent<ScrollRect>();
+            scroll.viewport = viewportRect; scroll.content = rowsRect;
+            scroll.horizontal = false; scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+            scroll.scrollSensitivity = 30;
+            return rows.transform;
+        }
+
         public static Button ActionRow(Transform parent, string labelText, string buttonText, UnityAction onButtonClick)
         {
             var rowGo = new GameObject("Row_" + labelText, typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
@@ -181,7 +212,7 @@ namespace TheLastKnight.UI
             layout.spacing = 16;
             layout.childAlignment = TextAnchor.MiddleCenter;
             layout.childControlWidth = true;
-            layout.childForceExpandWidth = true;
+            layout.childForceExpandWidth = false;
             layout.childControlHeight = true;
             layout.childForceExpandHeight = false;
 
@@ -193,6 +224,7 @@ namespace TheLastKnight.UI
             var btn = Button(rowGo.transform, buttonText, onButtonClick);
             var btnLe = btn.GetComponent<LayoutElement>();
             btnLe.preferredWidth = 180;
+            btnLe.minWidth = 180;
             btnLe.preferredHeight = 34;
             btnLe.flexibleWidth = 0f;
 

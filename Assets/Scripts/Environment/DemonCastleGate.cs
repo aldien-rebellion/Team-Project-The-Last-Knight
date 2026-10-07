@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 #if ENABLE_INPUT_SYSTEM
@@ -127,10 +127,7 @@ namespace TheLastKnight.Environment
 
             bool fPressed = false;
 #if ENABLE_INPUT_SYSTEM
-            if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
-            {
-                fPressed = true;
-            }
+            fPressed = TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("Interact");
 #else
             if (Input.GetKeyDown(KeyCode.F))
             {

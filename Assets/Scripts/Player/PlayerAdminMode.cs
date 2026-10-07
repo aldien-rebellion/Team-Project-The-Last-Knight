@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using TheLastKnight.Core;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using TheLastKnight.Inventory;
@@ -174,25 +175,25 @@ namespace TheLastKnight.Player
         private void DrawWindow(int id)
         {
             GUILayout.BeginVertical();
-            GUILayout.Label("สิทธิ์แต่ละอย่างเปิดหรือปิดแยกกันได้", GUI.skin.box);
+            GUILayout.Label(LocalizationManager.Translate("สิทธิ์แต่ละอย่างเปิดหรือปิดแยกกันได้"), GUI.skin.box);
             var stats = GetComponent<PlayerStats>();
             var controller = GetComponent<PlayerController>();
-            _infiniteHealth = GUILayout.Toggle(_infiniteHealth, "อมตะ (ไม่รับความเสียหาย)");
-            _noCooldowns = GUILayout.Toggle(_noCooldowns, "ปิดคูลดาวน์สกิล / โจมตี / แดช");
-            _statusImmunity = GUILayout.Toggle(_statusImmunity, "ต้านทานสตันและสถานะผิดปกติ");
+            _infiniteHealth = GUILayout.Toggle(_infiniteHealth, LocalizationManager.Translate("อมตะ (ไม่รับความเสียหาย)"));
+            _noCooldowns = GUILayout.Toggle(_noCooldowns, LocalizationManager.Translate("ปิดคูลดาวน์สกิล / โจมตี / แดช"));
+            _statusImmunity = GUILayout.Toggle(_statusImmunity, LocalizationManager.Translate("ต้านทานสตันและสถานะผิดปกติ"));
 
             GUILayout.Space(8f);
-            GUILayout.Label("เพิ่ม Status Point");
+            GUILayout.Label(LocalizationManager.Translate("เพิ่ม Status Point"));
             GUILayout.BeginHorizontal();
             _statAmountText = GUILayout.TextField(_statAmountText, GUILayout.Width(90f));
-            if (GUILayout.Button("เพิ่ม", GUILayout.Width(80f)) && stats != null &&
+            if (GUILayout.Button(LocalizationManager.Translate("เพิ่ม"), GUILayout.Width(80f)) && stats != null &&
                 int.TryParse(_statAmountText, out int amount) && amount > 0)
                 stats.AddStatPoints(amount);
-            GUILayout.Label(stats != null ? "คงเหลือ: " + stats.StatPoints : "ไม่พบ PlayerStats");
+            GUILayout.Label(stats != null ? LocalizationManager.Translate("แต้มคงเหลือ: " + stats.StatPoints) : LocalizationManager.Translate("ไม่พบ PlayerStats"));
             GUILayout.EndHorizontal();
 
             GUILayout.Space(8f);
-            GUILayout.Label("เสกไอเทม  |  จำนวนต่อครั้ง");
+            GUILayout.Label(LocalizationManager.Translate("เสกไอเทม  |  จำนวนต่อครั้ง"));
             _itemAmountText = GUILayout.TextField(_itemAmountText, GUILayout.Width(90f));
             _search = GUILayout.TextField(_search, GUI.skin.FindStyle("ToolbarSeachTextField") ?? GUI.skin.textField);
             _itemScroll = GUILayout.BeginScrollView(_itemScroll, GUILayout.ExpandHeight(true));
@@ -208,10 +209,10 @@ namespace TheLastKnight.Player
                 if (icon != null) GUILayout.Label(icon.texture, GUILayout.Width(38f), GUILayout.Height(38f));
                 else GUILayout.Label("□", GUILayout.Width(38f), GUILayout.Height(38f));
                 GUILayout.BeginVertical();
-                GUILayout.Label(item.name, _rowStyle);
+                GUILayout.Label(LocalizationManager.Translate(item.name), _rowStyle);
                 GUILayout.Label(item.id + "  ·  " + item.category, GUI.skin.label);
                 GUILayout.EndVertical();
-                if (GUILayout.Button("เสก", GUILayout.Width(54f), GUILayout.Height(36f)))
+                if (GUILayout.Button(LocalizationManager.Translate("เสก"), GUILayout.Width(54f), GUILayout.Height(36f)))
                 {
                     if (int.TryParse(_itemAmountText, out int count) && count > 0)
                     {

@@ -48,7 +48,8 @@ public static class LocalizationChecks
                     string text = LocalizationManager.Translate(definition.displayName) + LocalizationManager.Translate(definition.description);
                     if (language == GameLanguage.English && Regex.IsMatch(text, @"[ก-๙]"))
                         throw new Exception("Mixed English item: " + definition.name);
-                    if (language == GameLanguage.Thai && Regex.IsMatch(text, @"[A-Za-z]{3}"))
+                    // Attribute identifiers are intentionally shared by both languages.
+                    if (language == GameLanguage.Thai && Regex.IsMatch(Regex.Replace(text, @"\b(?:STR|AGI|VIT|DEX)\b", ""), @"[A-Za-z]{3}"))
                         throw new Exception("Untranslated Thai item: " + definition.name);
                     checks++;
                 }

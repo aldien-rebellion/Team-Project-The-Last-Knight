@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -229,14 +229,7 @@ public class ScenePortal : MonoBehaviour
         bool interactPressed = false;
 
 #if ENABLE_INPUT_SYSTEM
-        if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
-        {
-            interactPressed = true;
-        }
-        if (Gamepad.current != null && (Gamepad.current.buttonNorth.wasPressedThisFrame || Gamepad.current.buttonSouth.wasPressedThisFrame))
-        {
-            interactPressed = true;
-        }
+        interactPressed = TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("Interact");
 #else
         if (Input.GetKeyDown(KeyCode.F))
         {

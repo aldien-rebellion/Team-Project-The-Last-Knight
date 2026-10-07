@@ -39,12 +39,21 @@ namespace TheLastKnight.Core
                 Texts[entry.en] = entry;
                 Texts[entry.th] = entry;
                 if (!string.IsNullOrEmpty(entry.source)) Texts[entry.source] = entry;
+                // Dialogue presentation collapses paragraph breaks and normalizes punctuation.
+                Texts[NormalizeDialogue(entry.en)] = entry;
+                Texts[NormalizeDialogue(entry.th)] = entry;
                 if (!Regex.IsMatch(entry.en, @"\{\d+\}")) continue;
                 AddTemplate(English, entry.th, entry.en);
                 AddTemplate(English, entry.en, entry.en);
                 AddTemplate(Thai, entry.en, entry.th);
                 AddTemplate(Thai, entry.th, entry.th);
             }
+        }
+
+        private static string NormalizeDialogue(string text)
+        {
+            return Regex.Replace(text, @"\n(?:[ \t]*\n)+", "\n").Trim()
+                .Replace("—", "-").Replace("…", "...").Replace("|", ",").Replace("◆", "");
         }
 
         private static void AddTemplate(List<Template> templates, string source, string output)
@@ -68,6 +77,8 @@ namespace TheLastKnight.Core
             // Attribute identifiers stay the same in every locale, including template arguments.
             if (source == "STR" || source == "AGI" || source == "VIT" || source == "DEX") return source;
             Load();
+            if (source.StartsWith("> ", StringComparison.Ordinal))
+                return "> " + Translate(source.Substring(2), language, depth + 1);
             if (Texts.TryGetValue(source, out var entry))
                 return language == GameLanguage.English ? entry.en : entry.th;
             // Templates preserve values, hotkeys and markup while translating dynamic UI text.

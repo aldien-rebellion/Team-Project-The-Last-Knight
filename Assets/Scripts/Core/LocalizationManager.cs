@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,7 +46,7 @@ namespace TheLastKnight.Core
             { "MAIN_CONTINUE", "Continue" },
             { "MAIN_SETTINGS", "Settings" },
             { "MAIN_EXIT", "Exit" },
-            { "MAIN_CONTROLS_HINT", "A/D Move   Space Jump   Shift / RMB Dash\nLMB Attack / Parry   Q Potion   F Interact\nE Carnage Burst   R Buff   T Excalibur   B Status   M Map" },
+            { "MAIN_CONTROLS_HINT", "{0}/{1} Move   {2} Jump   {3} / {4} Dash\n{5} Attack   {6} Parry   {7} Potion   {8} Interact\n{9} Carnage Burst   {10} Buff   {11} Excalibur\n{12} Status   {13} Map   {14} Recall" },
 
             // Difficulty Selection
             { "DIFF_TITLE", "CHOOSE YOUR JOURNEY" },
@@ -97,7 +97,7 @@ namespace TheLastKnight.Core
 
             // Controls
             { "CONTROLS_TITLE", "PLAYER CONTROLS" },
-            { "CONTROLS_SUBTITLE", "Click a button to rebind, or Esc to cancel" },
+            { "CONTROLS_SUBTITLE", "Scroll for more controls. Click to rebind; Esc cancels" },
             { "REBIND_WAITING", "... Press any key ..." },
             { "BTN_RESET_CONTROLS", "Reset Controls to Default" },
             { "ACTION_MOVE_LEFT", "Move Left" },
@@ -112,7 +112,20 @@ namespace TheLastKnight.Core
             { "ACTION_EXCALIBUR", "Skill: Excalibur" },
             { "ACTION_INTERACT", "Interact" },
             { "ACTION_ADMIN_MODIFIER", "Admin Mode Modifier" },
-            { "ACTION_ADMIN_KEY", "Admin Mode Key" }
+            { "ACTION_ADMIN_KEY", "Admin Mode Key" },
+            { "ACTION_MOVE_LEFT_ALT", "Move Left (alternate)" },
+            { "ACTION_MOVE_RIGHT_ALT", "Move Right (alternate)" },
+            { "ACTION_SPRINT", "Sprint" },
+            { "ACTION_SPRINT_ALT", "Sprint (alternate)" },
+            { "ACTION_ATTACK_ALT", "Attack (alternate)" },
+            { "ACTION_DASH_ALT", "Dash (alternate)" },
+            { "ACTION_PREVIOUS", "Previous Skill" },
+            { "ACTION_NEXT", "Next Skill" },
+            { "ACTION_STATUS", "Open / Close Status" },
+            { "ACTION_MAP", "Open / Close Map" },
+            { "ACTION_MAP_VIEW", "Switch Map View" },
+            { "ACTION_RECALL", "Recall to Save Point" },
+            { "ACTION_DROP_ITEM", "Drop Held Item (Status)" }
         };
 
         private static readonly Dictionary<string, string> ThTexts = new Dictionary<string, string>
@@ -124,7 +137,7 @@ namespace TheLastKnight.Core
             { "MAIN_CONTINUE", "เล่นต่อ" },
             { "MAIN_SETTINGS", "ตั้งค่า" },
             { "MAIN_EXIT", "ออกจากเกม" },
-            { "MAIN_CONTROLS_HINT", "A/D เดิน   Space กระโดด   Shift / คลิกขวา พุ่งตัว\nคลิกซ้าย โจมตี / ปัดป้อง   Q ดื่มยา   F โต้ตอบ\nE สกิลหมุนดาบ   R บัฟ   T ดาบศักดิ์สิทธิ์   B สเตตัส   M แผนที่" },
+            { "MAIN_CONTROLS_HINT", "{0}/{1} เดิน   {2} กระโดด   {3} / {4} พุ่งตัว\n{5} โจมตี   {6} ปัดป้อง   {7} ดื่มยา   {8} โต้ตอบ\n{9} พายุดาบ   {10} บัฟ   {11} ดาบศักดิ์สิทธิ์\n{12} สเตตัส   {13} แผนที่   {14} กลับจุดบันทึก" },
 
             // Difficulty Selection
             { "DIFF_TITLE", "เลือกระดับความยาก" },
@@ -175,7 +188,7 @@ namespace TheLastKnight.Core
 
             // Controls
             { "CONTROLS_TITLE", "ปุ่มควบคุมตัวละคร" },
-            { "CONTROLS_SUBTITLE", "คลิกปุ่มเพื่อเปลี่ยน หรือกด Esc เพื่อยกเลิก" },
+            { "CONTROLS_SUBTITLE", "เลื่อนดูปุ่มทั้งหมด คลิกเพื่อเปลี่ยน กด Esc เพื่อยกเลิก" },
             { "REBIND_WAITING", "... กดปุ่มที่ต้องการ ..." },
             { "BTN_RESET_CONTROLS", "คืนค่าปุ่มเริ่มต้น" },
             { "ACTION_MOVE_LEFT", "เดินซ้าย" },
@@ -190,20 +203,32 @@ namespace TheLastKnight.Core
             { "ACTION_EXCALIBUR", "ทักษะ: ดาบศักดิ์สิทธิ์" },
             { "ACTION_INTERACT", "โต้ตอบ" },
             { "ACTION_ADMIN_MODIFIER", "ปุ่มเสริมโหมดแอดมิน" },
-            { "ACTION_ADMIN_KEY", "ปุ่มเปิดโหมดแอดมิน" }
+            { "ACTION_ADMIN_KEY", "ปุ่มเปิดโหมดแอดมิน" },
+            { "ACTION_MOVE_LEFT_ALT", "เดินซ้าย (ปุ่มเสริม)" },
+            { "ACTION_MOVE_RIGHT_ALT", "เดินขวา (ปุ่มเสริม)" },
+            { "ACTION_SPRINT", "วิ่ง" },
+            { "ACTION_SPRINT_ALT", "วิ่ง (ปุ่มเสริม)" },
+            { "ACTION_ATTACK_ALT", "โจมตี (ปุ่มเสริม)" },
+            { "ACTION_DASH_ALT", "พุ่งตัว (ปุ่มเสริม)" },
+            { "ACTION_PREVIOUS", "สกิลก่อนหน้า" },
+            { "ACTION_NEXT", "สกิลถัดไป" },
+            { "ACTION_STATUS", "เปิด / ปิดสเตตัส" },
+            { "ACTION_MAP", "เปิด / ปิดแผนที่" },
+            { "ACTION_MAP_VIEW", "สลับมุมมองแผนที่" },
+            { "ACTION_RECALL", "กลับจุดบันทึก" },
+            { "ACTION_DROP_ITEM", "ทิ้งไอเทมที่ถือ (หน้าสเตตัส)" }
         };
 
         public static string Get(string key)
         {
-            if (Current == GameLanguage.English)
-            {
-                if (EnTexts.TryGetValue(key, out var en)) return en;
-            }
-            else
-            {
-                if (ThTexts.TryGetValue(key, out var th)) return th;
-            }
-            return key;
+            var texts = Current == GameLanguage.English ? EnTexts : ThTexts;
+            if (!texts.TryGetValue(key, out string text)) return key;
+            if (key != "MAIN_CONTROLS_HINT") return text;
+            string[] actions = { "Move", "Move", "Jump", "Dash", "Dash", "Attack", "CounterAttack", "UseDrink", "Interact", "UseSkill", "UseBuff", "UseExcalibur", "ToggleStatus", "ToggleMap", "Recall" };
+            int[] indices = { 6, 8, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            var keys = new object[actions.Length];
+            for (int i = 0; i < actions.Length; i++) keys[i] = TheLastKnight.Input.KeyRebindManager.GetCurrentBindingDisplay(actions[i], indices[i]);
+            return string.Format(text, keys);
         }
 
         public static void ToggleLanguage()

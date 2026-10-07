@@ -81,7 +81,7 @@ namespace TheLastKnight.Player
                 }
                 AnimateVisuals();
             }
-            else if (Keyboard.current != null && Keyboard.current.hKey.wasPressedThisFrame)
+            else if (KeyRebindManager.WasPressedThisFrame("Recall"))
             {
                 if (!TryBeginRecall() && GameManager.Instance != null && !GameManager.Instance.InputBlocked &&
                     !_stats.IsDead && !GameManager.Instance.CanRecall)
@@ -187,7 +187,7 @@ namespace TheLastKnight.Player
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = new Vector2(t, 1f);
             rect.offsetMin = rect.offsetMax = Vector2.zero;
-            _label.text = $"กำลังกลับจุดเซฟ  {Mathf.Max(0f, ChannelDuration - _elapsed):0.0} วิ";
+            LocalizedText.Set(_label, $"กำลังกลับจุดเซฟ  {Mathf.Max(0f, ChannelDuration - _elapsed):0.0} วิ");
         }
     }
 }

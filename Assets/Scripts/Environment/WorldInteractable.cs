@@ -41,7 +41,7 @@ namespace TheLastKnight.Environment
             UpdateSelection(selected);
             if (!UsesWorldPrompt)
             {
-                if (selected && Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame) Interact();
+                if (selected && TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("Interact")) Interact();
                 return;
             }
             if (_prompt == null)
@@ -63,7 +63,7 @@ namespace TheLastKnight.Environment
             _prompt.transform.position = new Vector3(transform.position.x, promptY, transform.position.z);
             _prompt.gameObject.SetActive(selected);
             TheLastKnight.UI.LocalizedText.Set(_prompt, prompt);
-            bool fPressed = Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame;
+            bool fPressed = TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("Interact");
             if (selected && fPressed) Interact();
         }
         public abstract void Interact();

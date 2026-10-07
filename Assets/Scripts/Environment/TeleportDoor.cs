@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
@@ -433,27 +433,10 @@ namespace TheLastKnight.Environment
         private bool IsInteractPressed()
         {
 #if ENABLE_INPUT_SYSTEM
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.fKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame) return true;
-            }
-            if (Gamepad.current != null)
-            {
-                if (Gamepad.current.buttonNorth.wasPressedThisFrame || Gamepad.current.buttonSouth.wasPressedThisFrame) return true;
-            }
-            if (InputSystem.actions != null)
-            {
-                var interactAction = InputSystem.actions.FindAction("Interact");
-                if (interactAction != null && interactAction.WasPressedThisFrame()) return true;
-            }
+            return TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("Interact");
+#else
+            return UnityEngine.Input.GetKeyDown(_interactKey);
 #endif
-            try
-            {
-                if (UnityEngine.Input.GetKeyDown(_interactKey) || UnityEngine.Input.GetKeyDown(KeyCode.F) || UnityEngine.Input.GetKeyDown(KeyCode.E))
-                    return true;
-            }
-            catch {}
-            return false;
         }
 
         private void HandleInteraction()

@@ -39,6 +39,7 @@ namespace TheLastKnight.UI
             BuildUI();
             SceneManager.sceneLoaded += SceneLoaded;
             LocalizationManager.OnLanguageChanged += LanguageChanged;
+            TheLastKnight.Input.KeyRebindManager.OnBindingsChanged += RefreshText;
             RefreshText();
         }
 
@@ -46,6 +47,7 @@ namespace TheLastKnight.UI
         {
             SceneManager.sceneLoaded -= SceneLoaded;
             LocalizationManager.OnLanguageChanged -= LanguageChanged;
+            TheLastKnight.Input.KeyRebindManager.OnBindingsChanged -= RefreshText;
             if (_canvasObject != null) Destroy(_canvasObject);
             if (Instance == this) Instance = null;
         }
@@ -90,8 +92,8 @@ namespace TheLastKnight.UI
                     Close();
                     return;
                 }
-                if (keyboard.mKey.wasPressedThisFrame) Toggle();
-                if (IsOpen && keyboard.tabKey.wasPressedThisFrame) SwitchView();
+                if (TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("ToggleMap")) Toggle();
+                if (IsOpen && TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("SwitchMapView")) SwitchView();
             }
             if (!IsOpen) return;
             if (IsWorldView) { WorldMap.SetVerticesDirty(); return; }
@@ -233,10 +235,12 @@ namespace TheLastKnight.UI
         private void RefreshText()
         {
             bool thai = LocalizationManager.Current == GameLanguage.Thai;
+            string mapKey = TheLastKnight.Input.KeyRebindManager.GetCurrentBindingDisplay("ToggleMap", 0);
+            string viewKey = TheLastKnight.Input.KeyRebindManager.GetCurrentBindingDisplay("SwitchMapView", 0);
             _title.text = IsWorldView ? (thai ? "แผนที่โลก" : "WORLD ATLAS") : (thai ? "แผนที่พื้นที่" : "AREA MAP");
             _area.text = IsWorldView ? (thai ? "อาณาจักรทั้งหมด • 6 พื้นที่ • มุมมองจากด้านบน" : "THE WHOLE KINGDOM • 6 REGIONS • TOP-DOWN") : LocalizationManager.Translate(SceneManager.GetActiveScene().name);
             _subtitle.text = thai ? "ตำแหน่งทางเดินและห้อง • มุมมองด้านข้าง" : "SIDE VIEW • ROUTES & ROOMS";
-            _controls.text = thai ? "Tab สลับมุมมอง   •   M / Esc ปิดแผนที่" : "Tab Switch view   •   M / Esc Close map";
+            _controls.text = thai ? $"{viewKey} สลับมุมมอง   •   {mapKey} / Esc ปิดแผนที่" : $"{viewKey} Switch view   •   {mapKey} / Esc Close map";
             _worldTabText.text = thai ? "แผนที่โลก" : "WORLD";
             _localTabText.text = thai ? "ด้านข้าง" : "SIDE VIEW";
             _worldLegend.text = thai ? "◆ พื้นที่ปัจจุบัน     •     ทางสีทอง: เส้นทางเชื่อม     •     ทางสีแดง: ประตูผนึก" : "◆ Current region     •     Gold: connected route     •     Red: sealed gate";
@@ -250,7 +254,7 @@ namespace TheLastKnight.UI
                 _worldLocation.rectTransform.anchorMin = p + new Vector2(-.09f,.11f);
                 _worldLocation.rectTransform.anchorMax = p + new Vector2(.09f,.17f);
             }
-            _hintText.text = thai ? "M   แผนที่" : "M   MAP";
+            _hintText.text = thai ? $"{mapKey}   แผนที่" : $"{mapKey}   MAP";
             string[] names = thai ? new[] { "คุณ", "ศัตรู", "ประตู", "จุดเซฟ", "ร้านค้า" }
                                   : new[] { "You", "Enemy", "Gate", "Save", "Shop" };
             for (int i = 0; i < names.Length; i++) _legend[i].text = names[i];
