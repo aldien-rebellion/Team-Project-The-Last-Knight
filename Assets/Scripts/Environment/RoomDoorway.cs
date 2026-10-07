@@ -47,7 +47,13 @@ namespace TheLastKnight.Environment
         {
             if (!_autoTransitionOnEnter && _playerInRange)
             {
+                var manager = TheLastKnight.Core.GameManager.Instance;
+                if (manager != null && (manager.InputBlocked || manager.ArenaLocked || manager.Player == null || manager.Player.IsDead)) return;
+#if ENABLE_INPUT_SYSTEM
+                if (TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("Interact"))
+#else
                 if (UnityEngine.Input.GetKeyDown(_interactKey))
+#endif
                 {
                     PerformTransition();
                 }

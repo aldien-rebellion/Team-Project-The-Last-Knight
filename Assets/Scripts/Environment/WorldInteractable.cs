@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using TheLastKnight.Core;
 
 namespace TheLastKnight.Environment
@@ -8,6 +7,9 @@ namespace TheLastKnight.Environment
     public abstract class WorldInteractable : MonoBehaviour
     {
         private static readonly List<WorldInteractable> Active = new List<WorldInteractable>();
+        private static int _selectionFrame = -1;
+        private static int _interactionFrame = -1;
+        private static WorldInteractable _selected;
         public float interactionRange = 2.5f;
         public string prompt = "F  Interact";
         protected float promptHeight = 2f;
@@ -15,7 +17,16 @@ namespace TheLastKnight.Environment
         protected virtual void UpdateSelection(bool selected) { }
         protected virtual bool UsesWorldPrompt => true;
         private TextMesh _prompt;
-        protected virtual void OnEnable() { Active.Add(this); }
+        protected virtual bool CanInteract => interactionRange >= 0f;
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            // Keep enabled objects when Play Mode uses no scene reload.
+            Active.RemoveAll(item => item == null);
+            _selectionFrame = _interactionFrame = -1;
+            _selected = null;
+        }
+        protected virtual void OnEnable() { if (!Active.Contains(this)) Active.Add(this); }
         protected virtual void OnDisable()
         {
             Active.Remove(this);
@@ -25,23 +36,36 @@ namespace TheLastKnight.Environment
         {
             if (_prompt != null) Destroy(_prompt.gameObject);
         }
-        private void Update()
+        private static WorldInteractable FindClosest(Transform player)
         {
-            var manager = GameManager.Instance;
-            if (manager == null || manager.Player == null) return;
             WorldInteractable closest = null;
             float distance = float.PositiveInfinity;
+            var playerCollider = player.GetComponent<Collider2D>();
             foreach (var item in Active)
             {
-                if (item == null) continue;
-                float candidate = Vector2.Distance(item.transform.position, manager.Player.transform.position);
+                if (item == null || !item.isActiveAndEnabled || !item.CanInteract) continue;
+                Vector2 position = playerCollider != null && playerCollider.enabled
+                    ? playerCollider.ClosestPoint(item.transform.position) : (Vector2)player.position;
+                float candidate = Vector2.Distance(item.transform.position, position);
                 if (candidate <= item.interactionRange && candidate < distance) { distance = candidate; closest = item; }
             }
-            bool selected = closest == this && !manager.InputBlocked && !manager.Player.IsDead;
+            return closest;
+        }
+        private void LateUpdate()
+        {
+            var manager = GameManager.Instance;
+            if (_selectionFrame != Time.frameCount)
+            {
+                _selectionFrame = Time.frameCount;
+                _selected = manager != null && manager.Player != null && !manager.InputBlocked && !manager.Player.IsDead
+                    ? FindClosest(manager.Player.transform) : null;
+            }
+            bool selected = _selected == this && manager != null && !manager.InputBlocked &&
+                manager.Player != null && !manager.Player.IsDead && CanInteract;
             UpdateSelection(selected);
             if (!UsesWorldPrompt)
             {
-                if (selected && TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("Interact")) Interact();
+                TryInteract(selected);
                 return;
             }
             if (_prompt == null)
@@ -63,8 +87,16 @@ namespace TheLastKnight.Environment
             _prompt.transform.position = new Vector3(transform.position.x, promptY, transform.position.z);
             _prompt.gameObject.SetActive(selected);
             TheLastKnight.UI.LocalizedText.Set(_prompt, prompt);
-            bool fPressed = TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("Interact");
-            if (selected && fPressed) Interact();
+            TryInteract(selected);
+        }
+        private void TryInteract(bool selected)
+        {
+            if (!selected || _interactionFrame == Time.frameCount ||
+                !TheLastKnight.Input.KeyRebindManager.WasPressedThisFrame("Interact")) return;
+            // Opening a chest changes its range immediately. Other objects must
+            // not receive the same press when the closest target changes.
+            _interactionFrame = Time.frameCount;
+            Interact();
         }
         public abstract void Interact();
     }

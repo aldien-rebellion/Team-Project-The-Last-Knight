@@ -31,6 +31,7 @@ namespace TheLastKnight.Environment
 
         private void ShowOpened()
         {
+            interactionRange = -1f;
             prompt = "Pentagram collected";
             var sprite = GetComponent<SpriteRenderer>();
             if (sprite != null) sprite.color = new Color(0.65f, 0.65f, 0.65f);

@@ -505,8 +505,9 @@ namespace TheLastKnight.Tests
             }
         }
 
-        [Test]
-        public void WorldPickup_FullInventoryExplainsFailureAndAcceptsAvailableStackSpace()
+        [TestCase("Thai", "กระเป๋าเต็ม")]
+        [TestCase("English", "Bag full")]
+        public void WorldPickup_FullInventoryExplainsFailureAndAcceptsAvailableStackSpace(string language, string expectedNotice)
         {
             var playerObject = new GameObject("Test_FullBagPlayer");
             var dropObject = new GameObject("Test_FullBagPickup");
@@ -515,8 +516,11 @@ namespace TheLastKnight.Tests
             var pickupType = RuntimeType("TheLastKnight.Inventory.WorldItemPickup");
             var cooldown = pickupType.GetField("_nextInventoryFullNoticeTime", BindingFlags.Static | BindingFlags.NonPublic);
             float originalCooldown = (float)cooldown.GetValue(null);
+            var languageProperty = RuntimeType("TheLastKnight.Core.LocalizationManager").GetProperty("Current");
+            object originalLanguage = languageProperty.GetValue(null);
             try
             {
+                languageProperty.SetValue(null, Enum.Parse(languageProperty.PropertyType, language));
                 for (int i = 0; i < 24; i++) Set(Bag, i, "church_key", 1);
                 for (int i = 0; i < 5; i++) Set(Quick, i, "church_key", 1);
                 var player = playerObject.AddComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
@@ -529,7 +533,8 @@ namespace TheLastKnight.Tests
                 Call(pickup, "TryPickup", body);
                 Assert.That(Count(pickupType.GetProperty("ItemData").GetValue(pickup)), Is.EqualTo(2), "Full bags must not destroy unaccepted loot.");
                 var popups = UnityEngine.Object.FindObjectsByType(popupType, FindObjectsSortMode.None).Except(existingPopups).Cast<Component>().ToArray();
-                Assert.That(popups.Count(popup => popup.GetComponent<TextMesh>().text == "กระเป๋าเต็ม"), Is.EqualTo(1));
+                Assert.That(popups.Count(popup => popup.GetComponent<TextMesh>().text == expectedNotice), Is.EqualTo(1),
+                    "Full-bag notice must match the selected language.");
                 Call(pickup, "TryPickup", body);
                 Assert.That(UnityEngine.Object.FindObjectsByType(popupType, FindObjectsSortMode.None).Except(existingPopups).Count(), Is.EqualTo(1),
                     "Repeated trigger callbacks must not spam full-bag notices.");
@@ -546,6 +551,7 @@ namespace TheLastKnight.Tests
             }
             finally
             {
+                languageProperty.SetValue(null, originalLanguage);
                 cooldown.SetValue(null, originalCooldown);
                 foreach (Component popup in UnityEngine.Object.FindObjectsByType(popupType, FindObjectsSortMode.None).Except(existingPopups))
                     UnityEngine.Object.DestroyImmediate(popup.gameObject);

@@ -24,6 +24,7 @@ namespace TheLastKnight.Environment
         private static readonly int DestroyParam = Animator.StringToHash("Destroy");
 
         public bool IsDestroyed => _isDestroyed;
+        protected override bool CanInteract => base.CanInteract && !_isDestroyed;
 
         private void Awake()
         {

@@ -394,10 +394,7 @@ namespace TheLastKnight.Environment
         {
             if (TheLastKnight.Core.GameManager.Instance != null &&
                 (TheLastKnight.Core.GameManager.Instance.ArenaLocked || TheLastKnight.Core.GameManager.Instance.InputBlocked)) return;
-            if (!_playerInRange)
-            {
-                CheckPlayerOverlap();
-            }
+            CheckPlayerOverlap();
 
             if (!_playerInRange) return;
 
@@ -412,8 +409,9 @@ namespace TheLastKnight.Environment
 
         private void CheckPlayerOverlap()
         {
+            _playerInRange = false;
             if (_doorCollider == null) _doorCollider = GetComponent<BoxCollider2D>();
-            if (_doorCollider == null) return;
+            if (_doorCollider == null || !_doorCollider.enabled) return;
 
             if (_player == null || _playerCollider == null)
             {
@@ -423,11 +421,9 @@ namespace TheLastKnight.Environment
             if (_playerCollider != null && _doorCollider.bounds.Intersects(_playerCollider.bounds))
             {
                 _playerInRange = true;
-                if (_promptUI != null && (_selectionMenuUI == null || !_selectionMenuUI.IsOpen))
-                {
-                    _promptUI.SetActive(true);
-                }
             }
+            if (_promptUI != null)
+                _promptUI.SetActive(_playerInRange && (_selectionMenuUI == null || !_selectionMenuUI.IsOpen));
         }
 
         private bool IsInteractPressed()

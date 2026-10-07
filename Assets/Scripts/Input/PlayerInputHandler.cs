@@ -18,6 +18,7 @@ namespace TheLastKnight.Input
         private InputAction _nextAction;
         private InputAction _previousAction;
         private InputAction _useDrinkAction;
+        private InputAction _interactAction;
         private int _uiSkillFrame = -1, _uiBuffFrame = -1, _uiExcaliburFrame = -1, _uiDrinkFrame = -1;
 
         public void RequestUIAction(string action)
@@ -59,7 +60,8 @@ namespace TheLastKnight.Input
             // gameplay input while enabled; restore it after that UI handoff.
             var manager = TheLastKnight.Core.GameManager.Instance;
             if (manager != null && manager.InputBlocked) return;
-            if (_moveAction != null && !_moveAction.enabled) EnablePlayerActions();
+            if ((_moveAction != null && !_moveAction.enabled) ||
+                (_interactAction != null && !_interactAction.enabled)) EnablePlayerActions();
         }
 
         private void InitializeActions()
@@ -81,6 +83,7 @@ namespace TheLastKnight.Input
             _useBuffAction = InputSystem.actions.FindAction("UseBuff");
             _useExcaliburAction = InputSystem.actions.FindAction("UseExcalibur");
             _useDrinkAction = InputSystem.actions.FindAction("UseDrink");
+            _interactAction = InputSystem.actions.FindAction("Interact");
             _nextAction = InputSystem.actions.FindAction("Next");
             _previousAction = InputSystem.actions.FindAction("Previous");
 
@@ -103,10 +106,9 @@ namespace TheLastKnight.Input
             if (InputSystem.actions != null)
             {
                 var playerMap = InputSystem.actions.FindActionMap("Player");
-                if (playerMap != null && !playerMap.enabled)
-                {
-                    playerMap.Enable();
-                }
+                // A map reports enabled when ANY action is enabled. Enable the
+                // whole map even after a UI handoff left only some actions on.
+                playerMap?.Enable();
             }
 
             _moveAction?.Enable();
@@ -119,6 +121,7 @@ namespace TheLastKnight.Input
             _useBuffAction?.Enable();
             _useExcaliburAction?.Enable();
             _useDrinkAction?.Enable();
+            _interactAction?.Enable();
             _nextAction?.Enable();
             _previousAction?.Enable();
         }
@@ -149,6 +152,7 @@ namespace TheLastKnight.Input
             _useBuffAction?.Disable();
             _useExcaliburAction?.Disable();
             _useDrinkAction?.Disable();
+            _interactAction?.Disable();
             _nextAction?.Disable();
             _previousAction?.Disable();
         }

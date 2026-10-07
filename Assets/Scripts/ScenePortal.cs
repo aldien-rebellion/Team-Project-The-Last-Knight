@@ -194,6 +194,7 @@ public class ScenePortal : MonoBehaviour
 
     private void CheckPlayerOverlap()
     {
+        playerInRange = false;
         if (_boxCollider == null) _boxCollider = GetComponent<BoxCollider2D>();
         if (_boxCollider == null || !_boxCollider.enabled) return;
 
@@ -205,11 +206,8 @@ public class ScenePortal : MonoBehaviour
         if (_playerCollider != null && _boxCollider.bounds.Intersects(_playerCollider.bounds))
         {
             playerInRange = true;
-            if (popupUI != null)
-            {
-                popupUI.SetActive(true);
-            }
         }
+        if (popupUI != null) popupUI.SetActive(playerInRange);
     }
 
     void Update()
@@ -217,10 +215,8 @@ public class ScenePortal : MonoBehaviour
         var manager = TheLastKnight.Core.GameManager.Instance;
         if (manager == null || manager.InputBlocked || manager.ArenaLocked) return;
 
-        if (!playerInRange)
-        {
-            CheckPlayerOverlap();
-        }
+        // Reconcile every frame, including after teleports and collider exits.
+        CheckPlayerOverlap();
 
         if (!playerInRange) return;
 
