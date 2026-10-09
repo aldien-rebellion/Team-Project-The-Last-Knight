@@ -211,7 +211,7 @@ namespace TheLastKnight.Player
         private bool _dashInvincible;
         private float _dashIFrameTimer = 0f;
         private float _parryInvincibleUntil;
-        public bool IsInvincible { get => _dashIFrameTimer > 0f || _dashInvincible || Time.time < _parryInvincibleUntil || (GetComponent<TheLastKnight.Stats.PlayerStats>()?.HasUndyingBuff ?? false); private set => _dashInvincible = value; }
+        public bool IsInvincible { get => _dashIFrameTimer > 0f || _dashInvincible || Time.time < _parryInvincibleUntil || (GetComponent<TheLastKnight.Stats.PlayerStats>() is PlayerStats stats && (stats.AdminInvincible || stats.HasUndyingBuff)); private set => _dashInvincible = value; }
         private float _dashTimer = 0f;
         private float _dashCooldownTimer = 0f;
         private bool _hasDashedInAir = false;
@@ -1305,6 +1305,7 @@ namespace TheLastKnight.Player
         /// </summary>
         public void OnTakeDamage()
         {
+            if (GetComponent<PlayerStats>()?.AdminInvincible ?? false) return;
             var audioManager = TheLastKnight.Audio.AudioManager.Instance;
             if (Time.time >= _nextHurtVoiceTime)
             {

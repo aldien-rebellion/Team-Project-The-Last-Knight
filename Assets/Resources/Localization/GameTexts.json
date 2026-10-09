@@ -1956,6 +1956,22 @@
       "th": "เพิ่ม Status Point"
     },
     {
+      "en": "Add level +1",
+      "th": "เพิ่มเลเวล +1"
+    },
+    {
+      "en": "Add levels",
+      "th": "เพิ่มเลเวล"
+    },
+    {
+      "en": "Unavailable during boss combat",
+      "th": "ใช้รูปปั้นไม่ได้ระหว่างต่อสู้กับบอส"
+    },
+    {
+      "en": "Level: {0}",
+      "th": "เลเวล: {0}"
+    },
+    {
       "en": "Add",
       "th": "เพิ่ม"
     },

@@ -7,8 +7,11 @@ namespace TheLastKnight.Environment
     public class MedusaAura : MonoBehaviour
     {
         private readonly System.Collections.Generic.HashSet<PlayerStats> _players = new System.Collections.Generic.HashSet<PlayerStats>();
+        private MedusaSavePoint _savePoint;
+        public bool CanHeal => _savePoint == null || !_savePoint.IsBossCombatBlocked;
         private void Awake()
         {
+            _savePoint = GetComponent<MedusaSavePoint>();
             var area = GetComponent<CircleCollider2D>();
             area.isTrigger = true;
             area.radius = 4f;
@@ -17,6 +20,12 @@ namespace TheLastKnight.Environment
         {
             var player = other.GetComponentInParent<PlayerStats>();
             if (player == null) return;
+            if (!CanHeal)
+            {
+                _players.Remove(player);
+                player.SetRegenAura(this, false);
+                return;
+            }
             _players.Add(player);
             player.SetRegenAura(this, true);
         }

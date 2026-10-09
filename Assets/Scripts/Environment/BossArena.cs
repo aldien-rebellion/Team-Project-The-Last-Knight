@@ -20,6 +20,20 @@ namespace TheLastKnight.Environment
         private bool _bossMusicPlaying;
         private BoxCollider2D _area;
 
+        public bool IsCombatActive
+        {
+            get
+            {
+                if (boss == null || boss.IsDead || !boss.gameObject.activeInHierarchy) return false;
+                if (_entered || boss.CurrentHealth < boss.MaxHealth) return true;
+                var controller = boss.GetComponent<TheLastKnight.AI.EnemyController>();
+                if (controller == null) return false;
+                var state = controller.CurrentState;
+                return state == TheLastKnight.AI.EnemyAIState.Chase || state == TheLastKnight.AI.EnemyAIState.MeleeAttack
+                    || state == TheLastKnight.AI.EnemyAIState.RangedAttack || state == TheLastKnight.AI.EnemyAIState.Skill;
+            }
+        }
+
         private void Awake()
         {
             _area = GetComponent<BoxCollider2D>();

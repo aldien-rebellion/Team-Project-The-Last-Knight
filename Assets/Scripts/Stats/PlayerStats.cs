@@ -116,7 +116,15 @@ namespace TheLastKnight.Stats
         {
             if (active) _regenAuras.Add(source); else _regenAuras.Remove(source);
         }
-        public bool HasRegenAura => _regenAuras.Count > 0;
+        public bool HasRegenAura
+        {
+            get
+            {
+                foreach (var source in _regenAuras)
+                    if (source != null && (!(source is TheLastKnight.Environment.MedusaAura aura) || aura.CanHeal)) return true;
+                return false;
+            }
+        }
 
         public static event System.Action OnInsufficientStaminaGlobal;
         public event System.Action OnInsufficientStamina;
@@ -200,7 +208,7 @@ namespace TheLastKnight.Stats
             if (_playerController.CurrentState != PlayerState.Idle && _playerController.CurrentState != PlayerState.Walking) return;
             if (Time.time - _lastStaminaSpendTime < StaminaRegenDelay || _currentStamina >= MaxStamina) return;
 
-            float regenPercent = _regenAuras.Count > 0 ? AuraStaminaRegenPercent : BaseStaminaRegenPercent;
+            float regenPercent = HasRegenAura ? AuraStaminaRegenPercent : BaseStaminaRegenPercent;
             float regenRate = MaxStamina * regenPercent * TheLastKnight.Core.GameDifficultyManager.Regeneration;
             _currentStamina = Mathf.Min(MaxStamina, _currentStamina + regenRate * deltaTime);
         }
@@ -209,7 +217,7 @@ namespace TheLastKnight.Stats
         {
             if (IsDead || _playerController == null || HasUndyingBuff) return;
             if (_playerController.CurrentState != PlayerState.Idle && _playerController.CurrentState != PlayerState.Walking) return;
-            if (_regenAuras.Count == 0) return;
+            if (!HasRegenAura) return;
             float maxRegenHP = MaxHP * MaxAuraHPPercent;
             if (Time.time - _lastDamageTime < HPRegenDelay || _currentHP >= maxRegenHP) return;
 
@@ -755,7 +763,7 @@ namespace TheLastKnight.Stats
         /// </summary>
         public void AddEXP(int amount)
         {
-            _currentEXP += Mathf.Max(0, amount);
+            _currentEXP = (int)System.Math.Min(int.MaxValue, (long)_currentEXP + Mathf.Max(0, amount));
             Debug.Log($"[PlayerStats] Gained +{amount} EXP. Total: {_currentEXP}/{EXPNeeded}");
 
             while (_currentEXP >= EXPNeeded)
@@ -769,11 +777,22 @@ namespace TheLastKnight.Stats
         private void LevelUp()
         {
             _currentEXP -= EXPNeeded;
-            _currentLevel++;
+            AddLevel();
+        }
+
+        /// <summary>Grants one level with normal rewards, preserving accumulated EXP.</summary>
+        public void AddLevel() => AddLevels(1);
+
+        /// <summary>Grants levels with normal rewards, preserving accumulated EXP.</summary>
+        public void AddLevels(int amount)
+        {
+            int levelsGained = Mathf.Min(Mathf.Max(0, amount), int.MaxValue - _currentLevel);
+            if (levelsGained == 0) return;
+            _currentLevel += levelsGained;
             int pointsGained = (_statsTemplate != null && _statsTemplate.statPointsPerLevel > 0)
                 ? _statsTemplate.statPointsPerLevel
                 : DefaultStatPointsPerLevel;
-            _availableStatPoints += pointsGained; // Grant 10 stat upgrade points per level
+            _availableStatPoints = (int)System.Math.Min(int.MaxValue, (long)_availableStatPoints + (long)pointsGained * levelsGained);
 
             RecalculateStats();
             
@@ -897,6 +916,7 @@ namespace TheLastKnight.Stats
 
         public void TakeDamage(float damage, bool isStun, float stunDuration = 1.0f)
         {
+            if (AdminInvincible) return;
             TakeDamage(damage);
             if (isStun && !IsDead && !HasPurityBuff)
             {

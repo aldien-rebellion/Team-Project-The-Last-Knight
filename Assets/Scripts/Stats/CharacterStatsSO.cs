@@ -84,8 +84,10 @@ namespace TheLastKnight.Stats
         /// </summary>
         public int GetExpNeededForLevel(int level)
         {
-            if (level <= 1) return baseExpNeeded;
-            return Mathf.RoundToInt(baseExpNeeded * Mathf.Pow(expGrowthMultiplier, level - 1));
+            if (level <= 1) return Mathf.Max(1, baseExpNeeded);
+            float expNeeded = baseExpNeeded * Mathf.Pow(expGrowthMultiplier, level - 1);
+            // Admin level boosts can exceed the range of the exponential EXP curve.
+            return expNeeded >= int.MaxValue ? int.MaxValue : Mathf.Max(1, Mathf.RoundToInt(expNeeded));
         }
     }
 }

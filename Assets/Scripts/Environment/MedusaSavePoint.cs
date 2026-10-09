@@ -11,11 +11,16 @@ namespace TheLastKnight.Environment
     public class MedusaSavePoint : WorldInteractable
     {
         public bool grantsCityRune;
+        [Tooltip("Only pre-boss checkpoints use this. Healing and interaction stop until this boss encounter ends.")]
+        public BossArena bossCombatArena;
+        public bool IsBossCombatBlocked => bossCombatArena != null && bossCombatArena.IsCombatActive;
         private int _selectedOption;
         private bool _canChoose;
         private GameObject _choiceCanvas;
         private RectTransform _choicePanel;
         private UnityEngine.UI.Text[] _choiceLabels;
+        private UnityEngine.UI.Button[] _choiceButtons;
+        private UnityEngine.UI.Text _choiceHint;
         protected override bool UsesWorldPrompt => false;
         protected override TextAnchor PromptAnchor => TextAnchor.MiddleLeft;
         private int OptionCount => grantsCityRune ? 3 : 2;
@@ -24,7 +29,7 @@ namespace TheLastKnight.Environment
 
         protected override void UpdateSelection(bool selected)
         {
-            _canChoose = selected;
+            _canChoose = selected && !IsBossCombatBlocked;
             if (!selected) _selectedOption = 0;
             else if (Mouse.current != null)
             {
@@ -66,6 +71,7 @@ namespace TheLastKnight.Environment
             _choicePanel.pivot = new Vector2(0f, 0.5f);
             _choicePanel.sizeDelta = new Vector2(270f, OptionCount * 30f + 20f);
             _choiceLabels = new UnityEngine.UI.Text[OptionCount];
+            _choiceButtons = new UnityEngine.UI.Button[OptionCount];
             for (int i = 0; i < OptionCount; i++)
             {
                 int option = i;
@@ -80,6 +86,7 @@ namespace TheLastKnight.Environment
                 // These choices use F / mouse wheel, not UI keyboard navigation.
                 // Clicking a row must not make Space submit it instead of jumping.
                 button.navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.None };
+                _choiceButtons[i] = button;
                 var rect = button.GetComponent<RectTransform>();
                 rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
                 rect.pivot = new Vector2(0f, 1f);
@@ -94,6 +101,7 @@ namespace TheLastKnight.Environment
                 _choiceLabels[i].alignment = TextAnchor.MiddleLeft;
             }
             var hint = RuntimeUI.Label(panel.transform, "ลูกกลิ้งเลือก • F หรือคลิกเพื่อยืนยัน", 12);
+            _choiceHint = hint;
             hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = new Vector2(0f, 1f);
             hint.rectTransform.pivot = new Vector2(0f, 1f);
             hint.rectTransform.anchoredPosition = new Vector2(0f, -30f * OptionCount);
@@ -103,11 +111,14 @@ namespace TheLastKnight.Environment
         private void RefreshChoiceLabels()
         {
             if (_choiceLabels == null) return;
+            bool blocked = IsBossCombatBlocked;
             for (int i = 0; i < _choiceLabels.Length; i++)
             {
+                _choiceButtons[i].interactable = !blocked;
                 LocalizedText.Set(_choiceLabels[i], (i == _selectedOption ? "> " : "   ") + OptionLabel(i));
-                _choiceLabels[i].color = i == _selectedOption ? new Color(1f, 0.88f, 0.45f) : Color.white;
+                _choiceLabels[i].color = blocked ? Color.gray : i == _selectedOption ? new Color(1f, 0.88f, 0.45f) : Color.white;
             }
+            LocalizedText.Set(_choiceHint, blocked ? "ใช้รูปปั้นไม่ได้ระหว่างต่อสู้กับบอส" : "ลูกกลิ้งเลือก • F หรือคลิกเพื่อยืนยัน");
         }
 
         protected override void OnDisable()
@@ -137,6 +148,11 @@ namespace TheLastKnight.Environment
         {
             var manager = GameManager.Instance;
             if (manager == null || manager.Player == null || manager.InputBlocked || manager.Player.IsDead) return;
+            if (IsBossCombatBlocked)
+            {
+                FloatingCombatText.Show(transform.position, "ใช้รูปปั้นไม่ได้ระหว่างต่อสู้กับบอส", Color.yellow);
+                return;
+            }
             if (_selectedOption == OptionCount - 1) { RespawnMonsters(); return; }
             if (grantsCityRune && _selectedOption == 1) { Examine(); return; }
             bool saved = manager.SaveAt(manager.Player.transform.position, out string error);

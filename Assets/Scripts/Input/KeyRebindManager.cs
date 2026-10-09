@@ -24,6 +24,7 @@ namespace TheLastKnight.Input
     {
         private const string PrefKey = "TheLastKnight_BindingOverridesJson";
         private static InputActionRebindingExtensions.RebindingOperation _currentRebindOp;
+        public static bool IsRebinding => _currentRebindOp != null;
         public static event Action OnBindingsChanged;
         public static int RebindFinishedFrame { get; private set; } = -1;
 
@@ -61,9 +62,7 @@ namespace TheLastKnight.Input
                 new RebindableActionInfo("ToggleMap", 0, "ACTION_MAP"),
                 new RebindableActionInfo("SwitchMapView", 0, "ACTION_MAP_VIEW"),
                 new RebindableActionInfo("Recall", 0, "ACTION_RECALL"),
-                new RebindableActionInfo("DropItem", 0, "ACTION_DROP_ITEM"),
-                new RebindableActionInfo("AdminModeModifier", 0, "ACTION_ADMIN_MODIFIER"),
-                new RebindableActionInfo("AdminModeKey", 0, "ACTION_ADMIN_KEY")
+                new RebindableActionInfo("DropItem", 0, "ACTION_DROP_ITEM")
             };
         }
 

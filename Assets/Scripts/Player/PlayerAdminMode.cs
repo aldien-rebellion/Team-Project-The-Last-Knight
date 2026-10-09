@@ -9,7 +9,7 @@ using TheLastKnight.Stats;
 
 namespace TheLastKnight.Player
 {
-    /// <summary>Runtime developer panel for the local player. Toggle with F3 + G.</summary>
+    /// <summary>Runtime developer panel. Hold G, then O, then D to toggle.</summary>
     public sealed class PlayerAdminMode : MonoBehaviour
     {
         private static readonly Vector2 InitialWindowSize = new Vector2(460f, 560f);
@@ -23,6 +23,7 @@ namespace TheLastKnight.Player
         private bool _infiniteHealth;
         private bool _noCooldowns;
         private bool _statusImmunity;
+        private int _toggleSequenceStep;
         private GUIStyle _rowStyle;
 
         public static bool IsAdminModeOpen { get; private set; }
@@ -52,10 +53,37 @@ namespace TheLastKnight.Player
 
         private void OnDisable()
         {
+            _toggleSequenceStep = 0;
+            ApplyPermissions(false);
             if (_isOpen)
             {
                 SetOpen(false);
             }
+        }
+
+        private void OnEnable() => ApplyPermissions();
+
+        public void SetInfiniteHealth(bool enabled)
+        {
+            _infiniteHealth = enabled;
+            ApplyPermissions();
+        }
+
+        private void ApplyPermissions(bool active = true)
+        {
+            var stats = GetComponent<PlayerStats>();
+            var controller = GetComponent<PlayerController>();
+            if (stats != null) stats.AdminInvincible = active && _infiniteHealth;
+            if (controller != null)
+            {
+                controller.AdminNoCooldown = active && _noCooldowns;
+                controller.AdminStatusImmunity = active && _statusImmunity;
+            }
+        }
+
+        private void OnApplicationFocus(bool focused)
+        {
+            if (!focused) _toggleSequenceStep = 3;
         }
 
         private void OnDestroy()
@@ -109,43 +137,49 @@ namespace TheLastKnight.Player
                     SetOpen(false);
                 }
             }
-
-            var stats = GetComponent<PlayerStats>();
-            var controller = GetComponent<PlayerController>();
-            if (stats != null) stats.AdminInvincible = _infiniteHealth;
-            if (controller != null)
-            {
-                controller.AdminNoCooldown = _noCooldowns;
-                controller.AdminStatusImmunity = _statusImmunity;
-            }
         }
 
         private void HandleToggleInput()
         {
-            bool togglePressed = false;
-            var actions = InputSystem.actions;
-            var toggleAction = actions != null ? actions.FindAction("AdminModeKey") : null;
-            var modifierAction = actions != null ? actions.FindAction("AdminModeModifier") : null;
-            if (toggleAction != null && modifierAction != null)
+            var kb = Keyboard.current;
+            if (kb == null || KeyRebindManager.IsRebinding)
             {
-                if (!toggleAction.enabled) toggleAction.Enable();
-                if (!modifierAction.enabled) modifierAction.Enable();
-                togglePressed = toggleAction.WasPressedThisFrame() && modifierAction.IsPressed();
+                _toggleSequenceStep = 3;
+                return;
             }
-
-            if (!togglePressed)
-            {
-                var kb = Keyboard.current;
-                if (kb != null)
-                {
-                    togglePressed = kb.gKey.wasPressedThisFrame && kb.f3Key.isPressed;
-                }
-            }
-
-            if (togglePressed)
-            {
+            if (AdvanceToggleSequence(kb.gKey.isPressed, kb.gKey.wasPressedThisFrame,
+                kb.oKey.isPressed, kb.oKey.wasPressedThisFrame, kb.dKey.isPressed, kb.dKey.wasPressedThisFrame))
                 SetOpen(!_isOpen);
+        }
+
+        private bool AdvanceToggleSequence(bool gHeld, bool gPressed, bool oHeld, bool oPressed, bool dHeld, bool dPressed)
+        {
+            // After a completed/invalid chord, release every key before starting again.
+            if (_toggleSequenceStep == 3)
+            {
+                if (!gHeld && !oHeld && !dHeld) _toggleSequenceStep = 0;
+                return false;
             }
+            switch (_toggleSequenceStep)
+            {
+                case 0:
+                    if (gPressed && gHeld && !oHeld && !dHeld) _toggleSequenceStep = 1;
+                    else if (gHeld || oHeld || dHeld) _toggleSequenceStep = 3;
+                    break;
+                case 1:
+                    if (!gHeld || dHeld) _toggleSequenceStep = 3;
+                    else if (oHeld && oPressed) _toggleSequenceStep = 2;
+                    break;
+                case 2:
+                    if (!gHeld || !oHeld) _toggleSequenceStep = 3;
+                    else if (dHeld && dPressed)
+                    {
+                        _toggleSequenceStep = 3;
+                        return true;
+                    }
+                    break;
+            }
+            return false;
         }
 
         private void OnGUI()
@@ -167,9 +201,7 @@ namespace TheLastKnight.Player
             {
                 _rowStyle = new GUIStyle(GUI.skin.label) { wordWrap = true };
             }
-            string modifier = KeyRebindManager.GetCurrentBindingDisplay("AdminModeModifier", 0);
-            string key = KeyRebindManager.GetCurrentBindingDisplay("AdminModeKey", 0);
-            _windowRect = GUI.Window(731942, _windowRect, DrawWindow, "PLAYER ADMIN  |  " + modifier + " + " + key);
+            _windowRect = GUI.Window(731942, _windowRect, DrawWindow, "PLAYER ADMIN  |  G > O > D");
         }
 
         private void DrawWindow(int id)
@@ -177,10 +209,23 @@ namespace TheLastKnight.Player
             GUILayout.BeginVertical();
             GUILayout.Label(LocalizationManager.Translate("สิทธิ์แต่ละอย่างเปิดหรือปิดแยกกันได้"), GUI.skin.box);
             var stats = GetComponent<PlayerStats>();
-            var controller = GetComponent<PlayerController>();
-            _infiniteHealth = GUILayout.Toggle(_infiniteHealth, LocalizationManager.Translate("อมตะ (ไม่รับความเสียหาย)"));
+            bool infiniteHealth = GUILayout.Toggle(_infiniteHealth, LocalizationManager.Translate("อมตะ (ไม่รับความเสียหาย)"));
+            if (infiniteHealth != _infiniteHealth) SetInfiniteHealth(infiniteHealth);
             _noCooldowns = GUILayout.Toggle(_noCooldowns, LocalizationManager.Translate("ปิดคูลดาวน์สกิล / โจมตี / แดช"));
             _statusImmunity = GUILayout.Toggle(_statusImmunity, LocalizationManager.Translate("ต้านทานสตันและสถานะผิดปกติ"));
+            ApplyPermissions();
+
+            GUILayout.Space(8f);
+            GUILayout.Label(LocalizationManager.Translate("เพิ่มเลเวล"));
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("+1", GUILayout.Width(70f)) && stats != null)
+                stats.AddLevel();
+            if (GUILayout.Button("+10", GUILayout.Width(70f)) && stats != null)
+                stats.AddLevels(10);
+            if (GUILayout.Button("+100", GUILayout.Width(70f)) && stats != null)
+                stats.AddLevels(100);
+            GUILayout.Label(stats != null ? LocalizationManager.Translate("เลเวล: " + stats.Level) : LocalizationManager.Translate("ไม่พบ PlayerStats"));
+            GUILayout.EndHorizontal();
 
             GUILayout.Space(8f);
             GUILayout.Label(LocalizationManager.Translate("เพิ่ม Status Point"));

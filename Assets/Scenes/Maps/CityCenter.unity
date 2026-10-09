@@ -5333,6 +5333,7 @@ MonoBehaviour:
   interactionRange: 2.5
   prompt: F  Interact
   grantsCityRune: 1
+  bossCombatArena: {fileID: 0}
 --- !u!114 &158897302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66476,6 +66477,72 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1001 &1428745845
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1756866606}
+    m_Modifications:
+    - target: {fileID: 7342525046271473102, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: bossCombatArena
+      value: 
+      objectReference: {fileID: 254899525}
+    - target: {fileID: 7750168545052675766, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_Name
+      value: Medusa Pre-Boss Save Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 124
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.5799828
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+--- !u!4 &1428745846 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7998668387376054860, guid: dec73cdea2f30ae48818e1b1d1680d5e, type: 3}
+  m_PrefabInstance: {fileID: 1428745845}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1539500305
 GameObject:
   m_ObjectHideFlags: 0
@@ -76920,6 +76987,7 @@ Transform:
   - {fileID: 291804764}
   - {fileID: 437722324}
   - {fileID: 1575984077}
+  - {fileID: 1428745846}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1781717252
