@@ -25,10 +25,12 @@ namespace TheLastKnight.Tests
         private GameObject _player;
         private Component _controller;
         private Component _stats;
+        private object _originalDifficulty;
 
         [SetUp]
         public void SetUp()
         {
+            _originalDifficulty = RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("Current").GetValue(null);
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab");
             _player = UnityEngine.Object.Instantiate(prefab);
             _player.transform.position = new Vector3(30000, 30000, 0);
@@ -44,6 +46,7 @@ namespace TheLastKnight.Tests
         [TearDown]
         public void TearDown()
         {
+            RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("Current").SetValue(null, _originalDifficulty);
             if (_player != null)
             {
                 UnityEngine.Object.DestroyImmediate(_player);
@@ -257,13 +260,14 @@ namespace TheLastKnight.Tests
             float def5 = (float)GetProp(_stats, "Defense");
             Assert.That(def5, Is.EqualTo(5f).Within(0.01f), "DEF at level 5 should be 5");
 
-            // Verify damage reduction: 20 raw damage → after DEF(5) → 15 actual damage taken
+            // Normalize difficulty to test 20 damage before DEF(5) → 15 actual damage taken.
             float hpBefore = (float)GetProp(_stats, "CurrentHP");
-            _stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(_stats, new object[] { 20f });
+            float incomingMultiplier = (float)RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("EnemyDamage").GetValue(null);
+            _stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(_stats, new object[] { 20f / incomingMultiplier });
             float hpAfter = (float)GetProp(_stats, "CurrentHP");
             float damageTaken = hpBefore - hpAfter;
 
-            // 20 * 1.0 (normal difficulty) - 5 DEF = 15
+            // 20 - 5 DEF = 15 regardless of the selected difficulty.
             Assert.That(damageTaken, Is.EqualTo(15f).Within(0.01f), "Damage should be reduced by DEF");
         }
 
@@ -427,29 +431,44 @@ namespace TheLastKnight.Tests
             var regenMethod = _stats.GetType().GetMethod("RegenerateStamina");
             var setLastSpendTime = _stats.GetType().GetMethod("SetLastStaminaSpendTimeForTesting");
 
-            // Spend stamina
+            var stateProperty = _controller.GetType().GetProperty("CurrentState");
+            stateProperty.SetValue(_controller, Enum.Parse(stateProperty.PropertyType, "Idle"));
+            float initialStamina = (float)GetProp(_stats, "CurrentStamina");
+            float cost = (float)_stats.GetType().GetMethod("GetStaminaCost").Invoke(_stats, new object[] { 40f });
             spendMethod.Invoke(_stats, new object[] { 40f });
             float stmAfterSpend = (float)GetProp(_stats, "CurrentStamina");
-            Assert.That(stmAfterSpend, Is.EqualTo(60f).Within(0.01f));
+            Assert.That(stmAfterSpend, Is.EqualTo(initialStamina - cost).Within(0.01f));
 
-            // While within delay (e.g. 0.2s elapsed), regen should not happen
-            setLastSpendTime.Invoke(_stats, new object[] { Time.time - 0.2f });
+            // Regeneration stays blocked before the 0.25 second delay has elapsed.
+            setLastSpendTime.Invoke(_stats, new object[] { Time.time - 0.24f });
             regenMethod.Invoke(_stats, new object[] { 0.5f });
             float stmDuringDelay = (float)GetProp(_stats, "CurrentStamina");
-            Assert.That(stmDuringDelay, Is.EqualTo(60f).Within(0.01f), "Stamina must not regenerate during delay period");
+            Assert.That(stmDuringDelay, Is.EqualTo(stmAfterSpend).Within(0.01f), "Stamina must not regenerate during delay period");
 
-            // After delay has passed (e.g. 2.0s elapsed > StaminaRegenDelay), regen should proceed
-            setLastSpendTime.Invoke(_stats, new object[] { Time.time - 2.0f });
+            // Stamina-consuming actions still block regeneration after the delay.
+            setLastSpendTime.Invoke(_stats, new object[] { Time.time - 0.26f });
+            foreach (string action in new[] { "Running", "Jumping", "Falling", "Dashing", "Attacking", "UsingSkill", "Buffing", "Excalibur" })
+            {
+                stateProperty.SetValue(_controller, Enum.Parse(stateProperty.PropertyType, action));
+                regenMethod.Invoke(_stats, new object[] { 0.5f });
+                Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(stmAfterSpend).Within(0.01f), action + " must block stamina regeneration.");
+            }
+
+            // Once idle, regeneration can resume just after 0.25 seconds.
+            stateProperty.SetValue(_controller, Enum.Parse(stateProperty.PropertyType, "Idle"));
             regenMethod.Invoke(_stats, new object[] { 0.5f });
             float stmAfterDelay = (float)GetProp(_stats, "CurrentStamina");
-            Assert.That(stmAfterDelay, Is.GreaterThan(60f), "Stamina must regenerate after delay period");
+            Assert.That(stmAfterDelay, Is.GreaterThan(stmAfterSpend), "Stamina must regenerate after delay period");
         }
 
-        [Test]
-        public void Jump_Consumes15Stamina_AndFailsWhenInsufficientStamina()
+        [TestCase(0, 7.5f)]
+        [TestCase(1, 11.25f)]
+        [TestCase(2, 15f)]
+        public void Jump_ConsumesDifficultyStamina_AndFailsWhenInsufficientStamina(int mode, float expectedCost)
         {
-            // Set stamina to 10 (< 15)
-            SetField(_stats, "_currentStamina", 10f);
+            var difficulty = RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("Current");
+            difficulty.SetValue(null, Enum.ToObject(difficulty.PropertyType, mode));
+            SetField(_stats, "_currentStamina", expectedCost - 0.1f);
 
             // Grounded jump setup
             SetField(_controller, "_jumpBufferCounter", 0.15f);
@@ -461,11 +480,11 @@ namespace TheLastKnight.Tests
             // Jump failed due to lack of stamina: velocity.y is not JumpForce and state is not Jumping
             Vector2 velAfter = (Vector2)GetField(_controller, "_velocity");
             float jumpForce = (float)GetProp(_controller, "JumpForce");
-            Assert.That(velAfter.y, Is.LessThan(jumpForce), "Jump must fail when stamina < 15");
+            Assert.That(velAfter.y, Is.LessThan(jumpForce), "Jump must fail below its stamina cost");
             Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.Not.EqualTo("Jumping"));
-            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(10f).Within(0.01f));
+            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(expectedCost - 0.1f).Within(0.01f));
 
-            // Set stamina to 20 (>= 15)
+            // Set stamina above the cost for every difficulty.
             SetField(_stats, "_currentStamina", 20f);
             SetField(_controller, "_jumpBufferCounter", 0.15f);
             SetField(_controller, "_coyoteTimeCounter", 0.15f);
@@ -474,19 +493,22 @@ namespace TheLastKnight.Tests
 
             velAfter = (Vector2)GetField(_controller, "_velocity");
             jumpForce = (float)GetProp(_controller, "JumpForce");
-            Assert.That(velAfter.y, Is.EqualTo(jumpForce).Within(0.1f), "Jump should succeed when stamina >= 15");
-            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(5f).Within(0.01f), "Jump must consume 15 stamina");
+            Assert.That(velAfter.y, Is.EqualTo(jumpForce).Within(0.1f), "Jump should succeed with enough stamina");
+            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(20f - expectedCost).Within(0.01f), "Jump must consume the selected difficulty cost");
         }
 
-        [Test]
-        public void DoubleJump_Consumes15Stamina_AndFailsWhenInsufficientStamina()
+        [TestCase(0, 7.5f)]
+        [TestCase(1, 11.25f)]
+        [TestCase(2, 15f)]
+        public void DoubleJump_ConsumesDifficultyStamina_AndFailsWhenInsufficientStamina(int mode, float expectedCost)
         {
+            var difficulty = RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("Current");
+            difficulty.SetValue(null, Enum.ToObject(difficulty.PropertyType, mode));
             // Unlock double jump
             SetField(_stats, "_agility", 250);
             _stats.GetType().GetMethod("RecalculateStats", new[] { typeof(bool) })?.Invoke(_stats, new object[] { false });
 
-            // Set stamina to 10 (< 15)
-            SetField(_stats, "_currentStamina", 10f);
+            SetField(_stats, "_currentStamina", expectedCost - 0.1f);
 
             // In air setup
             SetField(_controller, "_velocity", new Vector2(0, -10f));
@@ -496,45 +518,47 @@ namespace TheLastKnight.Tests
 
             Invoke(_controller, "UpdateNormalMovement");
 
-            Assert.IsFalse((bool)GetProp(_controller, "HasDoubleJumped"), "Double jump must not occur when stamina < 15");
-            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(10f).Within(0.01f));
+            Assert.IsFalse((bool)GetProp(_controller, "HasDoubleJumped"), "Double jump must not occur below its stamina cost");
+            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(expectedCost - 0.1f).Within(0.01f));
 
-            // Set stamina to 15 (>= 15)
-            SetField(_stats, "_currentStamina", 15f);
+            // Exact cost must allow double jump.
+            SetField(_stats, "_currentStamina", expectedCost);
             SetField(_controller, "_jumpBufferCounter", 0.15f);
 
             Invoke(_controller, "UpdateNormalMovement");
 
-            Assert.IsTrue((bool)GetProp(_controller, "HasDoubleJumped"), "Double jump must succeed when stamina >= 15");
-            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(0f).Within(0.01f), "Double jump must consume 15 stamina");
+            Assert.IsTrue((bool)GetProp(_controller, "HasDoubleJumped"), "Double jump must succeed with enough stamina");
+            Assert.That((float)GetProp(_stats, "CurrentStamina"), Is.EqualTo(0f).Within(0.01f), "Double jump must consume the selected difficulty cost");
         }
 
-        [Test]
-        public void StaminaRegen_RatesMatchRequirements_Normal10Percent_Aura20Percent()
+        [TestCase(0, 1f)]
+        [TestCase(1, 1f)]
+        [TestCase(2, 0.5f)]
+        public void StaminaRegen_RatesScaleWithDifficulty_Normal10Percent_Aura20Percent(int mode, float multiplier)
         {
+            var difficulty = RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("Current");
+            difficulty.SetValue(null, Enum.ToObject(difficulty.PropertyType, mode));
             var regenMethod = _stats.GetType().GetMethod("RegenerateStamina");
             var setLastSpendTime = _stats.GetType().GetMethod("SetLastStaminaSpendTimeForTesting");
             var setRegenAura = _stats.GetType().GetMethod("SetRegenAura");
 
-            // Max stamina is 100
             float maxStamina = (float)GetProp(_stats, "MaxStamina");
-            Assert.That(maxStamina, Is.EqualTo(100f).Within(0.01f));
 
             // Set stamina to 0
             SetField(_stats, "_currentStamina", 0f);
             setLastSpendTime.Invoke(_stats, new object[] { Time.time - 2.0f });
 
-            // 1. Normal regen (no aura): 10% per second -> 10 stamina in 1 sec
+            // 1. Base regeneration uses 10% of maximum stamina and the difficulty multiplier.
             setRegenAura.Invoke(_stats, new object[] { _stats, false });
             regenMethod.Invoke(_stats, new object[] { 1.0f });
             float stmNormal = (float)GetProp(_stats, "CurrentStamina");
-            Assert.That(stmNormal, Is.EqualTo(10f).Within(0.01f), "Normal stamina regen should be 10% of MaxStamina per second");
+            Assert.That(stmNormal, Is.EqualTo(maxStamina * 0.1f * multiplier).Within(0.01f));
 
-            // 2. Regen Aura: 20% per second -> 20 stamina in 1 sec
+            // 2. Aura regeneration adds 20% of maximum stamina and the same difficulty multiplier.
             setRegenAura.Invoke(_stats, new object[] { _stats, true });
             regenMethod.Invoke(_stats, new object[] { 1.0f });
             float stmAura = (float)GetProp(_stats, "CurrentStamina");
-            Assert.That(stmAura, Is.EqualTo(30f).Within(0.01f), "Regen Aura stamina regen should be 20% of MaxStamina per second");
+            Assert.That(stmAura - stmNormal, Is.EqualTo(maxStamina * 0.2f * multiplier).Within(0.01f));
         }
 
         [Test]
@@ -700,16 +724,33 @@ namespace TheLastKnight.Tests
             }
         }
 
-        [Test]
-        public void LevelUp_Grants10StatPointsPerLevel()
+        [TestCase(1, 100)]
+        [TestCase(70, 84000)]
+        public void LevelUp_Grants10StatPointsPerLevel(int startingLevel, int expectedExpNeeded)
         {
+            SetField(_stats, "_currentLevel", startingLevel);
             int initialPoints = (int)GetProp(_stats, "StatPoints");
             int initialLevel = (int)GetProp(_stats, "Level");
             int expNeeded = (int)GetProp(_stats, "EXPNeeded");
+            Assert.That(expNeeded, Is.EqualTo(expectedExpNeeded));
 
-            // Add enough EXP to trigger level up
+            // Level 70 must need all 15 maximum monster rewards; level 1 starts at 100 EXP.
             var addExpMethod = _stats.GetType().GetMethod("AddEXP");
-            addExpMethod.Invoke(_stats, new object[] { expNeeded });
+            int lastDrop = startingLevel == 70 ? 5600 : 1;
+            if (startingLevel == 70)
+            {
+                for (int kill = 0; kill < 14; kill++)
+                {
+                    addExpMethod.Invoke(_stats, new object[] { lastDrop });
+                    Assert.That((int)GetProp(_stats, "Level"), Is.EqualTo(initialLevel), "The first 14 maximum rewards must not level up.");
+                }
+            }
+            else
+            {
+                addExpMethod.Invoke(_stats, new object[] { expNeeded - lastDrop });
+            }
+            Assert.That((int)GetProp(_stats, "Level"), Is.EqualTo(initialLevel));
+            addExpMethod.Invoke(_stats, new object[] { lastDrop });
 
             int newLevel = (int)GetProp(_stats, "Level");
             int newPoints = (int)GetProp(_stats, "StatPoints");

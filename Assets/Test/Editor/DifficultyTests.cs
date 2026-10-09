@@ -15,8 +15,8 @@ namespace TheLastKnight.Tests
             .GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Invoke(target, null);
         private static float Read(Component target, string property) => (float)target.GetType().GetProperty(property).GetValue(target);
 
-        [TestCase(0, 9f, 1f)]
-        [TestCase(1, 12f, 0.7f)]
+        [TestCase(0, 4f, 1.5f)]
+        [TestCase(1, 9f, 1f)]
         [TestCase(2, 15f, 0.4f)]
         public void ActualDamageFlow_UsesSelectedDifficulty(int mode, float incoming, float outgoingMultiplier)
         {
@@ -84,7 +84,9 @@ namespace TheLastKnight.Tests
 
                 float maxHP = Read(stats, "MaxHP");
                 stats.GetType().GetMethod("SetRegenAura").Invoke(stats, new object[] { stats, true });
-                stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(stats, new object[] { 50f });
+                // Keep HP below the aura cap even when Easy halves incoming damage.
+                float incomingMultiplier = (float)RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("EnemyDamage").GetValue(null);
+                stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(stats, new object[] { 50f / incomingMultiplier });
                 float hpAfterDamage = Read(stats, "CurrentHP");
 
                 var stateProp = controller.GetType().GetProperty("CurrentState");
@@ -131,7 +133,8 @@ namespace TheLastKnight.Tests
                 Invoke(stats, "Awake");
 
                 stats.GetType().GetMethod("SetRegenAura").Invoke(stats, new object[] { stats, true });
-                stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(stats, new object[] { 50f });
+                float incomingMultiplier = (float)RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("EnemyDamage").GetValue(null);
+                stats.GetType().GetMethod("TakeDamage", new[] { typeof(float) }).Invoke(stats, new object[] { 50f / incomingMultiplier });
                 stats.GetType().GetMethod("SetLastDamageTimeForTesting").Invoke(stats, new object[] { Time.time - 5.1f });
                 float hpBefore = Read(stats, "CurrentHP");
 
@@ -142,6 +145,69 @@ namespace TheLastKnight.Tests
                 stateProp.SetValue(controller, Enum.Parse(playerStateType, "Jumping"));
                 stats.GetType().GetMethod("RegenerateHP").Invoke(stats, new object[] { 1f });
                 Assert.That(Read(stats, "CurrentHP"), Is.EqualTo(hpBefore).Within(0.001f));
+            }
+            finally
+            {
+                if (player != null) UnityEngine.Object.DestroyImmediate(player);
+                difficulty.SetValue(null, originalMode);
+            }
+        }
+
+        [TestCase(0, false, 2f / 3f)]
+        [TestCase(1, false, 1f)]
+        [TestCase(2, false, 4f / 3f)]
+        [TestCase(0, true, 1f / 3f)]
+        [TestCase(1, true, 0.5f)]
+        [TestCase(2, true, 2f / 3f)]
+        public void StaminaActions_UseDifficultyAndEnduranceCosts(int mode, bool endurance, float expectedMultiplier)
+        {
+            var difficulty = RuntimeType("TheLastKnight.Core.GameDifficultyManager").GetProperty("Current");
+            var originalMode = difficulty.GetValue(null);
+            GameObject player = null;
+            try
+            {
+                difficulty.SetValue(null, Enum.ToObject(difficulty.PropertyType, mode));
+                player = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+                player.transform.position = new Vector3(10000, 10000);
+                var controller = player.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController"));
+                var stats = player.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                Invoke(controller, "Awake");
+                Invoke(stats, "Awake");
+                stats.GetType().GetField("_currentLevel", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(stats, 20);
+                if (endurance) Invoke(stats, "ApplyEnduranceBuff");
+
+                var stamina = stats.GetType().GetField("_currentStamina", BindingFlags.Instance | BindingFlags.NonPublic);
+                var state = controller.GetType().GetProperty("CurrentState");
+                var idle = Enum.Parse(state.PropertyType, "Idle");
+                var getCost = stats.GetType().GetMethod("GetStaminaCost");
+                string[] actions = { "StartAttack", "StartDash", "StartSkill", "StartExcalibur" };
+                float[] baseCosts = { 11.25f, 15f, 18.75f, 37.5f };
+                for (int action = 0; action < actions.Length; action++)
+                {
+                    float expectedCost = baseCosts[action] * expectedMultiplier;
+                    Assert.That((float)getCost.Invoke(stats, new object[] { baseCosts[action] }), Is.EqualTo(expectedCost).Within(0.001f));
+                    state.SetValue(controller, idle);
+                    stamina.SetValue(stats, expectedCost - 0.1f);
+                    Invoke(controller, actions[action]);
+                    Assert.That(state.GetValue(controller), Is.EqualTo(idle), actions[action] + " must reject insufficient stamina");
+                    Assert.That(Read(stats, "CurrentStamina"), Is.EqualTo(expectedCost - 0.1f).Within(0.001f));
+
+                    stamina.SetValue(stats, expectedCost);
+                    Invoke(controller, actions[action]);
+                    Assert.That(state.GetValue(controller), Is.Not.EqualTo(idle), actions[action] + " must accept exact stamina cost");
+                    Assert.That(Read(stats, "CurrentStamina"), Is.EqualTo(0f).Within(0.001f));
+                    if (actions[action] == "StartDash") Invoke(controller, "EndDash");
+                }
+
+                // Jump, double jump and sprint use the same spending path, including fractional frame costs.
+                var spend = stats.GetType().GetMethod("TrySpendStamina");
+                foreach (float baseCost in new[] { 11.25f, 11.25f * 0.1f })
+                {
+                    float expectedCost = baseCost * expectedMultiplier;
+                    stamina.SetValue(stats, expectedCost);
+                    Assert.That((bool)spend.Invoke(stats, new object[] { baseCost }), Is.True);
+                    Assert.That(Read(stats, "CurrentStamina"), Is.EqualTo(0f).Within(0.001f));
+                }
             }
             finally
             {

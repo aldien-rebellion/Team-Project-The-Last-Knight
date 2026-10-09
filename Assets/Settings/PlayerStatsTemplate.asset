@@ -33,4 +33,4 @@ MonoBehaviour:
   baseAGI: 10
   statPointsPerLevel: 10
   baseExpNeeded: 100
-  expGrowthMultiplier: 1.25
+  expGrowthMultiplier: 1.1025057

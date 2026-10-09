@@ -29,22 +29,24 @@ namespace TheLastKnight.Player
     public class ExcaliburVFXController : MonoBehaviour
     {
         [Header("Sprites (3 Phases)")]
-        [Tooltip("Phase 1: Anticipation Sprite (0.5s)")]
+        [Tooltip("Phase 1: Anticipation Sprite")]
         [SerializeField] private Sprite spritePhase1;
         
-        [Tooltip("Phase 2: Ultimate Charge Sprite (2.8s)")]
+        [Tooltip("Phase 2: Ultimate Charge Sprite")]
         [SerializeField] private Sprite spritePhase2;
         
-        [Tooltip("Phase 3: The Thrust / Beam Release Sprite (0.5s)")]
+        [Tooltip("Phase 3: The Thrust / Beam Release Sprite")]
         [SerializeField] private Sprite spritePhase3;
 
         [Header("Timing Configuration")]
-        [SerializeField] private float anticipationDuration = 0.5f;
-        [SerializeField] private float chargeDuration = 2.8f;
+        [SerializeField] private float anticipationDuration = 0.190921f;
+        [SerializeField] private float chargeDuration = 1.069158f;
         [SerializeField] private float swordBurstDuration = 0.35f;
-        [SerializeField] private float hitStopDuration = 0.12f;
+        [SerializeField] private float hitStopDuration = 0.05f;
         [SerializeField] private float hitStopTimeScale = 0.02f;
-        [SerializeField] private float beamDuration = 0.5f;
+        [SerializeField] private float beamDuration = 0.189921f;
+
+        public float HitStopAddedDuration => Mathf.Max(0f, hitStopDuration) * (1f - Mathf.Clamp01(hitStopTimeScale));
 
         [Header("VFX Prefabs & References (Optional / Auto-Assigned)")]
         [Tooltip("Subtle dark aura spawned at sword position during Phase 1")]
@@ -322,7 +324,7 @@ namespace TheLastKnight.Player
             Transform GetAnchorParent() => (swordVFXAnchor != null) ? swordVFXAnchor : transform;
 
             // ==========================================
-            // PHASE 1: Dark Anticipation & Ground Sigil (0.0s – 0.5s)
+            // PHASE 1: Dark Anticipation & Ground Sigil
             // ==========================================
             if (spriteRenderer != null && spritePhase1 != null)
             {
@@ -356,7 +358,7 @@ namespace TheLastKnight.Player
             UntrackAndDestroy(ref currentActiveAura);
 
             // ==========================================
-            // PHASE 2: Spiral Vortex & Red Lightning (0.5s – 3.3s)
+            // PHASE 2: Spiral Vortex & Red Lightning
             // ==========================================
             if (spriteRenderer != null && spritePhase2 != null)
             {
@@ -403,7 +405,7 @@ namespace TheLastKnight.Player
                 }
             }
 
-            // Scale particle emission rate from 20 to 300 over 2.8s
+            // Scale particle emission rate from 20 to 300 over the charge duration.
             float elapsedCharge = 0f;
 
             while (elapsedCharge < chargeDuration)
@@ -462,7 +464,7 @@ namespace TheLastKnight.Player
             UntrackAndDestroy(ref currentActiveGroundCrack);
 
             // ==========================================
-            // PHASE 3: THE THRUST / BEAM RELEASE (0.5s)
+            // PHASE 3: THE THRUST / BEAM RELEASE
             // (Seamless transition directly from Phase 2 Charge)
             // ==========================================
             if (spriteRenderer != null && spritePhase3 != null)
@@ -475,7 +477,7 @@ namespace TheLastKnight.Player
                 StartCoroutine(TriggerScreenFlashRoutine());
             }
 
-            // Real-time Hit-Stop Effect (0.02f timescale for 0.12s realtime)
+            // Real-time hit-stop, included in the total skill duration.
             Time.timeScale = hitStopTimeScale;
             yield return new WaitForSecondsRealtime(hitStopDuration);
             Time.timeScale = 1.0f;

@@ -77,7 +77,8 @@ namespace TheLastKnight.Stats
         [Tooltip("Number of stat upgrade points granted per level-up (default: 10).")]
         public int statPointsPerLevel = 10;
         public int baseExpNeeded = 100;
-        public float expGrowthMultiplier = 1.25f;
+        // Starting at 100 EXP, level 70 -> 71 needs 84,000 EXP (15 maximum level-70 rewards).
+        public float expGrowthMultiplier = 1.1025057f;
 
         /// <summary>
         /// Calculates EXP threshold needed to advance from the current level to the next.

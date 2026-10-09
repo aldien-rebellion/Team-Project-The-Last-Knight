@@ -211,7 +211,7 @@ public class PlanRuntimeChecks
         float interruptedHP = Manager.Player.CurrentHP;
         yield return new Pause(2.7f);
         Check(Manager.Player.CurrentHP == interruptedHP && Manager.Player.HealingPotions == 2, "Damage interrupts drink without healing or consuming a potion");
-        Manager.Player.TrySpendStamina(Manager.Player.CurrentStamina);
+        Manager.Player.TrySpendStamina(Manager.Player.CurrentStamina / Manager.Player.GetStaminaCost(1f));
         foreach (string action in new[] { "StartDash", "StartSkill", "StartExcalibur" }) Manager.Player.SendMessage(action);
         Check(Manager.Player.GetComponent<PlayerController>().CurrentState == PlayerState.Idle, "Insufficient stamina rejects dash and both skills");
         var firstStatue = FindAnyObjectByType<MedusaSavePoint>();
@@ -334,8 +334,8 @@ public class PlanRuntimeChecks
     private IEnumerator CombatChecks()
     {
         var player = Manager.Player;
-        float[] enemyMultipliers = { 1f, 1.3f, 1.6f };
-        float[] playerMultipliers = { 1f, 0.7f, 0.4f };
+        float[] enemyMultipliers = { 0.5f, 1f, 1.6f };
+        float[] playerMultipliers = { 1.5f, 1f, 0.4f };
         for (int mode = 0; mode < 3; mode++)
         {
             GameDifficultyManager.Current = (GameDifficulty)mode;
@@ -375,7 +375,7 @@ public class PlanRuntimeChecks
             player.GetComponent<PlayerController>().ResetVelocity();
             Physics2D.SyncTransforms();
             yield return new Pause(0.15);
-            player.Rest(); player.TrySpendStamina(80);
+            player.Rest(); player.TrySpendStamina(80f / player.GetStaminaCost(1f));
             float stamina = player.CurrentStamina, start = Time.time;
             yield return new Pause(0.25);
             float rate = (player.CurrentStamina - stamina) / (Time.time - start);

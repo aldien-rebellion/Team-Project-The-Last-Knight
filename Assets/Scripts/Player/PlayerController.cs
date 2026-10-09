@@ -64,7 +64,7 @@ namespace TheLastKnight.Player
 
         [Header("Skill 3 Settings (Excalibur - Key T)")]
         [SerializeField, Tooltip("Excalibur skill duration.")]
-        private float _excaliburDuration = 3.8f;
+        private float _excaliburDuration = 1.5f;
         [SerializeField, Tooltip("Cooldown between Skill 3 (Excalibur) uses.")]
         private float _excaliburCooldown = 5.0f;
         [SerializeField, Tooltip("Damage multiplier for Skill 3 (Excalibur) multiplied by Player ATK.")]
@@ -74,7 +74,7 @@ namespace TheLastKnight.Player
         [SerializeField, Tooltip("Hitbox offset for Excalibur beam from player center.")]
         private Vector2 _excaliburHitOffset = new Vector2(12f, 1.47f);
         [SerializeField, Tooltip("Time delay from skill start before damage is dealt (corresponds to beam release).")]
-        private float _excaliburDamageDelay = 3.3f;
+        private float _excaliburDamageDelay = 1.261079f;
         [SerializeField, Tooltip("Stun duration in seconds applied to enemies hit by Skill 3 (Excalibur).")]
         private float _excaliburStunDuration = 2.0f;
         [SerializeField, Tooltip("VFX controller for Excalibur. Auto-assigned if null.")]
@@ -334,6 +334,17 @@ namespace TheLastKnight.Player
             _kinematicController = GetComponent<KinematicCharacterController2D>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _animator = GetComponent<Animator>();
+            if (_animator != null && _animator.runtimeAnimatorController != null)
+            {
+                foreach (var clip in _animator.runtimeAnimatorController.animationClips)
+                {
+                    if (clip.name == "Excalibur")
+                    {
+                        _excaliburAnimationLength = clip.length;
+                        break;
+                    }
+                }
+            }
             _playerCollider = GetComponent<Collider2D>();
 
             if (_inputHandler == null)
@@ -363,6 +374,7 @@ namespace TheLastKnight.Player
         {
             var stats = GetComponent<PlayerStats>();
             if (stats != null && stats.IsDead) return;
+            if (_inputHandler == null || !_inputHandler.SprintHeld) _sprintRequiresRelease = false;
             if (IsFairyCarried) { ResetVelocity(); return; }
 
             // Update Dash i-Frame Timer
@@ -477,7 +489,7 @@ namespace TheLastKnight.Player
             {
                 if (CurrentState != PlayerState.Attacking)
                 {
-                    if (stats == null || stats.CurrentStamina >= 15f)
+                    if (stats == null || stats.CurrentStamina >= stats.GetStaminaCost(11.25f))
                     {
                         if (IsCancellableState(CurrentState))
                         {
@@ -496,7 +508,7 @@ namespace TheLastKnight.Player
             {
                 if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.UsingSkill)
                 {
-                    if (stats == null || stats.CurrentStamina >= 25f)
+                    if (stats == null || stats.CurrentStamina >= stats.GetStaminaCost(18.75f))
                     {
                         if (IsCancellableState(CurrentState))
                         {
@@ -527,7 +539,7 @@ namespace TheLastKnight.Player
             {
                 if (CurrentState != PlayerState.Attacking && CurrentState != PlayerState.Excalibur)
                 {
-                    if (stats == null || stats.CurrentStamina >= 50f)
+                    if (stats == null || stats.CurrentStamina >= stats.GetStaminaCost(37.5f))
                     {
                         if (IsCancellableState(CurrentState))
                         {
@@ -567,7 +579,7 @@ namespace TheLastKnight.Player
                     bool canDash = _kinematicController.IsGrounded || !_hasDashedInAir;
                     if (canDash)
                     {
-                        if (stats == null || stats.CurrentStamina >= 20f)
+                        if (stats == null || stats.CurrentStamina >= stats.GetStaminaCost(15f))
                         {
                             if (IsCancellableState(CurrentState))
                             {
@@ -620,7 +632,7 @@ namespace TheLastKnight.Player
 
         private void StartDash()
         {
-            if (!GetComponent<PlayerStats>().TrySpendStamina(20f)) return;
+            if (!GetComponent<PlayerStats>().TrySpendStamina(15f)) return;
             CurrentState = PlayerState.Dashing;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("dash");
             IsInvincible = true;
@@ -682,15 +694,15 @@ namespace TheLastKnight.Player
             // Transition out of dash cleanly
             if (_kinematicController.IsGrounded)
             {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
-                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float moveInputX = GetHorizontalMoveInput();
+                bool isSprinting = IsSprintActive;
                 float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
                 _velocity = new Vector2(moveInputX * currentSpeed, 0f);
                 CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
             }
             else
             {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
+                float moveInputX = GetHorizontalMoveInput();
                 _velocity = new Vector2(moveInputX * MoveSpeed, 0f); // smooth exit transition
                 CurrentState = PlayerState.Falling;
             }
@@ -698,7 +710,7 @@ namespace TheLastKnight.Player
 
         private void StartAttack()
         {
-            if (!GetComponent<PlayerStats>().TrySpendStamina(15f)) return;
+            if (!GetComponent<PlayerStats>().TrySpendStamina(11.25f)) return;
             _attackTargets.Clear();
             foreach (var hit in Physics2D.OverlapCircleAll(transform.position, 2.5f))
             {
@@ -768,8 +780,8 @@ namespace TheLastKnight.Player
             // Transition to appropriate state after attack
             if (_kinematicController.IsGrounded)
             {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
-                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float moveInputX = GetHorizontalMoveInput();
+                bool isSprinting = IsSprintActive;
                 float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
                 _velocity = new Vector2(moveInputX * currentSpeed, 0f);
                 CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
@@ -813,7 +825,7 @@ namespace TheLastKnight.Player
         private void StartSkill()
         {
             if (!IsSkill1Unlocked) return;
-            if (!GetComponent<PlayerStats>().TrySpendStamina(25f)) return;
+            if (!GetComponent<PlayerStats>().TrySpendStamina(18.75f)) return;
             _skillTargets.Clear();
             CurrentState = PlayerState.UsingSkill;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("skill");
@@ -951,8 +963,8 @@ namespace TheLastKnight.Player
         {
             if (_kinematicController.IsGrounded)
             {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
-                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float moveInputX = GetHorizontalMoveInput();
+                bool isSprinting = IsSprintActive;
                 float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
                 _velocity = new Vector2(moveInputX * currentSpeed, 0f);
                 CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
@@ -981,13 +993,7 @@ namespace TheLastKnight.Player
             }
             else if (CurrentState == PlayerState.Buffing)
             {
-                _buffTimer = 0f;
-                var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
-                if (stats != null)
-                {
-                    stats.RemoveSkill2Buff();
-                }
-                TransitionToMovementState();
+                CancelBuff();
             }
             else if (CurrentState == PlayerState.Drinking)
             {
@@ -1032,6 +1038,15 @@ namespace TheLastKnight.Player
 
             // Stop horizontal movement during Buff
             _velocity.x = 0f;
+        }
+
+        private void CancelBuff()
+        {
+            if (CurrentState != PlayerState.Buffing) return;
+            _buffTimer = 0f;
+            _buffCooldownTimer = Mathf.Max(0f, _buffCooldownTimer) * 0.5f;
+            GetComponent<PlayerStats>()?.RemoveSkill2Buff();
+            TransitionToMovementState();
         }
 
         private void UpdateBuff()
@@ -1081,21 +1096,28 @@ namespace TheLastKnight.Player
             TransitionToMovementState();
         }
 
+        private float _excaliburAnimationLength = 3.8f;
+
+        // Hit-stop uses real time, so subtract its extra delay from the scaled skill clock.
+        private float ExcaliburGameplayDuration => Mathf.Max(0.01f, _excaliburDuration -
+            (_excaliburVFXController != null ? _excaliburVFXController.HitStopAddedDuration : 0f));
+
         private void StartExcalibur()
         {
             if (!IsSkill3Unlocked) return;
-            if (!GetComponent<PlayerStats>().TrySpendStamina(50f)) return;
+            if (!GetComponent<PlayerStats>().TrySpendStamina(37.5f)) return;
             StopExcaliburSetupSounds();
             _excaliburTargets.Clear();
             CurrentState = PlayerState.Excalibur;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfxUntilStopped("excalibur");
-            _excaliburTimer = _excaliburDuration;
+            _excaliburTimer = ExcaliburGameplayDuration;
             _excaliburCooldownTimer = _excaliburCooldown;
             _actionDurationTimer = 0f;
             _actionInitialMoveX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
             {
+                _animator.speed = _excaliburAnimationLength / ExcaliburGameplayDuration;
                 _animator.Play("Excalibur", 0, 0f);
             }
 
@@ -1125,7 +1147,7 @@ namespace TheLastKnight.Player
             }
 
             // Apply beam damage during the beam release window
-            if (_excaliburTimer <= (_excaliburDuration - _excaliburDamageDelay))
+            if (_excaliburTimer <= (ExcaliburGameplayDuration - _excaliburDamageDelay))
             {
                 ApplyExcaliburHits();
             }
@@ -1155,6 +1177,7 @@ namespace TheLastKnight.Player
         private void EndExcalibur()
         {
             StopExcaliburSetupSounds();
+            if (_animator != null) _animator.speed = 1f;
             _excaliburTargets.Clear();
             TransitionToMovementState();
         }
@@ -1172,6 +1195,8 @@ namespace TheLastKnight.Player
             StopExcaliburSetupSounds();
             _excaliburTargets.Clear();
             _excaliburTimer = 0f;
+            _excaliburCooldownTimer = Mathf.Max(0f, _excaliburCooldownTimer) * 0.5f;
+            if (_animator != null) _animator.speed = 1f;
 
             if (_excaliburVFXController != null)
             {
@@ -1321,12 +1346,7 @@ namespace TheLastKnight.Player
 
             if (CurrentState == PlayerState.Buffing)
             {
-                _buffTimer = 0f;
-                var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
-                if (stats != null)
-                {
-                    stats.RemoveSkill2Buff();
-                }
+                CancelBuff();
             }
             else if (CurrentState == PlayerState.Drinking)
             {
@@ -1365,11 +1385,7 @@ namespace TheLastKnight.Player
             }
             else if (CurrentState == PlayerState.Buffing)
             {
-                _buffTimer = 0f;
-                if (stats != null)
-                {
-                    stats.RemoveSkill2Buff();
-                }
+                CancelBuff();
             }
             else if (CurrentState == PlayerState.Drinking)
             {
@@ -1441,8 +1457,8 @@ namespace TheLastKnight.Player
             _hurtTimer = 0f;
             if (_kinematicController.IsGrounded)
             {
-                float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
-                bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+                float moveInputX = GetHorizontalMoveInput();
+                bool isSprinting = IsSprintActive;
                 float currentSpeed = isSprinting ? SprintSpeed : MoveSpeed;
                 _velocity = new Vector2(moveInputX * currentSpeed, 0f);
                 CurrentState = Mathf.Abs(moveInputX) > 0.01f ? (isSprinting ? PlayerState.Running : PlayerState.Walking) : PlayerState.Idle;
@@ -1453,9 +1469,26 @@ namespace TheLastKnight.Player
             }
         }
 
+        private bool _sprintRequiresRelease;
+        private bool IsSprintActive => _inputHandler != null && _inputHandler.SprintHeld && !_sprintRequiresRelease;
+
+        private float GetHorizontalMoveInput()
+        {
+            if (_inputHandler == null) return 0f;
+
+            float moveInputX = _inputHandler.MoveInput.x;
+            // Holding sprint keeps moving forward, including walking after exhaustion.
+            if (Mathf.Abs(moveInputX) <= 0.01f && _inputHandler.SprintHeld)
+            {
+                return IsFacingRight ? 1f : -1f;
+            }
+
+            return moveInputX;
+        }
+
         private void UpdateNormalMovement()
         {
-            float moveInputX = _inputHandler != null ? _inputHandler.MoveInput.x : 0f;
+            float moveInputX = GetHorizontalMoveInput();
 
             // Flip/Facing Logic
             if (moveInputX > 0.01f)
@@ -1470,10 +1503,11 @@ namespace TheLastKnight.Player
             }
 
             // Horizontal Movement with acceleration/deceleration
-            bool isSprinting = _inputHandler != null && _inputHandler.SprintHeld;
+            bool isSprinting = IsSprintActive;
             float currentMoveSpeed = isSprinting ? SprintSpeed : MoveSpeed;
-            if (isSprinting && Mathf.Abs(moveInputX) > 0.01f && !GetComponent<PlayerStats>().TrySpendStamina(15f * Time.deltaTime))
+            if (isSprinting && Mathf.Abs(moveInputX) > 0.01f && !GetComponent<PlayerStats>().TrySpendStamina(11.25f * Time.deltaTime))
             {
+                _sprintRequiresRelease = true;
                 isSprinting = false;
                 currentMoveSpeed = MoveSpeed;
             }
@@ -1532,7 +1566,7 @@ namespace TheLastKnight.Player
                 else if (canJump)
                 {
                     var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
-                    if (stats == null || stats.TrySpendStamina(15f))
+                    if (stats == null || stats.TrySpendStamina(11.25f))
                     {
                         TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
                         _velocity.y = JumpForce;
@@ -1545,7 +1579,7 @@ namespace TheLastKnight.Player
                 else if (CanDoubleJump && !_hasDoubleJumped)
                 {
                     var stats = GetComponent<TheLastKnight.Stats.PlayerStats>();
-                    if (stats == null || stats.TrySpendStamina(15f))
+                    if (stats == null || stats.TrySpendStamina(11.25f))
                     {
                         TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("jump");
                         _velocity.y = JumpForce;
@@ -1649,7 +1683,11 @@ namespace TheLastKnight.Player
                 }
             }
 
-            if (isAttacking)
+            if (isExcalibur)
+            {
+                _animator.speed = _excaliburAnimationLength / ExcaliburGameplayDuration;
+            }
+            else if (isAttacking)
             {
                 float atkSpd = AttackSpeedMultiplier > 0.1f ? AttackSpeedMultiplier : 1.0f;
                 _animator.speed = atkSpd;

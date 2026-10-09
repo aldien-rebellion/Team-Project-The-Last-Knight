@@ -81178,12 +81178,12 @@ MonoBehaviour:
   spritePhase1: {fileID: 21300000, guid: 1ab59fc5bf423274dab3f48b9a884858, type: 3}
   spritePhase2: {fileID: 8553454827641894527, guid: 307ba343bdacf434186ea5257eef1a74, type: 3}
   spritePhase3: {fileID: 1472841751132624081, guid: a7302f6cb9b975a41a32947dba49e2eb, type: 3}
-  anticipationDuration: 0.5
-  chargeDuration: 2.8
+  anticipationDuration: 0.190921
+  chargeDuration: 1.069158
   swordBurstDuration: 0.35
-  hitStopDuration: 0.12
+  hitStopDuration: 0.05
   hitStopTimeScale: 0.02
-  beamDuration: 0.5
+  beamDuration: 0.189921
   auraPrefabPhase1: {fileID: 2834995905723977876, guid: 8ccef2abe179d0846a6693a033bec2b5, type: 3}
   chargeVortexPrefab: {fileID: 8195692410381398314, guid: 82d79ae3bc3b99c45af8cb56de4cbbd8, type: 3}
   swordBurstPrefab: {fileID: 2406659030162261933, guid: abbc987feeb5b9747b592ff6af037ffd, type: 3}
@@ -81290,12 +81290,12 @@ MonoBehaviour:
   _skillPushDistance: 1.2
   _buffDuration: 0.6
   _buffCooldown: 30
-  _excaliburDuration: 3.8
+  _excaliburDuration: 1.5
   _excaliburCooldown: 50
   _excaliburDamageMultiplier: 8
   _excaliburHitSize: {x: 24, y: 4.2}
   _excaliburHitOffset: {x: 12, y: 1.47}
-  _excaliburDamageDelay: 3.3
+  _excaliburDamageDelay: 1.261079
   _excaliburStunDuration: 2
   _excaliburVFXController: {fileID: 1536335259}
   _drinkDuration: 1.5

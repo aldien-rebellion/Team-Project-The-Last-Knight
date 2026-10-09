@@ -27,6 +27,106 @@ namespace TheLastKnight.Tests
         private static float PlayerDamageMultiplier => (float)RuntimeType("TheLastKnight.Core.GameDifficultyManager")
             .GetProperty("PlayerDamage", BindingFlags.Public | BindingFlags.Static).GetValue(null);
 
+        [TestCase(2, "CancelCurrentAction")]
+        [TestCase(2, "OnTakeDamage")]
+        [TestCase(2, "ApplyStun")]
+        [TestCase(3, "CancelCurrentAction")]
+        [TestCase(3, "CancelExcalibur")]
+        [TestCase(3, "ApplyStun")]
+        public void CancelledSkill_HalvesRemainingCooldown_OnlyOnce(int skill, string cancellation)
+        {
+            var player = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+            try
+            {
+                player.transform.position = new Vector3(28000, 28000, 0);
+                var controller = player.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController"));
+                var stats = player.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                Invoke(controller, "Awake");
+                Invoke(stats, "Awake");
+                SetField(stats, "_currentLevel", 20);
+                Invoke(controller, skill == 2 ? "StartBuff" : "StartExcalibur");
+                string timer = skill == 2 ? "BuffCooldownTimer" : "ExcaliburCooldownTimer";
+                string maximum = skill == 2 ? "BuffCooldown" : "ExcaliburCooldown";
+                float originalMaximum = (float)GetProp(controller, maximum);
+                SetProp(controller, timer, 12f); // Some cooldown has already elapsed.
+                if (cancellation == "ApplyStun") Invoke(controller, cancellation, 1f);
+                else Invoke(controller, cancellation);
+                Assert.That((float)GetProp(controller, timer), Is.EqualTo(6f));
+                Assert.That((float)GetProp(controller, maximum), Is.EqualTo(originalMaximum));
+                Assert.That(GetProp(controller, "CurrentState").ToString(), Is.Not.EqualTo(skill == 2 ? "Buffing" : "Excalibur"));
+                if (cancellation == "ApplyStun") Invoke(controller, cancellation, 1f);
+                else Invoke(controller, cancellation);
+                Assert.That((float)GetProp(controller, timer), Is.EqualTo(6f), "Repeating cancellation must not refund cooldown again.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(player);
+            }
+        }
+
+        [TestCase(2)]
+        [TestCase(3)]
+        public void CompletedSkill_KeepsRemainingCooldown(int skill)
+        {
+            var player = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+            try
+            {
+                var controller = player.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController"));
+                var stats = player.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                Invoke(controller, "Awake");
+                Invoke(stats, "Awake");
+                SetField(stats, "_currentLevel", 20);
+                Invoke(controller, skill == 2 ? "StartBuff" : "StartExcalibur");
+                string timer = skill == 2 ? "BuffCooldownTimer" : "ExcaliburCooldownTimer";
+                SetProp(controller, timer, 12f);
+                Invoke(controller, skill == 2 ? "EndBuff" : "EndExcalibur");
+                Invoke(controller, "CancelCurrentAction");
+                Assert.That((float)GetProp(controller, timer), Is.EqualTo(12f));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(player);
+            }
+        }
+
+        [Test]
+        public void Skill3_Timing_AlignsAnimationDamageAndVFX_IncludingHitStop()
+        {
+            var player = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab"));
+            try
+            {
+                var controller = player.GetComponent(RuntimeType("TheLastKnight.Player.PlayerController"));
+                var stats = player.GetComponent(RuntimeType("TheLastKnight.Stats.PlayerStats"));
+                var vfx = player.GetComponent(RuntimeType("TheLastKnight.Player.ExcaliburVFXController"));
+                var serializedVfx = new SerializedObject(vfx);
+                float anticipation = serializedVfx.FindProperty("anticipationDuration").floatValue;
+                float charge = serializedVfx.FindProperty("chargeDuration").floatValue;
+                float beam = serializedVfx.FindProperty("beamDuration").floatValue;
+                float hitStop = serializedVfx.FindProperty("hitStopDuration").floatValue;
+                float hitStopScale = serializedVfx.FindProperty("hitStopTimeScale").floatValue;
+                Assert.That((float)GetProp(controller, "ExcaliburDuration"), Is.EqualTo(1.5f));
+                Assert.That(anticipation + charge + hitStop + beam, Is.EqualTo(1.5f).Within(0.00001f));
+                Assert.That((float)GetProp(controller, "ExcaliburDamageDelay"), Is.EqualTo(anticipation + charge + hitStop * hitStopScale).Within(0.00001f));
+                Invoke(controller, "Awake");
+                Invoke(stats, "Awake");
+                SetField(stats, "_currentLevel", 20);
+                Invoke(controller, "StartExcalibur");
+                Invoke(controller, "LateUpdate");
+                var animator = player.GetComponent<Animator>();
+                var clip = animator.runtimeAnimatorController.animationClips.First(c => c.name == "Excalibur");
+                float extraHitStop = hitStop * (1f - hitStopScale);
+                Assert.That(clip.length / animator.speed + extraHitStop, Is.EqualTo(1.5f).Within(0.00001f));
+                Assert.That(clip.events.First(e => e.functionName == "PlayExcaliburSlashDownSound").time / animator.speed,
+                    Is.EqualTo(anticipation + charge).Within(0.00001f));
+                Invoke(controller, "CancelExcalibur");
+                Assert.That(animator.speed, Is.EqualTo(1f), "Movement animations must regain their normal speed on cancellation.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(player);
+            }
+        }
+
         [Test]
         public void Dash_EnablesInvincibility_AndAvoidsDamage()
         {

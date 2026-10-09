@@ -106,7 +106,7 @@ namespace TheLastKnight.Stats
         public void SetLastDamageTimeForTesting(float time) => _lastDamageTime = time;
 
         private float _lastStaminaSpendTime = -100f;
-        public const float StaminaRegenDelay = 1.0f; // 1 second delay after spending stamina before regen starts
+        public const float StaminaRegenDelay = 0.25f; // 0.25 second delay after spending stamina before regen starts
         public const float BaseStaminaRegenPercent = 0.10f; // 10% of MaxStamina per second
         public const float AuraStaminaRegenPercent = 0.20f; // 20% of MaxStamina per second
         public float LastStaminaSpendTime => _lastStaminaSpendTime;
@@ -141,12 +141,15 @@ namespace TheLastKnight.Stats
 
         public void ResetInsufficientStaminaCooldownForTesting() => _lastInsufficientStaminaTime = -100f;
 
+        public float GetStaminaCost(float baseCost)
+        {
+            float cost = baseCost * TheLastKnight.Core.GameDifficultyManager.StaminaConsumption;
+            return HasEnduranceBuff && cost > 0f ? cost * 0.5f : cost;
+        }
+
         public bool TrySpendStamina(float amount)
         {
-            if (HasEnduranceBuff && amount > 0f)
-            {
-                amount *= 0.5f;
-            }
+            amount = GetStaminaCost(amount);
             if (amount < 0 || _currentStamina < amount || IsDead)
             {
                 if (amount > 0 && _currentStamina < amount && !IsDead)

@@ -18,7 +18,8 @@ namespace TheLastKnight.UI
         Closed,
         Main,
         Settings,
-        Controls
+        Controls,
+        Tutorial
     }
 
     [DefaultExecutionOrder(-400)]
@@ -114,7 +115,7 @@ namespace TheLastKnight.UI
             {
                 if (escPressed)
                 {
-                    if (_state == PauseMenuState.Controls)
+                    if (_state == PauseMenuState.Controls || _state == PauseMenuState.Tutorial)
                     {
                         ShowSettings();
                     }
@@ -165,7 +166,7 @@ namespace TheLastKnight.UI
                         }
                     }
                 }
-                else if (_state == PauseMenuState.Controls)
+                else if (_state == PauseMenuState.Controls || _state == PauseMenuState.Tutorial)
                 {
                     if (num == 1 || IsBackKeyPressed())
                     {
@@ -335,23 +336,25 @@ namespace TheLastKnight.UI
 
             RuntimeUI.Label(content, LocalizationManager.Get("SETTINGS_SUBTITLE"), 18, new Color(0.85f, 0.88f, 0.95f));
 
+            var settingsRows = RuntimeUI.ScrollContent(content, 350f);
+
             // Audio Sliders
             var audio = AudioManager.Instance;
             float master = audio != null ? audio.Master : PlayerPrefs.GetFloat("MasterVolume", 1f);
             float music = audio != null ? audio.Music : PlayerPrefs.GetFloat("MusicVolume", 0.7f);
             float effects = audio != null ? audio.Effects : PlayerPrefs.GetFloat("EffectsVolume", 1f);
 
-            RuntimeUI.Slider(content, LocalizationManager.Get("AUDIO_MASTER"), master, v =>
+            RuntimeUI.Slider(settingsRows, LocalizationManager.Get("AUDIO_MASTER"), master, v =>
             {
                 if (AudioManager.Instance != null) AudioManager.Instance.SetVolumes(v, AudioManager.Instance.Music, AudioManager.Instance.Effects);
                 else PlayerPrefs.SetFloat("MasterVolume", v);
             });
-            RuntimeUI.Slider(content, LocalizationManager.Get("AUDIO_MUSIC"), music, v =>
+            RuntimeUI.Slider(settingsRows, LocalizationManager.Get("AUDIO_MUSIC"), music, v =>
             {
                 if (AudioManager.Instance != null) AudioManager.Instance.SetVolumes(AudioManager.Instance.Master, v, AudioManager.Instance.Effects);
                 else PlayerPrefs.SetFloat("MusicVolume", v);
             });
-            RuntimeUI.Slider(content, LocalizationManager.Get("AUDIO_SFX"), effects, v =>
+            RuntimeUI.Slider(settingsRows, LocalizationManager.Get("AUDIO_SFX"), effects, v =>
             {
                 if (AudioManager.Instance != null) AudioManager.Instance.SetVolumes(AudioManager.Instance.Master, AudioManager.Instance.Music, v);
                 else PlayerPrefs.SetFloat("EffectsVolume", v);
@@ -359,7 +362,7 @@ namespace TheLastKnight.UI
 
             // Brightness Slider
             float brightness = GameBrightnessManager.Instance != null ? GameBrightnessManager.Instance.Brightness : PlayerPrefs.GetFloat("TheLastKnight_BrightnessMultiplier", 1.0f);
-            RuntimeUI.Slider(content, LocalizationManager.Get("BRIGHTNESS"), brightness, v =>
+            RuntimeUI.Slider(settingsRows, LocalizationManager.Get("BRIGHTNESS"), brightness, v =>
             {
                 if (GameBrightnessManager.Instance != null)
                 {
@@ -373,14 +376,16 @@ namespace TheLastKnight.UI
 
             // Language Switcher Button
             string langButtonText = $"{LocalizationManager.Get("LANGUAGE_LABEL")}: {LocalizationManager.Get("LANGUAGE_CURRENT")}  ({LocalizationManager.Get("LANGUAGE_CHANGE_PROMPT")})";
-            RuntimeUI.Button(content, langButtonText, () =>
+            RuntimeUI.Button(settingsRows, langButtonText, () =>
             {
                 LocalizationManager.ToggleLanguage();
                 ShowSettings();
             });
 
             // Controls Rebinding Button
-            RuntimeUI.Button(content, LocalizationManager.Get("BTN_CONTROLS"), ShowControlsMenu);
+            RuntimeUI.Button(settingsRows, LocalizationManager.Get("BTN_CONTROLS"), ShowControlsMenu);
+
+            RuntimeUI.Button(settingsRows, LocalizationManager.Get("BTN_TUTORIAL"), () => ShowTutorialPage(0)).name = "TutorialButton";
 
             // Back Button
             var btnBack = RuntimeUI.Button(content, LocalizationManager.Get("BTN_BACK"), () =>
@@ -403,6 +408,14 @@ namespace TheLastKnight.UI
             {
                 EventSystem.current.SetSelectedGameObject(btnBack.gameObject);
             }
+        }
+
+        private void ShowTutorialPage(int page)
+        {
+            _state = PauseMenuState.Tutorial;
+            _activeRebindActionName = null;
+            DestroyPanel();
+            _panel = TutorialMenuUI.Build(page, ShowTutorialPage, ShowSettings);
         }
 
         private void ShowControlsMenu()
