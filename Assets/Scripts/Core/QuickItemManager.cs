@@ -38,7 +38,8 @@ namespace TheLastKnight.Core
         public static QuickItemManager Instance { get; private set; }
         public const int MaxSlots = 5;
 
-        private readonly QuickItemSlotData[] _slots = new QuickItemSlotData[MaxSlots];
+        private TheLastKnight.Inventory.InventoryManager _inventory;
+        private readonly QuickItemSlotData[] _views = new QuickItemSlotData[MaxSlots];
         public event Action OnQuickItemsChanged;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -75,28 +76,25 @@ namespace TheLastKnight.Core
             TheLastKnight.Inventory.InventoryManager.Instance?.SyncWithQuickItemManager();
         }
 
-        public void SyncFromInventory(TheLastKnight.Inventory.InventoryItemData[] items)
+        public void SyncFromInventory(TheLastKnight.Inventory.InventoryManager inventory)
         {
-            for (int i = 0; i < MaxSlots; i++)
-            {
-                var item = items[i];
-                _slots[i] = item == null ? null : new QuickItemSlotData
-                {
-                    id = item.id, name = item.name, typeName = item.typeName,
-                    description = item.description, icon = item.Icon,
-                    count = item.count, maxCount = item.maxStack, onUse = item.onUse
-                };
-            }
+            _inventory = inventory;
             OnQuickItemsChanged?.Invoke();
         }
 
-        public QuickItemSlotData GetSlot(int index) => index >= 0 && index < MaxSlots ? _slots[index] : null;
-        public int GetActiveSlotIndex()
+        // Reuse display records, but always read selection/counts from inventory.
+        public QuickItemSlotData GetSlot(int index)
         {
-            for (int i = 0; i < MaxSlots; i++)
-                if (_slots[i] != null && _slots[i].count > 0) return i;
-            return -1;
+            if (index < 0 || index >= MaxSlots || _inventory == null) return null;
+            var item = _inventory.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, index);
+            if (item == null) return null;
+            var view = _views[index] ?? (_views[index] = new QuickItemSlotData());
+            view.id = item.id; view.name = item.name; view.typeName = item.typeName;
+            view.description = item.description; view.icon = item.Icon;
+            view.count = item.count; view.maxCount = item.maxStack; view.onUse = item.onUse;
+            return view;
         }
+        public int GetActiveSlotIndex() => _inventory != null ? _inventory.GetActiveQuickSlotIndex() : -1;
         public QuickItemSlotData GetActiveItem() => GetSlot(GetActiveSlotIndex());
         public bool UseSlot(int index, PlayerStats player) =>
             TheLastKnight.Inventory.InventoryManager.Instance?.UseQuickSlot(index, player) ?? false;

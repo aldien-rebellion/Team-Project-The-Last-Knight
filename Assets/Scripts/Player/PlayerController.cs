@@ -268,7 +268,7 @@ namespace TheLastKnight.Player
         /// </summary>
         public void PlayDrinkSound()
         {
-            if (CurrentState != PlayerState.Drinking || _drinkingItem == null) return;
+            if (CurrentState != PlayerState.Drinking || _quickItemUse?.IsPending != true) return;
             TheLastKnight.Audio.AudioManager.Instance?.PlaySfx("drink");
         }
 
@@ -998,8 +998,7 @@ namespace TheLastKnight.Player
             else if (CurrentState == PlayerState.Drinking)
             {
                 _drinkTimer = 0f;
-                _drinkingSlot = -1;
-                _drinkingItem = null;
+                _quickItemUse?.Cancel();
                 TransitionToMovementState();
             }
             else if (CurrentState == PlayerState.Dashing)
@@ -1182,8 +1181,7 @@ namespace TheLastKnight.Player
             TransitionToMovementState();
         }
 
-        private int _drinkingSlot = -1;
-        private TheLastKnight.Inventory.InventoryItemData _drinkingItem;
+        private TheLastKnight.Inventory.QuickItemConsumption _quickItemUse;
 
         /// <summary>
         /// Cancels Excalibur immediately, removing all VFX, active beams, particles, and charging effects.
@@ -1253,12 +1251,9 @@ namespace TheLastKnight.Player
         private void StartDrink()
         {
             var stats = GetComponent<PlayerStats>();
-            var qm = TheLastKnight.Core.QuickItemManager.Instance;
             var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
-            int index = qm != null ? qm.GetActiveSlotIndex() : -1;
-            if (inventory == null || !inventory.CanUseQuickSlot(index, stats)) return;
-            _drinkingSlot = index;
-            _drinkingItem = inventory.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, index);
+            if (inventory == null || !inventory.QuickItemUse.TryBegin(stats)) return;
+            _quickItemUse = inventory.QuickItemUse;
             CurrentState = PlayerState.Drinking;
             _drinkTimer = _drinkDuration;
             _drinkCooldownTimer = _drinkDuration + _drinkCooldown;
@@ -1313,14 +1308,7 @@ namespace TheLastKnight.Player
 
         private void EndDrink()
         {
-            var stats = GetComponent<PlayerStats>();
-            var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
-            // Consume the stack selected at the start, not a replacement moved during the animation.
-            if (inventory != null && _drinkingItem != null &&
-                ReferenceEquals(inventory.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, _drinkingSlot), _drinkingItem))
-                inventory.UseQuickSlot(_drinkingSlot, stats);
-            _drinkingSlot = -1;
-            _drinkingItem = null;
+            _quickItemUse?.Complete();
             TransitionToMovementState();
         }
 
@@ -1351,8 +1339,7 @@ namespace TheLastKnight.Player
             else if (CurrentState == PlayerState.Drinking)
             {
                 _drinkTimer = 0f;
-                _drinkingSlot = -1;
-                _drinkingItem = null;
+                _quickItemUse?.Cancel();
             }
 
             CurrentState = PlayerState.Hurt;
@@ -1390,8 +1377,7 @@ namespace TheLastKnight.Player
             else if (CurrentState == PlayerState.Drinking)
             {
                 _drinkTimer = 0f;
-                _drinkingSlot = -1;
-                _drinkingItem = null;
+                _quickItemUse?.Cancel();
             }
 
             CurrentState = PlayerState.Hurt;
@@ -1793,6 +1779,7 @@ namespace TheLastKnight.Player
 
         private void OnDisable()
         {
+            _quickItemUse?.Cancel();
             _dashInvincible = false;
             _dashIFrameTimer = 0f;
             if (_kinematicController != null)

@@ -51,9 +51,11 @@ namespace TheLastKnight.Stats
         public bool CompletePotionDrink()
         {
             var inventory = TheLastKnight.Inventory.InventoryManager.Instance;
-            int index = TheLastKnight.Core.QuickItemManager.Instance?.GetActiveSlotIndex() ?? -1;
-            var item = inventory?.GetSlot(TheLastKnight.Inventory.SlotType.QuickSlot, index);
-            return item != null && item.id == "potion_heal" && inventory.UseQuickSlot(index, this);
+            if (inventory == null) return false;
+            // A repeated animation callback must not start another immediate use.
+            var controller = _playerController != null ? _playerController : GetComponent<PlayerController>();
+            if (controller != null && controller.CurrentState == PlayerState.Drinking && !inventory.QuickItemUse.IsPending) return false;
+            return inventory.QuickItemUse.CompleteHealingPotion(this);
         }
         public void SyncHealingPotions(int amount)
         {
@@ -144,7 +146,7 @@ namespace TheLastKnight.Stats
         public float GetStaminaCost(float baseCost)
         {
             float cost = baseCost * TheLastKnight.Core.GameDifficultyManager.StaminaConsumption;
-            return HasEnduranceBuff && cost > 0f ? cost * 0.5f : cost;
+            return cost > 0f ? cost * _buffs.StaminaCostMultiplier : cost;
         }
 
         public bool TrySpendStamina(float amount)
@@ -166,8 +168,8 @@ namespace TheLastKnight.Stats
             return true;
         }
 
-        private bool _wasSwiftnessActive;
-        private bool _wasFortitudeActive;
+        private readonly TemporaryBuffs _buffs = new TemporaryBuffs(() => Time.time);
+        private readonly BuffDisplay _buffDisplay = new BuffDisplay();
 
         private void Update()
         {
@@ -180,20 +182,7 @@ namespace TheLastKnight.Stats
                 _currentHP = Mathf.Min(MaxHP, _currentHP + MaxHP * 0.05f * Time.deltaTime);
             }
 
-            // Sync buff state changes
-            bool swiftActive = HasSwiftnessBuff;
-            if (_wasSwiftnessActive != swiftActive)
-            {
-                _wasSwiftnessActive = swiftActive;
-                RecalculateStats();
-            }
-
-            bool fortActive = HasFortitudeBuff;
-            if (_wasFortitudeActive != fortActive)
-            {
-                _wasFortitudeActive = fortActive;
-                RecalculateStats();
-            }
+            if (_buffs.Tick()) RecalculateStats();
 
             if (_playerController.CurrentState == PlayerState.Idle || _playerController.CurrentState == PlayerState.Walking)
             {
@@ -273,73 +262,60 @@ namespace TheLastKnight.Stats
         [CreateProperty]
         public float AttackPower
         {
-            get
-            {
-                float bonus = 0f;
-                if (Time.time < _mightExpiresAt) bonus += 0.25f;
-                if (Time.time < _skill2BuffExpiresAt) bonus += 0.22f;
-                return _baseAttackPower * (1f + bonus);
-            }
+            get => _baseAttackPower * (1f + _buffs.AttackBonus);
             private set => _baseAttackPower = value;
         }
         [CreateProperty]
         public float BaseAttackPower => _baseAttackPower;
         private float _baseAttackPower;
-        private float _mightExpiresAt;
-        public const float MightBuffMultiplier = 0.25f; // +25% ATK
-        public const float MightBuffDuration = 90f; // 1 minute 30 seconds
-        public void ApplyMightBuff() => _mightExpiresAt = Time.time + MightBuffDuration;
-        public void RemoveMightBuff() => _mightExpiresAt = 0f;
-        public bool HasMightBuff => Time.time < _mightExpiresAt;
-        public float MightBuffRemaining => Mathf.Max(0f, _mightExpiresAt - Time.time);
-        public void SetMightBuffExpiresAtForTesting(float time) => _mightExpiresAt = time;
+        public const float MightBuffMultiplier = TemporaryBuffs.MightAttackBonus; // +25% ATK
+        public const float MightBuffDuration = TemporaryBuffs.PotionDuration; // 1 minute 30 seconds
+        public void ApplyMightBuff() => _buffs.Apply(TemporaryBuff.Might);
+        public void RemoveMightBuff() => _buffs.Remove(TemporaryBuff.Might);
+        public bool HasMightBuff => _buffs.IsActive(TemporaryBuff.Might);
+        public float MightBuffRemaining => _buffs.Remaining(TemporaryBuff.Might);
 
-        // Potion of Swiftness (Potion 1-2): +25% Attack Speed & Movement Speed for 30s
-        private float _swiftnessExpiresAt;
-        public const float SwiftnessBuffDuration = 90f;
-        public void ApplySwiftnessBuff() { _swiftnessExpiresAt = Time.time + SwiftnessBuffDuration; RecalculateStats(); }
-        public void RemoveSwiftnessBuff() { _swiftnessExpiresAt = 0f; RecalculateStats(); }
-        public bool HasSwiftnessBuff => Time.time < _swiftnessExpiresAt;
-        public float SwiftnessBuffRemaining => Mathf.Max(0f, _swiftnessExpiresAt - Time.time);
+        // Potion of Swiftness (Potion 1-2): +25% Attack Speed & Movement Speed for 90s
+        public const float SwiftnessBuffDuration = TemporaryBuffs.PotionDuration;
+        public void ApplySwiftnessBuff() { _buffs.Apply(TemporaryBuff.Swiftness); RecalculateStats(); }
+        public void RemoveSwiftnessBuff() { _buffs.Remove(TemporaryBuff.Swiftness); RecalculateStats(); }
+        public bool HasSwiftnessBuff => _buffs.IsActive(TemporaryBuff.Swiftness);
+        public float SwiftnessBuffRemaining => _buffs.Remaining(TemporaryBuff.Swiftness);
 
         // Potion of Endurance (Potion 1-3): -50% all Stamina consumption for 90s
-        private float _enduranceExpiresAt;
-        public const float EnduranceBuffDuration = 90f;
-        public void ApplyEnduranceBuff() => _enduranceExpiresAt = Time.time + EnduranceBuffDuration;
-        public void RemoveEnduranceBuff() => _enduranceExpiresAt = 0f;
-        public bool HasEnduranceBuff => Time.time < _enduranceExpiresAt;
-        public float EnduranceBuffRemaining => Mathf.Max(0f, _enduranceExpiresAt - Time.time);
+        public const float EnduranceBuffDuration = TemporaryBuffs.PotionDuration;
+        public void ApplyEnduranceBuff() => _buffs.Apply(TemporaryBuff.Endurance);
+        public void RemoveEnduranceBuff() => _buffs.Remove(TemporaryBuff.Endurance);
+        public bool HasEnduranceBuff => _buffs.IsActive(TemporaryBuff.Endurance);
+        public float EnduranceBuffRemaining => _buffs.Remaining(TemporaryBuff.Endurance);
 
-        // Potion of Purity (Potion 1-4): Immune to stun and status ailments for 30s
-        private float _purityExpiresAt;
-        public const float PurityBuffDuration = 90f;
+        // Potion of Purity (Potion 1-4): Immune to stun and status ailments for 90s
+        public const float PurityBuffDuration = TemporaryBuffs.PotionDuration;
         public void ApplyPurityBuff()
         {
-            _purityExpiresAt = Time.time + PurityBuffDuration;
+            _buffs.Apply(TemporaryBuff.Purity);
             if (_playerController != null && _playerController.CurrentState == Player.PlayerState.Hurt)
             {
                 _playerController.EndHurt();
             }
         }
-        public void RemovePurityBuff() => _purityExpiresAt = 0f;
-        public bool HasPurityBuff => Time.time < _purityExpiresAt;
-        public float PurityBuffRemaining => Mathf.Max(0f, _purityExpiresAt - Time.time);
+        public void RemovePurityBuff() => _buffs.Remove(TemporaryBuff.Purity);
+        public bool HasPurityBuff => _buffs.IsActive(TemporaryBuff.Purity);
+        public float PurityBuffRemaining => _buffs.Remaining(TemporaryBuff.Purity);
 
-        // Potion of Regeneration (Potion 1-5): +5% Max HP/sec for 30s
-        private float _regenBuffExpiresAt;
-        public const float RegenBuffDuration = 90f;
-        public void ApplyRegenBuff() => _regenBuffExpiresAt = Time.time + RegenBuffDuration;
-        public void RemoveRegenBuff() => _regenBuffExpiresAt = 0f;
-        public bool HasRegenBuff => Time.time < _regenBuffExpiresAt;
-        public float RegenBuffRemaining => Mathf.Max(0f, _regenBuffExpiresAt - Time.time);
+        // Potion of Regeneration (Potion 1-5): +5% Max HP/sec for 90s
+        public const float RegenBuffDuration = TemporaryBuffs.PotionDuration;
+        public void ApplyRegenBuff() => _buffs.Apply(TemporaryBuff.Regeneration);
+        public void RemoveRegenBuff() => _buffs.Remove(TemporaryBuff.Regeneration);
+        public bool HasRegenBuff => _buffs.IsActive(TemporaryBuff.Regeneration);
+        public float RegenBuffRemaining => _buffs.Remaining(TemporaryBuff.Regeneration);
 
-        // Potion of Fortitude (Potion 1-7): +25% Max HP & DEF for 30s
-        private float _fortitudeExpiresAt;
-        public const float FortitudeBuffDuration = 90f;
+        // Potion of Fortitude (Potion 1-7): +25% Max HP & DEF for 90s
+        public const float FortitudeBuffDuration = TemporaryBuffs.PotionDuration;
         public void ApplyFortitudeBuff()
         {
             bool hadBuff = HasFortitudeBuff;
-            _fortitudeExpiresAt = Time.time + FortitudeBuffDuration;
+            _buffs.Apply(TemporaryBuff.Fortitude);
             if (!hadBuff)
             {
                 float prevMaxHP = MaxHP;
@@ -347,279 +323,48 @@ namespace TheLastKnight.Stats
                 _currentHP += Mathf.Max(0f, MaxHP - prevMaxHP);
             }
         }
-        public void RemoveFortitudeBuff() { _fortitudeExpiresAt = 0f; RecalculateStats(); }
-        public bool HasFortitudeBuff => Time.time < _fortitudeExpiresAt;
-        public float FortitudeBuffRemaining => Mathf.Max(0f, _fortitudeExpiresAt - Time.time);
+        public void RemoveFortitudeBuff() { _buffs.Remove(TemporaryBuff.Fortitude); RecalculateStats(); }
+        public bool HasFortitudeBuff => _buffs.IsActive(TemporaryBuff.Fortitude);
+        public float FortitudeBuffRemaining => _buffs.Remaining(TemporaryBuff.Fortitude);
 
-        // Potion of the Undying (Potion 1-8): HP becomes 1, no heal, invincible for 30s
-        private float _undyingExpiresAt;
-        public const float UndyingBuffDuration = 90f;
+        // Potion of the Undying (Potion 1-8): HP becomes 1, no heal, invincible for 90s
+        public const float UndyingBuffDuration = TemporaryBuffs.PotionDuration;
         public void ApplyUndyingBuff()
         {
-            _undyingExpiresAt = Time.time + UndyingBuffDuration;
+            _buffs.Apply(TemporaryBuff.Undying);
             _currentHP = 1f;
         }
-        public void RemoveUndyingBuff() => _undyingExpiresAt = 0f;
-        public bool HasUndyingBuff => Time.time < _undyingExpiresAt;
-        public float UndyingBuffRemaining => Mathf.Max(0f, _undyingExpiresAt - Time.time);
+        public void RemoveUndyingBuff() => _buffs.Remove(TemporaryBuff.Undying);
+        public bool HasUndyingBuff => _buffs.IsActive(TemporaryBuff.Undying);
+        public float UndyingBuffRemaining => _buffs.Remaining(TemporaryBuff.Undying);
 
-        private float _critDamageExpiresAt;
-        public const float CritDamageBuffDuration = 90f;
+        public const float CritDamageBuffDuration = TemporaryBuffs.PotionDuration;
         public const string CritDamageBuffDescription = "Sets DEX critical damage (attacks and skills) to 300% and Parry critical damage to 500% for 90 seconds. Using again refreshes the duration.";
-        public void ApplyCritDamageBuff() => _critDamageExpiresAt = Time.time + CritDamageBuffDuration;
-        public void RemoveCritDamageBuff() => _critDamageExpiresAt = 0f;
-        public bool HasCritDamageBuff => Time.time < _critDamageExpiresAt;
-        public float CritDamageBuffRemaining => Mathf.Max(0f, _critDamageExpiresAt - Time.time);
-        public float DexCriticalDamageMultiplier => HasCritDamageBuff ? 3f : 1.5f;
-        public float ParryCriticalDamageMultiplier => HasCritDamageBuff ? 5f : 2f;
+        public void ApplyCritDamageBuff() => _buffs.Apply(TemporaryBuff.CriticalDamage);
+        public void RemoveCritDamageBuff() => _buffs.Remove(TemporaryBuff.CriticalDamage);
+        public bool HasCritDamageBuff => _buffs.IsActive(TemporaryBuff.CriticalDamage);
+        public float CritDamageBuffRemaining => _buffs.Remaining(TemporaryBuff.CriticalDamage);
+        public float DexCriticalDamageMultiplier => _buffs.DexCriticalMultiplier;
+        public float ParryCriticalDamageMultiplier => _buffs.ParryCriticalMultiplier;
 
         public float GetCriticalDamageMultiplier(bool isParryStagger, bool isDexCrit)
         {
             return isParryStagger ? ParryCriticalDamageMultiplier : (isDexCrit ? DexCriticalDamageMultiplier : 1f);
         }
 
-        private float _skill2BuffExpiresAt;
-        public const float Skill2BuffMultiplier = 0.22f; // +22% ATK
-        public const float Skill2BuffDuration = 15f; // 15 seconds
-        public void ApplySkill2Buff() => _skill2BuffExpiresAt = Time.time + Skill2BuffDuration;
-        public void RemoveSkill2Buff() => _skill2BuffExpiresAt = 0f;
-        public bool HasSkill2Buff => Time.time < _skill2BuffExpiresAt;
-        public float Skill2BuffRemaining => Mathf.Max(0f, _skill2BuffExpiresAt - Time.time);
-        public void SetSkill2BuffExpiresAtForTesting(float time) => _skill2BuffExpiresAt = time;
+        public const float Skill2BuffMultiplier = TemporaryBuffs.IronWillAttackBonus; // +22% ATK
+        public const float Skill2BuffDuration = TemporaryBuffs.IronWillDuration; // 15 seconds
+        public void ApplySkill2Buff() => _buffs.Apply(TemporaryBuff.IronWill);
+        public void RemoveSkill2Buff() => _buffs.Remove(TemporaryBuff.IronWill);
+        public bool HasSkill2Buff => _buffs.IsActive(TemporaryBuff.IronWill);
+        public float Skill2BuffRemaining => _buffs.Remaining(TemporaryBuff.IronWill);
         public void SetRegenAuraForTesting(bool active) => SetRegenAura(this, active);
 
-        public void GetActiveBuffs(System.Collections.Generic.List<ActiveBuffInfo> list)
-        {
-            if (list == null) return;
-            list.Clear();
+        public void GetActiveBuffs(System.Collections.Generic.List<ActiveBuffInfo> list) =>
+            _buffDisplay.Read(_buffs, HasRegenAura,
+                _playerController != null && _playerController.CurrentState == PlayerState.Hurt, list);
 
-            // 1. Skill 2: Iron Will (Berserk Buff)
-            if (HasSkill2Buff)
-            {
-                float rem = Skill2BuffRemaining;
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "buff_iron_will",
-                    name = "Iron Will",
-                    category = "Combat Skill Buff",
-                    description = "Boosts Attack Power by +22% with unwavering warrior spirit.",
-                    remainingSeconds = rem,
-                    totalDuration = Skill2BuffDuration,
-                    formattedTime = FormatMinecraftTime(rem),
-                    icon = Resources.Load<Sprite>("BuffIcons/buff_iron_will") ?? Resources.Load<Sprite>("CharacterStatus/Skill_BerserkBuff"),
-                    isDebuff = false,
-                    themeColor = new Color(1f, 0.48f, 0.15f) // Fiery Orange
-                });
-            }
-
-            // 2. Potion of Might
-            if (HasMightBuff)
-            {
-                float rem = MightBuffRemaining;
-                Sprite icon = LoadPotionIcon("potion_might", "CharacterStatus/Item_BluePotion");
-
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "buff_might",
-                    name = "Potion of Might",
-                    category = "Elixir Enhancement",
-                    description = "Infuses weapons with brute force, boosting Attack Power by +25%.",
-                    remainingSeconds = rem,
-                    totalDuration = MightBuffDuration,
-                    formattedTime = FormatMinecraftTime(rem),
-                    icon = icon,
-                    isDebuff = false,
-                    themeColor = new Color(0.72f, 0.35f, 0.95f) // Violet / Purple
-                });
-            }
-
-            // 3. Potion of Swiftness
-            if (HasSwiftnessBuff)
-            {
-                float rem = SwiftnessBuffRemaining;
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "buff_swiftness",
-                    name = "Potion of Swiftness",
-                    category = "Elixir Enhancement",
-                    description = "Increases Attack Speed and Movement Speed (walk & sprint) by +25%.",
-                    remainingSeconds = rem,
-                    totalDuration = SwiftnessBuffDuration,
-                    formattedTime = FormatMinecraftTime(rem),
-                    icon = LoadPotionIcon("potion_swiftness", "CharacterStatus/Item_BluePotion"),
-                    isDebuff = false,
-                    themeColor = new Color(0.2f, 0.85f, 0.95f)
-                });
-            }
-
-            // 4. Potion of Endurance
-            if (HasEnduranceBuff)
-            {
-                float rem = EnduranceBuffRemaining;
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "buff_endurance",
-                    name = "Potion of Endurance",
-                    category = "Elixir Enhancement",
-                    description = "Reduces all Stamina consumption by 50%.",
-                    remainingSeconds = rem,
-                    totalDuration = EnduranceBuffDuration,
-                    formattedTime = FormatMinecraftTime(rem),
-                    icon = LoadPotionIcon("potion_endurance", "CharacterStatus/Item_GreenPotion"),
-                    isDebuff = false,
-                    themeColor = new Color(0.35f, 0.85f, 0.35f)
-                });
-            }
-
-            // 5. Potion of Purity
-            if (HasPurityBuff)
-            {
-                float rem = PurityBuffRemaining;
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "buff_purity",
-                    name = "Potion of Purity",
-                    category = "Elixir Enhancement",
-                    description = "Grants absolute immunity to Stun and all negative status effects.",
-                    remainingSeconds = rem,
-                    totalDuration = PurityBuffDuration,
-                    formattedTime = FormatMinecraftTime(rem),
-                    icon = LoadPotionIcon("potion_purity", "CharacterStatus/Item_RedPotion_Clean"),
-                    isDebuff = false,
-                    themeColor = new Color(0.95f, 0.95f, 0.45f)
-                });
-            }
-
-            // 6. Potion of Regeneration
-            if (HasRegenBuff)
-            {
-                float rem = RegenBuffRemaining;
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "buff_regeneration",
-                    name = "Potion of Regeneration",
-                    category = "Elixir Enhancement",
-                    description = "Rapidly regenerates +5% of Max HP per second.",
-                    remainingSeconds = rem,
-                    totalDuration = RegenBuffDuration,
-                    formattedTime = FormatMinecraftTime(rem),
-                    icon = LoadPotionIcon("potion_regeneration", "CharacterStatus/Item_RedPotion_Clean"),
-                    isDebuff = false,
-                    themeColor = new Color(0.3f, 0.95f, 0.55f)
-                });
-            }
-
-            // 7. Potion of Fortitude
-            if (HasFortitudeBuff)
-            {
-                float rem = FortitudeBuffRemaining;
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "buff_fortitude",
-                    name = "Potion of Fortitude",
-                    category = "Elixir Enhancement",
-                    description = "Bolsters defenses, increasing Max HP and Defense by +25%.",
-                    remainingSeconds = rem,
-                    totalDuration = FortitudeBuffDuration,
-                    formattedTime = FormatMinecraftTime(rem),
-                    icon = LoadPotionIcon("potion_fortitude", "CharacterStatus/Item_BluePotion"),
-                    isDebuff = false,
-                    themeColor = new Color(0.35f, 0.55f, 0.95f)
-                });
-            }
-
-            // 8. Potion of the Undying
-            if (HasUndyingBuff)
-            {
-                float rem = UndyingBuffRemaining;
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "buff_undying",
-                    name = "Potion of the Undying",
-                    category = "Forbidden Elixir",
-                    description = "Reduces HP to 1 and blocks all healing in exchange for absolute invincibility.",
-                    remainingSeconds = rem,
-                    totalDuration = UndyingBuffDuration,
-                    formattedTime = FormatMinecraftTime(rem),
-                    icon = LoadPotionIcon("potion_undying", "CharacterStatus/Item_RedPotion"),
-                    isDebuff = false,
-                    themeColor = new Color(0.95f, 0.2f, 0.2f)
-                });
-            }
-
-            if (HasCritDamageBuff)
-            {
-                float rem = CritDamageBuffRemaining;
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "buff_crit_damage",
-                    name = "Potion Crit DMG",
-                    category = "Elixir Enhancement",
-                    description = CritDamageBuffDescription,
-                    remainingSeconds = rem,
-                    totalDuration = CritDamageBuffDuration,
-                    formattedTime = FormatMinecraftTime(rem),
-                    icon = LoadPotionIcon("potion_crit_damage", "CharacterStatus/Items/Cat Fantasy - 32x32 Potion Pack/Potion 1/Potion Crit DMG"),
-                    isDebuff = false,
-                    themeColor = new Color(0.95f, 0.4f, 0.2f)
-                });
-            }
-
-            // 9. Medusa Sacred Fountain Aura
-            if (HasRegenAura)
-            {
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "aura_medusa",
-                    name = "Fountain Grace",
-                    category = "Sacred Aura",
-                    description = "Sacred blessing restoring Stamina (+20%/s) and HP up to 70% Max HP.",
-                    remainingSeconds = -1f,
-                    totalDuration = -1f,
-                    formattedTime = "**:**",
-                    icon = Resources.Load<Sprite>("BuffIcons/buff_medusa") ?? Resources.Load<Sprite>("CharacterStatus/Item_RuneTrident"),
-                    isDebuff = false,
-                    themeColor = new Color(0.25f, 0.85f, 1f) // Holy Cyan
-                });
-            }
-
-            // 10. Stunned Debuff (when player is in Hurt/Stunned state)
-            if (_playerController != null && _playerController.CurrentState == Player.PlayerState.Hurt)
-            {
-                list.Add(new ActiveBuffInfo
-                {
-                    id = "debuff_stun",
-                    name = "Stunned",
-                    category = "Status Debuff",
-                    description = "Stunned and incapacitated. Cannot move, attack, or cast skills.",
-                    remainingSeconds = 1f,
-                    totalDuration = 1f,
-                    formattedTime = "0:01",
-                    icon = Resources.Load<Sprite>("BuffIcons/debuff_stun") ?? Resources.Load<Sprite>("CharacterStatus/Slot_Frame"),
-                    isDebuff = true,
-                    themeColor = new Color(1f, 0.25f, 0.25f) // Red
-                });
-            }
-        }
-
-        private Sprite LoadPotionIcon(string potionId, string fallbackResource)
-        {
-            // Dedicated framed status icons, shared by the HUD and character window.
-            var buffIcon = Resources.Load<Sprite>("BuffIcons/" + potionId.Replace("potion_", "buff_"));
-            if (buffIcon != null) return buffIcon;
-            var def = Resources.Load<TheLastKnight.Inventory.ItemDefinition>("Items/Definitions/Consumables/" + potionId);
-            if (def != null && def.icon != null) return def.icon;
-            return Resources.Load<Sprite>(fallbackResource);
-        }
-
-        public static string FormatMinecraftTime(float seconds)
-        {
-            if (seconds < 0f) return "**:**";
-            int totalSec = Mathf.Max(0, Mathf.CeilToInt(seconds));
-            int m = totalSec / 60;
-            int s = totalSec % 60;
-            return $"{m}:{s:D2}";
-        }
+        public static string FormatMinecraftTime(float seconds) => BuffDisplay.FormatTime(seconds);
         [CreateProperty]
         public float CriticalChance { get; private set; }
         [CreateProperty]
@@ -692,7 +437,7 @@ namespace TheLastKnight.Stats
             // VIT -> Max HP and Max Stamina
             BaseMaxHP = _vitality * hpPerVit;
             float calculatedMaxHP = BaseMaxHP;
-            if (HasFortitudeBuff) calculatedMaxHP *= 1.25f;
+            calculatedMaxHP *= _buffs.FortitudeMultiplier;
             MaxHP = calculatedMaxHP;
             MaxStamina = baseStam + Mathf.Max(0, _vitality - baseVit) * stamPerVit;
 
@@ -712,14 +457,14 @@ namespace TheLastKnight.Stats
             // AGI -> Attack Speed, Movement Speed, Double Jump
             BaseAttackSpeedMultiplier = baseAtkSpd + Mathf.Max(0, _agility - baseAgi) * atkSpdPerAgi;
             float baseAtkSpdMultiplier = BaseAttackSpeedMultiplier;
-            if (HasSwiftnessBuff) baseAtkSpdMultiplier *= 1.25f;
+            baseAtkSpdMultiplier *= _buffs.SpeedMultiplier;
             AttackSpeedMultiplier = baseAtkSpdMultiplier;
 
             // DEF -> Level-based Defense (DEF = baseDEF + Level * defPerLevel)
             float baseDef = _statsTemplate != null ? _statsTemplate.baseDEF : 0f;
             float defPLv = _statsTemplate != null ? _statsTemplate.defPerLevel : 1f;
             float calcDef = baseDef + _currentLevel * defPLv;
-            if (HasFortitudeBuff) calcDef *= 1.25f;
+            calcDef *= _buffs.FortitudeMultiplier;
             Defense = calcDef;
 
             // Adjust health and stamina when caps grow
@@ -748,7 +493,7 @@ namespace TheLastKnight.Stats
             // Sync stats to Arthur's PlayerController movement & combat logic
             if (_playerController != null)
             {
-                float speedMod = HasSwiftnessBuff ? 1.25f : 1.0f;
+                float speedMod = _buffs.SpeedMultiplier;
                 _playerController.MoveSpeed = _playerController.BaseMoveSpeed * speedMod;
                 float sprintRatio = _playerController.BaseMoveSpeed > 0f ? (_playerController.BaseSprintSpeed / _playerController.BaseMoveSpeed) : 1.625f;
                 BaseSprintSpeed = _playerController.BaseSprintSpeed + (_agility - baseAgi) * (spdPerAgi * sprintRatio);

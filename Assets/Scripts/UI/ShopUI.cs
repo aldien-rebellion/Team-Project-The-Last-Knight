@@ -14,64 +14,6 @@ using TheLastKnight.Audio;
 
 namespace TheLastKnight.UI
 {
-    public enum ShopItemType
-    {
-        InventoryItem, // Added to player inventory (potions, food, bombs, darts, etc.)
-        StatPotion,    // Directly upgrades STR, VIT, DEX, or AGI attribute
-        RuneReward     // Demon rune reward dropped into the world
-    }
-
-    [System.Serializable]
-    public class ShopItemConfig
-    {
-        [Tooltip("Unique ID matching ItemRegistry id or 'RUNE', 'STR', 'VIT', 'DEX', 'AGI'")]
-        public string id = "potion_heal";
-
-        [Tooltip("Display name shown in shop cards")]
-        public string displayName = "Healing Potion [Q]";
-
-        [Tooltip("Category or subtitle (e.g. Consumable, Attribute Elixir)")]
-        public string category = "Consumable Potion";
-
-        [TextArea(2, 4)]
-        [Tooltip("Item description shown in tooltips")]
-        public string description = "Restores 50 HP immediately. Place in Quick Slot to drink on demand with [Q]. (Max 5 held)";
-
-        [Tooltip("Purchase cost in Gold")]
-        public int buyPrice = 50;
-
-        [Tooltip("Initial stock limit. Set to -1 for infinite / unlimited stock.")]
-        public int initialStock = -1;
-
-        [Tooltip("Custom sell price override. Set to -1 to automatically calculate 75% of buyPrice.")]
-        public int customSellPrice = -1;
-
-        [Tooltip("Type of item behavior when purchased")]
-        public ShopItemType itemType = ShopItemType.InventoryItem;
-
-        [Tooltip("Specific stat to upgrade if itemType is StatPotion ('STR', 'VIT', 'DEX', 'AGI')")]
-        public string statName = "STR";
-
-        [Tooltip("Rune index (0-3) if itemType is RuneReward")]
-        public int runeIndex = 3;
-
-        [Tooltip("Custom icon override. If null, loads from ItemRegistry or Resources/CharacterStatus.")]
-        public Sprite customIcon;
-
-        // Runtime stock tracking
-        [NonSerialized] public int currentStock = -1;
-        [NonSerialized] public bool stockInitialized = false;
-
-        public void EnsureStockInitialized()
-        {
-            if (!stockInitialized)
-            {
-                currentStock = initialStock;
-                stockInitialized = true;
-            }
-        }
-    }
-
     public class ShopUI : MonoBehaviour
     {
         public static ShopUI Instance { get; private set; }
@@ -1573,102 +1515,27 @@ namespace TheLastKnight.UI
             ClearSlotSelections();
         }
 
-        public int GetSellPrice(string itemId)
-        {
-            int potionPrice = PotionPrices.GetSellPrice(itemId);
-            if (potionPrice > 0) return potionPrice;
-            var config = FindCatalogItem(itemId);
-            if (config != null)
-            {
-                if (config.customSellPrice > 0) return config.customSellPrice;
-                return Mathf.Max(1, Mathf.RoundToInt(config.buyPrice * _sellPriceMultiplier));
-            }
+        private MerchantTrade Trade => new MerchantTrade(_shopCatalog, _sellPriceMultiplier);
 
-            var item = ItemRegistry.CreateItem(itemId, 1);
-            if (item != null && item.sellPrice > 0)
-            {
-                return item.sellPrice;
-            }
-
-            int regPrice = ItemRegistry.GetSellPrice(itemId);
-            if (regPrice > 0) return regPrice;
-
-            return -1; // Merchant does not sell/buy this item
-        }
-
-        public ShopItemConfig FindCatalogItem(string itemId)
-        {
-            if (string.IsNullOrEmpty(itemId)) return null;
-
-            foreach (var item in _shopCatalog)
-            {
-                if (string.Equals(item.id, itemId, StringComparison.OrdinalIgnoreCase)) return item;
-                // Special alias mapping
-                if (string.Equals(itemId, "potion_heal", StringComparison.OrdinalIgnoreCase) && string.Equals(item.id, "HEAL", StringComparison.OrdinalIgnoreCase)) return item;
-                if (string.Equals(itemId, "HEAL", StringComparison.OrdinalIgnoreCase) && string.Equals(item.id, "potion_heal", StringComparison.OrdinalIgnoreCase)) return item;
-                if (string.Equals(itemId, "rune_trident", StringComparison.OrdinalIgnoreCase) && string.Equals(item.id, "RUNE", StringComparison.OrdinalIgnoreCase)) return item;
-                if (string.Equals(itemId, "RUNE", StringComparison.OrdinalIgnoreCase) && string.Equals(item.id, "rune_trident", StringComparison.OrdinalIgnoreCase)) return item;
-            }
-            return null;
-        }
+        public int GetSellPrice(string itemId) => Trade.GetSellPrice(itemId);
+        public ShopItemConfig FindCatalogItem(string itemId) => Trade.FindCatalogItem(itemId);
 
         public void ExecuteSell(SlotType slotType, int slotIndex, bool sellAll)
         {
-            var inv = Inventory;
-            var player = Player;
-            if (inv == null || player == null) return;
-
-            var item = inv.GetSlot(slotType, slotIndex);
-            if (item == null || item.count <= 0)
+            var result = Trade.Sell(slotType, slotIndex, sellAll, Player, Inventory);
+            if (!result.Success)
             {
-                HideSellPanel();
+                if (result.Failure == TradeFailure.Unavailable) HideSellPanel();
+                else ShowTradeFailure(result.Failure);
                 return;
             }
-
-            int unitPrice = GetSellPrice(item.id);
-            if (unitPrice <= 0)
-            {
-                ShowToast("Cannot sell this item.", new Color(1f, 0.4f, 0.4f));
-                return;
-            }
-
-            int amountToSell = sellAll ? item.count : 1;
-            int totalGold = unitPrice * amountToSell;
-
-            player.AddGold(totalGold);
             AudioManager.Instance?.PlaySfx("click");
-
-            if (sellAll || item.count <= amountToSell)
-            {
-                inv.SetSlot(slotType, slotIndex, null);
-            }
-            else
-            {
-                item.count -= amountToSell;
-                inv.SetSlot(slotType, slotIndex, item);
-            }
-
-            // Sync healing potions counter if heal potion was sold
-            if (item.id == "potion_heal" || item.id == "HEAL")
-            {
-                player.SyncHealingPotions(inv.CountItem("potion_heal"));
-            }
-
             GameManager.Instance?.Capture();
-            ShowToast($"Sold {amountToSell}x {item.name} for {totalGold} Gold!", new Color(0.35f, 1f, 0.45f));
-
+            ShowToast($"Sold {result.Quantity}x {result.ItemName} for {result.GoldAmount} Gold!", new Color(0.35f, 1f, 0.45f));
             Refresh();
-
-            // Refresh sell panel or hide if empty
-            var updatedItem = inv.GetSlot(slotType, slotIndex);
-            if (updatedItem != null && updatedItem.count > 0)
-            {
-                UpdateSellPanelContent(slotType, slotIndex, updatedItem);
-            }
-            else
-            {
-                HideSellPanel();
-            }
+            var remaining = Inventory.GetSlot(slotType, slotIndex);
+            if (remaining != null && remaining.count > 0) UpdateSellPanelContent(slotType, slotIndex, remaining);
+            else HideSellPanel();
         }
 
         #endregion
@@ -1811,174 +1678,62 @@ namespace TheLastKnight.UI
 
         #region Purchase Logic
 
-        public bool HasInventorySpace(string itemId)
+        public bool HasInventorySpace(string itemId) => Inventory != null &&
+            Inventory.CanAccept(ItemRegistry.CreateItem(itemId == "HEAL" ? "potion_heal" : itemId));
+
+        public void BuyItem(ShopItemConfig config) => TryBuyItem(config);
+
+        public bool TryBuyItem(ShopItemConfig config)
         {
-            var inv = Inventory;
-            if (inv == null) return false;
-            for (int i = 0; i < InventoryManager.QuickSlotCount; i++)
-            {
-                var it = inv.GetSlot(SlotType.QuickSlot, i);
-                if (it == null || it.count <= 0) return true;
-                if (string.Equals(it.id, itemId, StringComparison.OrdinalIgnoreCase) && it.count < it.maxStack) return true;
-            }
-            for (int i = 0; i < InventoryManager.InventorySlotCount; i++)
-            {
-                var it = inv.GetSlot(SlotType.Inventory, i);
-                if (it == null || it.count <= 0) return true;
-                if (string.Equals(it.id, itemId, StringComparison.OrdinalIgnoreCase) && it.count < it.maxStack) return true;
-            }
-            return false;
+            if (config == null) return false;
+            if (ReferenceEquals(config, _randomOfferConfig)) return TryBuyRandomOffer(Player, Inventory);
+            return PresentPurchase(Trade.Buy(config, Player, Inventory, DemonRuneManager.Instance));
         }
 
-        public void BuyItem(ShopItemConfig config)
-        {
-            if (config == null) return;
-            if (ReferenceEquals(config, _randomOfferConfig))
-            {
-                TryBuyRandomOffer(Player, Inventory);
-                return;
-            }
-
-            config.EnsureStockInitialized();
-
-            // Check stock limit
-            if (config.initialStock >= 0 && config.currentStock <= 0)
-            {
-                ShowToast("Item is Sold Out!", new Color(1f, 0.4f, 0.4f));
-                AudioManager.Instance?.PlaySfx("click");
-                return;
-            }
-
-            var player = Player;
-            if (player == null) return;
-
-            if (player.Gold < config.buyPrice)
-            {
-                ShowToast("Not enough Gold!", new Color(1f, 0.35f, 0.35f));
-                AudioManager.Instance?.PlaySfx("click");
-                return;
-            }
-
-            // Item-type specific validation
-            if (config.itemType == ShopItemType.InventoryItem)
-            {
-                string targetItemId = (config.id == "HEAL") ? "potion_heal" : config.id;
-                if (!HasInventorySpace(targetItemId))
-                {
-                    ShowToast("Inventory is full!", new Color(1f, 0.75f, 0.35f));
-                    AudioManager.Instance?.PlaySfx("click");
-                    return;
-                }
-            }
-            else if (config.itemType == ShopItemType.RuneReward)
-            {
-                if (DemonRuneManager.Instance != null && DemonRuneManager.Instance.HasReward(config.runeIndex))
-                {
-                    ShowToast("Already acquired this Demonic Rune!", new Color(1f, 0.75f, 0.35f));
-                    AudioManager.Instance?.PlaySfx("click");
-                    return;
-                }
-            }
-
-            // Deduct Gold
-            if (!player.TrySpendGold(config.buyPrice))
-            {
-                ShowToast("Not enough Gold!", new Color(1f, 0.35f, 0.35f));
-                AudioManager.Instance?.PlaySfx("click");
-                return;
-            }
-
-            // Execute purchase effect
-            if (config.itemType == ShopItemType.InventoryItem)
-            {
-                string targetItemId = (config.id == "HEAL") ? "potion_heal" : config.id;
-                var createdItem = ItemRegistry.CreateItem(targetItemId);
-                if (createdItem != null && Inventory != null)
-                {
-                    Inventory.AddItem(createdItem);
-                    if (targetItemId == "potion_heal")
-                    {
-                        player.SyncHealingPotions(Inventory.CountItem("potion_heal"));
-                    }
-                }
-            }
-            else if (config.itemType == ShopItemType.StatPotion)
-            {
-                player.AddStatPotion(config.statName);
-            }
-            else if (config.itemType == ShopItemType.RuneReward)
-            {
-                DemonRuneManager.Instance?.DropRune(config.runeIndex, player.transform.position);
-            }
-
-            // Decrement stock if limited
-            if (config.initialStock >= 0)
-            {
-                config.currentStock = Mathf.Max(0, config.currentStock - 1);
-            }
-
-            AudioManager.Instance?.PlaySfx("click");
-            GameManager.Instance?.Capture();
-            ShowToast($"Purchased {config.displayName}!", new Color(0.35f, 1f, 0.45f));
-            Refresh();
-        }
-
-        // Backward compatibility method
         private bool TryBuyRandomOffer(PlayerStats player, InventoryManager inventory)
         {
-            SyncRandomOffer();
-            var offer = RandomOffer;
-            if (player == null || inventory == null) return false;
-            if (player.Gold < offer.price)
+            var result = Trade.BuyRandom(RandomOffer, player, inventory);
+            if (result.Success)
             {
-                ShowToast("Not enough Gold!", new Color(1f, 0.35f, 0.35f));
+                SyncRandomOffer();
+                HideTooltip();
+            }
+            return PresentPurchase(result);
+        }
+
+        private bool PresentPurchase(TradeResult result)
+        {
+            if (!result.Success)
+            {
+                ShowTradeFailure(result.Failure);
                 return false;
             }
-            bool hasSpace = false;
-            foreach (var type in new[] { SlotType.Inventory, SlotType.QuickSlot })
-            {
-                int count = type == SlotType.Inventory ? InventoryManager.InventorySlotCount : InventoryManager.QuickSlotCount;
-                for (int i = 0; i < count; i++)
-                {
-                    var slot = inventory.GetSlot(type, i);
-                    if (slot == null || (string.Equals(slot.id, offer.itemId, StringComparison.OrdinalIgnoreCase) && slot.count < slot.maxStack))
-                        hasSpace = true;
-                }
-            }
-            if (!hasSpace)
-            {
-                ShowToast("Inventory is full!", new Color(1f, 0.75f, 0.35f));
-                return false;
-            }
-            int price = offer.price;
-            var item = ItemRegistry.CreateItem(offer.itemId);
-            if (!player.TrySpendGold(price)) return false;
-            if (inventory.AddItem(item) > 0)
-            {
-                player.AddGold(price);
-                return false;
-            }
-            string purchasedName = _randomOfferConfig.displayName;
-            offer.AdvanceAfterPurchase();
-            SyncRandomOffer();
-            HideTooltip();
             AudioManager.Instance?.PlaySfx("click");
             GameManager.Instance?.Capture();
-            ShowToast($"Purchased {purchasedName}!", new Color(0.35f, 1f, 0.45f));
+            ShowToast($"Purchased {result.ItemName}!", new Color(0.35f, 1f, 0.45f));
             Refresh();
             return true;
         }
 
-        public bool TryPurchase(string item)
+        private void ShowTradeFailure(TradeFailure failure)
         {
-            var match = FindCatalogItem(item);
-            if (match != null)
+            string message;
+            switch (failure)
             {
-                BuyItem(match);
-                return true;
+                case TradeFailure.SoldOut: message = "Item is Sold Out!"; break;
+                case TradeFailure.NotEnoughGold: message = "Not enough Gold!"; break;
+                case TradeFailure.InventoryFull: message = "Inventory is full!"; break;
+                case TradeFailure.AlreadyOwned: message = "Already acquired this Demonic Rune!"; break;
+                case TradeFailure.NotSellable: message = "Cannot sell this item."; break;
+                case TradeFailure.Unavailable: return;
+                default: message = "Cannot purchase this item."; break;
             }
-            return false;
+            ShowToast(message, failure == TradeFailure.InventoryFull || failure == TradeFailure.AlreadyOwned
+                ? new Color(1f, 0.75f, 0.35f) : new Color(1f, 0.35f, 0.35f));
+            AudioManager.Instance?.PlaySfx("click");
         }
+
+        public bool TryPurchase(string item) => TryBuyItem(FindCatalogItem(item));
 
         #endregion
 

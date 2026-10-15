@@ -28,6 +28,15 @@ namespace TheLastKnight.Inventory
         private readonly InventoryItemData[] _quickSlots = new InventoryItemData[QuickSlotCount];
         public InventoryItemData CursorHeldItem { get; private set; }
         public event Action OnInventoryChanged;
+        private QuickItemConsumption _quickItemUse;
+        public QuickItemConsumption QuickItemUse => _quickItemUse ?? (_quickItemUse = new QuickItemConsumption(this));
+
+        public int GetActiveQuickSlotIndex()
+        {
+            for (int i = 0; i < QuickSlotCount; i++)
+                if (_quickSlots[i] != null && _quickSlots[i].count > 0) return i;
+            return -1;
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoInitialize() { _ = Instance; }
@@ -144,6 +153,37 @@ namespace TheLastKnight.Inventory
             Changed();
         }
 
+        public bool CanAccept(InventoryItemData item)
+        {
+            if (item == null || item.count <= 0 || item.maxStack <= 0) return false;
+            long capacity = 0;
+            foreach (var slots in new[] { _quickSlots, _inventorySlots })
+                foreach (var existing in slots)
+                {
+                    if (existing == null) capacity += item.maxStack;
+                    else if (existing.CanStackWith(item)) capacity += Mathf.Max(0, existing.maxStack - existing.count);
+                    if (capacity >= item.count) return true;
+                }
+            return false;
+        }
+
+        // All-or-nothing receipt for transactions; world pickups still use AddItem.
+        public bool TryAddItem(InventoryItemData item)
+        {
+            if (!CanAccept(item)) return false;
+            return AddItem(item) == 0;
+        }
+
+        public bool TryRemoveFromSlot(SlotType type, int index, int count, PlayerStats player)
+        {
+            var item = GetSlot(type, index);
+            if (item == null || count <= 0 || item.count < count) return false;
+            item.count -= count;
+            if (item.count == 0) Slots(type)[index] = null;
+            Changed(player);
+            return true;
+        }
+
         // The caller retains the unaccepted remainder (used by world pickups).
         public int AddItem(InventoryItemData item)
         {
@@ -257,11 +297,12 @@ namespace TheLastKnight.Inventory
             foreach (var item in _inventorySlots) if (item != null && item.id == "potion_heal") potions += item.count;
             foreach (var item in _quickSlots) if (item != null && item.id == "potion_heal") potions += item.count;
             if (player != null) player.SyncHealingPotions(potions);
-            QuickItemManager.Instance?.SyncFromInventory(_quickSlots);
+            QuickItemManager.Instance?.SyncFromInventory(this);
         }
 
         public void InitializeDefaultInventory(PlayerStats player = null)
         {
+            _quickItemUse?.Cancel();
             Array.Clear(_inventorySlots, 0, InventorySlotCount);
             Array.Clear(_quickSlots, 0, QuickSlotCount);
             CursorHeldItem = null;
@@ -290,6 +331,7 @@ namespace TheLastKnight.Inventory
         public void LoadFrom(PlayerSaveData data, PlayerStats player = null)
         {
             if (data == null) return;
+            _quickItemUse?.Cancel();
             Array.Clear(_inventorySlots, 0, InventorySlotCount);
             Array.Clear(_quickSlots, 0, QuickSlotCount);
             CursorHeldItem = null;

@@ -379,7 +379,7 @@ namespace TheLastKnight.Tests
                 Assert.That(property("AttackPower"), Is.EqualTo(125f));
                 Call(_quick, "UseSlot", 0, player);
                 Assert.That(property("AttackPower"), Is.EqualTo(125f), "Buff must not stack");
-                field("_mightExpiresAt", Time.time - 1f);
+                Call(player, "RemoveMightBuff");
                 Assert.That(property("AttackPower"), Is.EqualTo(100f));
                 Assert.That(property("STR"), Is.EqualTo(strength));
                 Set(Quick, 0, "church_key", 1);

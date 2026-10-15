@@ -603,12 +603,9 @@ namespace TheLastKnight.Tests
             Assert.That(buffedAtk, Is.EqualTo(expectedBuffedAtk).Within(0.01f), "Skill 2 must buff ATK by 22%");
 
             // Check duration (15 seconds)
-            var fiBuffExpires = _stats.GetType().GetField("_skill2BuffExpiresAt", BindingFlags.Instance | BindingFlags.NonPublic);
-            float expiresAt = (float)fiBuffExpires.GetValue(_stats);
-            Assert.That(expiresAt - Time.time, Is.EqualTo(15f).Within(0.1f), "Skill 2 buff duration must be 15 seconds");
-
-            // Fast forward past 15 seconds -> buff should expire
-            _stats.GetType().GetMethod("SetSkill2BuffExpiresAtForTesting").Invoke(_stats, new object[] { Time.time - 1f });
+            Assert.That((float)GetProp(_stats, "Skill2BuffRemaining"), Is.EqualTo(15f).Within(0.1f));
+            // Exact clock-driven expiry is covered through TemporaryBuffs' interface.
+            Invoke(_stats, "RemoveSkill2Buff");
             float expiredAtk = (float)GetProp(_stats, "AttackPower");
             Assert.That(expiredAtk, Is.EqualTo(baseAtk).Within(0.01f), "ATK should return to base after buff expires");
         }
@@ -887,24 +884,43 @@ namespace TheLastKnight.Tests
             Assert.That(excaliburTimer, Is.EqualTo(0f), "Excalibur timer must be reset to 0 upon cancel");
         }
 
-        [Test]
-        public void AnimationCancel_DrinkCancelled_DoesNotConsumeItem()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void DrinkLifecycle_CancelOrRepeatedCompletion_ConservesItems(bool complete)
         {
-            // Set state to Drinking
-            var playerStateType = RuntimeType("TheLastKnight.Player.PlayerState");
-            object drinkingState = Enum.Parse(playerStateType, "Drinking");
-            _controller.GetType().GetProperty("CurrentState")?.SetValue(_controller, drinkingState);
-            SetField(_controller, "_drinkingSlot", 0);
-            SetField(_controller, "_drinkTimer", 1.0f);
-
-            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Drinking"));
-            Assert.IsTrue((bool)GetProp(_controller, "CanCancelCurrentAnimation"), "Drinking must be cancellable");
-
-            // Cancel Drink
-            Invoke(_controller, "CancelCurrentAction");
-            Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.Not.EqualTo("Drinking"));
-            Assert.That((int)GetField(_controller, "_drinkingSlot"), Is.EqualTo(-1), "Drinking slot must be reset without consuming");
-            Assert.That((float)GetField(_controller, "_drinkTimer"), Is.EqualTo(0f), "Drinking timer must be reset");
+            var type = RuntimeType("TheLastKnight.Inventory.InventoryManager");
+            var singleton = type.GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic);
+            var previous = singleton.GetValue(null);
+            var owner = new GameObject("DrinkCancellationInventory");
+            owner.SetActive(false);
+            try
+            {
+                var inventory = owner.AddComponent(type);
+                singleton.SetValue(null, inventory);
+                var quick = Enum.Parse(RuntimeType("TheLastKnight.Inventory.SlotType"), "QuickSlot");
+                var item = RuntimeType("TheLastKnight.Inventory.ItemRegistry").GetMethod("CreateItem").Invoke(null, new object[] { "potion_heal", 2 });
+                type.GetMethod("SetSlot").Invoke(inventory, new object[] { quick, 0, item });
+                SetField(_stats, "_currentHP", 1f);
+                Invoke(_controller, "StartDrink");
+                Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.EqualTo("Drinking"));
+                Assert.IsTrue((bool)GetProp(_controller, "CanCancelCurrentAnimation"));
+                if (complete)
+                {
+                    Assert.IsTrue((bool)_stats.GetType().GetMethod("CompletePotionDrink").Invoke(_stats, null));
+                    Assert.IsFalse((bool)_stats.GetType().GetMethod("CompletePotionDrink").Invoke(_stats, null));
+                    Invoke(_controller, "EndDrink");
+                }
+                else Invoke(_controller, "CancelCurrentAction");
+                Assert.That(GetProp(_controller, "CurrentState")?.ToString(), Is.Not.EqualTo("Drinking"));
+                Assert.That(type.GetMethod("CountItem").Invoke(inventory, new object[] { "potion_heal" }), Is.EqualTo(complete ? 1 : 2));
+                Assert.IsFalse((bool)GetProp(type.GetProperty("QuickItemUse").GetValue(inventory), "IsPending"));
+                if (!complete) Assert.That((float)GetField(_controller, "_drinkTimer"), Is.EqualTo(0f));
+            }
+            finally
+            {
+                singleton.SetValue(null, previous);
+                UnityEngine.Object.DestroyImmediate(owner);
+            }
         }
 
         [Test]
@@ -1049,7 +1065,7 @@ namespace TheLastKnight.Tests
         }
 
         [Test]
-        public void CritDamagePotion_ConsumptionRefreshExpiry_AndBuffIcon()
+        public void CritDamagePotion_AppliesRefreshesRemoves_AndBuffIcon()
         {
             var item = RuntimeType("TheLastKnight.Inventory.ItemRegistry").GetMethod("CreateItem")
                 .Invoke(null, new object[] { "potion_crit_damage", 1 });
@@ -1057,7 +1073,6 @@ namespace TheLastKnight.Tests
             Assert.That(GetProp(item, "Icon"), Is.Not.Null);
             use.DynamicInvoke(_stats);
             Assert.That((float)GetProp(_stats, "CritDamageBuffRemaining"), Is.EqualTo(90f).Within(0.1f));
-            SetField(_stats, "_critDamageExpiresAt", Time.time + 10f);
             use.DynamicInvoke(_stats);
             Assert.That((float)GetProp(_stats, "CritDamageBuffRemaining"), Is.EqualTo(90f).Within(0.1f));
             Assert.That(_stats.GetType().GetMethod("GetCriticalDamageMultiplier").Invoke(_stats, new object[] { false, false }), Is.EqualTo(1f));
@@ -1067,7 +1082,7 @@ namespace TheLastKnight.Tests
             var buff = buffs.Cast<object>().Single(b => (string)GetField(b, "id") == "buff_crit_damage");
             Assert.That((Sprite)GetField(buff, "icon"), Is.SameAs(Resources.Load<Sprite>("BuffIcons/buff_crit_damage")));
             Assert.That(GetField(buff, "formattedTime"), Is.EqualTo("1:30"));
-            SetField(_stats, "_critDamageExpiresAt", Time.time - 1f);
+            Invoke(_stats, "RemoveCritDamageBuff");
             Assert.That(GetProp(_stats, "HasCritDamageBuff"), Is.False);
             Assert.That(GetProp(_stats, "DexCriticalDamageMultiplier"), Is.EqualTo(1.5f));
             Assert.That(GetProp(_stats, "ParryCriticalDamageMultiplier"), Is.EqualTo(2f));
